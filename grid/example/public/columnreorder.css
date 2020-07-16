@@ -26,17 +26,6 @@
 .columns--grid .column__grid {
     display: flex;
 }
-.columns--grid .column__grid :before {
-    width: 0px;
-    height: 0px;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-bottom: 7px solid #fff;
-    position: absolute;
-    top: -7px;
-    right: 10px;
-    content: "";
-}
 .columns--grid .column__grid .column__chooser {
     border-right: 1px solid #eee;
 }
@@ -53,9 +42,6 @@
 .columns--grid .column__grid .column__chooser .column__body .column__selectAll {
     display: flex;
 }
-.columns--grid .column__grid .column__chooser .column__body .column__selectAll .column__selectTxt {
-    margin-left: auto;
-}
 .columns--grid .column__grid .column__chooser .column__body .custom__ctrl {
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -68,7 +54,11 @@
     border-radius: 5px;
     padding: 0px 10px;
 }
-.columns--grid .column__grid .column__chooser .column__wrap .column__checkbox {
+.columns--grid .column__grid .column__chooser .column__selectAll {
+    padding: 0px 10px;
+}
+.columns--grid .column__grid .column__chooser .column__wrap .column__checkbox,
+.columns--grid .column__grid .column__chooser .column__selectAll .column__checkbox {
     margin-right: 10px;
 }
 .columns--grid .column__grid .column__settings .column__header {

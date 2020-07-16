@@ -8,24 +8,16 @@ const divStyle = {
 };
 
 const DeletePopUpOverLay = memo((props) => {
-    const { closePopUp, deleteRowFromGrid, row } = props;
-
-    const handleDeleteRow = (indexToBeDeleted) => {
-        deleteRowFromGrid(indexToBeDeleted);
-    };
-
-    const handleClosePopUp = () => {
-        closePopUp();
-    };
+    const { deleteRow, closeDeleteOverlay } = props;
 
     return (
         <div className="main-div-delete-overlay" style={divStyle}>
             <div className="cancel-save-buttons-delete">
-                <button className="delete-Button" onClick={() => handleDeleteRow(row.index)}>
+                <button className="delete-Button" onClick={deleteRow}>
                     Delete
                 </button>
                 &nbsp;&nbsp;&nbsp;
-                <button className="cancel-Button" onClick={handleClosePopUp}>
+                <button className="cancel-Button" onClick={closeDeleteOverlay}>
                     Cancel
                 </button>
             </div>

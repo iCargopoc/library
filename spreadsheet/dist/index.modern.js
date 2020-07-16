@@ -16,7 +16,7 @@ import { utils, write } from 'xlsx';
 class ExtDataGrid extends ReactDataGrid {
   componentDidMount() {
     this._mounted = true;
-    this.dataGridComponent = document.getElementsByClassName("react-grid-Container")[0];
+    this.dataGridComponent = document.getElementsByClassName("react-grid-Viewport")[0];
     window.addEventListener("resize", this.metricsUpdated);
 
     if (this.props.cellRangeSelection) {
@@ -240,6 +240,15 @@ const ColumnsList = props => {
     setColumns(update(columns, {
       $splice: [[index, 1], [atIndex, 0, column]]
     }));
+    let values = [];
+    let temp = [];
+    temp = update(columns, {
+      $splice: [[index, 1], [atIndex, 0, column]]
+    });
+    temp.forEach(item => {
+      values.push(item.id);
+    });
+    props.handleReorderList(values);
   };
 
   const findColumn = id => {
@@ -277,16 +286,29 @@ class ColumnReordering extends React.Component {
 
     this.resetColumnReorderList = () => {
       this.setState({
-        columnReorderEntityList: [],
-        isAllSelected: false
+        columnReorderEntityList: this.props.columns.map(item => item.name),
+        leftPinnedColumList: [],
+        isAllSelected: true
       });
     };
 
     this.selectAllToColumnReOrderList = () => {
       this.resetColumnReorderList();
+      var existingColumnReorderEntityList = this.state.columnReorderEntityList;
+      var isExistingAllSelect = this.state.isAllSelected;
+
+      if (!isExistingAllSelect) {
+        existingColumnReorderEntityList = this.props.columns.map(item => item.name);
+        isExistingAllSelect = true;
+      } else {
+        existingColumnReorderEntityList = [];
+        isExistingAllSelect = false;
+      }
+
       this.setState({
-        columnReorderEntityList: this.props.columns.map(item => item.name),
-        isAllSelected: true
+        columnReorderEntityList: existingColumnReorderEntityList,
+        isAllSelected: isExistingAllSelect,
+        leftPinnedColumList: []
       });
     };
 
@@ -398,11 +420,15 @@ class ColumnReordering extends React.Component {
       });
     };
 
+    this.handleReorderList = reordered => {
+      this.props.handleheaderNameList(reordered);
+    };
+
     this.state = {
       columnReorderEntityList: this.props.headerKeys,
       columnSelectList: this.props.columns.map(item => item.name),
       leftPinnedColumList: this.props.existingPinnedHeadersList,
-      isAllSelected: false,
+      isAllSelected: true,
       maxLeftPinnedColumn: this.props.maxLeftPinnedColumn
     };
     this.setWrapperRef = this.setWrapperRef.bind(this);
@@ -410,11 +436,11 @@ class ColumnReordering extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
+    document.addEventListener("mousedown", this.handleClickOutside);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
+    document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
   setWrapperRef(node) {
@@ -447,12 +473,16 @@ class ColumnReordering extends React.Component {
       className: "custom__ctrl",
       onChange: this.filterColumnReorderList
     })), /*#__PURE__*/React.createElement("div", {
-      className: "column__selectAll"
-    }, /*#__PURE__*/React.createElement("a", {
-      className: "column__selectTxt",
-      type: "button",
-      onClick: () => this.selectAllToColumnReOrderList()
-    }, "Select All")), this.state.columnSelectList.map(item => {
+      className: "column__wrap column__headertxt"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "column__checkbox"
+    }, /*#__PURE__*/React.createElement("input", {
+      type: "checkbox",
+      onChange: () => this.selectAllToColumnReOrderList(),
+      checked: this.state.columnReorderEntityList.length === this.props.columns.length
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "column__txt"
+    }, "Select all")), this.state.columnSelectList.map(item => {
       return /*#__PURE__*/React.createElement("div", {
         className: "column__wrap",
         key: item
@@ -478,14 +508,16 @@ class ColumnReordering extends React.Component {
       icon: faTimes,
       onClick: () => this.props.closeColumnReOrdering()
     }))), /*#__PURE__*/React.createElement("div", {
+      className: "column__header"
+    }, /*#__PURE__*/React.createElement("div", {
       className: "column__headerTxt"
-    }, /*#__PURE__*/React.createElement("strong", null, "\xA0 \xA0 Selected Column Count : ", this.state.columnReorderEntityList.length)), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("strong", null, "\xA0 \xA0 Selected Column Count :", " ", this.state.columnReorderEntityList.length)), /*#__PURE__*/React.createElement("div", {
       className: "column__headerTxt"
     }, this.state.maxLeftPinnedColumn - this.state.leftPinnedColumList.length > 0 ? /*#__PURE__*/React.createElement("strong", null, "\xA0 \xA0 Left Pinned Column Count Remaining :", " ", this.state.maxLeftPinnedColumn - this.state.leftPinnedColumList.length) : /*#__PURE__*/React.createElement("strong", {
       style: {
         color: "red"
       }
-    }, "\xA0 \xA0 Maximum Count Of Left Pin Columns REACHED")), /*#__PURE__*/React.createElement("div", {
+    }, "\xA0 \xA0 Maximum Count Of Left Pin Columns REACHED"))), /*#__PURE__*/React.createElement("div", {
       className: "column__body"
     }, /*#__PURE__*/React.createElement(DndProvider, {
       backend: TouchBackend,
@@ -493,7 +525,8 @@ class ColumnReordering extends React.Component {
         enableMouseEvents: true
       }
     }, /*#__PURE__*/React.createElement(ColumnsList, {
-      columnsArray: this.createColumnsArrayFromProps(this.state.columnReorderEntityList)
+      columnsArray: this.createColumnsArrayFromProps(this.state.columnReorderEntityList),
+      handleReorderList: this.handleReorderList
     }))), /*#__PURE__*/React.createElement("div", {
       className: "column__footer"
     }, /*#__PURE__*/React.createElement("div", {
@@ -624,40 +657,47 @@ class App extends React.Component {
     this.add = () => {
       let rowList = [...this.state.rowList];
       rowList.push(true);
+      var existingSortingOrderList = this.state.sortingOrderList;
+      existingSortingOrderList.push({
+        sortBy: "Flight #",
+        order: "Ascending",
+        sortOn: "Value"
+      });
       this.setState({
-        rowList
+        rowList,
+        sortingOrderList: existingSortingOrderList
       });
     };
 
     this.copy = i => {
-      let rowList = [...this.state.rowList];
-      console.log(rowList);
+      let rowList = [...this.state.sortingOrderList];
+      rowList.push(JSON.parse(JSON.stringify(rowList[i])));
+      this.setState({
+        sortingOrderList: rowList
+      });
     };
 
     this.clearAll = () => {
       this.setState({
-        rowList: []
+        sortingOrderList: []
       });
     };
 
     this.remove = i => {
-      let rowList = [...this.state.rowList];
-      console.log(i);
-      rowList.splice(i, 1);
-      console.log();
+      let sortingOrderList = [...this.state.sortingOrderList];
+      sortingOrderList.splice(i, 1);
       this.setState({
-        rowList
+        sortingOrderList
       });
     };
 
-    this.createColumnsArrayFromProps = rowList => {
-      console.log(this.state.rowList);
-      return rowList.map((i, index) => {
+    this.createColumnsArrayFromProps = rowsValue => {
+      return rowsValue.map((row, index) => {
         return {
           id: index,
           text: /*#__PURE__*/React.createElement("div", {
             className: "sort__bodyContent",
-            key: i
+            key: index
           }, /*#__PURE__*/React.createElement("div", {
             className: "sort__reorder"
           }, /*#__PURE__*/React.createElement("div", {
@@ -673,7 +713,10 @@ class App extends React.Component {
           }, /*#__PURE__*/React.createElement("div", null, "Sort by")), /*#__PURE__*/React.createElement("div", {
             className: "sort__file"
           }, /*#__PURE__*/React.createElement("select", {
-            className: "custom__ctrl"
+            className: "custom__ctrl",
+            name: "sortBy",
+            onChange: e => this.captureSortingFeildValues(e, index, "sortBy"),
+            value: row.sortBy
           }, this.props.columnFieldValue.map((item, index) => /*#__PURE__*/React.createElement("option", {
             key: index
           }, item))))), /*#__PURE__*/React.createElement("div", {
@@ -683,7 +726,10 @@ class App extends React.Component {
           }, /*#__PURE__*/React.createElement("div", null, "Sort on")), /*#__PURE__*/React.createElement("div", {
             className: "sort__file"
           }, /*#__PURE__*/React.createElement("select", {
-            className: "custom__ctrl"
+            className: "custom__ctrl",
+            name: "sortOn",
+            onChange: e => this.captureSortingFeildValues(e, index, "sortOn"),
+            value: row.sortOn
           }, /*#__PURE__*/React.createElement("option", null, "Value")))), /*#__PURE__*/React.createElement("div", {
             className: "sort__reorder"
           }, /*#__PURE__*/React.createElement("div", {
@@ -691,7 +737,10 @@ class App extends React.Component {
           }, /*#__PURE__*/React.createElement("div", null, "Order")), /*#__PURE__*/React.createElement("div", {
             className: "sort__file"
           }, /*#__PURE__*/React.createElement("select", {
-            className: "custom__ctrl"
+            className: "custom__ctrl",
+            name: "order",
+            onChange: e => this.captureSortingFeildValues(e, index, "order"),
+            value: row.order
           }, /*#__PURE__*/React.createElement("option", null, "Ascending"), /*#__PURE__*/React.createElement("option", null, "Descending")))), /*#__PURE__*/React.createElement("div", {
             className: "sort__reorder"
           }, /*#__PURE__*/React.createElement("div", {
@@ -701,7 +750,7 @@ class App extends React.Component {
           }, /*#__PURE__*/React.createElement(FontAwesomeIcon, {
             icon: faCopy,
             title: "Copy",
-            onClick: () => this.copy(i)
+            onClick: () => this.copy(index)
           }))), /*#__PURE__*/React.createElement("div", {
             className: "sort__reorder"
           }, /*#__PURE__*/React.createElement("div", {
@@ -717,19 +766,58 @@ class App extends React.Component {
       });
     };
 
+    this.captureSortingFeildValues = (event, index, sortingKey) => {
+      var existingSortingOrderList = this.state.sortingOrderList;
+
+      if (sortingKey === "sortBy") {
+        existingSortingOrderList[index]["sortBy"] = event.target.value;
+      }
+
+      if (sortingKey === "order") {
+        existingSortingOrderList[index]["order"] = event.target.value;
+      }
+
+      if (existingSortingOrderList[index]["sortOn"] === "" || existingSortingOrderList[index]["sortOn"] === undefined) {
+        existingSortingOrderList[index]["sortOn"] = "Value";
+      }
+
+      this.setState({
+        sortingOrderList: existingSortingOrderList
+      });
+    };
+
+    this.updateTableAsPerSortCondition = () => {
+      const unique = new Set();
+      const showError = this.state.sortingOrderList.some(element => unique.size === unique.add(element.sortBy).size);
+      showError ? this.setState({
+        errorMessage: true
+      }) : this.setState({
+        errorMessage: false
+      });
+      console.log("FILTER SORT LIST OF OBJECTS ", this.state.sortingOrderList);
+      this.props.setTableAsPerSortingParams(this.state.sortingOrderList);
+    };
+
     this.state = {
-      rowList: [true]
+      rowList: [true],
+      rows: [],
+      sortingOrderList: [{
+        sortBy: "Flight #",
+        order: "Ascending",
+        sortOn: "Value"
+      }],
+      errorMessage: false
     };
     this.setWrapperRef = this.setWrapperRef.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
   }
 
   componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
+    document.addEventListener("mousedown", this.handleClickOutside);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
+    document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
   setWrapperRef(node) {
@@ -743,7 +831,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.state.rowList);
     return /*#__PURE__*/React.createElement("div", {
       className: "sorts--grid",
       ref: this.setWrapperRef
@@ -769,8 +856,15 @@ class App extends React.Component {
         enableMouseEvents: true
       }
     }, /*#__PURE__*/React.createElement(SortingList, {
-      sortsArray: this.createColumnsArrayFromProps(this.state.rowList)
+      sortsArray: this.createColumnsArrayFromProps(this.state.sortingOrderList)
     })), /*#__PURE__*/React.createElement("div", {
+      className: "sort-warning"
+    }, this.state.errorMessage ? /*#__PURE__*/React.createElement("span", {
+      style: {
+        display: this.state.clickTag
+      },
+      className: "alert alert-danger"
+    }, "Sort types opted are same, Please choose different one.") : "")), /*#__PURE__*/React.createElement("div", {
       className: "sort__new"
     }, /*#__PURE__*/React.createElement("div", {
       className: "sort__section"
@@ -780,7 +874,7 @@ class App extends React.Component {
     }), /*#__PURE__*/React.createElement("div", {
       className: "sort__txt",
       onClick: () => this.add()
-    }, "New Sort")))), /*#__PURE__*/React.createElement("div", {
+    }, "New Sort"))), /*#__PURE__*/React.createElement("div", {
       className: "sort__footer"
     }, /*#__PURE__*/React.createElement("div", {
       className: "sort__btns"
@@ -788,7 +882,8 @@ class App extends React.Component {
       className: "btns",
       onClick: this.clearAll
     }, "Clear All"), /*#__PURE__*/React.createElement("button", {
-      className: "btns btns__save"
+      className: "btns btns__save",
+      onClick: () => this.updateTableAsPerSortCondition()
     }, "Ok"))))));
   }
 
@@ -1049,10 +1144,15 @@ class ExportData extends React.Component {
       className: "custom__ctrl",
       onChange: this.columnSearchLogic
     })), /*#__PURE__*/React.createElement("div", {
-      className: "export__selectAll"
+      className: "export__wrap export__headertxt"
     }, /*#__PURE__*/React.createElement("div", {
-      className: "export__selectTxt",
-      onClick: () => this.selectAllToColumnList()
+      className: "export__checkbox"
+    }, /*#__PURE__*/React.createElement("input", {
+      type: "checkbox",
+      onChange: () => this.selectAllToColumnList(),
+      checked: this.state.isAllSelected
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "export__txt"
     }, "Select All")), this.state.columnValueList.length > 0 ? this.state.columnValueList.map((column, index) => {
       return /*#__PURE__*/React.createElement("div", {
         className: "export__wrap",
@@ -1161,6 +1261,7 @@ const {
 const defaultParsePaste = str => str.split(/\r\n|\n|\r/).map(row => row.split("\t"));
 
 const selectors = Data.Selectors;
+let swapList = [];
 const {
   AutoCompleteFilter,
   NumericFilter
@@ -1400,16 +1501,27 @@ class spreadsheet extends Component {
       this.setState(reorderedColumns);
     };
 
+    this.handleheaderNameList = reordered => {
+      swapList = reordered;
+    };
+
     this.updateTableAsPerRowChooser = (inComingColumnsHeaderList, pinnedColumnsList) => {
-      var existingColumnsHeaderList = this.props.columns;
+      let existingColumnsHeaderList = this.props.columns;
       existingColumnsHeaderList = existingColumnsHeaderList.filter(item => {
         return inComingColumnsHeaderList.includes(item.name);
       });
-      var rePositionedArray = existingColumnsHeaderList;
-      var singleHeaderOneList;
+      let rePositionedArray = existingColumnsHeaderList;
+      let singleHeaderOneList;
 
       if (pinnedColumnsList.length > 0) {
         pinnedColumnsList.slice(0).reverse().map((item, index) => {
+          singleHeaderOneList = existingColumnsHeaderList.filter(subItem => item === subItem.name);
+          rePositionedArray = this.array_move(existingColumnsHeaderList, existingColumnsHeaderList.indexOf(singleHeaderOneList[0]), index);
+        });
+      }
+
+      if (swapList.length > 0) {
+        swapList.map((item, index) => {
           singleHeaderOneList = existingColumnsHeaderList.filter(subItem => item === subItem.name);
           rePositionedArray = this.array_move(existingColumnsHeaderList, existingColumnsHeaderList.indexOf(singleHeaderOneList[0]), index);
         });
@@ -1430,6 +1542,7 @@ class spreadsheet extends Component {
         columns: existingColumnsHeaderList
       });
       this.closeColumnReOrdering();
+      swapList = [];
     };
 
     this.array_move = (arr, old_index, new_index) => {
@@ -1456,7 +1569,8 @@ class spreadsheet extends Component {
           updateTableAsPerRowChooser: this.updateTableAsPerRowChooser,
           headerKeys: headerNameList,
           closeColumnReOrdering: this.closeColumnReOrdering,
-          existingPinnedHeadersList: existingPinnedHeadersList
+          existingPinnedHeadersList: existingPinnedHeadersList,
+          handleheaderNameList: this.handleheaderNameList
         }, this.props))
       });
     };
@@ -1487,6 +1601,7 @@ class spreadsheet extends Component {
       this.state.columns.map(item => columnField.push(item.name));
       this.setState({
         sortingPanelComponent: /*#__PURE__*/React.createElement(App, {
+          setTableAsPerSortingParams: args => this.setTableAsPerSortingParams(args),
           columnFieldValue: columnField,
           closeSorting: this.closeSorting
         })
@@ -1512,6 +1627,49 @@ class spreadsheet extends Component {
     this.closeExport = () => {
       this.setState({
         exportComponent: null
+      });
+    };
+
+    this.setTableAsPerSortingParams = tableSortList => {
+      var existingRows = this.state.rows;
+      var sortingOrderNameList = [];
+      tableSortList.map((item, index) => {
+        var nameOfItem = "";
+        Object.keys(this.state.rows[0]).map(rowItem => {
+          if (item.sortBy === "Flight #" && rowItem === "flightno") {
+            nameOfItem = "flightno";
+          } else if (rowItem.toLowerCase() === this.toCamelCase(item.sortBy).toLowerCase()) {
+            nameOfItem = rowItem;
+          }
+        });
+        console.log(nameOfItem);
+        var typeOfItem = this.state.rows[0][item.sortBy === "Flight #" ? "flightno" : nameOfItem];
+
+        if (typeof typeOfItem === "number") {
+          sortingOrderNameList.push({
+            name: nameOfItem,
+            primer: parseInt,
+            reverse: item.order === "Ascending" ? false : true
+          });
+        } else {
+          sortingOrderNameList.push({
+            name: nameOfItem,
+            reverse: item.order === "Ascending" ? false : true
+          });
+        }
+      });
+      existingRows.sort(sort_by(...sortingOrderNameList));
+      this.setState({
+        rows: existingRows
+      });
+      this.closeSorting();
+    };
+
+    this.toCamelCase = str => {
+      return str.replace(/\s(.)/g, function ($1) {
+        return $1.toUpperCase();
+      }).replace(/\s/g, "").replace(/^(.)/, function ($1) {
+        return $1.toLowerCase();
       });
     };
 
@@ -1569,6 +1727,12 @@ class spreadsheet extends Component {
     this.formulaAppliedCols = this.props.columns.filter(item => {
       return item.formulaApplicable;
     });
+  }
+
+  componentDidUpdate(prevProps) {
+    const resizeEvent = document.createEvent("HTMLEvents");
+    resizeEvent.initEvent("resize", true, false);
+    window.dispatchEvent(resizeEvent);
   }
 
   componentWillReceiveProps(props) {
@@ -1675,11 +1839,77 @@ class spreadsheet extends Component {
           indexes: this.state.selectedIndexes
         }
       },
-      onGridSort: (sortColumn, sortDirection) => this.sortRows(this.state.rows, sortColumn, sortDirection)
+      onGridSort: (sortColumn, sortDirection) => this.sortRows(this.state.filteringRows, sortColumn, sortDirection)
     })));
   }
 
 }
+
+var sort_by;
+
+(function () {
+  var default_cmp = function (a, b) {
+    if (a == b) return 0;
+    return a < b ? -1 : 1;
+  },
+      getCmpFunc = function (primer, reverse) {
+    var cmp = default_cmp;
+
+    if (primer) {
+      cmp = function (a, b) {
+        return default_cmp(primer(a), primer(b));
+      };
+    }
+
+    if (reverse) {
+      return function (a, b) {
+        return -1 * cmp(a, b);
+      };
+    }
+
+    return cmp;
+  };
+
+  sort_by = function () {
+    var fields = [],
+        n_fields = arguments.length,
+        field,
+        name,
+        cmp;
+
+    for (var i = 0; i < n_fields; i++) {
+      field = arguments[i];
+
+      if (typeof field === "string") {
+        name = field;
+        cmp = default_cmp;
+      } else {
+        name = field.name;
+        cmp = getCmpFunc(field.primer, field.reverse);
+      }
+
+      fields.push({
+        name: name,
+        cmp: cmp
+      });
+    }
+
+    return function (A, B) {
+      var name, cmp, result;
+
+      for (var i = 0, l = n_fields; i < l; i++) {
+        result = 0;
+        field = fields[i];
+        name = field.name;
+        cmp = field.cmp;
+        result = cmp(A[name], B[name]);
+        if (result !== 0) break;
+      }
+
+      return result;
+    };
+  };
+})();
 
 export default spreadsheet;
 //# sourceMappingURL=index.modern.js.map

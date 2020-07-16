@@ -39,18 +39,6 @@ const ColumnItem = ({ id, name, moveColumn, findColumn, innerCells }) => {
                     <i className="fa fa-align-justify" aria-hidden="true"></i>
                 </div>
                 <div className="">{name}</div>
-                {innerCells && innerCells.length
-                    ? innerCells.map((cell, index) => {
-                          return (
-                              <div className="column__wrap" key={index}>
-                                  <div className="column__checkbox">
-                                      <input type="checkbox"></input>
-                                  </div>
-                                  <div className="column__txt">{cell.Header}</div>
-                              </div>
-                          );
-                      })
-                    : null}
             </div>
         </div>
     );

@@ -167,7 +167,7 @@ class ColumnReordering extends React.Component {
                   disabled={
                     this.state.maxLeftPinnedColumn -
                       this.state.leftPinnedColumList.length <=
-                    0
+                      0
                       ? this.state.leftPinnedColumList.includes(item)
                         ? false
                         : true
@@ -215,7 +215,7 @@ class ColumnReordering extends React.Component {
   handleReorderList = (reordered) => {
     this.props.handleheaderNameList(reordered);
   };
-  render() {
+  render(props) {
     return (
       <div className="columns--grid" ref={this.setWrapperRef}>
         <div className="column__grid">
@@ -288,17 +288,17 @@ class ColumnReordering extends React.Component {
               <div className="column__headerTxt">
                 {this.state.maxLeftPinnedColumn -
                   this.state.leftPinnedColumList.length >
-                0 ? (
-                  <strong>
-                    &nbsp; &nbsp; Left Pinned Column Count Remaining :{" "}
-                    {this.state.maxLeftPinnedColumn -
-                      this.state.leftPinnedColumList.length}
-                  </strong>
-                ) : (
-                  <strong style={{ color: "red" }}>
-                    &nbsp; &nbsp; Maximum Count Of Left Pin Columns REACHED
-                  </strong>
-                )}
+                  0 ? (
+                    <strong>
+                      &nbsp; &nbsp; Left Pinned Column Count Remaining :{" "}
+                      {this.state.maxLeftPinnedColumn -
+                        this.state.leftPinnedColumList.length}
+                    </strong>
+                  ) : (
+                    <strong style={{ color: "red" }}>
+                      &nbsp; &nbsp; Maximum Count Of Left Pin Columns REACHED
+                    </strong>
+                  )}
               </div>
             </div>
             <div className="column__body">

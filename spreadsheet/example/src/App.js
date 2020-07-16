@@ -21,7 +21,7 @@ const App = () => {
   const columns = [
     {
       key: "flightno",
-      name: "Flight #",
+      name: "FlightNo",
       draggable: true,
       editor: "Text",
       formulaApplicable: false,

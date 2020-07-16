@@ -59,7 +59,7 @@ var ExtDataGrid = /*#__PURE__*/function (_ReactDataGrid) {
 
   _proto.componentDidMount = function componentDidMount() {
     this._mounted = true;
-    this.dataGridComponent = document.getElementsByClassName("react-grid-Container")[0];
+    this.dataGridComponent = document.getElementsByClassName("react-grid-Viewport")[0];
     window.addEventListener("resize", this.metricsUpdated);
 
     if (this.props.cellRangeSelection) {
@@ -305,6 +305,15 @@ var ColumnsList = function ColumnsList(props) {
     setColumns(update(columns, {
       $splice: [[index, 1], [atIndex, 0, column]]
     }));
+    var values = [];
+    var temp = [];
+    temp = update(columns, {
+      $splice: [[index, 1], [atIndex, 0, column]]
+    });
+    temp.forEach(function (item) {
+      values.push(item.id);
+    });
+    props.handleReorderList(values);
   };
 
   var findColumn = function findColumn(id) {
@@ -352,19 +361,34 @@ var ColumnReordering = /*#__PURE__*/function (_React$Component) {
 
     _this.resetColumnReorderList = function () {
       _this.setState({
-        columnReorderEntityList: [],
-        isAllSelected: false
+        columnReorderEntityList: _this.props.columns.map(function (item) {
+          return item.name;
+        }),
+        leftPinnedColumList: [],
+        isAllSelected: true
       });
     };
 
     _this.selectAllToColumnReOrderList = function () {
       _this.resetColumnReorderList();
 
-      _this.setState({
-        columnReorderEntityList: _this.props.columns.map(function (item) {
+      var existingColumnReorderEntityList = _this.state.columnReorderEntityList;
+      var isExistingAllSelect = _this.state.isAllSelected;
+
+      if (!isExistingAllSelect) {
+        existingColumnReorderEntityList = _this.props.columns.map(function (item) {
           return item.name;
-        }),
-        isAllSelected: true
+        });
+        isExistingAllSelect = true;
+      } else {
+        existingColumnReorderEntityList = [];
+        isExistingAllSelect = false;
+      }
+
+      _this.setState({
+        columnReorderEntityList: existingColumnReorderEntityList,
+        isAllSelected: isExistingAllSelect,
+        leftPinnedColumList: []
       });
     };
 
@@ -496,13 +520,17 @@ var ColumnReordering = /*#__PURE__*/function (_React$Component) {
       });
     };
 
+    _this.handleReorderList = function (reordered) {
+      _this.props.handleheaderNameList(reordered);
+    };
+
     _this.state = {
       columnReorderEntityList: _this.props.headerKeys,
       columnSelectList: _this.props.columns.map(function (item) {
         return item.name;
       }),
       leftPinnedColumList: _this.props.existingPinnedHeadersList,
-      isAllSelected: false,
+      isAllSelected: true,
       maxLeftPinnedColumn: _this.props.maxLeftPinnedColumn
     };
     _this.setWrapperRef = _this.setWrapperRef.bind(_assertThisInitialized(_this));
@@ -513,11 +541,11 @@ var ColumnReordering = /*#__PURE__*/function (_React$Component) {
   var _proto = ColumnReordering.prototype;
 
   _proto.componentDidMount = function componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
+    document.addEventListener("mousedown", this.handleClickOutside);
   };
 
   _proto.componentWillUnmount = function componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
+    document.removeEventListener("mousedown", this.handleClickOutside);
   };
 
   _proto.setWrapperRef = function setWrapperRef(node) {
@@ -552,14 +580,18 @@ var ColumnReordering = /*#__PURE__*/function (_React$Component) {
       className: "custom__ctrl",
       onChange: this.filterColumnReorderList
     })), /*#__PURE__*/React__default.createElement("div", {
-      className: "column__selectAll"
-    }, /*#__PURE__*/React__default.createElement("a", {
-      className: "column__selectTxt",
-      type: "button",
-      onClick: function onClick() {
+      className: "column__wrap column__headertxt"
+    }, /*#__PURE__*/React__default.createElement("div", {
+      className: "column__checkbox"
+    }, /*#__PURE__*/React__default.createElement("input", {
+      type: "checkbox",
+      onChange: function onChange() {
         return _this2.selectAllToColumnReOrderList();
-      }
-    }, "Select All")), this.state.columnSelectList.map(function (item) {
+      },
+      checked: this.state.columnReorderEntityList.length === this.props.columns.length
+    })), /*#__PURE__*/React__default.createElement("div", {
+      className: "column__txt"
+    }, "Select all")), this.state.columnSelectList.map(function (item) {
       return /*#__PURE__*/React__default.createElement("div", {
         className: "column__wrap",
         key: item
@@ -589,14 +621,16 @@ var ColumnReordering = /*#__PURE__*/function (_React$Component) {
         return _this2.props.closeColumnReOrdering();
       }
     }))), /*#__PURE__*/React__default.createElement("div", {
+      className: "column__header"
+    }, /*#__PURE__*/React__default.createElement("div", {
       className: "column__headerTxt"
-    }, /*#__PURE__*/React__default.createElement("strong", null, "\xA0 \xA0 Selected Column Count : ", this.state.columnReorderEntityList.length)), /*#__PURE__*/React__default.createElement("div", {
+    }, /*#__PURE__*/React__default.createElement("strong", null, "\xA0 \xA0 Selected Column Count :", " ", this.state.columnReorderEntityList.length)), /*#__PURE__*/React__default.createElement("div", {
       className: "column__headerTxt"
     }, this.state.maxLeftPinnedColumn - this.state.leftPinnedColumList.length > 0 ? /*#__PURE__*/React__default.createElement("strong", null, "\xA0 \xA0 Left Pinned Column Count Remaining :", " ", this.state.maxLeftPinnedColumn - this.state.leftPinnedColumList.length) : /*#__PURE__*/React__default.createElement("strong", {
       style: {
         color: "red"
       }
-    }, "\xA0 \xA0 Maximum Count Of Left Pin Columns REACHED")), /*#__PURE__*/React__default.createElement("div", {
+    }, "\xA0 \xA0 Maximum Count Of Left Pin Columns REACHED"))), /*#__PURE__*/React__default.createElement("div", {
       className: "column__body"
     }, /*#__PURE__*/React__default.createElement(reactDnd.DndProvider, {
       backend: reactDndTouchBackend.TouchBackend,
@@ -604,7 +638,8 @@ var ColumnReordering = /*#__PURE__*/function (_React$Component) {
         enableMouseEvents: true
       }
     }, /*#__PURE__*/React__default.createElement(ColumnsList, {
-      columnsArray: this.createColumnsArrayFromProps(this.state.columnReorderEntityList)
+      columnsArray: this.createColumnsArrayFromProps(this.state.columnReorderEntityList),
+      handleReorderList: this.handleReorderList
     }))), /*#__PURE__*/React__default.createElement("div", {
       className: "column__footer"
     }, /*#__PURE__*/React__default.createElement("div", {
@@ -761,42 +796,50 @@ var App = /*#__PURE__*/function (_React$Component) {
     _this.add = function () {
       var rowList = [].concat(_this.state.rowList);
       rowList.push(true);
+      var existingSortingOrderList = _this.state.sortingOrderList;
+      existingSortingOrderList.push({
+        sortBy: "Flight #",
+        order: "Ascending",
+        sortOn: "Value"
+      });
 
       _this.setState({
-        rowList: rowList
+        rowList: rowList,
+        sortingOrderList: existingSortingOrderList
       });
     };
 
     _this.copy = function (i) {
-      var rowList = [].concat(_this.state.rowList);
-      console.log(rowList);
+      var rowList = [].concat(_this.state.sortingOrderList);
+      rowList.push(JSON.parse(JSON.stringify(rowList[i])));
+
+      _this.setState({
+        sortingOrderList: rowList
+      });
     };
 
     _this.clearAll = function () {
       _this.setState({
-        rowList: []
+        sortingOrderList: []
       });
     };
 
     _this.remove = function (i) {
-      var rowList = [].concat(_this.state.rowList);
-      console.log(i);
-      rowList.splice(i, 1);
-      console.log();
+      var sortingOrderList = [].concat(_this.state.sortingOrderList);
+      sortingOrderList.splice(i, 1);
 
       _this.setState({
-        rowList: rowList
+        sortingOrderList: sortingOrderList
       });
     };
 
-    _this.createColumnsArrayFromProps = function (rowList) {
-      console.log(_this.state.rowList);
-      return rowList.map(function (i, index) {
+    _this.createColumnsArrayFromProps = function (rowsValue) {
+      return rowsValue.map(function (row, index) {
         return {
           id: index,
           text: /*#__PURE__*/React__default.createElement("div", {
             className: "sort__bodyContent",
-            key: i
+            key: index
           }, /*#__PURE__*/React__default.createElement("div", {
             className: "sort__reorder"
           }, /*#__PURE__*/React__default.createElement("div", {
@@ -812,7 +855,12 @@ var App = /*#__PURE__*/function (_React$Component) {
           }, /*#__PURE__*/React__default.createElement("div", null, "Sort by")), /*#__PURE__*/React__default.createElement("div", {
             className: "sort__file"
           }, /*#__PURE__*/React__default.createElement("select", {
-            className: "custom__ctrl"
+            className: "custom__ctrl",
+            name: "sortBy",
+            onChange: function onChange(e) {
+              return _this.captureSortingFeildValues(e, index, "sortBy");
+            },
+            value: row.sortBy
           }, _this.props.columnFieldValue.map(function (item, index) {
             return /*#__PURE__*/React__default.createElement("option", {
               key: index
@@ -824,7 +872,12 @@ var App = /*#__PURE__*/function (_React$Component) {
           }, /*#__PURE__*/React__default.createElement("div", null, "Sort on")), /*#__PURE__*/React__default.createElement("div", {
             className: "sort__file"
           }, /*#__PURE__*/React__default.createElement("select", {
-            className: "custom__ctrl"
+            className: "custom__ctrl",
+            name: "sortOn",
+            onChange: function onChange(e) {
+              return _this.captureSortingFeildValues(e, index, "sortOn");
+            },
+            value: row.sortOn
           }, /*#__PURE__*/React__default.createElement("option", null, "Value")))), /*#__PURE__*/React__default.createElement("div", {
             className: "sort__reorder"
           }, /*#__PURE__*/React__default.createElement("div", {
@@ -832,7 +885,12 @@ var App = /*#__PURE__*/function (_React$Component) {
           }, /*#__PURE__*/React__default.createElement("div", null, "Order")), /*#__PURE__*/React__default.createElement("div", {
             className: "sort__file"
           }, /*#__PURE__*/React__default.createElement("select", {
-            className: "custom__ctrl"
+            className: "custom__ctrl",
+            name: "order",
+            onChange: function onChange(e) {
+              return _this.captureSortingFeildValues(e, index, "order");
+            },
+            value: row.order
           }, /*#__PURE__*/React__default.createElement("option", null, "Ascending"), /*#__PURE__*/React__default.createElement("option", null, "Descending")))), /*#__PURE__*/React__default.createElement("div", {
             className: "sort__reorder"
           }, /*#__PURE__*/React__default.createElement("div", {
@@ -843,7 +901,7 @@ var App = /*#__PURE__*/function (_React$Component) {
             icon: freeSolidSvgIcons.faCopy,
             title: "Copy",
             onClick: function onClick() {
-              return _this.copy(i);
+              return _this.copy(index);
             }
           }))), /*#__PURE__*/React__default.createElement("div", {
             className: "sort__reorder"
@@ -862,8 +920,52 @@ var App = /*#__PURE__*/function (_React$Component) {
       });
     };
 
+    _this.captureSortingFeildValues = function (event, index, sortingKey) {
+      var existingSortingOrderList = _this.state.sortingOrderList;
+
+      if (sortingKey === "sortBy") {
+        existingSortingOrderList[index]["sortBy"] = event.target.value;
+      }
+
+      if (sortingKey === "order") {
+        existingSortingOrderList[index]["order"] = event.target.value;
+      }
+
+      if (existingSortingOrderList[index]["sortOn"] === "" || existingSortingOrderList[index]["sortOn"] === undefined) {
+        existingSortingOrderList[index]["sortOn"] = "Value";
+      }
+
+      _this.setState({
+        sortingOrderList: existingSortingOrderList
+      });
+    };
+
+    _this.updateTableAsPerSortCondition = function () {
+      var unique = new Set();
+
+      var showError = _this.state.sortingOrderList.some(function (element) {
+        return unique.size === unique.add(element.sortBy).size;
+      });
+
+      showError ? _this.setState({
+        errorMessage: true
+      }) : _this.setState({
+        errorMessage: false
+      });
+      console.log("FILTER SORT LIST OF OBJECTS ", _this.state.sortingOrderList);
+
+      _this.props.setTableAsPerSortingParams(_this.state.sortingOrderList);
+    };
+
     _this.state = {
-      rowList: [true]
+      rowList: [true],
+      rows: [],
+      sortingOrderList: [{
+        sortBy: "Flight #",
+        order: "Ascending",
+        sortOn: "Value"
+      }],
+      errorMessage: false
     };
     _this.setWrapperRef = _this.setWrapperRef.bind(_assertThisInitialized(_this));
     _this.handleClickOutside = _this.handleClickOutside.bind(_assertThisInitialized(_this));
@@ -873,11 +975,11 @@ var App = /*#__PURE__*/function (_React$Component) {
   var _proto = App.prototype;
 
   _proto.componentDidMount = function componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
+    document.addEventListener("mousedown", this.handleClickOutside);
   };
 
   _proto.componentWillUnmount = function componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
+    document.removeEventListener("mousedown", this.handleClickOutside);
   };
 
   _proto.setWrapperRef = function setWrapperRef(node) {
@@ -892,8 +994,6 @@ var App = /*#__PURE__*/function (_React$Component) {
 
   _proto.render = function render() {
     var _this2 = this;
-
-    console.log(this.state.rowList);
     return /*#__PURE__*/React__default.createElement("div", {
       className: "sorts--grid",
       ref: this.setWrapperRef
@@ -921,8 +1021,15 @@ var App = /*#__PURE__*/function (_React$Component) {
         enableMouseEvents: true
       }
     }, /*#__PURE__*/React__default.createElement(SortingList, {
-      sortsArray: this.createColumnsArrayFromProps(this.state.rowList)
+      sortsArray: this.createColumnsArrayFromProps(this.state.sortingOrderList)
     })), /*#__PURE__*/React__default.createElement("div", {
+      className: "sort-warning"
+    }, this.state.errorMessage ? /*#__PURE__*/React__default.createElement("span", {
+      style: {
+        display: this.state.clickTag
+      },
+      className: "alert alert-danger"
+    }, "Sort types opted are same, Please choose different one.") : "")), /*#__PURE__*/React__default.createElement("div", {
       className: "sort__new"
     }, /*#__PURE__*/React__default.createElement("div", {
       className: "sort__section"
@@ -934,7 +1041,7 @@ var App = /*#__PURE__*/function (_React$Component) {
       onClick: function onClick() {
         return _this2.add();
       }
-    }, "New Sort")))), /*#__PURE__*/React__default.createElement("div", {
+    }, "New Sort"))), /*#__PURE__*/React__default.createElement("div", {
       className: "sort__footer"
     }, /*#__PURE__*/React__default.createElement("div", {
       className: "sort__btns"
@@ -942,7 +1049,10 @@ var App = /*#__PURE__*/function (_React$Component) {
       className: "btns",
       onClick: this.clearAll
     }, "Clear All"), /*#__PURE__*/React__default.createElement("button", {
-      className: "btns btns__save"
+      className: "btns btns__save",
+      onClick: function onClick() {
+        return _this2.updateTableAsPerSortCondition();
+      }
     }, "Ok"))))));
   };
 
@@ -1227,12 +1337,17 @@ var ExportData = /*#__PURE__*/function (_React$Component) {
       className: "custom__ctrl",
       onChange: this.columnSearchLogic
     })), /*#__PURE__*/React__default.createElement("div", {
-      className: "export__selectAll"
+      className: "export__wrap export__headertxt"
     }, /*#__PURE__*/React__default.createElement("div", {
-      className: "export__selectTxt",
-      onClick: function onClick() {
+      className: "export__checkbox"
+    }, /*#__PURE__*/React__default.createElement("input", {
+      type: "checkbox",
+      onChange: function onChange() {
         return _this2.selectAllToColumnList();
-      }
+      },
+      checked: this.state.isAllSelected
+    })), /*#__PURE__*/React__default.createElement("div", {
+      className: "export__txt"
     }, "Select All")), this.state.columnValueList.length > 0 ? this.state.columnValueList.map(function (column, index) {
       return /*#__PURE__*/React__default.createElement("div", {
         className: "export__wrap",
@@ -1345,6 +1460,7 @@ var defaultParsePaste = function defaultParsePaste(str) {
 };
 
 var selectors = reactDataGridAddons.Data.Selectors;
+var swapList = [];
 var AutoCompleteFilter = reactDataGridAddons.Filters.AutoCompleteFilter,
     NumericFilter = reactDataGridAddons.Filters.NumericFilter;
 
@@ -1602,6 +1718,10 @@ var spreadsheet = /*#__PURE__*/function (_Component) {
       _this.setState(reorderedColumns);
     };
 
+    _this.handleheaderNameList = function (reordered) {
+      swapList = reordered;
+    };
+
     _this.updateTableAsPerRowChooser = function (inComingColumnsHeaderList, pinnedColumnsList) {
       var existingColumnsHeaderList = _this.props.columns;
       existingColumnsHeaderList = existingColumnsHeaderList.filter(function (item) {
@@ -1612,6 +1732,15 @@ var spreadsheet = /*#__PURE__*/function (_Component) {
 
       if (pinnedColumnsList.length > 0) {
         pinnedColumnsList.slice(0).reverse().map(function (item, index) {
+          singleHeaderOneList = existingColumnsHeaderList.filter(function (subItem) {
+            return item === subItem.name;
+          });
+          rePositionedArray = _this.array_move(existingColumnsHeaderList, existingColumnsHeaderList.indexOf(singleHeaderOneList[0]), index);
+        });
+      }
+
+      if (swapList.length > 0) {
+        swapList.map(function (item, index) {
           singleHeaderOneList = existingColumnsHeaderList.filter(function (subItem) {
             return item === subItem.name;
           });
@@ -1636,6 +1765,8 @@ var spreadsheet = /*#__PURE__*/function (_Component) {
       });
 
       _this.closeColumnReOrdering();
+
+      swapList = [];
     };
 
     _this.array_move = function (arr, old_index, new_index) {
@@ -1671,7 +1802,8 @@ var spreadsheet = /*#__PURE__*/function (_Component) {
           updateTableAsPerRowChooser: _this.updateTableAsPerRowChooser,
           headerKeys: headerNameList,
           closeColumnReOrdering: _this.closeColumnReOrdering,
-          existingPinnedHeadersList: existingPinnedHeadersList
+          existingPinnedHeadersList: existingPinnedHeadersList,
+          handleheaderNameList: _this.handleheaderNameList
         }, _this.props))
       });
     };
@@ -1707,6 +1839,9 @@ var spreadsheet = /*#__PURE__*/function (_Component) {
 
       _this.setState({
         sortingPanelComponent: /*#__PURE__*/React__default.createElement(App, {
+          setTableAsPerSortingParams: function setTableAsPerSortingParams(args) {
+            return _this.setTableAsPerSortingParams(args);
+          },
           columnFieldValue: columnField,
           closeSorting: _this.closeSorting
         })
@@ -1732,6 +1867,51 @@ var spreadsheet = /*#__PURE__*/function (_Component) {
     _this.closeExport = function () {
       _this.setState({
         exportComponent: null
+      });
+    };
+
+    _this.setTableAsPerSortingParams = function (tableSortList) {
+      var existingRows = _this.state.rows;
+      var sortingOrderNameList = [];
+      tableSortList.map(function (item, index) {
+        var nameOfItem = "";
+        Object.keys(_this.state.rows[0]).map(function (rowItem) {
+          if (item.sortBy === "Flight #" && rowItem === "flightno") {
+            nameOfItem = "flightno";
+          } else if (rowItem.toLowerCase() === _this.toCamelCase(item.sortBy).toLowerCase()) {
+            nameOfItem = rowItem;
+          }
+        });
+        console.log(nameOfItem);
+        var typeOfItem = _this.state.rows[0][item.sortBy === "Flight #" ? "flightno" : nameOfItem];
+
+        if (typeof typeOfItem === "number") {
+          sortingOrderNameList.push({
+            name: nameOfItem,
+            primer: parseInt,
+            reverse: item.order === "Ascending" ? false : true
+          });
+        } else {
+          sortingOrderNameList.push({
+            name: nameOfItem,
+            reverse: item.order === "Ascending" ? false : true
+          });
+        }
+      });
+      existingRows.sort(sort_by.apply(void 0, sortingOrderNameList));
+
+      _this.setState({
+        rows: existingRows
+      });
+
+      _this.closeSorting();
+    };
+
+    _this.toCamelCase = function (str) {
+      return str.replace(/\s(.)/g, function ($1) {
+        return $1.toUpperCase();
+      }).replace(/\s/g, "").replace(/^(.)/, function ($1) {
+        return $1.toLowerCase();
       });
     };
 
@@ -1795,6 +1975,12 @@ var spreadsheet = /*#__PURE__*/function (_Component) {
   }
 
   var _proto = spreadsheet.prototype;
+
+  _proto.componentDidUpdate = function componentDidUpdate(prevProps) {
+    var resizeEvent = document.createEvent("HTMLEvents");
+    resizeEvent.initEvent("resize", true, false);
+    window.dispatchEvent(resizeEvent);
+  };
 
   _proto.componentWillReceiveProps = function componentWillReceiveProps(props) {
     this.setState({
@@ -1915,13 +2101,79 @@ var spreadsheet = /*#__PURE__*/function (_Component) {
         }
       },
       onGridSort: function onGridSort(sortColumn, sortDirection) {
-        return _this2.sortRows(_this2.state.rows, sortColumn, sortDirection);
+        return _this2.sortRows(_this2.state.filteringRows, sortColumn, sortDirection);
       }
     })));
   };
 
   return spreadsheet;
 }(React.Component);
+
+var sort_by;
+
+(function () {
+  var default_cmp = function default_cmp(a, b) {
+    if (a == b) return 0;
+    return a < b ? -1 : 1;
+  },
+      getCmpFunc = function getCmpFunc(primer, reverse) {
+    var cmp = default_cmp;
+
+    if (primer) {
+      cmp = function cmp(a, b) {
+        return default_cmp(primer(a), primer(b));
+      };
+    }
+
+    if (reverse) {
+      return function (a, b) {
+        return -1 * cmp(a, b);
+      };
+    }
+
+    return cmp;
+  };
+
+  sort_by = function sort_by() {
+    var fields = [],
+        n_fields = arguments.length,
+        field,
+        name,
+        cmp;
+
+    for (var i = 0; i < n_fields; i++) {
+      field = arguments[i];
+
+      if (typeof field === "string") {
+        name = field;
+        cmp = default_cmp;
+      } else {
+        name = field.name;
+        cmp = getCmpFunc(field.primer, field.reverse);
+      }
+
+      fields.push({
+        name: name,
+        cmp: cmp
+      });
+    }
+
+    return function (A, B) {
+      var name, cmp, result;
+
+      for (var i = 0, l = n_fields; i < l; i++) {
+        result = 0;
+        field = fields[i];
+        name = field.name;
+        cmp = field.cmp;
+        result = cmp(A[name], B[name]);
+        if (result !== 0) break;
+      }
+
+      return result;
+    };
+  };
+})();
 
 module.exports = spreadsheet;
 //# sourceMappingURL=index.js.map

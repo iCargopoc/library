@@ -413,11 +413,11 @@ select:-webkit-autofill:focus {
 .table-outer .table .row-options-edit-wrap {
     position: relative;
 }
-.table-outer .table .row-options-edit-wrap .icon-edit {
+.table-outer .table .row-options-edit-wrap .icon-row-options {
     position: relative;
     cursor: pointer;
 }
-.table-outer .table .row-options-edit-wrap .icon-edit i {
+.table-outer .table .row-options-edit-wrap .icon-row-options i {
     background: #999999;
     width: 4px;
     height: 4px;

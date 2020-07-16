@@ -17,6 +17,20 @@ const SortingList = (props) => {
         ],
       })
     );
+
+    let values = [];
+		let temp = [];
+		temp = update(cards, {
+			$splice: [
+				[index, 1],
+				[atIndex, 0, card],
+			],
+		})
+		temp.forEach((item) => {
+			values.push(item.id)
+    })
+    props.handleReorderListOfSort(values);
+    
   };
 
   const findCard = (id) => {
