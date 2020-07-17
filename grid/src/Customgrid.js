@@ -17,6 +17,14 @@ import DefaultColumnFilter from "./Functions/DefaultColumnFilter";
 import GlobalFilter from "./Functions/GlobalFilter";
 import RowOptions from "./Functions/RowOptions";
 import ColumnReordering from "./Overlays/managecolumns";
+import ExportData from "./Overlays/exportdata/ExportData";
+import {
+    faSortAmountDown,
+    faColumns,
+    faShareAlt,
+    faSortDown,
+  } from "@fortawesome/free-solid-svg-icons";
+  import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const listRef = createRef(null);
 
@@ -73,6 +81,23 @@ const Customgrid = memo((props) => {
     const updateColumnStructure = (newColumnStructure) => {
         setColumns(newColumnStructure);
         toggleManageColumns();
+    };
+
+    //Export Data Logic
+    const [exportComponent, setExportComponent] = useState(null);
+    const exportColumnData = () => {
+        setExportComponent(
+        <ExportData 
+            rows={data} 
+            columnsList={columns} 
+            closeExport={closeExport} 
+            managableColumns = {managableColumns}
+            originalColumns = {originalColumns}
+        />);
+    };
+
+    const closeExport = () => {
+        setExportComponent(null);
     };
 
     //Column filter added for all columns by default
@@ -236,9 +261,13 @@ const Customgrid = memo((props) => {
                     <div className="filter-icon keyword-search" onClick={toggleColumnFilter}>
                         <i className="fa fa-filter" aria-hidden="true"></i>
                     </div>
-                    <div className="filter-icon bulk-select" onClick={bulkSelector}>
+                    {/* <div className="filter-icon bulk-select" onClick={bulkSelector}>
                         <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </div> */}
+                    <div className="filterIcons">
+                        <FontAwesomeIcon title="Export" icon={faShareAlt} onClick={exportColumnData} />
                     </div>
+                    {exportComponent}
                     <div className="filter-icon manage-columns" onClick={toggleManageColumns}>
                         <i className="fa fa-columns" aria-hidden="true"></i>
                     </div>
