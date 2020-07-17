@@ -8,10 +8,12 @@ const Grid = memo((props) => {
         gridWidth,
         columns,
         fetchData,
+        rowEditOverlay,
+        rowEditData,
+        updateRowData,
         deletePopUpOverLay,
         deleteRowData,
         globalSearchLogic,
-        updateCellData,
         selectBulkData,
         calculateRowHeight,
         renderExpandedContent
@@ -26,21 +28,73 @@ const Grid = memo((props) => {
 
     let processedColumns = [];
     columns.forEach((column, index) => {
+        const { innerCells, accessor, sortValue } = column;
+        const isInnerCellsPresent = innerCells && innerCells.length > 0;
+
+        //Add column Id
         column.columnId = `column_${index}`;
+
+        //Add logic to sort column if sort is not disabled
+        if (!column.disableSortBy) {
+            if (isInnerCellsPresent) {
+                //If there are inner cells and a sort value specified, do sort on that value
+                if (sortValue) {
+                    column.sortType = (rowA, rowB) => {
+                        return rowA.original[accessor][sortValue] > rowB.original[accessor][sortValue] ? -1 : 1;
+                    };
+                } else {
+                    column.disableSortBy = true;
+                }
+            } else if (!innerCells) {
+                //If no inner cells are there, just do sort on column value
+                column.sortType = (rowA, rowB) => {
+                    return rowA.original[accessor] > rowB.original[accessor] ? -1 : 1;
+                };
+            }
+        }
+
+        //Add logic to filter column if column filter is not disabled
+        if (!column.disableFilters) {
+            if (isInnerCellsPresent) {
+                column.filter = (rows, id, filterValue) => {
+                    const filterText = filterValue ? filterValue.toLowerCase() : "";
+                    return rows.filter((row) => {
+                        const rowValue = row.values[id];
+                        const filterCols = innerCells.filter((cell) => {
+                            const cellValue = rowValue[cell.accessor] ? rowValue[cell.accessor].toString().toLowerCase() : "";
+                            return cellValue.includes(filterText);
+                        });
+                        return filterCols && filterCols.length > 0;
+                    });
+                };
+            }
+        }
+
         processedColumns.push(column);
     });
     const gridColumns = useMemo(() => processedColumns, []);
 
+    //Gets triggered when one row item is updated
+    const updateRowInGrid = (rowIndex, updatedRow) => {
+        setItems((old) =>
+            old.map((row, index) => {
+                if (index === rowIndex) {
+                    row = updatedRow;
+                }
+                return row;
+            })
+        );
+        updateRowData(updatedRow);
+    };
+
     //Gets triggered when one row item is deleted
-    const deleteRowFromGrid = (row) => {
-        const { index, original } = row;
-        const rowIndexToBeDeleted = index;
+    const deleteRowFromGrid = (rowIndexToBeDeleted, deletedRow) => {
         setItems((old) =>
             old.filter((row, index) => {
                 return index !== rowIndexToBeDeleted;
             })
         );
-        deleteRowData(original);
+        deleteRowData(deletedRow);
     };
 
     //Gets called when page scroll reaches the bottom of the grid.
@@ -75,10 +129,12 @@ const Grid = memo((props) => {
                     managableColumns={gridColumns}
                     originalColumns={gridColumns}
                     data={items}
+                    rowEditOverlay={rowEditOverlay}
+                    rowEditData={rowEditData}
+                    updateRowInGrid={updateRowInGrid}
                     deletePopUpOverLay={deletePopUpOverLay}
                     deleteRowFromGrid={deleteRowFromGrid}
                     globalSearchLogic={globalSearchLogic}
-                    updateCellData={updateCellData}
                     selectBulkData={selectBulkData}
                     calculateRowHeight={calculateRowHeight}
                     renderExpandedContent={renderExpandedContent}

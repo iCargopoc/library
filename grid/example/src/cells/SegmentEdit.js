@@ -74,7 +74,7 @@ const SegmentEdit = memo(({ index, segmentId, segmentValue, weightId, weightValu
                     <span>{cellSegmentValue.to}</span>
                 </div>
                 <div className={`content-edit ${isEdit ? "open" : "close"}`}>
-                    <select onChange={onChangeFrom} key={cellSegmentValue.from} value={cellSegmentValue.from}>
+                    <select onChange={onChangeFrom} key="segment-from" value={cellSegmentValue.from}>
                         {airportCodeList.map((item, index) => {
                             return (
                                 <option key={index} value={item}>
@@ -83,7 +83,7 @@ const SegmentEdit = memo(({ index, segmentId, segmentValue, weightId, weightValu
                             );
                         })}
                     </select>
-                    <select onChange={onChangeTo} key={cellSegmentValue.to} value={cellSegmentValue.to}>
+                    <select onChange={onChangeTo} key="segment-to" value={cellSegmentValue.to}>
                         {airportCodeList.map((item, index) => {
                             return (
                                 <option key={index} value={item}>

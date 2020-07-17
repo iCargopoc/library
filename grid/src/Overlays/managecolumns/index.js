@@ -9,6 +9,7 @@ const ColumnReordering = memo((props) => {
     const { isManageColumnOpen, toggleManageColumns, originalColumns } = props;
 
     const [managedColumns, setManagedColumns] = useState(originalColumns);
+    const [searchedColumns, setSearchedColumns] = useState(originalColumns);
 
     const HTML5toTouch = {
         backends: [
@@ -24,13 +25,27 @@ const ColumnReordering = memo((props) => {
         ]
     };
 
+    const filterColumnsList = (event) => {
+        let { value } = event ? event.target : "";
+        value = value.toLowerCase();
+        if (value != "") {
+            setSearchedColumns(
+                originalColumns.filter((column) => {
+                    return column.Header.toLowerCase().includes(value);
+                })
+            );
+        } else {
+            setSearchedColumns(originalColumns);
+        }
+    };
+
     const updateColumnsInState = (columns) => {
         setManagedColumns(columns);
     };
 
     const isCheckboxSelected = (header) => {
         if (header === "Select All") {
-            return managedColumns.length === originalColumns.length;
+            return managedColumns.length === searchedColumns.length;
         } else {
             const selectedColumn = managedColumns.filter((column) => {
                 return column.Header === header;
@@ -41,7 +56,7 @@ const ColumnReordering = memo((props) => {
 
     const selectAllColumns = (event) => {
         if (event.currentTarget.checked) {
-            setManagedColumns(originalColumns);
+            setManagedColumns(searchedColumns);
         } else {
             setManagedColumns([]);
         }
@@ -82,11 +97,13 @@ const ColumnReordering = memo((props) => {
     };
 
     const doColumnUpdate = () => {
+        setSearchedColumns(originalColumns);
         props.updateColumnStructure(managedColumns);
     };
 
     const resetColumnUpdate = () => {
         setManagedColumns(originalColumns);
+        setSearchedColumns(originalColumns);
         props.updateColumnStructure(originalColumns);
     };
 
@@ -102,7 +119,12 @@ const ColumnReordering = memo((props) => {
                         </div>
                         <div className="column__body">
                             <div>
-                                <input type="text" placeholder="Search column" className="custom__ctrl"></input>
+                                <input
+                                    type="text"
+                                    placeholder="Search column"
+                                    className="custom__ctrl"
+                                    onChange={filterColumnsList}
+                                ></input>
                             </div>
                             <div className="column__selectAll">
                                 <div className="column__checkbox">
@@ -115,7 +137,7 @@ const ColumnReordering = memo((props) => {
                                 </div>
                                 <div className="column__selectTxt">Select All</div>
                             </div>
-                            {originalColumns.map((column, index) => {
+                            {searchedColumns.map((column, index) => {
                                 return (
                                     <div className="column__wrap" key={index}>
                                         <div className="column__checkbox">
