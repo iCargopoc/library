@@ -410,22 +410,22 @@ select:-webkit-autofill:focus {
     font-weight: normal;
     color: #566a81;
 }
-.table-outer .table .row-options-edit-wrap {
+.table-outer .table .row-options-wrap {
     position: relative;
 }
-.table-outer .table .row-options-edit-wrap .icon-row-options {
+.table-outer .table .row-options-wrap .icon-row-options {
     position: relative;
     cursor: pointer;
 }
-.table-outer .table .row-options-edit-wrap .icon-row-options i {
+.table-outer .table .row-options-wrap .icon-row-options i {
     background: #999999;
     width: 4px;
     height: 4px;
     display: block;
     margin-bottom: 2px;
 }
-.table-outer .table .row-options-edit-wrap .row-options-edit {
-    display: none;
+.table-outer .table .row-options-wrap .row-options-overlay {
+    display: block;
     position: absolute;
     background: #fff;
     border-radius: 4px;
@@ -437,24 +437,21 @@ select:-webkit-autofill:focus {
     margin-bottom: 40px;
     z-index: 9;
 }
-.table-outer .table .row-options-edit-wrap .row-options-edit.open {
-    display: block;
-}
-.table-outer .table .row-options-edit-wrap .row-options-edit li {
+.table-outer .table .row-options-wrap .row-options-overlay li {
     margin-bottom: 13px;
     cursor: pointer;
 }
-.table-outer .table .row-options-edit-wrap .row-options-edit li:last-child {
+.table-outer .table .row-options-wrap .row-options-overlay li:last-child {
     margin: 0;
 }
-.table-outer .table .row-options-edit-wrap .row-options-edit li i {
+.table-outer .table .row-options-wrap .row-options-overlay li i {
     width: 14px;
     display: inline-block;
 }
-.table-outer .table .row-options-edit-wrap .row-options-edit li span {
+.table-outer .table .row-options-wrap .row-options-overlay li span {
     margin-left: 8px;
 }
-.table-outer .table .row-options-edit-wrap .row-options-edit .close {
+.table-outer .table .row-options-wrap .row-options-overlay .close {
     position: absolute;
     top: 5px;
     right: 5px;

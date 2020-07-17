@@ -28,10 +28,12 @@ const Customgrid = memo((props) => {
         managableColumns,
         originalColumns,
         data,
+        rowEditOverlay,
+        rowEditData,
+        updateRowInGrid,
         deletePopUpOverLay,
         deleteRowFromGrid,
         globalSearchLogic,
-        updateCellData,
         selectBulkData,
         calculateRowHeight,
         renderExpandedContent,
@@ -98,7 +100,6 @@ const Customgrid = memo((props) => {
             columns,
             data,
             defaultColumn,
-            updateCellData,
             globalFilter: (rows, columns, filterValue) => {
                 //Call global search function defined in application, if it is present
                 if (globalSearchLogic && typeof globalSearchLogic === "function") {
@@ -152,6 +153,9 @@ const Customgrid = memo((props) => {
                                     row={row}
                                     DeletePopUpOverLay={deletePopUpOverLay}
                                     deleteRowFromGrid={deleteRowFromGrid}
+                                    RowEditOverlay={rowEditOverlay}
+                                    rowEditData={rowEditData}
+                                    updateRowInGrid={updateRowInGrid}
                                 />
                                 <span className="expander" {...row.getToggleRowExpandedProps()}>
                                     {row.isExpanded ? (
