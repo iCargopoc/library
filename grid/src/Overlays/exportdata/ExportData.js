@@ -1,358 +1,352 @@
-import React from "react";
+import React, { memo, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTimes,
-  faFilePdf,
-  faFileExcel,
-  faFileCsv,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faFilePdf, faFileExcel, faFileCsv } from "@fortawesome/free-solid-svg-icons";
 
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 
-let downLaodFileType = [];
-class ExportData extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      columnValueList: this.props.columnsList,
-      managableColumns: this.props.managableColumns,
-      originalColumns: this.props.originalColumns,
-      columnEntityList: [],
-      isAllSelected: false,
-      downLaodFileType: [],
-      filteredRow: [],
-      warning: "",
-      clickTag: "none",
-    };
-    this.setWrapperRef = this.setWrapperRef.bind(this);
-    this.handleClickOutside = this.handleClickOutside.bind(this);
-    this.selectDownLoadType = this.selectDownLoadType.bind(this);
-    this.exportValidation = this.exportValidation.bind(this);
-  }
-  componentDidMount() {
-    document.addEventListener("mousedown", this.handleClickOutside);
-  }
+const ColumnReordering = memo((props) => {
+    const { originalColumns } = props;
 
-  componentWillUnmount() {
-    document.removeEventListener("mousedown", this.handleClickOutside);
-  }
+    const [managedColumns, setManagedColumns] = useState(originalColumns);
+    const [searchedColumns, setSearchedColumns] = useState(originalColumns);
 
-  setWrapperRef(node) {
-    this.wrapperRef = node;
-  }
+    const [warning, setWarning] = useState("");
+    const [clickTag, setClickTag] = useState("none");
 
-  handleClickOutside(event) {
-    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      this.props.closeExport();
-    }
-  }
+    var downLaodFileType = [];
 
-  resetColumnExportList = () => {
-    this.setState({
-      columnEntityList: [],
-      isAllSelected: false,
-    });
-  };
-
-  selectAllToColumnList = () => {
-    this.resetColumnExportList();
-    this.setState({
-      columnEntityList: !this.state.isAllSelected ? this.props.managableColumns : [],
-      isAllSelected: !this.state.isAllSelected,
-    });
-  };
-
-  addToColumnEntityList = (typeToBeAdded) => {
-    var existingColumnEntityList = this.state.columnEntityList;
-    if (!existingColumnEntityList.includes(typeToBeAdded)) {
-      existingColumnEntityList.push(typeToBeAdded);
-    } else {
-      existingColumnEntityList = existingColumnEntityList.filter((item) => {
-        return item !== typeToBeAdded;
-      });
-    }
-    this.setState({
-      columnEntityList: existingColumnEntityList,
-      isAllSelected: false,
-    });
-  };
-
-  selectDownLoadType = (event) => {
-    if (
-      event.target.checked &&
-      !this.state.downLaodFileType.includes(event.target.value)
-    ) {
-      downLaodFileType.push(event.target.value);
-      this.setState({ downLaodFileType });
-    } else {
-      downLaodFileType.map(function (value, index) {
-        if (value === event.target.value) {
-          downLaodFileType = downLaodFileType.splice(index, value);
+    const selectDownLoadType = (event) => {
+        if (event.target.checked && !downLaodFileType.includes(event.target.value)) {
+            downLaodFileType.push(event.target.value);
+        } else {
+            downLaodFileType.map(function (value, index) {
+                if (value === event.target.value) {
+                    downLaodFileType = downLaodFileType.splice(index, value);
+                }
+            });
         }
-      });
-      this.setState({ downLaodFileType });
-    }
-  };
-
-  exportRowData = () => {
-    const columnVlaueList = this.state.columnEntityList;
-    if (columnVlaueList.length > 0 && this.state.downLaodFileType.length > 0) {
-      this.props.rows.forEach((row) => {
-        const keys = Object.getOwnPropertyNames(row);
-        var filteredColumnVal = {};
-        keys.forEach(function (key) {
-          columnVlaueList.forEach((columnName) => {
-            if (columnName.key === key) filteredColumnVal[key] = row[key];
-          });
-        });
-        this.state.filteredRow.push(filteredColumnVal);
-      });
-
-      this.state.downLaodFileType.map((item) => {
-        if (item === "pdf") this.downloadPDF();
-        else if (item === "excel") this.downloadXLSFile();
-        else this.downloadCSVFile();
-      });
-    }
-  };
-
-  downloadPDF = () => {
-    const unit = "pt";
-    const size = "A4"; // Use A1, A2, A3 or A4
-    const orientation = "landscape"; // portrait or landscape
-
-    const marginLeft = 300;
-    const doc = new jsPDF(orientation, unit, size);
-
-    doc.setFontSize(15);
-
-    const title = "iCargo Report";
-    const headers = [
-      this.state.columnEntityList.map((column) => {
-        return column.name;
-      }),
-    ];
-    var dataValues = [];
-    this.props.rows.forEach((row) => {
-      const keys = Object.keys(row);
-      var filteredColumnVal = [];
-      this.state.columnEntityList.forEach((columnName) => {
-        keys.forEach((key) => {
-          if (columnName.key === key) filteredColumnVal.push(row[key]);
-        });
-      });
-      dataValues.push(filteredColumnVal);
-    });
-
-    let content = {
-      startY: 50,
-      head: headers,
-      body: dataValues,
     };
 
-    doc.text(title, marginLeft, 40);
-    doc.autoTable(content);
-    doc.save("report.pdf");
-  };
+    const exportRowData = () => {
+      debugger
+        let filteredRow = [];
+        if (searchedColumns.length > 0 && downLaodFileType.length > 0) {
+            props.rows.forEach((row) => {
+                const keys = Object.getOwnPropertyNames(row);
+                let filteredColumnVal = {};
+                keys.forEach(function (key) {
+                    searchedColumns.forEach((columnName) => {
+                        if (columnName.accessor === key) {
+                            let columnVlaue = "";
+                            if (typeof row[key] === "object") {
+                                if (row[key].length === undefined)
+                                    columnVlaue = Object.values(row[key]).toString().replace(",", " | ");
+                                if (row[key].length > 0) {
+                                    columnVlaue = row[key].map((item) => {
+                                        return columnVlaue != " "
+                                            ? " | " + item.position + " " + item.value
+                                            : item.position + " " + item.value;
+                                    });
+                                }
+                            } else {
+                                columnVlaue = row[key];
+                            }
+                            filteredColumnVal[key] = columnVlaue;
+                        }
+                    });
+                });
+                filteredRow.push(filteredColumnVal);
+            });
 
-  downloadCSVFile = () => {
-    const fileType =
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-    const fileExtension = ".csv";
-    const fileName = "CSVDownload";
-    const ws = XLSX.utils.json_to_sheet(this.state.filteredRow);
-    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-    const excelBuffer = XLSX.write(wb, { bookType: "csv", type: "array" });
-    const data = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(data, fileName + fileExtension);
-  };
+            downLaodFileType.map((item) => {
+                if (item === "pdf") downloadPDF();
+                else if (item === "excel") downloadXLSFile(filteredRow);
+                else downloadCSVFile(filteredRow);
+            });
+        } else {
+            if (searchedColumns.length === 0 && downLaodFileType.length === 0) {
+                setWarning("You haven't selected File Type & Column");
+                setClickTag("");
+            }
+            if (searchedColumns.length === 0) {
+                setWarning("You haven't selected Column ");
+                setClickTag("");
+            }
+            if (downLaodFileType.length === 0) {
+                setWarning("You haven't selected File Type");
+                setClickTag("");
+            }
+        }
+    };
 
-  downloadXLSFile = () => {
-    const fileType =
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-    const fileExtension = ".xlsx";
-    const fileName = "XLSXDownload";
-    const ws = XLSX.utils.json_to_sheet(this.state.filteredRow);
-    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const data = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(data, fileName + fileExtension);
-  };
+    const downloadPDF = () => {
+        const unit = "pt";
+        const size = "A4"; // Use A1, A2, A3 or A4
+        const orientation = "landscape"; // portrait or landscape
 
-  columnSearchLogic = (e) => {
-    const searchKey = String(e.target.value).toLowerCase();
-    let filteredRows = this.props.managableColumns.filter((item) => {
-      return item.Header.toLowerCase().includes(searchKey);
-    });
-    if (!filteredRows.length) {
-      this.setState({ columnValueList: this.props.managableColumns });
-    } else {
-      this.setState({ columnValueList: filteredRows });
-    }
-  };
+        const marginLeft = 300;
+        const doc = new jsPDF(orientation, unit, size);
 
-  exportValidation = () => {
-    let columnLength = this.state.columnEntityList.length;
-    let fileLength = this.state.downLaodFileType.length;
-    if (columnLength > 0 && fileLength > 0) {
-      this.exportRowData();
-      this.setState({ clickTag: "none" });
-    } else if (columnLength === 0) {
-      this.setState({ warning: "Column" });
-      this.setState({ clickTag: "" });
-    } else if (fileLength === 0) {
-      this.setState({ warning: "File Type" });
-      this.setState({ clickTag: "" });
-    }
-    if (columnLength === 0 && fileLength === 0) {
-      this.setState({ warning: "File Type & Column" });
-      this.setState({ clickTag: "" });
-    }
-  };
-  render() {
+        doc.setFontSize(15);
+
+        const title = "iCargo Report";
+        const headers = [
+            searchedColumns.map((column) => {
+                return column.Header;
+            })
+        ];
+        let dataValues = [];
+        props.rows.forEach((row) => {
+            const keys = Object.keys(row);
+            let filteredColumnVal = [];
+            searchedColumns.forEach((columnName) => {
+                keys.forEach((key) => {
+                    if (columnName.accessor === key) {
+                        let columnVlaue = "";
+                        if (typeof row[key] === "object") {
+                            if (row[key].length === undefined)
+                                columnVlaue = Object.values(row[key]).toString().replace(",", " | ");
+                            if (row[key].length > 0) {
+                                columnVlaue = row[key].map((item) => {
+                                    return columnVlaue != " "
+                                        ? " | " + item.position + " " + item.value
+                                        : item.position + " " + item.value;
+                                });
+                            }
+                        } else {
+                            columnVlaue = row[key];
+                        }
+                        filteredColumnVal.push(columnVlaue);
+                    }
+                });
+            });
+            dataValues.push(filteredColumnVal);
+        });
+
+        let content = {
+            startY: 50,
+            head: headers,
+            body: dataValues
+        };
+
+        doc.text(title, marginLeft, 40);
+        doc.autoTable(content);
+        doc.save("report.pdf");
+    };
+
+    const downloadCSVFile = (filteredRowValue) => {
+        const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        const fileExtension = ".csv";
+        const fileName = "CSVDownload";
+        const ws = XLSX.utils.json_to_sheet(filteredRowValue);
+        const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+        const excelBuffer = XLSX.write(wb, { bookType: "csv", type: "array" });
+        const data = new Blob([excelBuffer], { type: fileType });
+        FileSaver.saveAs(data, fileName + fileExtension);
+    };
+
+    const downloadXLSFile = (filteredRowValue) => {
+        const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        const fileExtension = ".xlsx";
+        const fileName = "XLSXDownload";
+        const ws = XLSX.utils.json_to_sheet(filteredRowValue);
+        const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: fileType });
+        FileSaver.saveAs(data, fileName + fileExtension);
+    };
+
+    const columnSearchLogic = (event) => {
+        let { value } = event ? event.target : "";
+        value = value.toLowerCase();
+        if (value != "") {
+            setSearchedColumns(
+                originalColumns.filter((column) => {
+                    return column.Header.toLowerCase().includes(value);
+                })
+            );
+        } else {
+            setSearchedColumns(originalColumns);
+        }
+    };
+
+    const isCheckboxSelected = (header) => {
+        if (header === "Select All") {
+            return managedColumns.length === searchedColumns.length;
+        } else {
+            const selectedColumn = managedColumns.filter((column) => {
+                return column.Header === header;
+            });
+            return selectedColumn && selectedColumn.length > 0;
+        }
+    };
+
+    const selectAllColumns = (event) => {
+        if (event.currentTarget.checked) {
+            setManagedColumns(searchedColumns);
+        } else {
+            setManagedColumns([]);
+        }
+    };
+
+    const selectSingleColumn = (event) => {
+        const { currentTarget } = event;
+        const { checked, value } = currentTarget;
+
+        //If column checkbox is checked
+        if (checked) {
+            //Find the index of selected column from original column array and also find the user selected column
+            let indexOfColumnToAdd = originalColumns.findIndex((column) => {
+                return column.Header == value;
+            });
+            const itemToAdd = originalColumns[indexOfColumnToAdd];
+
+            //Loop through the managedColumns array to find the position of the column that is present previous to the user selected column
+            //Find index of that previous column and push the new column to add in that position
+            let prevItemIndex = -1;
+            while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
+                prevItemIndex = managedColumns.findIndex((column) => {
+                    return column.Header == originalColumns[indexOfColumnToAdd - 1].Header;
+                });
+                indexOfColumnToAdd = indexOfColumnToAdd - 1;
+            }
+
+            const newColumnsList = managedColumns.slice(0); //Copying state value
+            newColumnsList.splice(prevItemIndex + 1, 0, itemToAdd);
+            setManagedColumns(newColumnsList);
+        } else {
+            setManagedColumns(
+                managedColumns.filter((column) => {
+                    return column.Header !== value;
+                })
+            );
+        }
+    };
+
+    // const exportValidation = () => {
+    //     let columnLength = searchedColumns.length;
+    //     let fileLength = downLaodFileType.length;
+    //     if (columnLength > 0 && fileLength > 0) {
+    //         exportRowData();
+    //         setClickTag("none");
+    //     } else if (columnLength === 0) {
+    //         setWarning("You haven't selected Column ");
+    //         setClickTag("");
+    //     } else if (fileLength === 0) {
+    //         setWarning("You haven't selected File Type");
+    //         setClickTag("");
+    //     }
+    //     if (columnLength === 0 && fileLength === 0) {
+    //         setWarning("You haven't selected File Type & Column");
+    //         setClickTag("");
+    //     }
+    // };
+
     return (
-      <div className="exports--grid" ref={this.setWrapperRef}>
-        <div className="export__grid">
-          <div className="export__chooser">
-            <div className="export__header">
-              <div className="">
-                <strong>Export Data</strong>
-              </div>
-            </div>
-            <div className="export__body">
-              <div>
-                <input
-                  type="text"
-                  placeholder="Search export"
-                  className="custom__ctrl"
-                  onChange={this.columnSearchLogic}
-                ></input>
-              </div>
-              <div className="export__wrap export__headertxt">
-                <div className="export__checkbox">
-                  <input
-                    type="checkbox"
-                    onChange={() => this.selectAllToColumnList()}
-                    checked={this.state.isAllSelected}
-                  />
-                </div>
-                <div className="export__txt">Select All</div>
-              </div>
-              {this.state.managableColumns.length > 0
-                ? this.state.managableColumns.map((column, index) => {
-                    return (
-                      <div className="export__wrap" key={column.accessor}>
-                        <div className="export__checkbox">
-                          <input
-                            type="checkbox"
-                            checked={this.state.columnEntityList.includes(
-                              column
-                            )}
-                            onChange={() => this.addToColumnEntityList(column)}
-                          ></input>
+        <div className="exports--grid">
+            <div className="export__grid">
+                <div className="export__chooser">
+                    <div className="export__header">
+                        <div className="">
+                            <strong>Export Data</strong>
                         </div>
-                        <div className="export__txt">{column.Header}</div>
-                      </div>
-                    );
-                  })
-                : ""}
+                    </div>
+                    <div className="export__body">
+                        <div>
+                            <input
+                                type="text"
+                                placeholder="Search export"
+                                className="custom__ctrl"
+                                onChange={columnSearchLogic}
+                            ></input>
+                        </div>
+                        <div className="export__wrap export__headertxt">
+                            <div className="export__checkbox">
+                                <input
+                                    type="checkbox"
+                                    value="Select All"
+                                    checked={isCheckboxSelected("Select All")}
+                                    onChange={selectAllColumns}
+                                />
+                            </div>
+                            <div className="export__txt">Select All</div>
+                        </div>
+                        {searchedColumns.map((column, index) => {
+                            return (
+                                <div className="export__wrap" key={index}>
+                                    <div className="export__checkbox">
+                                        <input
+                                            type="checkbox"
+                                            value={column.Header}
+                                            checked={isCheckboxSelected(column.Header)}
+                                            onChange={selectSingleColumn}
+                                        ></input>
+                                    </div>
+                                    <div className="export__txt">{column.Header}</div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+                <div className="export__settings">
+                    <div className="export__header">
+                        <div className="export__headerTxt"></div>
+                        <div className="export__close">
+                            <FontAwesomeIcon icon={faTimes} className="icon-close" onClick={props.closeExport}></FontAwesomeIcon>
+                        </div>
+                    </div>
+                    <div className="export__as">Export as</div>
+                    <div className="export__body">
+                        <div className="export__reorder">
+                            <div className="">
+                                <input type="checkbox" name="pdf" value="pdf" onChange={selectDownLoadType}></input>
+                            </div>
+                            <div className="export__file">
+                                <FontAwesomeIcon icon={faFilePdf} className="temp"></FontAwesomeIcon>
+                            </div>
+                        </div>
+                        <div className="export__reorder">
+                            <div className="">
+                                <input type="checkbox" name="excel" value="excel" onChange={selectDownLoadType}></input>
+                            </div>
+                            <div className="export__file">
+                                <FontAwesomeIcon icon={faFileExcel} className="temp"></FontAwesomeIcon>
+                            </div>
+                        </div>
+                        <div className="export__reorder">
+                            <div className="">
+                                <input type="checkbox" name="csv" value="csv" onChange={selectDownLoadType}></input>
+                            </div>
+                            <div className="export__file">
+                                <FontAwesomeIcon icon={faFileCsv} className="temp"></FontAwesomeIcon>
+                            </div>
+                        </div>
+                        <div className="exportWarning">
+                            <span className="alert alert-danger">
+                                <strong>{warning}</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="export__footer">
+                        <div className="export__btns">
+                            <button className="btns" onClick={props.closeExport}>
+                                Cancel
+                            </button>
+                            <button
+                                className="btns btns__save"
+                                onClick={exportRowData}
+                            >
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div className="export__settings">
-            <div className="export__header">
-              <div className="export__headerTxt"></div>
-              <div className="export__close">
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className="icon-close"
-                  onClick={this.props.closeExport}
-                ></FontAwesomeIcon>
-              </div>
-            </div>
-            <div className="export__as">Export as</div>
-            <div className="export__body">
-              <div className="export__reorder">
-                <div className="">
-                  <input
-                    type="checkbox"
-                    name="pdf"
-                    value="pdf"
-                    onChange={this.selectDownLoadType}
-                  ></input>
-                </div>
-                <div className="export__file">
-                  <FontAwesomeIcon
-                    icon={faFilePdf}
-                    className="temp"
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-              <div className="export__reorder">
-                <div className="">
-                  <input
-                    type="checkbox"
-                    name="excel"
-                    value="excel"
-                    onChange={this.selectDownLoadType}
-                  ></input>
-                </div>
-                <div className="export__file">
-                  <FontAwesomeIcon
-                    icon={faFileExcel}
-                    className="temp"
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-              <div className="export__reorder">
-                <div className="">
-                  <input
-                    type="checkbox"
-                    name="csv"
-                    value="csv"
-                    onChange={this.selectDownLoadType}
-                  ></input>
-                </div>
-                <div className="export__file">
-                  <FontAwesomeIcon
-                    icon={faFileCsv}
-                    className="temp"
-                  ></FontAwesomeIcon>
-                </div>
-              </div>
-              <div className="exportWarning">
-                <span
-                  style={{ display: this.state.clickTag }}
-                  className="alert alert-danger"
-                >
-                  You haven't selected <strong>{this.state.warning}</strong>
-                </span>
-              </div>
-            </div>
-            <div className="export__footer">
-              <div className="export__btns">
-                <button
-                  className="btns"
-                  onClick={() => this.props.closeExport()}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="btns btns__save"
-                  onClick={(e) => {
-                    this.exportValidation();
-                  }}
-                >
-                  Export
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     );
-  }
-}
-export default ExportData;
+});
+
+export default ColumnReordering;
