@@ -17,6 +17,7 @@ import DefaultColumnFilter from "./Functions/DefaultColumnFilter";
 import GlobalFilter from "./Functions/GlobalFilter";
 import RowOptions from "./Functions/RowOptions";
 import ColumnReordering from "./Overlays/managecolumns";
+import TableSorting from "./Overlays/groupsort";
 
 const listRef = createRef(null);
 
@@ -39,7 +40,8 @@ const Customgrid = memo((props) => {
         renderExpandedContent,
         hasNextPage,
         isNextPageLoading,
-        loadNextPage
+        loadNextPage,
+        setSortedDataToTable
     } = props;
 
     //Local state value for holding columns configuration
@@ -62,6 +64,82 @@ const Customgrid = memo((props) => {
     const toggleColumnFilter = () => {
         setFilterOpen(!isFilterOpen);
     };
+
+    const compareAscValues = function (v1, v2) {
+        return v1 > v2 ? 1 : v1 < v2 ? -1 : 0;
+    };
+    const compareDescValues = function (v1, v2) {
+        return v1 < v2 ? 1 : v1 > v2 ? -1 : 0;
+    };
+
+    const updateSortingParamsList = (updatedSortingList, isError) => {
+        if (!isError && Array.isArray(updatedSortingList) && updatedSortingList.length > 0) {
+            let sortedResult = [];
+            if (updatedSortingList.length === 1) {
+                sortedResult = data.sort(function (x, y) {
+                    return updatedSortingList[0].order === "Ascending"
+                        ? compareAscValues(
+                              x[updatedSortingList[0].sortBy][updatedSortingList[0].sortOn],
+                              y[updatedSortingList[0].sortBy][updatedSortingList[0].sortOn]
+                          )
+                        : compareDescValues(
+                              x[updatedSortingList[0].sortBy][updatedSortingList[0].sortOn],
+                              y[updatedSortingList[0].sortBy][updatedSortingList[0].sortOn]
+                          );
+                });
+            } else {
+                updatedSortingList.map((updtdSrt, index) => {
+                    sortedResult = data.sort(function (x, y) {
+                        if (index < updateRowInGrid.length - 1) {
+                            let result =
+                                updatedSortingList[index].order === "Ascending"
+                                    ? compareAscValues(
+                                          x[updatedSortingList[index].sortBy][updatedSortingList[index].sortOn],
+                                          y[updatedSortingList[index].sortBy][updatedSortingList[index].sortOn]
+                                      )
+                                    : compareDescValues(
+                                          x[updatedSortingList[index].sortBy][updatedSortingList[index].sortOn],
+                                          y[updatedSortingList[index].sortBy][updatedSortingList[index].sortOn]
+                                      );
+                            return result === 0
+                                ? updatedSortingList[index + 1].order === "Ascending"
+                                    ? compareAscValues(
+                                          x[updatedSortingList[index + 1].sortBy][updatedSortingList[index + 1].sortOn],
+                                          y[updatedSortingList[index + 1].sortBy][updatedSortingList[index + 1].sortOn]
+                                      )
+                                    : compareDescValues(
+                                          x[updatedSortingList[index + 1].sortBy][updatedSortingList[index + 1].sortOn],
+                                          y[updatedSortingList[index + 1].sortBy][updatedSortingList[index + 1].sortOn]
+                                      )
+                                : result;
+                        }
+                    });
+                });
+            }
+
+            // sortedResult = data.sort(function (x, y) {
+            //     let result;
+            //     //debugger
+            //     updatedSortingList.map((srtPrm) => {
+            //          result =
+            //             srtPrm.order === "Ascending"
+            //                 ? compareAscValues(x[srtPrm.sortBy][srtPrm.sortOn], y[srtPrm.sortBy][srtPrm.sortOn])
+            //                 : compareDescValues(x[srtPrm.sortBy][srtPrm.sortOn], y[srtPrm.sortBy][srtPrm.sortOn]);
+            //     });
+            //     return result;
+            // });
+            setSortedDataToTable(sortedResult);
+            toggleGroupSortOverLay();
+        }
+    };
+    //Local state value for checking if group Sort Overlay is open/closed.
+    const [isGroupSortOverLayOpen, setGroupSortOverLay] = useState(false);
+
+    //Toggle group Sort state value based on UI clicks
+    const toggleGroupSortOverLay = () => {
+        setGroupSortOverLay(!isGroupSortOverLayOpen);
+    };
+
 
     //Local state value for hiding/unhiding column management overlay
     const [isManageColumnOpen, setManageColumnOpen] = useState(false);
@@ -237,12 +315,23 @@ const Customgrid = memo((props) => {
                         updateColumnStructure={updateColumnStructure}
                     />
                     <GlobalFilter globalFilter={state.globalFilter} setGlobalFilter={setGlobalFilter} />
+                    <TableSorting
+                        isGroupSortOverLayOpen={isGroupSortOverLayOpen}
+                        toggleGroupSortOverLay={toggleGroupSortOverLay}
+                        originalColumns={originalColumns}
+                        updateSortingParamsList={updateSortingParamsList}
+                    />
                     <div className="filter-icon keyword-search" onClick={toggleColumnFilter}>
                         <i className="fa fa-filter" aria-hidden="true"></i>
                     </div>
                     <div className="filter-icon bulk-select" onClick={bulkSelector}>
                         <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
                     </div>
+
+                    <div className="filter-icon bulk-select" onClick={toggleGroupSortOverLay}>
+                        <i class="fa fa-sort-amount-desc" aria-hidden="true"></i>
+                    </div>
+
                     <div className="filter-icon manage-columns" onClick={toggleManageColumns}>
                         <i className="fa fa-columns" aria-hidden="true"></i>
                     </div>

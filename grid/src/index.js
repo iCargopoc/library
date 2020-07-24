@@ -91,6 +91,13 @@ const Grid = forwardRef((props, ref) => {
         }
     }));
 
+    const setSortedDataToTable = (sortedData) => {
+        setItems((old)=> old.map((row, index)=>{
+            return sortedData[index];
+        }));
+        updateRowData(sortedData);
+    };
+
     //Gets triggered when one row item is updated
     const updateRowInGrid = (rowIndex, updatedRow) => {
         setItems((old) =>
@@ -158,6 +165,7 @@ const Grid = forwardRef((props, ref) => {
                     hasNextPage={hasNextPage}
                     isNextPageLoading={isNextPageLoading}
                     loadNextPage={loadNextPage}
+                    setSortedDataToTable={setSortedDataToTable}
                 />
                 {isNextPageLoading ? <h2 style={{ textAlign: "center" }}>Loading...</h2> : null}
             </div>
