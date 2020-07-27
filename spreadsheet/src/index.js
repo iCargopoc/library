@@ -27,10 +27,11 @@ const {
 
 const { DropDownEditor } = Editors;
 
-const defaultParsePaste = (str) => str.split(/\r\n|\n|\r/).map((row) => row.split("\t"));
+const defaultParsePaste = (str) =>
+  str.split(/\r\n|\n|\r/).map((row) => row.split("\t"));
 const selectors = Data.Selectors;
 let swapList = [];
-let swapSortList=[]
+let swapSortList = [];
 const { AutoCompleteFilter, NumericFilter } = Filters;
 class spreadsheet extends Component {
   constructor(props) {
@@ -46,7 +47,7 @@ class spreadsheet extends Component {
       searchIconDisplay: "",
       searchValue: "",
       filter: {},
-      rows: this.props.rows,
+      rows: JSON.parse(JSON.stringify(this.props.rows)),
       selectedIndexes: [],
       junk: {},
       topLeft: {},
@@ -56,8 +57,8 @@ class spreadsheet extends Component {
       tempRows: this.props.rows,
       sortingPanelComponent: null,
       count: this.props.rows.length,
-      sortingOrderSwapList:[],
-      sortingParamsObjectList:[],
+      sortingOrderSwapList: [],
+      sortingParamsObjectList: [],
       columns: this.props.columns.map((item) => {
         if (item.editor === "DatePicker") {
           item.editor = DatePicker;
@@ -70,8 +71,7 @@ class spreadsheet extends Component {
         }
         if (item.filterType === "numeric") {
           item.filterRenderer = NumericFilter;
-        }
-        else {
+        } else {
           item.filterRenderer = AutoCompleteFilter;
         }
         return item;
@@ -108,7 +108,7 @@ class spreadsheet extends Component {
         rows,
       };
     });
-  }
+  };
 
   rowGetter = (i) => {
     const { rows } = this.state;
@@ -137,9 +137,11 @@ class spreadsheet extends Component {
     pasteData.forEach((row) => {
       const rowData = {};
       // Merge the values from pasting and the keys from the columns
-      this.state.columns.slice(topLeft.colIdx - 1, topLeft.colIdx - 1 + row.length).forEach((col, j) => {
-        rowData[col.key] = row[j];
-      });
+      this.state.columns
+        .slice(topLeft.colIdx - 1, topLeft.colIdx - 1 + row.length)
+        .forEach((col, j) => {
+          rowData[col.key] = row[j];
+        });
       newRows.push(rowData);
     });
     this.updateRows(topLeft.rowIdx, newRows);
@@ -159,11 +161,11 @@ class spreadsheet extends Component {
   };
 
   handleWarningStatus = () => {
-    this.setState({ warningStatus: "invalid" })
-  }
+    this.setState({ warningStatus: "invalid" });
+  };
   closeWarningStatus = () => {
-    this.setState({ warningStatus: "" })
-  }
+    this.setState({ warningStatus: "" });
+  };
   componentWillReceiveProps(props) {
     this.setState({
       rows: props.rows,
@@ -175,16 +177,16 @@ class spreadsheet extends Component {
       textValue: props.textValue,
     });
     this.setState({ count: props.count });
-    this.setState({ warningStatus: props.status })
+    this.setState({ warningStatus: props.status });
   }
 
   /**
- * Method To update the cell/cells with the edited values
- * @param {*} fromRow is the row from which this edit is performed
- * @param {*} toRow is the row upto which this edit is performed
- * @param {*} updated is the value of change
- * @param {*} action is type of edit action performed
- */
+   * Method To update the cell/cells with the edited values
+   * @param {*} fromRow is the row from which this edit is performed
+   * @param {*} toRow is the row upto which this edit is performed
+   * @param {*} updated is the value of change
+   * @param {*} action is type of edit action performed
+   */
   onGridRowsUpdated = ({ fromRow, toRow, updated, action }) => {
     let columnName = "";
     const filter = this.formulaAppliedCols.filter((item) => {
@@ -240,36 +242,45 @@ class spreadsheet extends Component {
       });
     }
     if (this.props.updateCellData) {
-      this.props.updateCellData(this.state.tempRows[fromRow], this.state.tempRows[toRow], updated, action);
+      this.props.updateCellData(
+        this.state.tempRows[fromRow],
+        this.state.tempRows[toRow],
+        updated,
+        action
+      );
     }
   };
-	/**
-	 * Method To bulk/individual select of rows
-	 * @param {*} rows is the selected row
-	 */
+  /**
+   * Method To bulk/individual select of rows
+   * @param {*} rows is the selected row
+   */
   onRowsSelected = (rows) => {
     this.setState({
-      selectedIndexes: this.state.selectedIndexes.concat(rows.map((r) => r.rowIdx)),
+      selectedIndexes: this.state.selectedIndexes.concat(
+        rows.map((r) => r.rowIdx)
+      ),
     });
     if (this.props.selectBulkData) {
       this.props.selectBulkData(rows);
     }
   };
-	/**
-	 * Method To bulk/individual deselect of rows
-	 * @param {*} rows is the deselected row
-	 */
+  /**
+   * Method To bulk/individual deselect of rows
+   * @param {*} rows is the deselected row
+   */
   onRowsDeselected = (rows) => {
     let rowIndexes = rows.map((r) => r.rowIdx);
     this.setState({
-      selectedIndexes: this.state.selectedIndexes.filter((i) => rowIndexes.indexOf(i) === -1),
+      selectedIndexes: this.state.selectedIndexes.filter(
+        (i) => rowIndexes.indexOf(i) === -1
+      ),
     });
   };
 
-	/**
-	 * Method To filter the multiple columns
-	 * @param {*} value is the  incoming filtering event
-	 */
+  /**
+   * Method To filter the multiple columns
+   * @param {*} value is the  incoming filtering event
+   */
   handleFilterChange = (value) => {
     let junk = this.state.junk;
     if (!(value.filterTerm == null) && !(value.filterTerm.length <= 0)) {
@@ -286,8 +297,7 @@ class spreadsheet extends Component {
     });
     if (data.length === 0) {
       this.handleWarningStatus();
-    }
-    else {
+    } else {
       this.closeWarningStatus();
     }
   };
@@ -300,10 +310,10 @@ class spreadsheet extends Component {
   };
 
   /**
- * Method To render the filter values for filtering rows
- * @param {*} rows is the row data to be considered for filtering
- * @param {*} columnId is the specific columnId for which the row datas are being considered
- */
+   * Method To render the filter values for filtering rows
+   * @param {*} rows is the row data to be considered for filtering
+   * @param {*} columnId is the specific columnId for which the row datas are being considered
+   */
   getValidFilterValues(rows, columnId) {
     return rows
       .map((r) => r[columnId])
@@ -312,11 +322,11 @@ class spreadsheet extends Component {
       });
   }
   /**
-* Method To sort the rows for a particular column
-* @param {*} data is the row datas to be considered for sorting
-* @param {*} sortColumn is the specific column for which the row sort is being triggered
-* @param {*} sortDirection is the type of sort
-*/
+   * Method To sort the rows for a particular column
+   * @param {*} data is the row datas to be considered for sorting
+   * @param {*} sortColumn is the specific column for which the row sort is being triggered
+   * @param {*} sortDirection is the type of sort
+   */
   sortRows = (data, sortColumn, sortDirection) => {
     const comparer = (a, b) => {
       if (sortDirection === "ASC") {
@@ -327,20 +337,29 @@ class spreadsheet extends Component {
     };
     this.setState({
       rows: [...data].sort(comparer),
+      selectedIndexes: [],
     });
     return sortDirection === "NONE" ? data : this.state.rows;
   };
   /**
-     * Method To swap the columns
-     * @param {*} source is source column
-     * @param {*} target is the target column 
-     */
+   * Method To swap the columns
+   * @param {*} source is source column
+   * @param {*} target is the target column
+   */
   onHeaderDrop = (source, target) => {
     const stateCopy = Object.assign({}, this.state);
-    const columnSourceIndex = this.state.columns.findIndex((i) => i.key === source);
-    const columnTargetIndex = this.state.columns.findIndex((i) => i.key === target);
+    const columnSourceIndex = this.state.columns.findIndex(
+      (i) => i.key === source
+    );
+    const columnTargetIndex = this.state.columns.findIndex(
+      (i) => i.key === target
+    );
 
-    stateCopy.columns.splice(columnTargetIndex, 0, stateCopy.columns.splice(columnSourceIndex, 1)[0]);
+    stateCopy.columns.splice(
+      columnTargetIndex,
+      0,
+      stateCopy.columns.splice(columnSourceIndex, 1)[0]
+    );
 
     const emptyColumns = Object.assign({}, this.state, {
       columns: [],
@@ -351,18 +370,21 @@ class spreadsheet extends Component {
       columns: stateCopy.columns,
     });
     this.setState(reorderedColumns);
-  }
+  };
   /**
-    * Method To dynamically swap the column from column chooser
-    * @param {*} reordered is the swapped array of columns
-    */
+   * Method To dynamically swap the column from column chooser
+   * @param {*} reordered is the swapped array of columns
+   */
   handleheaderNameList = (reordered) => {
     swapList = reordered;
-  }
-  handleTableSortSwap=(reorderedSwap)=>{
+  };
+  handleTableSortSwap = (reorderedSwap) => {
     swapSortList = reorderedSwap;
-  }
-  updateTableAsPerRowChooser = (inComingColumnsHeaderList, pinnedColumnsList) => {
+  };
+  updateTableAsPerRowChooser = (
+    inComingColumnsHeaderList,
+    pinnedColumnsList
+  ) => {
     let pinnedReorder = false;
     let existingColumnsHeaderList = this.props.columns;
     existingColumnsHeaderList = existingColumnsHeaderList.filter((item) => {
@@ -375,7 +397,9 @@ class spreadsheet extends Component {
         .slice(0)
         .reverse()
         .map((item, index) => {
-          singleHeaderOneList = existingColumnsHeaderList.filter((subItem) => item === subItem.name);
+          singleHeaderOneList = existingColumnsHeaderList.filter(
+            (subItem) => item === subItem.name
+          );
           rePositionedArray = this.array_move(
             existingColumnsHeaderList,
             existingColumnsHeaderList.indexOf(singleHeaderOneList[0]),
@@ -384,22 +408,20 @@ class spreadsheet extends Component {
         });
     }
     if (swapList.length > 0) {
-      swapList
-        .slice(0)
-        .map((item, index) => {
-          singleHeaderOneList = existingColumnsHeaderList.filter((subItem) => {
-            return item === subItem.name
-          });
-          rePositionedArray = this.array_move(
-            existingColumnsHeaderList,
-            existingColumnsHeaderList.indexOf(singleHeaderOneList[0]),
-            index
-          );
+      swapList.slice(0).map((item, index) => {
+        singleHeaderOneList = existingColumnsHeaderList.filter((subItem) => {
+          return item === subItem.name;
         });
+        rePositionedArray = this.array_move(
+          existingColumnsHeaderList,
+          existingColumnsHeaderList.indexOf(singleHeaderOneList[0]),
+          index
+        );
+      });
     }
 
     existingColumnsHeaderList = rePositionedArray;
-		/**
+    /**
        making all the frozen attribute as false for all the columns and then 
        setting items of pinnedColumnsList as frozen = true
        */
@@ -412,8 +434,9 @@ class spreadsheet extends Component {
       }
     });
 
-    const toTop = (key, value) => (a, b) => (b[key] === value) - (a[key] === value);
-    existingColumnsHeaderList.sort(toTop('frozen', true));
+    const toTop = (key, value) => (a, b) =>
+      (b[key] === value) - (a[key] === value);
+    existingColumnsHeaderList.sort(toTop("frozen", true));
 
     this.setState({
       columns: existingColumnsHeaderList,
@@ -421,12 +444,11 @@ class spreadsheet extends Component {
     let tempList = [];
     existingColumnsHeaderList.forEach((item) => {
       tempList.push(item.name);
-    })
+    });
 
     if (swapList.length > 0) {
       for (let i = 0; i < tempList.length; i++) {
-        if (tempList[i] === swapList[i])
-          pinnedReorder = true;
+        if (tempList[i] === swapList[i]) pinnedReorder = true;
       }
     }
     this.closeColumnReOrdering();
@@ -434,12 +456,12 @@ class spreadsheet extends Component {
     pinnedReorder = false;
   };
 
-	/**
-	 * Method To re-position a particular object in an Array from old_index to new_index
-	 * @param {*} arr inComing array
-	 * @param {*} old_index initial index
-	 * @param {*} new_index final index
-	 */
+  /**
+   * Method To re-position a particular object in an Array from old_index to new_index
+   * @param {*} arr inComing array
+   * @param {*} old_index initial index
+   * @param {*} new_index final index
+   */
   array_move = (arr, old_index, new_index) => {
     if (new_index >= arr.length) {
       var k = new_index - arr.length + 1;
@@ -451,9 +473,9 @@ class spreadsheet extends Component {
     return arr;
   };
 
-	/**
-	 * Method to render the column Selector Pannel
-	 */
+  /**
+   * Method to render the column Selector Pannel
+   */
   columnReorderingPannel = () => {
     var headerNameList = [];
     var existingPinnedHeadersList = [];
@@ -476,9 +498,9 @@ class spreadsheet extends Component {
     });
   };
 
-	/**
-	 * Method to stop the render the column Selector Pannel
-	 */
+  /**
+   * Method to stop the render the column Selector Pannel
+   */
   closeColumnReOrdering = () => {
     this.setState({
       columnReorderingComponent: null,
@@ -496,34 +518,45 @@ class spreadsheet extends Component {
     let columnField = [];
     this.state.columns.map((item) => columnField.push(item.name));
     this.setState({
-      sortingPanelComponent: <Sorting setTableAsPerSortingParams={(args) => this.setTableAsPerSortingParams(args)}
-      sortingParamsObjectList={this.state.sortingParamsObjectList}
-        handleTableSortSwap={this.handleTableSortSwap}
-        clearAllSortingParams={this.clearAllSortingParams}  
-        columnFieldValue={columnField}
-        closeSorting={this.closeSorting} />,
+      sortingPanelComponent: (
+        <Sorting
+          setTableAsPerSortingParams={(args) =>
+            this.setTableAsPerSortingParams(args)
+          }
+          sortingParamsObjectList={this.state.sortingParamsObjectList}
+          handleTableSortSwap={this.handleTableSortSwap}
+          clearAllSortingParams={this.clearAllSortingParams}
+          columnFieldValue={columnField}
+          closeSorting={this.closeSorting}
+        />
+      ),
     });
   };
 
   closeSorting = () => {
     this.setState({
       sortingPanelComponent: null,
-      sortingOrderSwapList:[],
+      sortingOrderSwapList: [],
     });
-    swapSortList=[];
+    swapSortList = [];
   };
 
-  clearAllSortingParams=()=>{
+  clearAllSortingParams = () => {
     this.setState({
-      rows: this.props.rows,
-    })
-  }
+      rows: JSON.parse(JSON.stringify(this.props.rows)),
+      // sortingPanelComponent: null,
+    });
+  };
 
   //Export Data Logic
   exportColumnData = () => {
     this.setState({
       exportComponent: (
-        <ExportData rows={this.state.rows} columnsList={this.state.columns} closeExport={this.closeExport} />
+        <ExportData
+          rows={this.state.rows}
+          columnsList={this.state.columns}
+          closeExport={this.closeExport}
+        />
       ),
     });
   };
@@ -535,19 +568,18 @@ class spreadsheet extends Component {
   };
 
   setTableAsPerSortingParams = (tableSortList) => {
-
     var existingRows = this.state.rows;
     var sortingOrderNameList = [];
     tableSortList.map((item, index) => {
       var nameOfItem = "";
-      Object.keys(this.state.rows[0]).map(rowItem => {
-       if (rowItem.toLowerCase() === this.toCamelCase(item.sortBy).toLowerCase()) {
+      Object.keys(this.state.rows[0]).map((rowItem) => {
+        if (
+          rowItem.toLowerCase() === this.toCamelCase(item.sortBy).toLowerCase()
+        ) {
           nameOfItem = rowItem;
         }
-      })
-      var typeOfItem = this.state.rows[0][
-        item.sortBy === nameOfItem
-      ];
+      });
+      var typeOfItem = this.state.rows[0][item.sortBy === nameOfItem];
       if (typeof typeOfItem === "number") {
         sortingOrderNameList.push({
           name: nameOfItem,
@@ -562,25 +594,34 @@ class spreadsheet extends Component {
       }
     });
 
-    if(swapSortList.length>0){
+    if (swapSortList.length > 0) {
       var existingSortingOrderSwapList = this.state.sortingOrderSwapList;
-      swapSortList.map((item, index)=>{
-        var stringOfItemIndex = item+""+index;
-        if(item!==index && !existingSortingOrderSwapList.includes(stringOfItemIndex.split('').reverse().join(''))){
-          existingSortingOrderSwapList.push(stringOfItemIndex)
-          sortingOrderNameList = this.array_move(sortingOrderNameList, item, index)
-          tableSortList = this.array_move(tableSortList, item, index)
+      swapSortList.map((item, index) => {
+        var stringOfItemIndex = item + "" + index;
+        if (
+          item !== index &&
+          !existingSortingOrderSwapList.includes(
+            stringOfItemIndex.split("").reverse().join("")
+          )
+        ) {
+          existingSortingOrderSwapList.push(stringOfItemIndex);
+          sortingOrderNameList = this.array_move(
+            sortingOrderNameList,
+            item,
+            index
+          );
+          tableSortList = this.array_move(tableSortList, item, index);
         }
         this.setState({
-          sortingOrderSwapList: existingSortingOrderSwapList
-        })
-      })
+          sortingOrderSwapList: existingSortingOrderSwapList,
+        });
+      });
     }
 
     existingRows.sort(sort_by(...sortingOrderNameList));
     this.setState({
       rows: existingRows,
-      sortingParamsObjectList: tableSortList
+      sortingParamsObjectList: tableSortList,
     });
 
     this.closeSorting();
@@ -600,15 +641,15 @@ class spreadsheet extends Component {
   render() {
     return (
       <div>
-        <div className='parentDiv'>
-          <div className='totalCount'>
+        <div className="parentDiv">
+          <div className="totalCount">
             Showing <strong> {this.state.count} </strong> records
-					</div>
-          <div className='globalSearch'>
+          </div>
+          <div className="globalSearch">
             <i className="fa fa-search"></i>
             <FormControl
               className="globalSeachInput"
-              type='text'
+              type="text"
               placeholder="Search"
               onChange={(e) => {
                 this.handleSearchValue(e.target.value);
@@ -620,18 +661,22 @@ class spreadsheet extends Component {
           {/* <div className="filterIcons">
             <FontAwesomeIcon icon={faFilter} />
           </div> */}
-          <div className='filterIcons' onClick={this.sortingPanel}>
-            <FontAwesomeIcon title='Group Sort' icon={faSortAmountDown} />
-            <FontAwesomeIcon icon={faSortDown} className='filterArrow' />
+          <div className="filterIcons" onClick={this.sortingPanel}>
+            <FontAwesomeIcon title="Group Sort" icon={faSortAmountDown} />
+            <FontAwesomeIcon icon={faSortDown} className="filterArrow" />
           </div>
           {this.state.sortingPanelComponent}
-          <div className='filterIcons' onClick={this.columnReorderingPannel}>
-            <FontAwesomeIcon title='Column Chooser' icon={faColumns} />
-            <FontAwesomeIcon icon={faSortDown} className='filterArrow' />
+          <div className="filterIcons" onClick={this.columnReorderingPannel}>
+            <FontAwesomeIcon title="Column Chooser" icon={faColumns} />
+            <FontAwesomeIcon icon={faSortDown} className="filterArrow" />
           </div>
           {this.state.columnReorderingComponent}
-          <div className='filterIcons'>
-            <FontAwesomeIcon title='Export' icon={faShareAlt} onClick={this.exportColumnData} />
+          <div className="filterIcons">
+            <FontAwesomeIcon
+              title="Export"
+              icon={faShareAlt}
+              onClick={this.exportColumnData}
+            />
           </div>
           {this.state.exportComponent}
           {/* <div className="filterIcons">
@@ -642,7 +687,7 @@ class spreadsheet extends Component {
           </div> */}
         </div>
         <ErrorMessage
-          className='errorDiv'
+          className="errorDiv"
           status={this.state.warningStatus}
           closeWarningStatus={(e) => {
             this.props.closeWarningStatus();
@@ -650,10 +695,15 @@ class spreadsheet extends Component {
           }}
           clearSearchValue={this.clearSearchValue}
         />
-        <DraggableContainer className='gridDiv' onHeaderDrop={this.onHeaderDrop}>
+        <DraggableContainer
+          className="gridDiv"
+          onHeaderDrop={this.onHeaderDrop}
+        >
           <ExtDataGrid
             toolbar={<Toolbar enableFilter={true} />}
-            getValidFilterValues={(columnKey) => this.getValidFilterValues(this.state.filteringRows, columnKey)}
+            getValidFilterValues={(columnKey) =>
+              this.getValidFilterValues(this.state.filteringRows, columnKey)
+            }
             minHeight={this.state.height}
             columns={this.state.columns}
             rowGetter={(i) => this.state.rows[i]}
@@ -663,7 +713,9 @@ class spreadsheet extends Component {
             onClearFilters={() => {
               this.setState({ junk: {} });
             }}
-            onColumnResize={(idx, width) => console.log(`Column ${idx} has been resized to ${width}`)}
+            onColumnResize={(idx, width) =>
+              console.log(`Column ${idx} has been resized to ${width}`)
+            }
             onAddFilter={(filter) => this.handleFilterChange(filter)}
             rowSelection={{
               showCheckbox: true,
@@ -674,10 +726,12 @@ class spreadsheet extends Component {
                 indexes: this.state.selectedIndexes,
               },
             }}
-            onGridSort={(sortColumn, sortDirection) => this.sortRows(this.state.filteringRows, sortColumn, sortDirection)}
-          // cellRangeSelection={{
-          //   onComplete: this.setSelection,
-          // }}
+            onGridSort={(sortColumn, sortDirection) =>
+              this.sortRows(this.state.filteringRows, sortColumn, sortDirection)
+            }
+            // cellRangeSelection={{
+            //   onComplete: this.setSelection,
+            // }}
           />
         </DraggableContainer>
       </div>
@@ -692,9 +746,9 @@ var sort_by;
 (function () {
   // utility functions
   var default_cmp = function (a, b) {
-    if (a == b) return 0;
-    return a < b ? -1 : 1;
-  },
+      if (a == b) return 0;
+      return a < b ? -1 : 1;
+    },
     getCmpFunc = function (primer, reverse) {
       var cmp = default_cmp;
       if (primer) {

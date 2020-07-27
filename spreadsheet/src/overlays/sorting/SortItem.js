@@ -1,6 +1,7 @@
 import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
+import PropTypes from "prop-types";
 
 const style = {
   cursor: "move",
@@ -41,6 +42,13 @@ const Card = ({ id, text, moveCard, findCard }) => {
       {text}
     </div>
   );
+};
+
+Card.propTypes = {
+  id: PropTypes.any,
+  text: PropTypes.any,
+  moveCard: PropTypes.any,
+  findCard: PropTypes.any,
 };
 
 export default Card;

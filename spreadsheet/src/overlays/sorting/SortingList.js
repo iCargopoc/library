@@ -3,6 +3,7 @@ import { useDrop } from "react-dnd";
 import Card from "./SortItem";
 import update from "immutability-helper";
 import { ItemTypes } from "./ItemTypes";
+import PropTypes from "prop-types";
 
 const SortingList = (props) => {
   const [cards, setCards] = useState([...props.sortsArray]);
@@ -19,18 +20,17 @@ const SortingList = (props) => {
     );
 
     let values = [];
-		let temp = [];
-		temp = update(cards, {
-			$splice: [
-				[index, 1],
-				[atIndex, 0, card],
-			],
-		})
-		temp.forEach((item) => {
-			values.push(item.id)
-    })
+    let temp = [];
+    temp = update(cards, {
+      $splice: [
+        [index, 1],
+        [atIndex, 0, card],
+      ],
+    });
+    temp.forEach((item) => {
+      values.push(item.id);
+    });
     props.handleReorderListOfSort(values);
-    
   };
 
   const findCard = (id) => {
@@ -62,6 +62,11 @@ const SortingList = (props) => {
       </div>
     </React.Fragment>
   );
+};
+
+SortingList.propTypes = {
+  sortsArray: PropTypes.any,
+  handleReorderListOfSort: PropTypes.any,
 };
 
 export default SortingList;

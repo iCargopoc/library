@@ -9,7 +9,6 @@
   position: absolute;
   font-size: 14px;
   color: #1f567e;
-  line-height: 32px;
   top: 50px;
   right: 10px;
   transition: 0.5s;
@@ -45,6 +44,7 @@
 }
 .exports--grid .export__grid .export__chooser {
   border-right: 1px solid #eee;
+  width: 200px;
 }
 .exports--grid .export__grid .export__chooser .export__header {
   padding: 10px;
@@ -62,13 +62,13 @@
 .exports--grid .export__grid .export__chooser .export__body .custom__ctrl {
   border: 1px solid #ddd;
   border-radius: 5px;
-  padding: 0px 5px;
+  padding: 7px 5px;
 }
 .exports--grid .export__grid .export__chooser .export__wrap {
   display: flex;
   border: 1px solid #cdd0d5;
   border-radius: 5px;
-  padding: 0px 10px;
+  padding: 8px 10px;
 }
 .exports--grid .export__grid .export__chooser .export__wrap .export__checkbox {
   margin-right: 10px;
@@ -138,6 +138,7 @@
   width: 100px;
   margin-left: 10px;
   color: #0e4bda;
+  padding: 8px;
 }
 .exports--grid
   .export__grid

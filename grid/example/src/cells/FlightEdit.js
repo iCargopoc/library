@@ -2,9 +2,9 @@ import React, { memo, useState, useEffect } from "react";
 import ClickAwayListener from "react-click-away-listener";
 import getDateValue from "../utils/DateUtility";
 
-const FlightEdit = memo(({ value: initialValue, row: { index }, column: { id }, updateCellData }) => {
-    const [value, setValue] = useState(initialValue);
-    const [oldValue] = useState(initialValue);
+const FlightEdit = memo(({ index, columnId, columnValue, updateCellData }) => {
+    const [value, setValue] = useState(columnValue);
+    const [oldValue] = useState(columnValue);
     const [isEdit, setEdit] = useState(false);
 
     const onFlightChange = (e) => {
@@ -28,7 +28,7 @@ const FlightEdit = memo(({ value: initialValue, row: { index }, column: { id }, 
     const saveEdit = () => {
         setEdit(false);
         if (updateCellData) {
-            updateCellData(index, id, value);
+            updateCellData(index, columnId, value);
         }
     };
     const clearEdit = () => {
@@ -37,8 +37,8 @@ const FlightEdit = memo(({ value: initialValue, row: { index }, column: { id }, 
     };
 
     useEffect(() => {
-        setValue(initialValue);
-    }, [initialValue]);
+        setValue(columnValue);
+    }, [columnValue]);
 
     return (
         <ClickAwayListener onClickAway={clearEdit}>

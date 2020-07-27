@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1595586204700" clover="3.2.0">
+  <project timestamp="1595586204700" name="All files">
+    <metrics statements="41" coveredstatements="18" conditionals="70" coveredconditionals="2" methods="9" coveredmethods="1" elements="120" coveredelements="21" complexity="0" loc="41" ncloc="41" packages="1" files="2" classes="2"/>
+    <file name="App.js" path="D:\sreejith\workspace\IBS\new\repo\icargo\library\spreadsheet\example\src\App.js">
+      <metrics statements="34" coveredstatements="17" conditionals="63" coveredconditionals="2" methods="8" coveredmethods="1"/>
+      <line num="7" count="1" type="stmt"/>
+      <line num="9" count="1" type="stmt"/>
+      <line num="11" count="1" type="stmt"/>
+      <line num="13" count="1" type="stmt"/>
+      <line num="15" count="1" type="stmt"/>
+      <line num="16" count="1" type="stmt"/>
+      <line num="18" count="1" type="stmt"/>
+      <line num="21" count="1" type="stmt"/>
+      <line num="373" count="1" type="stmt"/>
+      <line num="431" count="1" type="stmt"/>
+      <line num="432" count="0" type="stmt"/>
+      <line num="433" count="0" type="stmt"/>
+      <line num="434" count="0" type="stmt"/>
+      <line num="475" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="476" count="0" type="stmt"/>
+      <line num="477" count="0" type="stmt"/>
+      <line num="479" count="0" type="stmt"/>
+      <line num="480" count="0" type="stmt"/>
+      <line num="483" count="1" type="stmt"/>
+      <line num="484" count="0" type="stmt"/>
+      <line num="487" count="1" type="stmt"/>
+      <line num="488" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="489" count="0" type="stmt"/>
+      <line num="491" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="492" count="0" type="stmt"/>
+      <line num="497" count="1" type="stmt"/>
+      <line num="498" count="0" type="stmt"/>
+      <line num="500" count="1" type="stmt"/>
+      <line num="501" count="0" type="stmt"/>
+      <line num="503" count="1" type="stmt"/>
+      <line num="508" count="0" type="stmt"/>
+      <line num="511" count="1" type="cond" truecount="2" falsecount="2"/>
+      <line num="512" count="0" type="stmt"/>
+      <line num="531" count="1" type="stmt"/>
+    </file>
+    <file name="getData.js" path="D:\sreejith\workspace\IBS\new\repo\icargo\library\spreadsheet\example\src\getData.js">
+      <metrics statements="7" coveredstatements="1" conditionals="7" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="4" count="0" type="stmt"/>
+      <line num="7" count="0" type="cond" truecount="0" falsecount="5"/>
+      <line num="8" count="0" type="stmt"/>
+      <line num="9" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="10" count="0" type="stmt"/>
+      <line num="13" count="0" type="stmt"/>
+    </file>
+  </project>
+</coverage>

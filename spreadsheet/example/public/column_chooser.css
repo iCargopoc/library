@@ -4,7 +4,6 @@
   position: absolute;
   font-size: 14px;
   color: #1f567e;
-  line-height: 32px;
   top: 50px;
   right: 50px;
   transition: 0.5s;
@@ -39,6 +38,7 @@
 }
 .columns--grid .column__grid .column__chooser {
   border-right: 1px solid #eee;
+  width: 200px;
 }
 .columns--grid .column__grid .column__chooser .column__header {
   padding: 10px;
@@ -64,14 +64,14 @@
 .columns--grid .column__grid .column__chooser .column__body .custom__ctrl {
   border: 1px solid #ddd;
   border-radius: 5px;
-  padding: 0px 5px;
+  padding: 7px 5px;
   width: 100%;
 }
 .columns--grid .column__grid .column__chooser .column__wrap {
   display: flex;
   border: 1px solid #cdd0d5;
   border-radius: 5px;
-  padding: 0px 10px;
+  padding: 7px 10px;
 }
 .columns--grid .column__grid .column__chooser .column__headertxt {
   border: none;
@@ -103,6 +103,7 @@
   height: 180px;
   margin: 10px 5px;
   padding: 10px;
+  line-height: 32px;
   -moz-user-select: none;
   -ms-user-select: none;
   -khtml-user-select: none;
@@ -117,7 +118,7 @@
   .column__body
   .column__reorder
   .column__reorder__name {
-  word-break: break-all;
+  word-break: break-word;
   line-height: 15px;
 }
 .columns--grid
@@ -163,6 +164,7 @@
   width: 100px;
   margin-left: 10px;
   color: #0e4bda;
+  padding: 8px;
 }
 .columns--grid
   .column__grid
