@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTimes,
@@ -17,7 +17,10 @@ class App extends React.Component {
     this.state = {
       rowList: [true],
       rows: [],
-      sortingOrderList: this.props.sortingParamsObjectList === undefined ? [] : this.props.sortingParamsObjectList,
+      sortingOrderList:
+        this.props.sortingParamsObjectList === undefined
+          ? []
+          : this.props.sortingParamsObjectList,
       errorMessage: false,
     };
     this.setWrapperRef = this.setWrapperRef.bind(this);
@@ -64,7 +67,7 @@ class App extends React.Component {
   };
 
   clearAll = () => {
-    this.setState({ sortingOrderList: [] });
+    this.setState({ sortingOrderList: [], errorMessage: false });
     this.props.clearAllSortingParams();
   };
 
@@ -72,6 +75,9 @@ class App extends React.Component {
     let sortingOrderList = [...this.state.sortingOrderList];
     sortingOrderList.splice(i, 1);
     this.setState({ sortingOrderList });
+    if (sortingOrderList.length <= 1) {
+      this.setState({ errorMessage: false });
+    }
   };
 
   createColumnsArrayFromProps = (rowsValue) => {
@@ -219,16 +225,18 @@ class App extends React.Component {
       : this.setState({
           errorMessage: false,
         });
-        !showError ? this.props.setTableAsPerSortingParams(this.state.sortingOrderList) : ''
+    !showError
+      ? this.props.setTableAsPerSortingParams(this.state.sortingOrderList)
+      : "";
   };
 
   /**
- * 
- * @param {*} reOrderedSortingList 
- */
-handleReorderListOfSort=(reOrderedIndexList)=>{
-  this.props.handleTableSortSwap(reOrderedIndexList);
-}
+   *
+   * @param {*} reOrderedSortingList
+   */
+  handleReorderListOfSort = (reOrderedIndexList) => {
+    this.props.handleTableSortSwap(reOrderedIndexList);
+  };
 
   render() {
     let { rowList } = this.state.rowList;
@@ -264,10 +272,7 @@ handleReorderListOfSort=(reOrderedIndexList)=>{
               </DndProvider>
               <div className="sort-warning">
                 {this.state.errorMessage ? (
-                  <span
-                    style={{ display: this.state.clickTag }}
-                    className="alert alert-danger"
-                  >
+                  <span className="alert alert-danger">
                     Sort by opted are same, Please choose different one.
                   </span>
                 ) : (

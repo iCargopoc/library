@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Spreadsheet from "spreadsheet";
 import CargoData from "./data.json";
@@ -29,7 +28,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "date",
@@ -41,7 +40,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "segmentfrom",
@@ -53,7 +52,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "revenue",
@@ -65,7 +64,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "yeild",
@@ -77,7 +76,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "segmentto",
@@ -89,7 +88,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "flightModel",
@@ -100,7 +99,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "numeric"
+      filterType: "numeric",
     },
     {
       key: "bodyType",
@@ -112,7 +111,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "type",
@@ -124,7 +123,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "startTime",
@@ -136,7 +135,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "endTime",
@@ -148,7 +147,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "status",
@@ -160,7 +159,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "additionalStatus",
@@ -172,7 +171,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "timeStatus",
@@ -184,7 +183,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "weightpercentage",
@@ -196,7 +195,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "weightvalue",
@@ -208,7 +207,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "volumepercentage",
@@ -220,7 +219,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "volumevalue",
@@ -232,7 +231,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "uldposition1",
@@ -244,7 +243,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "uldvalue1",
@@ -256,7 +255,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "uldposition2",
@@ -268,7 +267,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "uldvalue2",
@@ -280,7 +279,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "uldposition3",
@@ -292,7 +291,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "uldvalue3",
@@ -304,7 +303,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "uldposition4",
@@ -316,7 +315,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "uldvalue4",
@@ -328,7 +327,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
 
     {
@@ -341,7 +340,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "queuedBookingSR",
@@ -353,7 +352,7 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
+      filterType: "autoCompleteFilter",
     },
     {
       key: "queuedBookingvolume",
@@ -365,67 +364,67 @@ const App = () => {
       resizable: true,
       filterable: true,
       width: 150,
-      filterType: "autoCompleteFilter"
-    }
+      filterType: "autoCompleteFilter",
+    },
   ];
 
   //Configure columns and its related functions
-  const airportCodeList =  [
-        "AAA",
-        "AAB",
-        "AAC",
-        "ABA",
-        "ABB",
-        "ABC",
-        "ACA",
-        "ACB",
-        "ACC",
-        "BAA",
-        "BAB",
-        "BAC",
-        "BBA",
-        "BBB",
-        "BBC",
-        "BCA",
-        "BCB",
-        "BCC",
-        "CAA",
-        "CAB",
-        "CAC",
-        "CBA",
-        "CBB",
-        "CBC",
-        "CCA",
-        "CCB",
-        "CCC",
-        "XXX",
-        "XXY",
-        "XXZ",
-        "XYX",
-        "XYY",
-        "XYZ",
-        "XZX",
-        "XZY",
-        "XZZ",
-        "YXX",
-        "YXY",
-        "YXZ",
-        "YYX",
-        "YYY",
-        "YYZ",
-        "YZX",
-        "YZY",
-        "YZZ",
-        "ZXX",
-        "ZXY",
-        "ZXZ",
-        "ZYX",
-        "ZYY",
-        "ZYZ",
-        "ZZX",
-        "ZZY",
-        "ZZZ"
-    ];
+  const airportCodeList = [
+    "AAA",
+    "AAB",
+    "AAC",
+    "ABA",
+    "ABB",
+    "ABC",
+    "ACA",
+    "ACB",
+    "ACC",
+    "BAA",
+    "BAB",
+    "BAC",
+    "BBA",
+    "BBB",
+    "BBC",
+    "BCA",
+    "BCB",
+    "BCC",
+    "CAA",
+    "CAB",
+    "CAC",
+    "CBA",
+    "CBB",
+    "CBC",
+    "CCA",
+    "CCB",
+    "CCC",
+    "XXX",
+    "XXY",
+    "XXZ",
+    "XYX",
+    "XYY",
+    "XYZ",
+    "XZX",
+    "XZY",
+    "XZZ",
+    "YXX",
+    "YXY",
+    "YXZ",
+    "YYX",
+    "YYY",
+    "YYZ",
+    "YZX",
+    "YZY",
+    "YZZ",
+    "ZXX",
+    "ZXY",
+    "ZXZ",
+    "ZYX",
+    "ZYY",
+    "ZYZ",
+    "ZZX",
+    "ZZY",
+    "ZZZ",
+  ];
 
   //Add logic for doing global search in the spreadsheet
   const globalSearchLogic = (e, updatedRows) => {
@@ -459,7 +458,8 @@ const App = () => {
         (item.uldvalue2 && item.uldvalue2.toLowerCase().includes(searchKey)) ||
         (item.uldposition3 &&
           item.uldposition3.toLowerCase().includes(searchKey)) ||
-          (item.weightvalue && item.weightvalue.toLowerCase().includes(searchKey)) ||
+        (item.weightvalue &&
+          item.weightvalue.toLowerCase().includes(searchKey)) ||
         (item.uldvalue3 && item.uldvalue3.toLowerCase().includes(searchKey)) ||
         (item.uldposition4 &&
           item.uldposition4.toLowerCase().includes(searchKey)) ||
@@ -474,32 +474,50 @@ const App = () => {
     });
     if (!filteredRows.length) {
       setStatus("invalid");
-      setData(rows);
+      setData([]);
+      // setRow("");
     } else {
       setData(filteredRows);
       setStatus("");
     }
   };
-const handleWarningStatus=()=>{
-  setStatus("invalid");
-}
+  const handleWarningStatus = () => {
+    setStatus("invalid");
+  };
   //Gets called when there is a cell edit
-  const updateCellData = (fromRow,toRow,value,updateType) => {
-    if(updateType==="CELL_UPDATE"){
-      console.log("row:", fromRow, "updated-Value:", value,"Updation-Type:", updateType);
+  const updateCellData = (fromRow, toRow, value, updateType) => {
+    if (updateType === "CELL_UPDATE") {
+      console.log(
+        "row:",
+        fromRow,
+        "updated-Value:",
+        value,
+        "Updation-Type:",
+        updateType
+      );
     }
-    if(updateType==="CELL_DRAG"){
-      console.log("fromRow:", fromRow,"toRow:",toRow, "updated-Value:", value,"Updation-Type:", updateType);
+    if (updateType === "CELL_DRAG") {
+      console.log(
+        "fromRow:",
+        fromRow,
+        "toRow:",
+        toRow,
+        "updated-Value:",
+        value,
+        "Updation-Type:",
+        updateType
+      );
     }
-  }
+  };
 
   //Gets called when row bulk edit is done
   const selectBulkData = (selectedRows) => {
     console.log("selectedRows:", selectedRows);
   };
   const closeWarningStatus = () => {
-    setStatus("")
-  }
+    setStatus("");
+    setData(rows);
+  };
   useEffect(() => {
     //Make API call to fetch initial set of data, uncomment below code to use API call
     // fetchData(0).then((data) => {
@@ -508,7 +526,7 @@ const handleWarningStatus=()=>{
     setData(rows);
   }, [rows]);
 
-  if (data && data.length) {
+  if (data) {
     return (
       <div>
         <Spreadsheet
@@ -528,7 +546,11 @@ const handleWarningStatus=()=>{
         />
       </div>
     );
-  } else return <h2>Loading Data</h2>;
+  } else if (data === undefined) {
+    return <h2>Loading Data</h2>;
+  } else {
+    return null;
+  }
 };
 
 export default App;

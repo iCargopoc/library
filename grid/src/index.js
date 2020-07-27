@@ -1,7 +1,7 @@
-import React, { memo, useMemo, useState, useEffect } from "react";
+import React, { forwardRef, useImperativeHandle, useMemo, useState, useEffect } from "react";
 import Customgrid from "./Customgrid";
 
-const Grid = memo((props) => {
+const Grid = forwardRef((props, ref) => {
     const {
         title,
         gridHeight,
@@ -73,6 +73,23 @@ const Grid = memo((props) => {
         processedColumns.push(column);
     });
     const gridColumns = useMemo(() => processedColumns, []);
+
+    //Gets triggered when a cell in grid is updated
+    useImperativeHandle(ref, () => ({
+        updateCellInGrid(rowIndex, columnId, value) {
+            setItems((old) =>
+                old.map((row, index) => {
+                    if (index === rowIndex) {
+                        return {
+                            ...old[rowIndex],
+                            [columnId]: value
+                        };
+                    }
+                    return row;
+                })
+            );
+        }
+    }));
 
     //Gets triggered when one row item is updated
     const updateRowInGrid = (rowIndex, updatedRow) => {

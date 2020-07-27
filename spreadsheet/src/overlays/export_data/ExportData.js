@@ -18,8 +18,8 @@ class ExportData extends React.Component {
     super(props);
     this.state = {
       columnValueList: this.props.columnsList,
-      columnEntityList: [],
-      isAllSelected: false,
+      columnEntityList: this.props.columnsList,
+      isAllSelected: true,
       downLaodFileType: [],
       filteredRow: [],
       warning: "",
