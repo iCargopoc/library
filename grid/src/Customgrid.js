@@ -90,7 +90,7 @@ const Customgrid = memo((props) => {
     const exportColumnData = () => {
         setExportComponent(
         <ExportData 
-            rows={data} 
+            rows={rows} 
             columnsList={columns} 
             closeExport={closeExport} 
             managableColumns = {managableColumns}

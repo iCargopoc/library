@@ -14,75 +14,71 @@ const ColumnReordering = memo((props) => {
     const [searchedColumns, setSearchedColumns] = useState(originalColumns);
 
     const [warning, setWarning] = useState("");
-    const [clickTag, setClickTag] = useState("none");
 
-    var downLaodFileType = [];
-
-    const selectDownLoadType = (event) => {
-        if (event.target.checked && !downLaodFileType.includes(event.target.value)) {
-            downLaodFileType.push(event.target.value);
-        } else {
-            downLaodFileType.map(function (value, index) {
-                if (value === event.target.value) {
-                    downLaodFileType = downLaodFileType.splice(index, value);
-                }
-            });
-        }
-    };
+    let isDownload = false;
 
     const exportRowData = () => {
-      debugger
+        isDownload = true;
         let filteredRow = [];
-        if (searchedColumns.length > 0 && downLaodFileType.length > 0) {
-            props.rows.forEach((row) => {
+        let filteredRowValues = [];
+        let downLaodFileType = [];
+        let downLaodFileTypeCount = document.getElementsByName("fileType[]").length;
+        for (let i = 0; i < downLaodFileTypeCount; i++) {
+            if (document.getElementsByName("fileType[]")[i].checked == true) {
+                downLaodFileType.push(document.getElementsByName("fileType[]")[i].value);
+            }
+        }
+
+        setWarning("");
+        if (managedColumns.length > 0 && downLaodFileType.length > 0) {
+            props.rows.forEach((rowDetails) => {
+                let row = rowDetails.original;
                 const keys = Object.getOwnPropertyNames(row);
                 let filteredColumnVal = {};
+                let rowFilteredValues = [];
                 keys.forEach(function (key) {
-                    searchedColumns.forEach((columnName) => {
+                    managedColumns.forEach((columnName) => {
                         if (columnName.accessor === key) {
-                            let columnVlaue = "";
+                            let columnValue = "";
                             if (typeof row[key] === "object") {
                                 if (row[key].length === undefined)
-                                    columnVlaue = Object.values(row[key]).toString().replace(",", " | ");
+                                    columnValue = Object.values(row[key]).toString().replace(",", " | ");
                                 if (row[key].length > 0) {
-                                    columnVlaue = row[key].map((item) => {
-                                        return columnVlaue != " "
-                                            ? " | " + item.position + " " + item.value
-                                            : item.position + " " + item.value;
+                                    let arrObj = "";
+                                    row[key].forEach((item, index) => {
+                                        arrObj = index != 0 ? arrObj + " | " + Object.values(item) : Object.values(item);
                                     });
+                                    columnValue = arrObj;
                                 }
                             } else {
-                                columnVlaue = row[key];
+                                columnValue = row[key];
                             }
-                            filteredColumnVal[key] = columnVlaue;
+                            filteredColumnVal[key] = columnValue;
+                            rowFilteredValues.push(columnValue);
                         }
                     });
                 });
                 filteredRow.push(filteredColumnVal);
+                filteredRowValues.push(rowFilteredValues);
             });
 
             downLaodFileType.map((item) => {
-                if (item === "pdf") downloadPDF();
+                if (item === "pdf") downloadPDF(filteredRowValues);
                 else if (item === "excel") downloadXLSFile(filteredRow);
                 else downloadCSVFile(filteredRow);
             });
         } else {
-            if (searchedColumns.length === 0 && downLaodFileType.length === 0) {
+            if (managedColumns.length === 0 && downLaodFileType.length === 0) {
                 setWarning("You haven't selected File Type & Column");
-                setClickTag("");
-            }
-            if (searchedColumns.length === 0) {
+            } else if (managedColumns.length === 0) {
                 setWarning("You haven't selected Column ");
-                setClickTag("");
-            }
-            if (downLaodFileType.length === 0) {
+            } else if (downLaodFileType.length === 0) {
                 setWarning("You haven't selected File Type");
-                setClickTag("");
             }
         }
     };
 
-    const downloadPDF = () => {
+    const downloadPDF = (rowFilteredValues) => {
         const unit = "pt";
         const size = "A4"; // Use A1, A2, A3 or A4
         const orientation = "landscape"; // portrait or landscape
@@ -94,47 +90,22 @@ const ColumnReordering = memo((props) => {
 
         const title = "iCargo Report";
         const headers = [
-            searchedColumns.map((column) => {
+            managedColumns.map((column) => {
                 return column.Header;
             })
         ];
-        let dataValues = [];
-        props.rows.forEach((row) => {
-            const keys = Object.keys(row);
-            let filteredColumnVal = [];
-            searchedColumns.forEach((columnName) => {
-                keys.forEach((key) => {
-                    if (columnName.accessor === key) {
-                        let columnVlaue = "";
-                        if (typeof row[key] === "object") {
-                            if (row[key].length === undefined)
-                                columnVlaue = Object.values(row[key]).toString().replace(",", " | ");
-                            if (row[key].length > 0) {
-                                columnVlaue = row[key].map((item) => {
-                                    return columnVlaue != " "
-                                        ? " | " + item.position + " " + item.value
-                                        : item.position + " " + item.value;
-                                });
-                            }
-                        } else {
-                            columnVlaue = row[key];
-                        }
-                        filteredColumnVal.push(columnVlaue);
-                    }
-                });
-            });
-            dataValues.push(filteredColumnVal);
-        });
 
         let content = {
             startY: 50,
             head: headers,
-            body: dataValues
+            body: rowFilteredValues
         };
 
         doc.text(title, marginLeft, 40);
         doc.autoTable(content);
         doc.save("report.pdf");
+
+        isDownload = false;
     };
 
     const downloadCSVFile = (filteredRowValue) => {
@@ -185,7 +156,7 @@ const ColumnReordering = memo((props) => {
     };
 
     const selectAllColumns = (event) => {
-        if (event.currentTarget.checked) {
+        if (event.target.checked) {
             setManagedColumns(searchedColumns);
         } else {
             setManagedColumns([]);
@@ -225,25 +196,6 @@ const ColumnReordering = memo((props) => {
             );
         }
     };
-
-    // const exportValidation = () => {
-    //     let columnLength = searchedColumns.length;
-    //     let fileLength = downLaodFileType.length;
-    //     if (columnLength > 0 && fileLength > 0) {
-    //         exportRowData();
-    //         setClickTag("none");
-    //     } else if (columnLength === 0) {
-    //         setWarning("You haven't selected Column ");
-    //         setClickTag("");
-    //     } else if (fileLength === 0) {
-    //         setWarning("You haven't selected File Type");
-    //         setClickTag("");
-    //     }
-    //     if (columnLength === 0 && fileLength === 0) {
-    //         setWarning("You haven't selected File Type & Column");
-    //         setClickTag("");
-    //     }
-    // };
 
     return (
         <div className="exports--grid">
@@ -302,7 +254,7 @@ const ColumnReordering = memo((props) => {
                     <div className="export__body">
                         <div className="export__reorder">
                             <div className="">
-                                <input type="checkbox" name="pdf" value="pdf" onChange={selectDownLoadType}></input>
+                                <input type="checkbox" id="fileType[]" name="fileType[]" value="pdf"></input>
                             </div>
                             <div className="export__file">
                                 <FontAwesomeIcon icon={faFilePdf} className="temp"></FontAwesomeIcon>
@@ -310,7 +262,7 @@ const ColumnReordering = memo((props) => {
                         </div>
                         <div className="export__reorder">
                             <div className="">
-                                <input type="checkbox" name="excel" value="excel" onChange={selectDownLoadType}></input>
+                                <input type="checkbox" id="fileType[]" name="fileType[]" value="excel"></input>
                             </div>
                             <div className="export__file">
                                 <FontAwesomeIcon icon={faFileExcel} className="temp"></FontAwesomeIcon>
@@ -318,7 +270,7 @@ const ColumnReordering = memo((props) => {
                         </div>
                         <div className="export__reorder">
                             <div className="">
-                                <input type="checkbox" name="csv" value="csv" onChange={selectDownLoadType}></input>
+                                <input type="checkbox" id="fileType[]" name="fileType[]" value="csv"></input>
                             </div>
                             <div className="export__file">
                                 <FontAwesomeIcon icon={faFileCsv} className="temp"></FontAwesomeIcon>
@@ -329,16 +281,14 @@ const ColumnReordering = memo((props) => {
                                 <strong>{warning}</strong>
                             </span>
                         </div>
+                        <div>{isDownload ? <h2 style={{ textAlign: "center" }}>Loading...</h2> : null}</div>
                     </div>
                     <div className="export__footer">
                         <div className="export__btns">
                             <button className="btns" onClick={props.closeExport}>
                                 Cancel
                             </button>
-                            <button
-                                className="btns btns__save"
-                                onClick={exportRowData}
-                            >
+                            <button className="btns btns__save" onClick={exportRowData}>
                                 Export
                             </button>
                         </div>

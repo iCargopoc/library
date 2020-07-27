@@ -13,13 +13,14 @@ import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 
 let downLaodFileType = [];
+let isDownload = false;
 class ExportData extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       columnValueList: this.props.columnsList,
-      columnEntityList: [],
-      isAllSelected: false,
+      columnEntityList: this.props.columnsList,
+      isAllSelected: true,
       downLaodFileType: [],
       filteredRow: [],
       warning: "",
@@ -96,28 +97,35 @@ class ExportData extends React.Component {
   };
 
   exportRowData = () => {
+    isDownload = true;
     const columnVlaueList = this.state.columnEntityList;
+    let filteredRowValues = [];
     if (columnVlaueList.length > 0 && this.state.downLaodFileType.length > 0) {
       this.props.rows.forEach((row) => {
         const keys = Object.getOwnPropertyNames(row);
         var filteredColumnVal = {};
+        let rowFilteredValues = [];
         keys.forEach(function (key) {
           columnVlaueList.forEach((columnName) => {
-            if (columnName.key === key) filteredColumnVal[key] = row[key];
+            if (columnName.key === key) {
+              filteredColumnVal[key] = row[key];
+              rowFilteredValues.push(row[key]);
+            }
           });
         });
         this.state.filteredRow.push(filteredColumnVal);
+        filteredRowValues.push(rowFilteredValues);
       });
 
       this.state.downLaodFileType.map((item) => {
-        if (item === "pdf") this.downloadPDF();
+        if (item === "pdf") this.downloadPDF(filteredRowValues);
         else if (item === "excel") this.downloadXLSFile();
         else this.downloadCSVFile();
       });
     }
   };
 
-  downloadPDF = () => {
+  downloadPDF = (filteredRowValues) => {
     const unit = "pt";
     const size = "A4"; // Use A1, A2, A3 or A4
     const orientation = "landscape"; // portrait or landscape
@@ -133,27 +141,17 @@ class ExportData extends React.Component {
         return column.name;
       }),
     ];
-    var dataValues = [];
-    this.props.rows.forEach((row) => {
-      const keys = Object.keys(row);
-      var filteredColumnVal = [];
-      this.state.columnEntityList.forEach((columnName) => {
-        keys.forEach((key) => {
-          if (columnName.key === key) filteredColumnVal.push(row[key]);
-        });
-      });
-      dataValues.push(filteredColumnVal);
-    });
 
     let content = {
       startY: 50,
       head: headers,
-      body: dataValues,
+      body: filteredRowValues,
     };
 
     doc.text(title, marginLeft, 40);
     doc.autoTable(content);
     doc.save("report.pdf");
+    isDownload = false;
   };
 
   downloadCSVFile = () => {
@@ -327,6 +325,11 @@ class ExportData extends React.Component {
                 >
                   You haven't selected <strong>{this.state.warning}</strong>
                 </span>
+              </div>
+              <div>
+                {isDownload ? (
+                  <h2 style={{ textAlign: "center" }}>Loading...</h2>
+                ) : null}
               </div>
             </div>
             <div className="export__footer">
