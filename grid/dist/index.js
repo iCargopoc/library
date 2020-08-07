@@ -13,10 +13,14 @@ var reactDndTouchBackend = require('react-dnd-touch-backend');
 var MultiBackend = require('react-dnd-multi-backend');
 var MultiBackend__default = _interopDefault(MultiBackend);
 var update = _interopDefault(require('immutability-helper'));
+require('!style-loader!css-loader!sass-loader!./styles/columnreorder.scss');
+require('!style-loader!css-loader!sass-loader!./styles/groupsort.scss');
 var jsPDF = _interopDefault(require('jspdf'));
 require('jspdf-autotable');
 var FileSaver = require('file-saver');
 var XLSX = require('xlsx');
+require('!style-loader!css-loader!sass-loader!./styles/exportdata.scss');
+require('!style-loader!css-loader!sass-loader!./styles/main.scss');
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -51,8 +55,9 @@ function _objectWithoutPropertiesLoose(source, excluded) {
   return target;
 }
 
-var CellDisplayAndEdit = React.memo(function (_ref) {
+var CellDisplayAndEdit = /*#__PURE__*/React.memo(function (_ref) {
   var row = _ref.row,
+      columns = _ref.columns,
       updateRowInGrid = _ref.updateRowInGrid;
   var column = row.column;
 
@@ -64,6 +69,8 @@ var CellDisplayAndEdit = React.memo(function (_ref) {
     var _useState2 = React.useState(null),
         editedRowValue = _useState2[0],
         setEditedRowValue = _useState2[1];
+
+    var id = column.id;
 
     var closeEdit = function closeEdit() {
       setIsEditOpen(false);
@@ -87,40 +94,49 @@ var CellDisplayAndEdit = React.memo(function (_ref) {
       closeEdit();
     };
 
-    var originalRowValue = _extends({}, row.row.original);
+    var DisplayTag = function DisplayTag(props) {
+      var cellKey = props.cellKey,
+          columnKey = props.columnKey;
 
-    var id = column.id,
-        innerCells = column.innerCells,
-        originalInnerCells = column.originalInnerCells;
+      if (columns && columnKey) {
+        var selectedColumn = columns.find(function (col) {
+          return col.accessor === columnKey;
+        });
 
-    if (originalRowValue && originalInnerCells && originalInnerCells.length && innerCells && innerCells.length && innerCells.length < originalInnerCells.length) {
-      var columnValue = originalRowValue[id];
-
-      if (typeof columnValue === "object") {
-        if (columnValue.length > 0) {
-          var newcolumnValue = columnValue.map(function (value) {
-            var params = {};
-            innerCells.forEach(function (cell) {
-              var cellAccessor = cell.accessor;
-              params[cellAccessor] = value[cellAccessor];
-            });
-            value = params;
-            return value;
-          });
-          originalRowValue[id] = newcolumnValue;
-        } else {
-          var params = {};
-          innerCells.forEach(function (cell) {
-            var cellAccessor = cell.accessor;
-            params[cellAccessor] = row.value[cellAccessor];
-          });
-          originalRowValue[id] = params;
+        if (checkInnerCells(selectedColumn, cellKey)) {
+          return /*#__PURE__*/React__default.createElement(React.Fragment, null, " ", props.children);
+        }
+      } else if (cellKey) {
+        if (checkInnerCells(column, cellKey)) {
+          return /*#__PURE__*/React__default.createElement(React.Fragment, null, " ", props.children);
         }
       }
-    }
 
-    var cellDisplayContent = column.displayCell(originalRowValue);
-    var cellEditContent = column.editCell ? column.editCell(originalRowValue, getUpdatedRowValue) : null;
+      return null;
+    };
+
+    var checkInnerCells = function checkInnerCells(column, cellKey) {
+      if (column) {
+        var innerCells = column.innerCells;
+
+        if (innerCells) {
+          var innerCellData = innerCells.find(function (cell) {
+            return cell.accessor === cellKey;
+          });
+
+          if (innerCellData) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    };
+
+    var originalRowValue = _extends({}, row.row.original);
+
+    var cellDisplayContent = column.displayCell(originalRowValue, DisplayTag);
+    var cellEditContent = column.editCell ? column.editCell(originalRowValue, DisplayTag, getUpdatedRowValue) : null;
     return /*#__PURE__*/React__default.createElement(ClickAwayListener, {
       onClickAway: closeEdit
     }, /*#__PURE__*/React__default.createElement("div", {
@@ -145,7 +161,7 @@ var CellDisplayAndEdit = React.memo(function (_ref) {
 
 var extractColumns = function extractColumns(columns, searchColumn, isDesktop, updateRowInGrid) {
   var filteredColumns = columns.filter(function (column) {
-    return isDesktop ? !column.onlyInIpad : !column.onlyInDesktop;
+    return isDesktop ? !column.onlyInTablet : !column.onlyInDesktop;
   });
   var modifiedColumns = [];
   filteredColumns.forEach(function (column, index) {
@@ -159,6 +175,7 @@ var extractColumns = function extractColumns(columns, searchColumn, isDesktop, u
       column.Cell = function (row) {
         return /*#__PURE__*/React__default.createElement(CellDisplayAndEdit, {
           row: row,
+          columns: columns,
           updateRowInGrid: updateRowInGrid
         });
       };
@@ -201,14 +218,14 @@ var extractAdditionalColumn = function extractAdditionalColumn(additionalColumn,
 
   if (isInnerCellsPresent) {
     additionalColumn.innerCells = innerCells.filter(function (cell) {
-      return isDesktop ? !cell.onlyInIpad : !cell.onlyInDesktop;
+      return isDesktop ? !cell.onlyInTablet : !cell.onlyInDesktop;
     });
   }
 
   return additionalColumn;
 };
 
-var RowSelector = React.memo(React.forwardRef(function (_ref, ref) {
+var RowSelector = /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef(function (_ref, ref) {
   var indeterminate = _ref.indeterminate,
       rest = _objectWithoutPropertiesLoose(_ref, ["indeterminate"]);
 
@@ -236,7 +253,7 @@ var RowSelector = React.memo(React.forwardRef(function (_ref, ref) {
   }, rest)));
 }));
 
-var DefaultColumnFilter = React.memo(function (_ref) {
+var DefaultColumnFilter = /*#__PURE__*/React.memo(function (_ref) {
   var _ref$column = _ref.column,
       filterValue = _ref$column.filterValue,
       setFilter = _ref$column.setFilter;
@@ -250,7 +267,7 @@ var DefaultColumnFilter = React.memo(function (_ref) {
   });
 });
 
-var GlobalFilter = React.memo(function (_ref) {
+var GlobalFilter = /*#__PURE__*/React.memo(function (_ref) {
   var globalFilter = _ref.globalFilter,
       setGlobalFilter = _ref.setGlobalFilter;
 
@@ -286,7 +303,7 @@ var RowEdit = require("./RowEdit~BuKwAcSl.svg");
 
 var RowPin = require("./RowPin~qQRdvcXq.png");
 
-var RowOptions = React.memo(function (_ref) {
+var RowOptions = /*#__PURE__*/React.memo(function (_ref) {
   var row = _ref.row,
       bindRowEditOverlay = _ref.bindRowEditOverlay,
       bindRowDeleteOverlay = _ref.bindRowDeleteOverlay;
@@ -346,8 +363,11 @@ var RowOptions = React.memo(function (_ref) {
   })))) : null));
 });
 
-var RowEditOverLay = React.memo(function (_ref) {
+var RowEditOverLay = /*#__PURE__*/React.memo(function (_ref) {
   var row = _ref.row,
+      columns = _ref.columns,
+      isRowExpandEnabled = _ref.isRowExpandEnabled,
+      additionalColumn = _ref.additionalColumn,
       getRowEditOverlay = _ref.getRowEditOverlay,
       closeRowEditOverlay = _ref.closeRowEditOverlay,
       updateRowInGrid = _ref.updateRowInGrid;
@@ -370,7 +390,50 @@ var RowEditOverLay = React.memo(function (_ref) {
     closeRowEditOverlay();
   };
 
-  var rowEditContent = getRowEditOverlay(row, getUpdatedRowValue);
+  var DisplayTag = function DisplayTag(props) {
+    var cellKey = props.cellKey,
+        columnKey = props.columnKey;
+
+    if (columns && columnKey) {
+      var selectedColumn = columns.find(function (col) {
+        return col.accessor === columnKey;
+      });
+
+      if (selectedColumn && cellKey) {
+        if (checkInnerCells(selectedColumn, cellKey)) {
+          return /*#__PURE__*/React__default.createElement(React.Fragment, null, " ", props.children);
+        }
+      } else if (!selectedColumn && isRowExpandEnabled && additionalColumn) {
+        if (checkInnerCells(additionalColumn, columnKey)) {
+          return /*#__PURE__*/React__default.createElement(React.Fragment, null, " ", props.children);
+        }
+      }
+    }
+
+    return null;
+  };
+
+  var checkInnerCells = function checkInnerCells(column, cellKey) {
+    if (column) {
+      var innerCells = column.innerCells;
+
+      if (innerCells) {
+        var innerCellData = innerCells.find(function (cell) {
+          return cell.accessor === cellKey;
+        });
+
+        if (innerCellData) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
+
+  var originalRowValue = _extends({}, row);
+
+  var rowEditContent = getRowEditOverlay(originalRowValue, DisplayTag, getUpdatedRowValue);
   return /*#__PURE__*/React__default.createElement(ClickAwayListener, {
     onClickAway: closeRowEditOverlay
   }, /*#__PURE__*/React__default.createElement("div", {
@@ -386,7 +449,7 @@ var RowEditOverLay = React.memo(function (_ref) {
   }, "Cancel"))));
 });
 
-var RowDeleteOverLay = React.memo(function (_ref) {
+var RowDeleteOverLay = /*#__PURE__*/React.memo(function (_ref) {
   var row = _ref.row,
       closeRowDeleteOverlay = _ref.closeRowDeleteOverlay,
       deleteRowFromGrid = _ref.deleteRowFromGrid;
@@ -563,7 +626,7 @@ var ColumnsList = function ColumnsList(props) {
   })));
 };
 
-var ColumnReordering = React.memo(function (props) {
+var ColumnReordering = /*#__PURE__*/React.memo(function (props) {
   var isManageColumnOpen = props.isManageColumnOpen,
       toggleManageColumns = props.toggleManageColumns,
       originalColumns = props.originalColumns,
@@ -1122,7 +1185,7 @@ var SortingList = function SortingList(props) {
   })));
 };
 
-var GroupSort = React.memo(function (props) {
+var GroupSort = /*#__PURE__*/React.memo(function (props) {
   var isGroupSortOverLayOpen = props.isGroupSortOverLayOpen,
       toggleGroupSortOverLay = props.toggleGroupSortOverLay,
       applyGroupSort = props.applyGroupSort,
@@ -1272,7 +1335,7 @@ var GroupSort = React.memo(function (props) {
   }
 });
 
-var ExportData = React.memo(function (props) {
+var ExportData = /*#__PURE__*/React.memo(function (props) {
   var isExportOverlayOpen = props.isExportOverlayOpen,
       toggleExportDataOverlay = props.toggleExportDataOverlay,
       rows = props.rows,
@@ -1638,8 +1701,8 @@ var ExportData = React.memo(function (props) {
   }
 });
 
-var listRef = React.createRef(null);
-var Customgrid = React.memo(function (props) {
+var listRef = /*#__PURE__*/React.createRef(null);
+var Customgrid = /*#__PURE__*/React.memo(function (props) {
   var title = props.title,
       gridHeight = props.gridHeight,
       gridWidth = props.gridWidth,
@@ -1862,7 +1925,7 @@ var Customgrid = React.memo(function (props) {
         }), cell.render("Cell"));
       })), isRowExpandEnabled && row.isExpanded ? /*#__PURE__*/React__default.createElement("div", {
         className: "expand"
-      }, displayExpandedContent ? displayExpandedContent(row, additionalColumn) : null) : null);
+      }, displayExpandedContent ? displayExpandedContent(row) : null) : null);
     }
   }, [prepareRow, rows, displayExpandedContent]);
   return /*#__PURE__*/React__default.createElement("div", {
@@ -1937,6 +2000,9 @@ var Customgrid = React.memo(function (props) {
     className: "table-popus"
   }, isRowEditOverlyOpen ? /*#__PURE__*/React__default.createElement(RowEditOverLay, {
     row: editedRowData,
+    columns: columns,
+    isRowExpandEnabled: isRowExpandEnabled,
+    additionalColumn: additionalColumn,
     getRowEditOverlay: getRowEditOverlay,
     closeRowEditOverlay: closeRowEditOverlay,
     updateRowInGrid: updateRowInGrid
@@ -2008,7 +2074,7 @@ var Customgrid = React.memo(function (props) {
   })));
 });
 
-var Grid = React.memo(function (props) {
+var Grid = /*#__PURE__*/React.memo(function (props) {
   var title = props.title,
       gridHeight = props.gridHeight,
       gridWidth = props.gridWidth,
@@ -2115,19 +2181,42 @@ var Grid = React.memo(function (props) {
   }, []);
   var renderExpandedContent = additionalColumn ? additionalColumn.displayCell : null;
 
-  var displayExpandedContent = function displayExpandedContent(row, additionalColumn) {
-    if (row && additionalColumn) {
-      var innerCells = additionalColumn.innerCells;
-      var original = row.original;
+  var DisplayTag = function DisplayTag(props) {
+    console.log(additionalColumn);
+    var cellKey = props.cellKey;
 
-      if (original && innerCells && innerCells.length > 0) {
-        var expandedRowContent = {};
-        innerCells.forEach(function (cell) {
-          var accessor = cell.accessor;
-          expandedRowContent[accessor] = original[accessor];
-        });
-        return renderExpandedContent(expandedRowContent);
+    if (additionalColumn && cellKey) {
+      if (checkInnerCells(additionalColumn, cellKey)) {
+        return /*#__PURE__*/React__default.createElement(React.Fragment, null, " ", props.children);
       }
+    }
+
+    return null;
+  };
+
+  var checkInnerCells = function checkInnerCells(column, cellKey) {
+    if (column) {
+      var innerCells = column.innerCells;
+
+      if (innerCells) {
+        var innerCellData = innerCells.find(function (cell) {
+          return cell.accessor === cellKey;
+        });
+
+        if (innerCellData) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
+
+  var displayExpandedContent = function displayExpandedContent(row) {
+    var original = row.original;
+
+    if (original) {
+      return renderExpandedContent(original, DisplayTag);
     }
   };
 
@@ -2272,7 +2361,7 @@ var Grid = React.memo(function (props) {
     className: "background"
   }, /*#__PURE__*/React__default.createElement("div", {
     className: "dots container"
-  }, /*#__PURE__*/React__default.createElement("span", null), /*#__PURE__*/React__default.createElement("span", null), /*#__PURE__*/React__default.createElement("span", null))) : null, ")") : /*#__PURE__*/React__default.createElement("h2", {
+  }, /*#__PURE__*/React__default.createElement("span", null), /*#__PURE__*/React__default.createElement("span", null), /*#__PURE__*/React__default.createElement("span", null))) : null) : /*#__PURE__*/React__default.createElement("h2", {
     style: {
       textAlign: "center",
       marginTop: "70px"

@@ -13,7 +13,13 @@ const RowSelector = memo(
         }, [resolvedRef, indeterminate]);
         return (
             <div className="check-wrap">
-                <input type="checkbox" checked={checkValue} onChange={onChange} ref={resolvedRef} {...rest} />
+                <input
+                    type="checkbox"
+                    checked={checkValue}
+                    onChange={onChange}
+                    ref={resolvedRef}
+                    {...rest}
+                />
             </div>
         );
     })

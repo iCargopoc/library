@@ -30,7 +30,10 @@ const RowOptions = memo(({ row, bindRowEditOverlay, bindRowDeleteOverlay }) => {
     return (
         <div>
             <div className="row-options-wrap">
-                <span className="icon-row-options" onClick={openRowOptionsOverlay}>
+                <span
+                    className="icon-row-options"
+                    onClick={openRowOptionsOverlay}
+                >
                     <i></i>
                     <i></i>
                     <i></i>
@@ -50,7 +53,12 @@ const RowOptions = memo(({ row, bindRowEditOverlay, bindRowDeleteOverlay }) => {
                                 <li>
                                     <span>
                                         <i>
-                                            <img src={RowPin} alt="cargo" width="15" height="15" />
+                                            <img
+                                                src={RowPin}
+                                                alt="cargo"
+                                                width="15"
+                                                height="15"
+                                            />
                                         </i>
                                         <span>Pin This row</span>
                                     </span>
@@ -64,7 +72,10 @@ const RowOptions = memo(({ row, bindRowEditOverlay, bindRowDeleteOverlay }) => {
                                     </span>
                                 </li>
                             </ul>
-                            <span className="close" onClick={closeRowOptionsOverlay}>
+                            <span
+                                className="close"
+                                onClick={closeRowOptionsOverlay}
+                            >
                                 <i className="fa fa-close"></i>
                             </span>
                         </div>

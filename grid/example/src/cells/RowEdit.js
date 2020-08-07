@@ -147,14 +147,14 @@ const RowEdit = ({ rowData, DisplayTag, airportCodeList, rowUpdateCallBack }) =>
                     </DisplayTag>
                 </div>
                 <div className="edit-sr">
-                    <DisplayTag columnKey="sr">
+                    <DisplayTag columnKey="sr" cellKey="sr">
                         <label>SR</label>
                         <input type="text" value={sr} onChange={updateSrValue} />
                     </DisplayTag>
                 </div>
             </div>
             <div className="remarks-edit">
-                <DisplayTag columnKey="remarks">
+                <DisplayTag columnKey="remarks" cellKey="remarks">
                     <label>Remarks</label>
                     <textarea rows="4" value={remarks} onChange={updateRemarksValue}></textarea>
                 </DisplayTag>

@@ -5,7 +5,12 @@ import { ItemTypes } from "./ItemTypes";
 import ColumnItem from "./columnItem";
 
 const ColumnsList = (props) => {
-    const { updateColumnsInState, columnsToManage, isInnerCellSelected, selectInnerCells } = props;
+    const {
+        updateColumnsInState,
+        columnsToManage,
+        isInnerCellSelected,
+        selectInnerCells
+    } = props;
 
     const moveColumn = (columnId, atIndex) => {
         const { column, index } = findColumn(columnId);
@@ -20,7 +25,9 @@ const ColumnsList = (props) => {
     };
 
     const findColumn = (columnId) => {
-        const column = columnsToManage.filter((c) => `${c.columnId}` === columnId)[0];
+        const column = columnsToManage.filter(
+            (c) => `${c.columnId}` === columnId
+        )[0];
         return {
             column,
             index: columnsToManage.indexOf(column)

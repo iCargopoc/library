@@ -48,7 +48,9 @@ const SortingList = (props) => {
                             originalColumns={props.originalColumns}
                             moveSort={moveSort}
                             findSort={findSort}
-                            updateSingleSortingOption={props.updateSingleSortingOption}
+                            updateSingleSortingOption={
+                                props.updateSingleSortingOption
+                            }
                             copySortOption={props.copySortOption}
                             deleteSortOption={props.deleteSortOption}
                         />

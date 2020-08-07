@@ -4,6 +4,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
+import "!style-loader!css-loader!sass-loader!./styles/exportdata.scss";
 
 const ExportData = memo((props) => {
     const {
@@ -19,7 +20,9 @@ const ExportData = memo((props) => {
         return isExpandContentAvailable ? additionalColumn : [];
     };
 
-    const updatedColumns = [...originalColumns].concat(getRemarksColumnIfAvailable());
+    const updatedColumns = [...originalColumns].concat(
+        getRemarksColumnIfAvailable()
+    );
 
     const [managedColumns, setManagedColumns] = useState(updatedColumns);
     const [searchedColumns, setSearchedColumns] = useState(updatedColumns);
@@ -32,47 +35,79 @@ const ExportData = memo((props) => {
         isDownload = true;
         let filteredRow = [];
         let filteredRowValues = [];
+        let filteredRowHeader = [];
 
         setWarning("");
 
         if (managedColumns.length > 0 && downloadTypes.length > 0) {
-            rows.forEach((rowDetails) => {
+            const rowLength = rows && rows.length > 0 ? rows.length : 0;
+            rows.forEach((rowDetails, index) => {
                 let row = rowDetails.original;
-                const keys = Object.getOwnPropertyNames(row);
                 let filteredColumnVal = {};
                 let rowFilteredValues = [];
-                keys.forEach(function (key) {
-                    managedColumns.forEach((columnName) => {
+                let rowFilteredHeader = [];
+                managedColumns.forEach((columnName) => {
+                    const { Header, accessor, innerCells } = columnName;
+                    const accessorRowValue = row[accessor];
+                    let columnValue = "";
+                    let columnHeader = "";
+                    if (accessor) {
                         if (
-                            columnName.accessor === key ||
-                            (columnName.innerCells && columnName.innerCells.length && columnName.innerCells.includes(key))
+                            innerCells &&
+                            innerCells.length > 0 &&
+                            typeof accessorRowValue === "object"
                         ) {
-                            let columnValue = "";
-                            if (typeof row[key] === "object") {
-                                if (row[key].length === undefined)
-                                    columnValue = Object.values(row[key]).toString().replace(",", " | ");
-                                if (row[key].length > 0) {
-                                    let arrObj = "";
-                                    row[key].forEach((item, index) => {
-                                        arrObj = index != 0 ? arrObj + " | " + Object.values(item) : Object.values(item);
+                            innerCells.forEach((cell) => {
+                                const innerCellAccessor = cell.accessor;
+                                const innerCellHeader = cell.Header;
+                                const innerCellAccessorValue =
+                                    accessorRowValue[innerCellAccessor];
+                                if (accessorRowValue.length > 0) {
+                                    accessorRowValue.forEach((item, index) => {
+                                        columnValue = item[
+                                            innerCellAccessor
+                                        ].toString();
+                                        columnHeader =
+                                            Header +
+                                            " - " +
+                                            innerCellHeader +
+                                            "_" +
+                                            index;
+                                        filteredColumnVal[
+                                            columnHeader
+                                        ] = columnValue;
+                                        rowFilteredValues.push(columnValue);
+                                        rowFilteredHeader.push(columnHeader);
                                     });
-                                    columnValue = arrObj;
+                                } else if (innerCellAccessorValue) {
+                                    columnValue = innerCellAccessorValue;
+                                    columnHeader =
+                                        Header + " - " + innerCellHeader;
+                                    filteredColumnVal[
+                                        columnHeader
+                                    ] = columnValue;
+                                    rowFilteredValues.push(columnValue);
+                                    rowFilteredHeader.push(columnHeader);
                                 }
-                            } else {
-                                columnValue = row[key];
-                            }
-                            filteredColumnVal[key] = columnValue;
+                            });
+                        } else {
+                            columnValue = accessorRowValue;
+                            columnHeader = Header;
+                            filteredColumnVal[columnHeader] = columnValue;
                             rowFilteredValues.push(columnValue);
+                            rowFilteredHeader.push(columnHeader);
                         }
-                    });
+                    }
                 });
                 filteredRow.push(filteredColumnVal);
                 filteredRowValues.push(rowFilteredValues);
+                if (rowLength === index + 1)
+                    filteredRowHeader.push(rowFilteredHeader);
             });
 
             downloadTypes.map((item) => {
                 if (item === "pdf") {
-                    downloadPDF(filteredRowValues);
+                    downloadPDF(filteredRowValues, filteredRowHeader);
                 } else if (item === "excel") {
                     downloadXLSFile(filteredRow);
                 } else {
@@ -90,27 +125,32 @@ const ExportData = memo((props) => {
         }
     };
 
-    const downloadPDF = (rowFilteredValues) => {
+    const downloadPDF = (rowFilteredValues, rowFilteredHeader) => {
         const unit = "pt";
         const size = "A4"; // Use A1, A2, A3 or A4
         const orientation = "landscape"; // portrait or landscape
 
-        const marginLeft = 300;
+        const marginLeft = 30;
         const doc = new jsPDF(orientation, unit, size);
 
         doc.setFontSize(15);
-
         const title = "iCargo Neo Report";
-        const headers = [
-            managedColumns.map((column) => {
-                return column.Header;
-            })
-        ];
 
         let content = {
             startY: 50,
-            head: headers,
-            body: rowFilteredValues
+            head: rowFilteredHeader,
+            body: rowFilteredValues,
+            tableWidth: "wrap", //'auto'|'wrap'|'number'
+            headStyles: { fillColor: [102, 102, 255] },
+            styles: {
+                fontSize: 12,
+                overflowX: "visible",
+                overflowY: "visible"
+            },
+            theme: "grid", //'striped'|'grid'|'plain'|'css'
+            overflow: "visible", //'linebreak'|'ellipsize'|'visible'|'hidden'
+            cellWidth: "auto",
+            margin: { top: 15, right: 30, bottom: 10, left: 30 }
         };
 
         doc.text(title, marginLeft, 40);
@@ -121,7 +161,8 @@ const ExportData = memo((props) => {
     };
 
     const downloadCSVFile = (filteredRowValue) => {
-        const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        const fileType =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".csv";
         const fileName = "iCargo Neo Report";
         const ws = XLSX.utils.json_to_sheet(filteredRowValue);
@@ -132,7 +173,8 @@ const ExportData = memo((props) => {
     };
 
     const downloadXLSFile = (filteredRowValue) => {
-        const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        const fileType =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".xlsx";
         const fileName = "iCargo Neo Report";
         const ws = XLSX.utils.json_to_sheet(filteredRowValue);
@@ -198,7 +240,10 @@ const ExportData = memo((props) => {
             let prevItemIndex = -1;
             while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
                 prevItemIndex = managedColumns.findIndex((column) => {
-                    return column.Header === updatedColumns[indexOfColumnToAdd - 1].Header;
+                    return (
+                        column.Header ===
+                        updatedColumns[indexOfColumnToAdd - 1].Header
+                    );
                 });
                 indexOfColumnToAdd = indexOfColumnToAdd - 1;
             }
@@ -253,24 +298,37 @@ const ExportData = memo((props) => {
                                         <input
                                             type="checkbox"
                                             value="Select All"
-                                            checked={isCheckboxSelected("Select All")}
+                                            checked={isCheckboxSelected(
+                                                "Select All"
+                                            )}
                                             onChange={selectAllColumns}
                                         />
                                     </div>
-                                    <div className="export__txt">Select All</div>
+                                    <div className="export__txt">
+                                        Select All
+                                    </div>
                                 </div>
                                 {searchedColumns.map((column, index) => {
                                     return (
-                                        <div className="export__wrap" key={index}>
+                                        <div
+                                            className="export__wrap"
+                                            key={index}
+                                        >
                                             <div className="export__checkbox">
                                                 <input
                                                     type="checkbox"
                                                     value={column.Header}
-                                                    checked={isCheckboxSelected(column.Header)}
-                                                    onChange={selectSingleColumn}
+                                                    checked={isCheckboxSelected(
+                                                        column.Header
+                                                    )}
+                                                    onChange={
+                                                        selectSingleColumn
+                                                    }
                                                 ></input>
                                             </div>
-                                            <div className="export__txt">{column.Header}</div>
+                                            <div className="export__txt">
+                                                {column.Header}
+                                            </div>
                                         </div>
                                     );
                                 })}
@@ -280,7 +338,11 @@ const ExportData = memo((props) => {
                             <div className="export__header">
                                 <div className="export__headerTxt"></div>
                                 <div className="export__close">
-                                    <i className="fa fa-times" aria-hidden="true" onClick={toggleExportDataOverlay}></i>
+                                    <i
+                                        className="fa fa-times"
+                                        aria-hidden="true"
+                                        onClick={toggleExportDataOverlay}
+                                    ></i>
                                 </div>
                             </div>
                             <div className="export__as">Export As</div>
@@ -291,12 +353,17 @@ const ExportData = memo((props) => {
                                             type="checkbox"
                                             id="chk_pdf"
                                             value="pdf"
-                                            checked={downloadTypes.includes("pdf")}
+                                            checked={downloadTypes.includes(
+                                                "pdf"
+                                            )}
                                             onChange={changeDownloadType}
                                         ></input>
                                     </div>
                                     <div className="export__file">
-                                        <i className="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                        <i
+                                            className="fa fa-file-pdf-o"
+                                            aria-hidden="true"
+                                        ></i>
                                         <br />
                                         <strong>PDF</strong>
                                     </div>
@@ -307,12 +374,17 @@ const ExportData = memo((props) => {
                                             type="checkbox"
                                             id="chk_excel"
                                             value="excel"
-                                            checked={downloadTypes.includes("excel")}
+                                            checked={downloadTypes.includes(
+                                                "excel"
+                                            )}
                                             onChange={changeDownloadType}
                                         ></input>
                                     </div>
                                     <div className="export__file">
-                                        <i className="fa fa-file-excel-o" aria-hidden="true"></i>
+                                        <i
+                                            className="fa fa-file-excel-o"
+                                            aria-hidden="true"
+                                        ></i>
                                         <br />
                                         <strong>Excel</strong>
                                     </div>
@@ -323,12 +395,17 @@ const ExportData = memo((props) => {
                                             type="checkbox"
                                             id="chk_csv"
                                             value="csv"
-                                            checked={downloadTypes.includes("csv")}
+                                            checked={downloadTypes.includes(
+                                                "csv"
+                                            )}
                                             onChange={changeDownloadType}
                                         ></input>
                                     </div>
                                     <div className="export__file">
-                                        <i className="fa fa-file-text-o" aria-hidden="true"></i>
+                                        <i
+                                            className="fa fa-file-text-o"
+                                            aria-hidden="true"
+                                        ></i>
                                         <br />
                                         <strong>CSV</strong>
                                     </div>
@@ -338,14 +415,26 @@ const ExportData = memo((props) => {
                                         <strong>{warning}</strong>
                                     </span>
                                 </div>
-                                <div>{isDownload ? <h2 style={{ textAlign: "center" }}>Loading...</h2> : null}</div>
+                                <div>
+                                    {isDownload ? (
+                                        <h2 style={{ textAlign: "center" }}>
+                                            Loading...
+                                        </h2>
+                                    ) : null}
+                                </div>
                             </div>
                             <div className="export__footer">
                                 <div className="export__btns">
-                                    <button className="btns" onClick={toggleExportDataOverlay}>
+                                    <button
+                                        className="btns"
+                                        onClick={toggleExportDataOverlay}
+                                    >
                                         Cancel
                                     </button>
-                                    <button className="btns btns__save" onClick={exportRowData}>
+                                    <button
+                                        className="btns btns__save"
+                                        onClick={exportRowData}
+                                    >
                                         Export
                                     </button>
                                 </div>

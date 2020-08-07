@@ -5,15 +5,23 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import ClickAwayListener from "react-click-away-listener";
 import SortingList from "./sortingList";
+import "!style-loader!css-loader!sass-loader!./styles/groupsort.scss";
 
 const GroupSort = memo((props) => {
-    const { isGroupSortOverLayOpen, toggleGroupSortOverLay, applyGroupSort, originalColumns } = props;
+    const {
+        isGroupSortOverLayOpen,
+        toggleGroupSortOverLay,
+        applyGroupSort,
+        originalColumns
+    } = props;
 
     const sortingOrders = ["Ascending", "Descending"];
     const defaultSortingOption = [
         {
             sortBy: originalColumns[0].accessor,
-            sortOn: originalColumns[0].innerCells ? originalColumns[0].innerCells[0].accessor : "value",
+            sortOn: originalColumns[0].innerCells
+                ? originalColumns[0].innerCells[0].accessor
+                : "value",
             order: sortingOrders[0]
         }
     ];
@@ -48,14 +56,21 @@ const GroupSort = memo((props) => {
         applyGroupSort([]);
     };
 
-    const updateSingleSortingOption = (sortIndex, sortByValue, sortOnValue, sortOrder) => {
+    const updateSingleSortingOption = (
+        sortIndex,
+        sortByValue,
+        sortOnValue,
+        sortOrder
+    ) => {
         const newOptionsList = sortOptions.slice(0);
         const newSortingOption = {
             sortBy: sortByValue,
             sortOn: sortOnValue,
             order: sortOrder
         };
-        const updatedSortOptions = newOptionsList.map((option, index) => (index === sortIndex ? newSortingOption : option));
+        const updatedSortOptions = newOptionsList.map((option, index) =>
+            index === sortIndex ? newSortingOption : option
+        );
         updateSortingOptions(updatedSortOptions);
     };
 
@@ -78,7 +93,11 @@ const GroupSort = memo((props) => {
             const { sortBy, sortOn } = option;
             const optionIndex = index;
             const duplicateSort = sortOptions.find((opt, optIndex) => {
-                return sortBy === opt.sortBy && sortOn === opt.sortOn && optionIndex !== optIndex;
+                return (
+                    sortBy === opt.sortBy &&
+                    sortOn === opt.sortOn &&
+                    optionIndex !== optIndex
+                );
             });
             if (duplicateSort) {
                 isError = true;
@@ -100,36 +119,59 @@ const GroupSort = memo((props) => {
                             <div className="sort__header">
                                 <div className="sort__headerTxt">Sort</div>
                                 <div className="sort__close">
-                                    <i className="fa fa-times" aria-hidden="true" onClick={toggleGroupSortOverLay}></i>
+                                    <i
+                                        className="fa fa-times"
+                                        aria-hidden="true"
+                                        onClick={toggleGroupSortOverLay}
+                                    ></i>
                                 </div>
                             </div>
                             <div className="sort__body">
-                                <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+                                <DndProvider
+                                    backend={MultiBackend}
+                                    options={HTML5toTouch}
+                                >
                                     <SortingList
                                         sortOptions={sortOptions}
                                         originalColumns={originalColumns}
-                                        updateSortingOptions={updateSortingOptions}
-                                        updateSingleSortingOption={updateSingleSortingOption}
+                                        updateSortingOptions={
+                                            updateSortingOptions
+                                        }
+                                        updateSingleSortingOption={
+                                            updateSingleSortingOption
+                                        }
                                         copySortOption={copySortOption}
                                         deleteSortOption={deleteSortOption}
                                     />
                                 </DndProvider>
                             </div>
                             <div className="sort-warning">
-                                {isErrorDisplayed ? <span>Duplicate sort options found.</span> : null}
+                                {isErrorDisplayed ? (
+                                    <span>Duplicate sort options found.</span>
+                                ) : null}
                             </div>
                             <div className="sort__new">
-                                <div className="sort__section" type="button" onClick={addSortingOptions}>
+                                <div
+                                    className="sort__section"
+                                    type="button"
+                                    onClick={addSortingOptions}
+                                >
                                     <span>+</span>
                                     <div className="sort__txt">New Sort</div>
                                 </div>
                             </div>
                             <div className="sort__footer">
                                 <div className="sort__btns">
-                                    <button className="btns" onClick={clearSortingOptions}>
+                                    <button
+                                        className="btns"
+                                        onClick={clearSortingOptions}
+                                    >
                                         Clear All
                                     </button>
-                                    <button className="btns btns__save" onClick={applySort}>
+                                    <button
+                                        className="btns btns__save"
+                                        onClick={applySort}
+                                    >
                                         Ok
                                     </button>
                                 </div>

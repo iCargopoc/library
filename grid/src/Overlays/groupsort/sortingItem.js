@@ -53,19 +53,31 @@ const SortItem = ({
         updateSingleSortingOption(
             id,
             newSortByValue,
-            innerCellsList && innerCellsList.length > 0 ? innerCellsList[0].accessor : "value",
+            innerCellsList && innerCellsList.length > 0
+                ? innerCellsList[0].accessor
+                : "value",
             sortOption.order
         );
     };
 
     const changeSortOnOptions = (event) => {
         const newSortOnValue = event.target.value;
-        updateSingleSortingOption(id, sortOption.sortBy, newSortOnValue, sortOption.order);
+        updateSingleSortingOption(
+            id,
+            sortOption.sortBy,
+            newSortOnValue,
+            sortOption.order
+        );
     };
 
     const changeSortOrderOptions = (event) => {
         const newSortOrderValue = event.target.value;
-        updateSingleSortingOption(id, sortOption.sortBy, sortOption.sortOn, newSortOrderValue);
+        updateSingleSortingOption(
+            id,
+            sortOption.sortBy,
+            sortOption.sortOn,
+            newSortOrderValue
+        );
     };
 
     const copySort = () => {
@@ -81,14 +93,22 @@ const SortItem = ({
     return (
         <div className="sort__bodyContent" style={{ opacity }}>
             <div className="sort__reorder">
-                <div ref={(node) => drag(drop(node))} style={{ cursor: "move" }} className="">
+                <div
+                    ref={(node) => drag(drop(node))}
+                    style={{ cursor: "move" }}
+                    className=""
+                >
                     <i className="fa fa-navicon"></i>
                 </div>
             </div>
 
             <div className="sort__reorder">
                 <div className="sort__file">
-                    <select className="custom__ctrl" onChange={changeSortByOptions} value={sortOption.sortBy}>
+                    <select
+                        className="custom__ctrl"
+                        onChange={changeSortByOptions}
+                        value={sortOption.sortBy}
+                    >
                         {originalColumns.map((orgItem, index) => (
                             <option key={index} value={orgItem.accessor}>
                                 {orgItem.Header}
@@ -99,13 +119,23 @@ const SortItem = ({
             </div>
             <div className="sort__reorder">
                 <div className="sort__file">
-                    <select className="custom__ctrl" onChange={changeSortOnOptions} value={sortOption.sortOn}>
-                        {getInncerCellsOfColumn(sortOption.sortBy) && getInncerCellsOfColumn(sortOption.sortBy).length > 0 ? (
-                            getInncerCellsOfColumn(sortOption.sortBy).map((innerCellItem, innerCellIndex) => (
-                                <option key={innerCellIndex} value={innerCellItem.accessor}>
-                                    {innerCellItem.Header}
-                                </option>
-                            ))
+                    <select
+                        className="custom__ctrl"
+                        onChange={changeSortOnOptions}
+                        value={sortOption.sortOn}
+                    >
+                        {getInncerCellsOfColumn(sortOption.sortBy) &&
+                        getInncerCellsOfColumn(sortOption.sortBy).length > 0 ? (
+                            getInncerCellsOfColumn(sortOption.sortBy).map(
+                                (innerCellItem, innerCellIndex) => (
+                                    <option
+                                        key={innerCellIndex}
+                                        value={innerCellItem.accessor}
+                                    >
+                                        {innerCellItem.Header}
+                                    </option>
+                                )
+                            )
                         ) : (
                             <option key={0} value="value">
                                 Value
@@ -116,7 +146,11 @@ const SortItem = ({
             </div>
             <div className="sort__reorder">
                 <div className="sort__file">
-                    <select className="custom__ctrl" value={sortOption.order} onChange={changeSortOrderOptions}>
+                    <select
+                        className="custom__ctrl"
+                        value={sortOption.order}
+                        onChange={changeSortOrderOptions}
+                    >
                         <option>Ascending</option>
                         <option>Descending</option>
                     </select>
@@ -130,7 +164,11 @@ const SortItem = ({
                 </div>
             </div>
             <div className="sort__reorder">
-                <div className="sort__icon" type={"button"} onClick={deleteSort}>
+                <div
+                    className="sort__icon"
+                    type={"button"}
+                    onClick={deleteSort}
+                >
                     <i>
                         <img src={SortDelete} alt="copy sort" />
                     </i>

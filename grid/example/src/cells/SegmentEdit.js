@@ -54,7 +54,7 @@ const SegmentEdit = ({ rowData, DisplayTag, airportCodeList, rowUpdateCallBack }
     const { percentage, value } = weight;
     return (
         <div>
-            <DisplayTag cellKey="from">
+            <DisplayTag columnKey="segment" cellKey="from">
                 <select value={from} onChange={updateFromValue}>
                     {airportCodeList.map((item, index) => {
                         return (
@@ -65,7 +65,7 @@ const SegmentEdit = ({ rowData, DisplayTag, airportCodeList, rowUpdateCallBack }
                     })}
                 </select>
             </DisplayTag>
-            <DisplayTag cellKey="to">
+            <DisplayTag columnKey="segment" cellKey="to">
                 <select value={to} onChange={updateToValue}>
                     {airportCodeList.map((item, index) => {
                         return (

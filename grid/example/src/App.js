@@ -94,10 +94,10 @@ const App = () => {
                 const { flightno, date } = rowData.flight;
                 return (
                     <div className="flight-details">
-                        <DisplayTag cellKey="flightno">
+                        <DisplayTag columnKey="flight" cellKey="flightno">
                             <strong>{flightno}</strong>
                         </DisplayTag>
-                        <DisplayTag cellKey="date">
+                        <DisplayTag columnKey="flight" cellKey="date">
                             <span>{getValueOfDate(date, "cell")}</span>
                         </DisplayTag>
                     </div>
@@ -126,13 +126,13 @@ const App = () => {
                 const { from, to } = rowData.segment;
                 return (
                     <div className="segment-details">
-                        <DisplayTag cellKey="from">
+                        <DisplayTag columnKey="segment" cellKey="from">
                             <span>{from}</span>
                         </DisplayTag>
                         <i>
                             <img src={FlightIcon} alt="segment" />
                         </i>
-                        <DisplayTag cellKey="to">
+                        <DisplayTag columnKey="segment" cellKey="to">
                             <span>{to}</span>
                         </DisplayTag>
                     </div>
@@ -198,36 +198,49 @@ const App = () => {
                     <div className="details-wrap">
                         <ul>
                             <li>
-                                <DisplayTag cellKey="startTime">{startTime}</DisplayTag>-
-                                <DisplayTag cellKey="endTime">{endTime}</DisplayTag>
+                                <DisplayTag columnKey="details" cellKey="startTime">
+                                    {startTime}
+                                </DisplayTag>
+                                -
+                                <DisplayTag columnKey="details" cellKey="endTime">
+                                    {endTime}
+                                </DisplayTag>
                             </li>
                             <li className="divider">|</li>
                             <li>
-                                <DisplayTag cellKey="status">
+                                <DisplayTag columnKey="details" cellKey="status">
                                     <span>{status}</span>
                                 </DisplayTag>
                             </li>
                             <li className="divider">|</li>
                             <li>
-                                <DisplayTag cellKey="additionalStatus">{additionalStatus}</DisplayTag>
+                                <DisplayTag columnKey="details" cellKey="additionalStatus">
+                                    {additionalStatus}
+                                </DisplayTag>
                             </li>
                             <li className="divider">|</li>
                             <li>
-                                <DisplayTag cellKey="flightModel">{flightModel}</DisplayTag>
+                                <DisplayTag columnKey="details" cellKey="flightModel">
+                                    {flightModel}
+                                </DisplayTag>
                             </li>
                             <li className="divider">|</li>
                             <li>
-                                <DisplayTag cellKey="bodyType">{bodyType}</DisplayTag>
+                                <DisplayTag columnKey="details" cellKey="bodyType">
+                                    {bodyType}
+                                </DisplayTag>
                             </li>
                             <li className="divider">|</li>
                             <li>
                                 <span>
-                                    <DisplayTag cellKey="type">{type}</DisplayTag>
+                                    <DisplayTag columnKey="details" cellKey="type">
+                                        {type}
+                                    </DisplayTag>
                                 </span>
                             </li>
                             <li className="divider">|</li>
                             <li>
-                                <DisplayTag cellKey="timeStatus">
+                                <DisplayTag columnKey="details" cellKey="timeStatus">
                                     <strong>{timeValue} </strong>
                                     <span>{timeText}</span>
                                 </DisplayTag>
@@ -263,10 +276,10 @@ const App = () => {
                 }
                 return (
                     <div className="weight-details">
-                        <DisplayTag cellKey="percentage">
+                        <DisplayTag columnKey="weight" cellKey="percentage">
                             <strong className="per">{percentage}</strong>
                         </DisplayTag>
-                        <DisplayTag cellKey="value">
+                        <DisplayTag columnKey="weight" cellKey="value">
                             <span>
                                 <strong>{valuePrefix}/</strong>
                                 {valueSuffix}
@@ -302,10 +315,10 @@ const App = () => {
                 }
                 return (
                     <div className="weight-details">
-                        <DisplayTag cellKey="percentage">
+                        <DisplayTag columnKey="volume" cellKey="percentage">
                             <strong className="per">{percentage}</strong>
                         </DisplayTag>
-                        <DisplayTag cellKey="value">
+                        <DisplayTag columnKey="volume" cellKey="value">
                             <span>
                                 <strong>{valuePrefix}/</strong>
                                 {valueSuffix}
@@ -338,10 +351,10 @@ const App = () => {
                             {uldPositions.map((positions, index) => {
                                 return (
                                     <li key={index}>
-                                        <DisplayTag cellKey="position">
+                                        <DisplayTag columnKey="uldPositions" cellKey="position">
                                             <span>{positions.position}</span>
                                         </DisplayTag>
-                                        <DisplayTag cellKey="value">
+                                        <DisplayTag columnKey="uldPositions" cellKey="value">
                                             <strong>{positions.value}</strong>
                                         </DisplayTag>
                                     </li>
@@ -370,10 +383,10 @@ const App = () => {
                 const { revenue, yeild } = rowData.revenue;
                 return (
                     <div className="revenue-details">
-                        <DisplayTag cellKey="revenue">
+                        <DisplayTag columnKey="revenue" cellKey="revenue">
                             <span className="large">{revenue}</span>
                         </DisplayTag>
-                        <DisplayTag cellKey="yeild">
+                        <DisplayTag columnKey="revenue" cellKey="yeild">
                             <span>{yeild}</span>
                         </DisplayTag>
                     </div>
@@ -416,12 +429,12 @@ const App = () => {
                 const { sr, volume } = rowData.queuedBooking;
                 return (
                     <div className="queued-details">
-                        <DisplayTag cellKey="sr">
+                        <DisplayTag columnKey="queuedBooking" cellKey="sr">
                             <span>
                                 <strong>{sr}</strong>
                             </span>
                         </DisplayTag>
-                        <DisplayTag cellKey="volume">
+                        <DisplayTag columnKey="queuedBooking" cellKey="volume">
                             <span>
                                 <strong>{volume}</strong>
                             </span>
@@ -449,12 +462,12 @@ const App = () => {
             const timeText = timeStatusArray.join(" ");
             return (
                 <div className="details-wrap">
-                    <DisplayTag cellKey="remarks">
+                    <DisplayTag columnKey="remarks" cellKey="remarks">
                         <ul>
                             <li>{remarks}</li>
                         </ul>
                     </DisplayTag>
-                    <DisplayTag cellKey="details">
+                    <DisplayTag columnKey="details" cellKey="details">
                         <ul>
                             <li>
                                 {startTime} - {endTime}

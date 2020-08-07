@@ -1,4 +1,11 @@
-import React, { useCallback, useState, memo, useEffect, createRef, useMemo } from "react";
+import React, {
+    useCallback,
+    useState,
+    memo,
+    useEffect,
+    createRef,
+    useMemo
+} from "react";
 import {
     useTable,
     useResizeColumns,
@@ -50,11 +57,17 @@ const Customgrid = memo((props) => {
     //Local state value for holding columns configuration
     const [columns, setColumns] = useState(managableColumns);
     //Local state value for holding the boolean value to check if row expand is available
-    const [isRowExpandEnabled, setIsRowExpandEnabled] = useState(isExpandContentAvailable);
+    const [isRowExpandEnabled, setIsRowExpandEnabled] = useState(
+        isExpandContentAvailable
+    );
 
     //Variables used for handling infinite loading
     const itemCount = hasNextPage ? data.length + 1 : data.length;
-    const loadMoreItems = isNextPageLoading ? () => {} : loadNextPage ? loadNextPage : () => {};
+    const loadMoreItems = isNextPageLoading
+        ? () => {}
+        : loadNextPage
+        ? loadNextPage
+        : () => {};
     const isItemLoaded = (index) => !hasNextPage || index < data.length;
 
     //Local state value for checking if column filter is open/closed
@@ -117,7 +130,9 @@ const Customgrid = memo((props) => {
     //Callback method from column manage overlay to update the column structure of the grid
     const updateColumnStructure = (newColumnStructure, remarksColumn) => {
         setColumns([...newColumnStructure]);
-        setIsRowExpandEnabled(remarksColumn && remarksColumn.length > 0 ? true : false);
+        setIsRowExpandEnabled(
+            remarksColumn && remarksColumn.length > 0 ? true : false
+        );
     };
 
     //Local state value for hiding/unhiding export data overlay
@@ -153,7 +168,10 @@ const Customgrid = memo((props) => {
             defaultColumn,
             globalFilter: (rows, columns, filterValue) => {
                 //Call global search function defined in application, if it is present
-                if (globalSearchLogic && typeof globalSearchLogic === "function") {
+                if (
+                    globalSearchLogic &&
+                    typeof globalSearchLogic === "function"
+                ) {
                     return globalSearchLogic(rows, columns, filterValue);
                 } else {
                     return rows;
@@ -184,8 +202,12 @@ const Customgrid = memo((props) => {
                     minWidth: 35,
                     width: 35,
                     maxWidth: 35,
-                    Header: ({ getToggleAllRowsSelectedProps }) => <RowSelector {...getToggleAllRowsSelectedProps()} />,
-                    Cell: ({ row }) => <RowSelector {...row.getToggleRowSelectedProps()} />
+                    Header: ({ getToggleAllRowsSelectedProps }) => (
+                        <RowSelector {...getToggleAllRowsSelectedProps()} />
+                    ),
+                    Cell: ({ row }) => (
+                        <RowSelector {...row.getToggleRowSelectedProps()} />
+                    )
                 },
                 ...columns,
                 {
@@ -206,11 +228,20 @@ const Customgrid = memo((props) => {
                                     bindRowDeleteOverlay={bindRowDeleteOverlay}
                                 />
                                 {isRowExpandEnabled ? (
-                                    <span className="expander" {...row.getToggleRowExpandedProps()}>
+                                    <span
+                                        className="expander"
+                                        {...row.getToggleRowExpandedProps()}
+                                    >
                                         {row.isExpanded ? (
-                                            <i className="fa fa-angle-up" aria-hidden="true"></i>
+                                            <i
+                                                className="fa fa-angle-up"
+                                                aria-hidden="true"
+                                            ></i>
                                         ) : (
-                                            <i className="fa fa-angle-down" aria-hidden="true"></i>
+                                            <i
+                                                className="fa fa-angle-down"
+                                                aria-hidden="true"
+                                            ></i>
                                         )}
                                     </span>
                                 ) : null}
@@ -243,11 +274,17 @@ const Customgrid = memo((props) => {
                 const row = rows[index];
                 prepareRow(row);
                 return (
-                    <div {...row.getRowProps({ style })} className="table-row tr">
+                    <div
+                        {...row.getRowProps({ style })}
+                        className="table-row tr"
+                    >
                         <div className="table-row-wrap">
                             {row.cells.map((cell) => {
                                 return (
-                                    <div {...cell.getCellProps()} className="table-cell td">
+                                    <div
+                                        {...cell.getCellProps()}
+                                        className="table-cell td"
+                                    >
                                         {cell.render("Cell")}
                                     </div>
                                 );
@@ -255,7 +292,11 @@ const Customgrid = memo((props) => {
                         </div>
                         {/*Check if row eapand icon is clicked, and if yes, call function to bind content to the expanded region*/}
                         {isRowExpandEnabled && row.isExpanded ? (
-                            <div className="expand">{displayExpandedContent ? displayExpandedContent(row) : null}</div>
+                            <div className="expand">
+                                {displayExpandedContent
+                                    ? displayExpandedContent(row)
+                                    : null}
+                            </div>
                         ) : null}
                     </div>
                 );
@@ -270,8 +311,14 @@ const Customgrid = memo((props) => {
     //Infinite loader used for lazy loading, with the properties passed here and other values calculated at the top
     //React window list is used for implementing virtualization, specifying the item count in a frame and height of each rows in it.
     return (
-        <div className="table-wrapper" style={{ width: gridWidth ? gridWidth : "100%" }}>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+        <div
+            className="table-wrapper"
+            style={{ width: gridWidth ? gridWidth : "100%" }}
+        >
+            <link
+                rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+            />
             <div className="table-filter">
                 <div className="results">
                     <div className="name">
@@ -288,7 +335,10 @@ const Customgrid = memo((props) => {
                         additionalColumn={[additionalColumn]}
                         updateColumnStructure={updateColumnStructure}
                     />
-                    <GlobalFilter globalFilter={state.globalFilter} setGlobalFilter={setGlobalFilter} />
+                    <GlobalFilter
+                        globalFilter={state.globalFilter}
+                        setGlobalFilter={setGlobalFilter}
+                    />
                     <GroupSort
                         isGroupSortOverLayOpen={isGroupSortOverLayOpen}
                         toggleGroupSortOverLay={toggleGroupSortOverLay}
@@ -303,19 +353,40 @@ const Customgrid = memo((props) => {
                         isExpandContentAvailable={isExpandContentAvailable}
                         additionalColumn={[additionalColumn]}
                     />
-                    <div className="filter-icon keyword-search" onClick={toggleColumnFilter}>
+                    <div
+                        className="filter-icon keyword-search"
+                        onClick={toggleColumnFilter}
+                    >
                         <i className="fa fa-filter" aria-hidden="true"></i>
                     </div>
-                    <div className="filter-icon bulk-select" onClick={bulkSelector}>
-                        <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <div
+                        className="filter-icon bulk-select"
+                        onClick={bulkSelector}
+                    >
+                        <i
+                            className="fa fa-pencil-square-o"
+                            aria-hidden="true"
+                        ></i>
                     </div>
-                    <div className="filter-icon bulk-select" onClick={toggleGroupSortOverLay}>
-                        <i className="fa fa-sort-amount-desc" aria-hidden="true"></i>
+                    <div
+                        className="filter-icon bulk-select"
+                        onClick={toggleGroupSortOverLay}
+                    >
+                        <i
+                            className="fa fa-sort-amount-desc"
+                            aria-hidden="true"
+                        ></i>
                     </div>
-                    <div className="filter-icon manage-columns" onClick={toggleManageColumns}>
+                    <div
+                        className="filter-icon manage-columns"
+                        onClick={toggleManageColumns}
+                    >
                         <i className="fa fa-columns" aria-hidden="true"></i>
                     </div>
-                    <div className="filter-icon manage-columns" onClick={toggleExportDataOverlay}>
+                    <div
+                        className="filter-icon manage-columns"
+                        onClick={toggleExportDataOverlay}
+                    >
                         <i className="fa fa-share-alt" aria-hidden="true"></i>
                     </div>
                 </div>
@@ -344,41 +415,78 @@ const Customgrid = memo((props) => {
 
             <div
                 className="tableContainer table-outer"
-                style={{ height: gridHeight ? gridHeight : "50vh", overflowX: "auto", overflowY: "hidden" }}
+                style={{
+                    height: gridHeight ? gridHeight : "50vh",
+                    overflowX: "auto",
+                    overflowY: "hidden"
+                }}
             >
                 <AutoSizer disableWidth disableResizing>
                     {({ height }) => (
                         <div {...getTableProps()} className="table">
                             <div className="thead table-row table-row--head">
                                 {headerGroups.map((headerGroup) => (
-                                    <div {...headerGroup.getHeaderGroupProps()} className="tr">
+                                    <div
+                                        {...headerGroup.getHeaderGroupProps()}
+                                        className="tr"
+                                    >
                                         {headerGroup.headers.map((column) => (
-                                            <div {...column.getHeaderProps()} className="table-cell column-heading th">
-                                                <div {...column.getSortByToggleProps()}>
+                                            <div
+                                                {...column.getHeaderProps()}
+                                                className="table-cell column-heading th"
+                                            >
+                                                <div
+                                                    {...column.getSortByToggleProps()}
+                                                >
                                                     {column.render("Header")}
                                                     <span>
                                                         {column.isSorted ? (
                                                             column.isSortedDesc ? (
-                                                                <i className="fa fa-sort-desc" aria-hidden="true"></i>
+                                                                <i
+                                                                    className="fa fa-sort-desc"
+                                                                    aria-hidden="true"
+                                                                ></i>
                                                             ) : (
-                                                                <i className="fa fa-sort-asc" aria-hidden="true"></i>
+                                                                <i
+                                                                    className="fa fa-sort-asc"
+                                                                    aria-hidden="true"
+                                                                ></i>
                                                             )
                                                         ) : (
                                                             ""
                                                         )}
                                                     </span>
                                                 </div>
-                                                <div className={`txt-wrap column-filter ${isFilterOpen ? "open" : ""}`}>
-                                                    {!column.disableFilters ? column.render("Filter") : null}
+                                                <div
+                                                    className={`txt-wrap column-filter ${
+                                                        isFilterOpen
+                                                            ? "open"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    {!column.disableFilters
+                                                        ? column.render(
+                                                              "Filter"
+                                                          )
+                                                        : null}
                                                 </div>
-                                                {column.canResize && <div {...column.getResizerProps()} className="resizer" />}
+                                                {column.canResize && (
+                                                    <div
+                                                        {...column.getResizerProps()}
+                                                        className="resizer"
+                                                    />
+                                                )}
                                             </div>
                                         ))}
                                     </div>
                                 ))}
                             </div>
                             <div {...getTableBodyProps()} className="tbody">
-                                <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={itemCount} loadMoreItems={loadMoreItems}>
+                                <InfiniteLoader
+                                    isItemLoaded={isItemLoaded}
+                                    itemCount={itemCount}
+                                    loadMoreItems={loadMoreItems}
+                                >
                                     {({ onItemsRendered, ref }) => (
                                         <List
                                             ref={(list) => {
@@ -391,7 +499,11 @@ const Customgrid = memo((props) => {
                                             itemSize={(index) => {
                                                 return calculateRowHeight(
                                                     rows[index],
-                                                    headerGroups && headerGroups.length ? headerGroups[0].headers : []
+                                                    headerGroups &&
+                                                        headerGroups.length
+                                                        ? headerGroups[0]
+                                                              .headers
+                                                        : []
                                                 );
                                             }}
                                             onItemsRendered={onItemsRendered}

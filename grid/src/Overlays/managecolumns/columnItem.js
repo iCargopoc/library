@@ -2,7 +2,15 @@ import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 
-const ColumnItem = ({ id, Header, moveColumn, findColumn, originalInnerCells, isInnerCellSelected, selectInnerCells }) => {
+const ColumnItem = ({
+    id,
+    Header,
+    moveColumn,
+    findColumn,
+    originalInnerCells,
+    isInnerCellSelected,
+    selectInnerCells
+}) => {
     const originalIndex = findColumn(id).index;
 
     const [{ isDragging }, drag] = useDrag({
@@ -35,7 +43,11 @@ const ColumnItem = ({ id, Header, moveColumn, findColumn, originalInnerCells, is
     return (
         <div style={{ opacity }}>
             <div className="column__reorder">
-                <div ref={(node) => drag(drop(node))} style={{ cursor: "move" }} className="">
+                <div
+                    ref={(node) => drag(drop(node))}
+                    style={{ cursor: "move" }}
+                    className=""
+                >
                     <i className="fa fa-align-justify" aria-hidden="true"></i>
                 </div>
                 <div className="">{Header}</div>
@@ -49,11 +61,16 @@ const ColumnItem = ({ id, Header, moveColumn, findColumn, originalInnerCells, is
                                               type="checkbox"
                                               data-columnheader={Header}
                                               value={cell.Header}
-                                              checked={isInnerCellSelected(Header, cell.Header)}
+                                              checked={isInnerCellSelected(
+                                                  Header,
+                                                  cell.Header
+                                              )}
                                               onChange={selectInnerCells}
                                           ></input>
                                       </div>
-                                      <div className="column__txt">{cell.Header}</div>
+                                      <div className="column__txt">
+                                          {cell.Header}
+                                      </div>
                                   </div>
                               );
                           })

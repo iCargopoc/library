@@ -33,10 +33,10 @@ const FlightEdit = ({ rowData, DisplayTag, rowUpdateCallBack }) => {
     const { flightno, date } = flight;
     return (
         <div>
-            <DisplayTag cellKey="flightno">
+            <DisplayTag columnKey="flight" cellKey="flightno">
                 <input type="text" value={flightno} onChange={updateFlightnoValue} />
             </DisplayTag>
-            <DisplayTag cellKey="date">
+            <DisplayTag columnKey="flight" cellKey="date">
                 <input type="date" value={getValueOfDate(date, "calendar")} onChange={updateDateValue} />
             </DisplayTag>
         </div>

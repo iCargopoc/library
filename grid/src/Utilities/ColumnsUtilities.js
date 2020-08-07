@@ -1,7 +1,12 @@
 import React from "react";
 import CellDisplayAndEdit from "../Functions/CellDisplayAndEdit";
 
-export const extractColumns = (columns, searchColumn, isDesktop, updateRowInGrid) => {
+export const extractColumns = (
+    columns,
+    searchColumn,
+    isDesktop,
+    updateRowInGrid
+) => {
     //Remove iPad only columns from desktop and vice-versa
     const filteredColumns = columns.filter((column) => {
         return isDesktop ? !column.onlyInTablet : !column.onlyInDesktop;
@@ -19,7 +24,13 @@ export const extractColumns = (columns, searchColumn, isDesktop, updateRowInGrid
         //Configure Cell function (which is used by react-table component), based on the user defined function displayCell
         if (!column.Cell && column.displayCell) {
             column.Cell = (row) => {
-                return <CellDisplayAndEdit row={row} columns={columns} updateRowInGrid={updateRowInGrid} />;
+                return (
+                    <CellDisplayAndEdit
+                        row={row}
+                        columns={columns}
+                        updateRowInGrid={updateRowInGrid}
+                    />
+                );
             };
         }
 
@@ -29,7 +40,10 @@ export const extractColumns = (columns, searchColumn, isDesktop, updateRowInGrid
                 //If there are inner cells and a sort value specified, do sort on that value
                 if (sortValue) {
                     column.sortType = (rowA, rowB) => {
-                        return rowA.original[accessor][sortValue] > rowB.original[accessor][sortValue] ? -1 : 1;
+                        return rowA.original[accessor][sortValue] >
+                            rowB.original[accessor][sortValue]
+                            ? -1
+                            : 1;
                     };
                 } else {
                     column.disableSortBy = true;
@@ -37,7 +51,9 @@ export const extractColumns = (columns, searchColumn, isDesktop, updateRowInGrid
             } else if (!innerCells) {
                 //If no inner cells are there, just do sort on column value
                 column.sortType = (rowA, rowB) => {
-                    return rowA.original[accessor] > rowB.original[accessor] ? -1 : 1;
+                    return rowA.original[accessor] > rowB.original[accessor]
+                        ? -1
+                        : 1;
                 };
             }
         }
