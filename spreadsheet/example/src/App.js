@@ -26,7 +26,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "date",
@@ -38,7 +40,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "segmentfrom",
@@ -50,7 +54,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: "segmentfrom"
         },
         {
             key: "revenue",
@@ -62,7 +68,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "yeild",
@@ -74,7 +82,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "segmentto",
@@ -86,7 +96,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: "segmentto"
         },
         {
             key: "flightModel",
@@ -97,7 +109,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "numeric"
+            filterType: "numeric",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "bodyType",
@@ -109,7 +123,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "type",
@@ -121,7 +137,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "startTime",
@@ -133,7 +151,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "endTime",
@@ -145,7 +165,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "status",
@@ -157,7 +179,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "additionalStatus",
@@ -169,7 +193,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "timeStatus",
@@ -181,7 +207,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "weightpercentage",
@@ -193,7 +221,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "weightvalue",
@@ -205,7 +235,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "volumepercentage",
@@ -217,7 +249,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "volumevalue",
@@ -229,7 +263,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "uldposition1",
@@ -241,7 +277,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "uldvalue1",
@@ -253,7 +291,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "uldposition2",
@@ -265,7 +305,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "uldvalue2",
@@ -277,7 +319,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "uldposition3",
@@ -289,7 +333,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "uldvalue3",
@@ -301,7 +347,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "uldposition4",
@@ -313,7 +361,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "uldvalue4",
@@ -325,7 +375,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
 
         {
@@ -338,7 +390,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "queuedBookingSR",
@@ -350,7 +404,9 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         },
         {
             key: "queuedBookingvolume",
@@ -362,12 +418,14 @@ const App = (props) => {
             resizable: true,
             filterable: true,
             width: 150,
-            filterType: "autoCompleteFilter"
+            filterType: "autoCompleteFilter",
+            dataSource: [],
+            dataSourceType: ""
         }
     ];
 
     //Configure columns and its related functions
-    const airportCodeList = [
+    const segmenToCode = [
         "AAA",
         "AAB",
         "AAC",
@@ -424,6 +482,37 @@ const App = (props) => {
         "ZZZ"
     ];
 
+    //Configure dropdown editor values
+    const segmentFromCode = [
+        "AAA",
+        "AAB",
+        "AAC",
+        "ABA",
+        "ABB",
+        "ABC",
+        "ACA",
+        "ACB",
+        "ACC",
+        "BAA",
+        "BAB",
+        "BAC",
+        "BBA",
+        "BBB",
+        "BBC",
+        "BCA",
+        "BCB",
+        "BCC",
+        "CAA",
+        "CAB",
+        "CAC",
+        "CBA",
+        "CBB",
+        "CBC",
+        "CCA",
+        "CCB",
+        "CCC"
+    ];
+
     //Gets called when there is a cell edit
     const updateCellData = (fromRow, toRow, value, updateType) => {
         if (updateType === "CELL_UPDATE") {
@@ -457,6 +546,23 @@ const App = (props) => {
         console.log("selectedRows:", selectedRows);
     };
 
+    //binding the required values of dropDown to the dataSource field in columns
+    columns.forEach((item) => {
+        if (item.dataSourceType === "segmentto") {
+            let tempArray = [];
+            segmenToCode.forEach((it) => {
+                tempArray.push({ id: it, value: it });
+            });
+            item.dataSource = tempArray;
+        } else if (item.dataSourceType === "segmentfrom") {
+            let tempArray = [];
+            segmentFromCode.forEach((it) => {
+                tempArray.push({ id: it, value: it });
+            });
+            item.dataSource = tempArray;
+        }
+    });
+
     useEffect(() => {
         //Make API call to fetch initial set of data, uncomment below code to use API call
         // fetchData(0).then((data) => {
@@ -464,6 +570,14 @@ const App = (props) => {
         // });
         setData(rows);
     }, [rows]);
+
+    /**
+     * Method To save the rows
+     * @param {*} rows is the updated row values
+     */
+    const saveRows = (rows) => {
+        console.log("savedData:", rows);
+    };
 
     if (data) {
         return (
@@ -474,11 +588,11 @@ const App = (props) => {
                     pageSize={pageSize}
                     count={pageSize}
                     columns={columns}
-                    airportCodes={airportCodeList}
                     gridHeight={gridHeight}
                     updateCellData={updateCellData}
                     selectBulkData={selectBulkData}
                     maxLeftPinnedColumn={maxLeftPinnedColumn}
+                    saveRows={saveRows}
                 />
             </div>
         );
