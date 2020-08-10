@@ -7,23 +7,27 @@ export const extractColumns = (
     isDesktop,
     updateRowInGrid
 ) => {
-    //Remove iPad only columns from desktop and vice-versa
+    // Remove iPad only columns from desktop and vice-versa
     const filteredColumns = columns.filter((column) => {
         return isDesktop ? !column.onlyInTablet : !column.onlyInDesktop;
     });
 
-    let modifiedColumns = [];
-    //Loop through the columns configuration and create required column structure
+    const modifiedColumns = [];
+    // Loop through the columns configuration and create required column structure
     filteredColumns.forEach((column, index) => {
         const { innerCells, accessor, sortValue } = column;
         const isInnerCellsPresent = innerCells && innerCells.length > 0;
+        const elem = column;
 
-        //Add column Id
-        column.columnId = `column_${index}`;
+        // Add column Id
+        elem.columnId = `column_${index}`;
 
-        //Configure Cell function (which is used by react-table component), based on the user defined function displayCell
-        if (!column.Cell && column.displayCell) {
-            column.Cell = (row) => {
+        //Add an indentifier that this is a column not for expanded region
+        elem.displayInExpandedRegion = false;
+
+        // Configure Cell function (which is used by react-table component), based on the user defined function displayCell
+        if (!elem.Cell && elem.displayCell) {
+            elem.Cell = (row) => {
                 return (
                     <CellDisplayAndEdit
                         row={row}
@@ -34,23 +38,23 @@ export const extractColumns = (
             };
         }
 
-        //Add logic to sort column if sort is not disabled
-        if (!column.disableSortBy) {
+        // Add logic to sort column if sort is not disabled
+        if (!elem.disableSortBy) {
             if (isInnerCellsPresent) {
-                //If there are inner cells and a sort value specified, do sort on that value
+                // If there are inner cells and a sort value specified, do sort on that value
                 if (sortValue) {
-                    column.sortType = (rowA, rowB) => {
+                    elem.sortType = (rowA, rowB) => {
                         return rowA.original[accessor][sortValue] >
                             rowB.original[accessor][sortValue]
                             ? -1
                             : 1;
                     };
                 } else {
-                    column.disableSortBy = true;
+                    elem.disableSortBy = true;
                 }
             } else if (!innerCells) {
-                //If no inner cells are there, just do sort on column value
-                column.sortType = (rowA, rowB) => {
+                // If no inner cells are there, just do sort on column value
+                elem.sortType = (rowA, rowB) => {
                     return rowA.original[accessor] > rowB.original[accessor]
                         ? -1
                         : 1;
@@ -58,14 +62,14 @@ export const extractColumns = (
             }
         }
 
-        //Add logic to filter column if column filter is not disabled
-        if (!column.disableFilters) {
-            column.filter = (rows, id, filterValue) => {
+        // Add logic to filter column if column filter is not disabled
+        if (!elem.disableFilters) {
+            elem.filter = (rows, id, filterValue) => {
                 const searchText = filterValue ? filterValue.toLowerCase() : "";
                 return rows.filter((row) => {
-                    //Find original data value of each row
+                    // Find original data value of each row
                     const { original } = row;
-                    //Do search for the column
+                    // Do search for the column
                     return searchColumn(column, original, searchText);
                 });
             };
@@ -79,13 +83,17 @@ export const extractColumns = (
 export const extractAdditionalColumn = (additionalColumn, isDesktop) => {
     const { innerCells } = additionalColumn;
     const isInnerCellsPresent = innerCells && innerCells.length > 0;
+    const element = additionalColumn;
 
-    //Add column Id
-    additionalColumn.columnId = `ExpandColumn`;
+    // Add column Id
+    element.columnId = `ExpandColumn`;
 
-    //Remove iPad only columns from desktop and vice-versa
+    //Add an indentifier that this is a column for expanded region
+    element.displayInExpandedRegion = true;
+
+    // Remove iPad only columns from desktop and vice-versa
     if (isInnerCellsPresent) {
-        additionalColumn.innerCells = innerCells.filter((cell) => {
+        element.innerCells = innerCells.filter((cell) => {
             return isDesktop ? !cell.onlyInTablet : !cell.onlyInDesktop;
         });
     }

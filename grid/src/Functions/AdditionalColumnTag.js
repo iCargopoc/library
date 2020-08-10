@@ -3,7 +3,6 @@ import { AdditionalColumnContext } from "../Utilities/TagsContext";
 import { checkInnerCells } from "../Utilities/TagUtilities";
 
 const AdditionalColumnTag = (props) => {
-    console.log("Inside additional tag");
     const contextVallues = useContext(AdditionalColumnContext);
     const { additionalColumn } = contextVallues;
     const { cellKey } = props;

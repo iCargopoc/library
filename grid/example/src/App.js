@@ -555,7 +555,7 @@ const App = () => {
         }
     };
 
-    //Pass row edit overlay to the grid component
+    //Pass row edit overlay to the grid component callback function
     const getRowEditOverlay = (rowData, DisplayTag, rowUpdateCallBack) => {
         return (
             <RowEdit
@@ -566,6 +566,21 @@ const App = () => {
             />
         );
     };
+
+    //#region -- Configure actions that has to be diplayed in row options overlay and the callback method to be rturned from component
+    //Configure additional actions
+    const rowActions = [
+        { label: "Send SCR", value: "SCR" },
+        { label: "Segment Summary", value: "SegmentSummary" },
+        { label: "Open Summary", value: "OpenSummary" },
+        { label: "Close Summary", value: "CloseSummary" }
+    ];
+    //Configure row action callback function
+    const rowActionCallback = (rowData, actionValue) => {
+        console.log("Row action: " + actionValue);
+        console.log(rowData);
+    };
+    //#endregion
 
     //Add logic to calculate height of each row, based on the content of  or more columns
     const calculateRowHeight = (row, gridColumns) => {
@@ -632,6 +647,8 @@ const App = () => {
             gridWidth="100%"
             columns={columns}
             columnToExpand={columnToExpand}
+            rowActions={rowActions}
+            rowActionCallback={rowActionCallback}
             fetchData={fetchData}
             getRowEditOverlay={getRowEditOverlay}
             calculateRowHeight={calculateRowHeight}

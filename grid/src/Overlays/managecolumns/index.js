@@ -4,8 +4,8 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import ClickAwayListener from "react-click-away-listener";
+import PropTypes from "prop-types";
 import ColumnsList from "./columnsList";
-import "!style-loader!css-loader!sass-loader!./styles/columnreorder.scss";
 
 const ColumnReordering = memo((props) => {
     const {
@@ -54,7 +54,7 @@ const ColumnReordering = memo((props) => {
     const filterColumnsList = (event) => {
         let { value } = event ? event.target : "";
         value = value ? value.toLowerCase() : "";
-        if (value != "") {
+        if (value !== "") {
             setSearchedColumns(
                 originalColumns
                     .filter((column) => {
@@ -91,14 +91,14 @@ const ColumnReordering = memo((props) => {
     const isCheckboxSelected = (header) => {
         if (header === additionalColumnHeader) {
             return remarksColumnToManage.length > 0;
-        } else if (header === "Select All") {
+        }
+        if (header === "Select All") {
             return (
                 searchedColumns.length ===
                 managedColumns.length + remarksColumnToManage.length
             );
-        } else {
-            return isItemPresentInList(managedColumns, header);
         }
+        return isItemPresentInList(managedColumns, header);
     };
 
     const isInnerCellSelected = (columnHeader, header) => {
@@ -123,16 +123,15 @@ const ColumnReordering = memo((props) => {
                     column.Header === originalColumns[indexOfColumnToAdd].Header
                 );
             });
-        } else {
-            return findColumn(columnsList, columnHeader).innerCells.findIndex(
-                (cell) => {
-                    return (
-                        cell.Header ===
-                        originalInnerCells[indexOfColumnToAdd].Header
-                    );
-                }
-            );
         }
+        return findColumn(columnsList, columnHeader).innerCells.findIndex(
+            (cell) => {
+                return (
+                    cell.Header ===
+                    originalInnerCells[indexOfColumnToAdd].Header
+                );
+            }
+        );
     };
 
     const selectAllColumns = (event) => {
@@ -156,19 +155,19 @@ const ColumnReordering = memo((props) => {
                 setRemarksColumnToManage([]);
             }
         } else {
-            //If column checkbox is checked
+            // If column checkbox is checked
             if (checked) {
-                //Find the index of selected column from original column array and also find the user selected column
+                // Find the index of selected column from original column array and also find the user selected column
                 let indexOfColumnToAdd = originalColumns.findIndex((column) => {
                     return column.Header === value;
                 });
                 const itemToAdd = originalColumns[indexOfColumnToAdd];
 
-                //Loop through the managedColumns array to find the position of the column that is present previous to the user selected column
-                //Find index of that previous column in original column list and push the new column next to that position
+                // Loop through the managedColumns array to find the position of the column that is present previous to the user selected column
+                // Find index of that previous column in original column list and push the new column next to that position
                 let prevItemIndex = -1;
                 while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
-                    indexOfColumnToAdd = indexOfColumnToAdd - 1;
+                    indexOfColumnToAdd -= 1;
                     prevItemIndex = findIndexOfItem(
                         "column",
                         managedColumns,
@@ -198,12 +197,12 @@ const ColumnReordering = memo((props) => {
         const { checked, dataset, value } = currentTarget;
         const { columnheader } = dataset;
 
-        //Find the column in which checked/unchecked inner cell is present
+        // Find the column in which checked/unchecked inner cell is present
         const selectedColumn = findColumn(stateColumnList, columnheader);
         const { originalInnerCells } = selectedColumn;
         if (originalInnerCells && originalInnerCells.length > 0) {
             if (checked) {
-                //Find the index of selected column from original column array and also find the user selected column
+                // Find the index of selected column from original column array and also find the user selected column
                 let indexOfColumnToAdd = originalInnerCells.findIndex(
                     (column) => {
                         return column.Header === value;
@@ -211,11 +210,11 @@ const ColumnReordering = memo((props) => {
                 );
                 const itemToAdd = originalInnerCells[indexOfColumnToAdd];
 
-                //Loop through the stateColumnList array to find the position of the column that is present previous to the user selected column
-                //Find index of that previous column and push the new column to add in that position
+                // Loop through the stateColumnList array to find the position of the column that is present previous to the user selected column
+                // Find index of that previous column and push the new column to add in that position
                 let prevItemIndex = -1;
                 while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
-                    indexOfColumnToAdd = indexOfColumnToAdd - 1;
+                    indexOfColumnToAdd -= 1;
                     prevItemIndex = findIndexOfItem(
                         "innercell",
                         stateColumnList,
@@ -300,8 +299,8 @@ const ColumnReordering = memo((props) => {
     if (isManageColumnOpen) {
         return (
             <ClickAwayListener onClickAway={toggleManageColumns}>
-                <div className="columns--grid">
-                    <div className="column__grid">
+                <div className="neo-popover neo-popover--column columns--grid">
+                    <div className="neo-popover__column column__grid">
                         <div className="column__chooser">
                             <div className="column__header">
                                 <div className="">
@@ -315,7 +314,7 @@ const ColumnReordering = memo((props) => {
                                         placeholder="Search column"
                                         className="custom__ctrl"
                                         onChange={filterColumnsList}
-                                    ></input>
+                                    />
                                 </div>
                                 <div className="column__selectAll">
                                     <div className="column__checkbox">
@@ -326,7 +325,7 @@ const ColumnReordering = memo((props) => {
                                                 "Select All"
                                             )}
                                             onChange={selectAllColumns}
-                                        ></input>
+                                        />
                                     </div>
                                     <div className="column__selectTxt">
                                         Select All
@@ -348,7 +347,7 @@ const ColumnReordering = memo((props) => {
                                                     onChange={
                                                         selectSingleColumn
                                                     }
-                                                ></input>
+                                                />
                                             </div>
                                             <div className="column__txt">
                                                 {column.Header}
@@ -376,12 +375,13 @@ const ColumnReordering = memo((props) => {
                                 </div>
                                 <div
                                     className="column__close"
+                                    role="presentation"
                                     onClick={toggleManageColumns}
                                 >
                                     <i
                                         className="fa fa-times"
                                         aria-hidden="true"
-                                    ></i>
+                                    />
                                 </div>
                             </div>
                             <div className="column__body">
@@ -436,7 +436,7 @@ const ColumnReordering = memo((props) => {
                                                                           onChange={
                                                                               selectRemarksInnerCells
                                                                           }
-                                                                      ></input>
+                                                                      />
                                                                   </div>
                                                                   <div className="column__txt">
                                                                       {
@@ -455,18 +455,21 @@ const ColumnReordering = memo((props) => {
                             <div className="column__footer">
                                 <div className="column__btns">
                                     <button
+                                        type="button"
                                         className="btns"
                                         onClick={resetColumnUpdate}
                                     >
                                         Reset
                                     </button>
                                     <button
+                                        type="button"
                                         className="btns"
                                         onClick={toggleManageColumns}
                                     >
                                         Cancel
                                     </button>
                                     <button
+                                        type="button"
                                         className="btns btns__save"
                                         onClick={doColumnUpdate}
                                     >
@@ -479,9 +482,17 @@ const ColumnReordering = memo((props) => {
                 </div>
             </ClickAwayListener>
         );
-    } else {
-        return <div></div>;
     }
+    return <div />;
 });
+
+ColumnReordering.propTypes = {
+    isManageColumnOpen: PropTypes.any,
+    toggleManageColumns: PropTypes.any,
+    originalColumns: PropTypes.any,
+    isExpandContentAvailable: PropTypes.any,
+    additionalColumn: PropTypes.any,
+    updateColumnStructure: PropTypes.any
+};
 
 export default ColumnReordering;

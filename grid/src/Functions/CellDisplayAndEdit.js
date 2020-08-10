@@ -2,6 +2,7 @@ import React, { memo, useState } from "react";
 import ClickAwayListener from "react-click-away-listener";
 import CellDisplayAndEditTag from "./CellDisplayAndEditTag";
 import { CellDisplayAndEditContext } from "../Utilities/TagsContext";
+import PropTypes from "prop-types";
 
 const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
     const { column } = row;
@@ -53,20 +54,33 @@ const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
                         className={`table-cell--content table-cell--content__${id}`}
                     >
                         {cellEditContent ? (
-                            <div className="cell-edit" onClick={openEdit}>
+                            <div
+                                className="cell-edit"
+                                role="presentation"
+                                onClick={openEdit}
+                            >
                                 <i
                                     className="fa fa-pencil"
                                     aria-hidden="true"
-                                ></i>
+                                />
                             </div>
                         ) : null}
                         {cellDisplayContent}
                         {isEditOpen ? (
                             <div className="table-cell--content-edit">
                                 {cellEditContent}
-                                <button className="ok" onClick={saveEdit} />
                                 <button
+                                    type="button"
+                                    aria-label="Mute volume"
+                                    className="ok"
+                                    data-testid="ok"
+                                    onClick={saveEdit}
+                                />
+                                <button
+                                    type="button"
+                                    aria-label="Mute volume"
                                     className="cancel"
+                                    data-testid="cancel"
                                     onClick={closeEdit}
                                 />
                             </div>
@@ -77,5 +91,14 @@ const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
         );
     }
 });
+
+CellDisplayAndEdit.propTypes = {
+    row: PropTypes.any,
+    columns: PropTypes.any,
+    updateRowInGrid: PropTypes.any,
+    cellKey: PropTypes.any,
+    columnKey: PropTypes.any,
+    children: PropTypes.any
+};
 
 export default CellDisplayAndEdit;

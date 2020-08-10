@@ -1,5 +1,6 @@
 import React from "react";
 import { useDrag, useDrop } from "react-dnd";
+import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
 import SortCopy from "../../Images/SortCopy.svg";
 import SortDelete from "../../Images/SortDelete.svg";
@@ -98,7 +99,7 @@ const SortItem = ({
                     style={{ cursor: "move" }}
                     className=""
                 >
-                    <i className="fa fa-navicon"></i>
+                    <i className="fa fa-navicon" />
                 </div>
             </div>
 
@@ -157,7 +158,11 @@ const SortItem = ({
                 </div>
             </div>
             <div className="sort__reorder">
-                <div className="sort__icon" type={"button"} onClick={copySort}>
+                <div
+                    className="sort__icon"
+                    role="presentation"
+                    onClick={copySort}
+                >
                     <i>
                         <img src={SortCopy} alt="copy sort" />
                     </i>
@@ -166,7 +171,7 @@ const SortItem = ({
             <div className="sort__reorder">
                 <div
                     className="sort__icon"
-                    type={"button"}
+                    role="presentation"
                     onClick={deleteSort}
                 >
                     <i>
@@ -176,6 +181,17 @@ const SortItem = ({
             </div>
         </div>
     );
+};
+
+SortItem.propTypes = {
+    id: PropTypes.any,
+    sortOption: PropTypes.any,
+    originalColumns: PropTypes.any,
+    moveSort: PropTypes.any,
+    findSort: PropTypes.any,
+    updateSingleSortingOption: PropTypes.any,
+    copySortOption: PropTypes.any,
+    deleteSortOption: PropTypes.any
 };
 
 export default SortItem;

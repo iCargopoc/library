@@ -1,5 +1,6 @@
 import React from "react";
 import { useDrag, useDrop } from "react-dnd";
+import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
 
 const ColumnItem = ({
@@ -48,7 +49,7 @@ const ColumnItem = ({
                     style={{ cursor: "move" }}
                     className=""
                 >
-                    <i className="fa fa-align-justify" aria-hidden="true"></i>
+                    <i className="fa fa-align-justify" aria-hidden="true" />
                 </div>
                 <div className="">{Header}</div>
                 <div className="column__innerCells__wrap">
@@ -66,7 +67,7 @@ const ColumnItem = ({
                                                   cell.Header
                                               )}
                                               onChange={selectInnerCells}
-                                          ></input>
+                                          />
                                       </div>
                                       <div className="column__txt">
                                           {cell.Header}
@@ -79,6 +80,16 @@ const ColumnItem = ({
             </div>
         </div>
     );
+};
+
+ColumnItem.propTypes = {
+    id: PropTypes.any,
+    Header: PropTypes.any,
+    moveColumn: PropTypes.any,
+    findColumn: PropTypes.any,
+    originalInnerCells: PropTypes.any,
+    isInnerCellSelected: PropTypes.any,
+    selectInnerCells: PropTypes.any
 };
 
 export default ColumnItem;

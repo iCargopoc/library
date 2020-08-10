@@ -1,0 +1,52 @@
+// -----------------------------------------------------------------------------
+// This file contains all application-wide Sass variables.
+// -----------------------------------------------------------------------------
+
+// Font Family
+$font-family: sans-serif, Arial, "Segoe UI", serif;
+
+// Base Font for HTML
+$em-base: 16;
+$base-font-size: $em-base + px;
+
+// Header Styles
+
+$header-size: rem(28);
+$header-line-height: 1.25em;
+
+// hr
+$hr-margin: 30px;
+
+// Type Misc
+$font-weight-bold: 700;
+
+// Body font
+$body-font: Arial, segoe ui;
+$secondary-font: Arial, segoe ui;
+
+:root {
+    --default: rgba(26, 72, 105);
+    --default_hover: rgba(40, 70, 91);
+    --primary: rgba(0, 164, 170);
+    --primary-light: rgba(0, 164, 170, 0.1);
+    --primary_hover: #06808d;
+    --secondary: #f9fafb;
+    --tertiary: rgba(0, 164, 170, 0.7);
+    --linkcolor: #00b4b4;
+    --info: #11cdef;
+    --text-light: #566a81;
+    --text-dark: #212529;
+    --titlecolor: rgba(26, 72, 105);
+    --reserved: rgba(26, 72, 105, 0.5);
+    --danger: #ff0000;
+    --success: #2dce89;
+    --grey: #76728c;
+    --white: #fff;
+    --orange: #fb6340;
+    --border: rgba(26, 72, 105, 0.25);
+    --border-grey: #d8d8d8;
+    --placeholder: rgba(26, 72, 105, 0.9);
+    --box-shadow: rgba(32, 77, 111, 0.2);
+    --focus: #199ed8;
+    --em-base: 16;
+}

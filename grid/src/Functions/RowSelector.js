@@ -1,4 +1,5 @@
 import React, { forwardRef, useRef, useEffect, useState, memo } from "react";
+import PropTypes from "prop-types";
 
 const RowSelector = memo(
     forwardRef(({ indeterminate, ...rest }, ref) => {
@@ -24,5 +25,9 @@ const RowSelector = memo(
         );
     })
 );
+
+RowSelector.propTypes = {
+    indeterminate: PropTypes.any
+};
 
 export default RowSelector;

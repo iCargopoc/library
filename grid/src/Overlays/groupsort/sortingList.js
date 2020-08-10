@@ -1,11 +1,20 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useDrop } from "react-dnd";
 import update from "immutability-helper";
+import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
 import SortItem from "./sortingItem";
 
 const SortingList = (props) => {
     const { updateSortingOptions, sortOptions } = props;
+
+    const findSort = (sortId) => {
+        const sort = sortOptions.filter((c, index) => index === sortId)[0];
+        return {
+            sort,
+            index: sortOptions.indexOf(sort)
+        };
+    };
 
     const moveSort = (sortId, atIndex) => {
         const { sort, index } = findSort(sortId);
@@ -19,18 +28,10 @@ const SortingList = (props) => {
         );
     };
 
-    const findSort = (sortId) => {
-        const sort = sortOptions.filter((c, index) => index === sortId)[0];
-        return {
-            sort,
-            index: sortOptions.indexOf(sort)
-        };
-    };
-
     const [, drop] = useDrop({ accept: ItemTypes.SORT_ITEM });
 
     return (
-        <React.Fragment>
+        <>
             <div ref={drop} style={{ display: "flex", flexWrap: "wrap" }}>
                 {sortOptions && sortOptions.length > 0 ? (
                     <ul>
@@ -57,8 +58,17 @@ const SortingList = (props) => {
                     );
                 })}
             </div>
-        </React.Fragment>
+        </>
     );
+};
+
+SortingList.propTypes = {
+    updateSortingOptions: PropTypes.any,
+    sortOptions: PropTypes.any,
+    originalColumns: PropTypes.any,
+    copySortOption: PropTypes.any,
+    deleteSortOption: PropTypes.any,
+    updateSingleSortingOption: PropTypes.any
 };
 
 export default SortingList;

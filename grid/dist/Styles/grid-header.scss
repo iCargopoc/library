@@ -1,0 +1,65 @@
+@function rem($size, $base: $em-base) {
+    $remSize: $size / $em-base;
+    @return #{$remSize}rem;
+}
+.neo-grid-header {
+    background-color: var(--secondary);
+    display: flex;
+    padding: 20px 15px;
+    justify-content: space-between;
+    &__results {
+        display: flex;
+        font-size: rem(14);
+        color: var(--titlecolor);
+        font-weight: $font-weight-bold;
+        span {
+            margin-left: 5px;
+            display: inline-block;
+        }
+        .showing {
+            margin-left: 5px;
+            padding-left: 5px;
+            position: relative;
+            &:before {
+                content: "";
+                position: absolute;
+                height: 15px;
+                width: 1px;
+                left: 0;
+                top: 3px;
+                background: #26577d;
+            }
+        }
+    }
+    &__utilities {
+        display: flex;
+        align-items: center;
+        .txt-wrap {
+            position: relative;
+            .txt {
+                height: 25px;
+                border-radius: 3px;
+                padding: 1px 0 0 23px;
+                font-size: 12px;
+                color: #000;
+                border: #cfd0d0 solid 1px;
+            }
+            i {
+                position: absolute;
+                left: 7px;
+                top: 8px;
+            }
+        }
+        .utilities-icon {
+            margin-left: 10px;
+            border: var(--border-grey) solid 1px;
+            padding: 0 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            line-height: 1px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+        }
+    }
+}
