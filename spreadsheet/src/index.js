@@ -4,7 +4,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from "react";
-
 import { Toolbar, Data, Filters, Editors } from "react-data-grid-addons";
 import { FormControl } from "react-bootstrap";
 import {
@@ -33,9 +32,8 @@ const { AutoCompleteFilter, NumericFilter } = Filters;
 class Spreadsheet extends Component {
     constructor(props) {
         super(props);
-        const airportCodes = [];
         const { dataSet, pageSize } = this.props;
-        
+
         const dataSetVar = JSON.parse(JSON.stringify(dataSet));
         this.state = {
             warningStatus: "",
@@ -63,7 +61,7 @@ class Spreadsheet extends Component {
             columns: this.props.columns.map((item) => {
                 const colItem = item;
                 if (colItem.editor === "DatePicker") {
-                    colItem.editor = DatePicker;
+                    colItem.editor = <DatePicker />;
                 } else if (
                     colItem.editor === "DropDown" &&
                     colItem.dataSource
@@ -826,6 +824,7 @@ class Spreadsheet extends Component {
         }
 
         if (action !== "COPY_PASTE") {
+             this.props.updatedRows({ fromRow, toRow, updated, action });
             this.setState((state) => {
                 const rows = state.rows.slice();
                 for (let i = fromRow; i <= toRow; i++) {
@@ -839,21 +838,21 @@ class Spreadsheet extends Component {
                     rows
                 };
             });
-            
-            this.setState((state) => {
-                const dataSet = state.dataSet.slice();
-                for (let i = fromRow; i <= toRow; i++) {
-                    dataSet[i] = {
-                        ...dataSet[i],
-                        ...updated
-                    };
-                }
 
-                return {
-                    dataSet
-                };
-            });
+            // this.setState((state) => {
+            //     const dataSet = state.dataSet.slice();
+            //     for (let i = fromRow; i <= toRow; i++) {
+            //         dataSet[i] = {
+            //             ...dataSet[i],
+            //             ...updated
+            //         };
+            //     }
 
+            //     return {
+            //         dataSet
+            //     };
+            // });
+           
             this.setState((state) => {
                 const filteringRows = state.filteringRows.slice();
                 for (let i = fromRow; i <= toRow; i++) {
@@ -1166,9 +1165,9 @@ class Spreadsheet extends Component {
                             value={this.state.searchValue}
                         />
                     </div>
-                    <div className="filterIcons" onClick={this.save}>
+                    {/* <div className="filterIcons" onClick={this.save}>
                         <FontAwesomeIcon title="Group Sort" icon={faSave} />
-                    </div>
+                    </div> */}
                     <div className="filterIcons" onClick={this.sortingPanel}>
                         <FontAwesomeIcon
                             title="Group Sort"
