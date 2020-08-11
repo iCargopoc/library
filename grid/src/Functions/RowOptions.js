@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import RowDelete from "../Images/RowDelete.svg";
 import RowEdit from "../Images/RowEdit.svg";
 import RowPin from "../Images/RowPin.png";
+import IconCancel from "../Images/icon-cancel.svg";
 
 const RowOptions = memo(
     ({
@@ -126,7 +127,12 @@ const RowOptions = memo(
                                     className="close"
                                     onClick={closeRowOptionsOverlay}
                                 >
-                                    <i className="fa fa-close" />
+                                    <i>
+                                        <img
+                                            src={IconCancel}
+                                            alt="Row options Overlay Close Icon"
+                                        />
+                                    </i>
                                 </span>
                             </div>
                         </ClickAwayListener>
@@ -139,6 +145,8 @@ const RowOptions = memo(
 
 RowOptions.propTypes = {
     row: PropTypes.any,
+    rowActions: PropTypes.any,
+    rowActionCallback: PropTypes.any,
     bindRowEditOverlay: PropTypes.any,
     bindRowDeleteOverlay: PropTypes.any
 };

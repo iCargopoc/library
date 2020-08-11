@@ -6,6 +6,7 @@ import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
 import ColumnsList from "./columnsList";
+import IconClose from "../../Images/icon-close.svg";
 
 const ColumnReordering = memo((props) => {
     const {
@@ -303,7 +304,7 @@ const ColumnReordering = memo((props) => {
                     <div className="neo-popover__column column__grid">
                         <div className="column__chooser">
                             <div className="column__header">
-                                <div className="">
+                                <div>
                                     <strong>Column Chooser</strong>
                                 </div>
                             </div>
@@ -378,10 +379,12 @@ const ColumnReordering = memo((props) => {
                                     role="presentation"
                                     onClick={toggleManageColumns}
                                 >
-                                    <i
-                                        className="fa fa-times"
-                                        aria-hidden="true"
-                                    />
+                                    <i>
+                                        <img
+                                            src={IconClose}
+                                            alt="Column chooser Close Icon"
+                                        />
+                                    </i>
                                 </div>
                             </div>
                             <div className="column__body">
@@ -403,7 +406,7 @@ const ColumnReordering = memo((props) => {
                                 {remarksColumnToManage &&
                                 remarksColumnToManage.length > 0 ? (
                                     <div className="column__reorder full-width">
-                                        <div className="">
+                                        <div>
                                             {remarksColumnToManage[0].Header}
                                         </div>
                                         <div className="column__innerCells__wrap">

@@ -2,6 +2,7 @@ import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
+import IconJustify from "../../Images/icon-align-justify.svg";
 
 const ColumnItem = ({
     id,
@@ -47,11 +48,13 @@ const ColumnItem = ({
                 <div
                     ref={(node) => drag(drop(node))}
                     style={{ cursor: "move" }}
-                    className=""
+                    className="column_drag"
                 >
-                    <i className="fa fa-align-justify" aria-hidden="true" />
+                    <i>
+                        <img src={IconJustify} alt="Column Chooser Drag Icon" />
+                    </i>
                 </div>
-                <div className="">{Header}</div>
+                <div>{Header}</div>
                 <div className="column__innerCells__wrap">
                     {originalInnerCells && originalInnerCells.length > 0
                         ? originalInnerCells.map((cell, index) => {

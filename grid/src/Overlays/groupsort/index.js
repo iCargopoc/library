@@ -6,6 +6,7 @@ import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
 import SortingList from "./sortingList";
+import IconClose from "../../Images/icon-close.svg";
 
 const GroupSort = memo((props) => {
     const {
@@ -119,11 +120,12 @@ const GroupSort = memo((props) => {
                         <div className="neo-popover__title">
                             <h2>Sort</h2>
                             <div className="neo-popover__close">
-                                <i
-                                    className="fa fa-times"
-                                    aria-hidden="true"
-                                    onClick={toggleGroupSortOverLay}
-                                />
+                                <i onClick={toggleGroupSortOverLay}>
+                                    <img
+                                        src={IconClose}
+                                        alt="Group Sort Close Icon"
+                                    />
+                                </i>
                             </div>
                         </div>
                         <div className="neo-popover__content">

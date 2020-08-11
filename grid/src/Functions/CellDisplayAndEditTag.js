@@ -1,4 +1,5 @@
-import React, { useContext, Fragment } from "react";
+import React, { useContext } from "react";
+import PropTypes from "prop-types";
 import { CellDisplayAndEditContext } from "../Utilities/TagsContext";
 import { checkInnerCells } from "../Utilities/TagUtilities";
 
@@ -12,14 +13,20 @@ const CellDisplayAndEditTag = (props) => {
             (col) => col.accessor === columnKey
         );
         if (checkInnerCells(selectedColumn, cellKey)) {
-            return <Fragment> {props.children}</Fragment>;
+            return <> {props.children}</>;
         }
     } else if (cellKey) {
         if (checkInnerCells(column, cellKey)) {
-            return <Fragment> {props.children}</Fragment>;
+            return <> {props.children}</>;
         }
     }
     return null;
+};
+
+CellDisplayAndEditTag.propTypes = {
+    cellKey: PropTypes.any,
+    columnKey: PropTypes.any,
+    children: PropTypes.any
 };
 
 export default CellDisplayAndEditTag;

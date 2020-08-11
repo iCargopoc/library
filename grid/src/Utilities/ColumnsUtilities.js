@@ -22,7 +22,7 @@ export const extractColumns = (
         // Add column Id
         elem.columnId = `column_${index}`;
 
-        //Add an indentifier that this is a column not for expanded region
+        // Add an indentifier that this is a column not for expanded region
         elem.displayInExpandedRegion = false;
 
         // Configure Cell function (which is used by react-table component), based on the user defined function displayCell
@@ -88,7 +88,7 @@ export const extractAdditionalColumn = (additionalColumn, isDesktop) => {
     // Add column Id
     element.columnId = `ExpandColumn`;
 
-    //Add an indentifier that this is a column for expanded region
+    // Add an indentifier that this is a column for expanded region
     element.displayInExpandedRegion = true;
 
     // Remove iPad only columns from desktop and vice-versa

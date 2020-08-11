@@ -5,6 +5,10 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
+import IconCsv from "../../Images/icon-csv.svg";
+import IconExcel from "../../Images/icon-excel.svg";
+import IconPdf from "../../Images/icon-pdf.svg";
+import IconClose from "../../Images/icon-close.svg";
 
 const ExportData = memo((props) => {
     const {
@@ -18,22 +22,22 @@ const ExportData = memo((props) => {
         additionalColumn
     } = props;
 
-    //Check if row expand is configured by developer
+    // Check if row expand is configured by developer
     const getRemarksColumnIfAvailable = () => {
         return isExpandContentAvailable ? additionalColumn : [];
     };
 
-    //Check if row expand is set visible from manage overlay
+    // Check if row expand is set visible from manage overlay
     const getRemarksColumnIfSelectedByUser = () => {
         return isRowExpandEnabled ? additionalColumn : [];
     };
 
-    //Full list of columns + expand column
+    // Full list of columns + expand column
     const updatedColumns = [...originalColumns].concat(
         getRemarksColumnIfAvailable()
     );
 
-    //List of columns + expand based on user selection from manage overlay
+    // List of columns + expand based on user selection from manage overlay
     const updatedColumnsPerUserSelection = [...columns].concat(
         getRemarksColumnIfSelectedByUser()
     );
@@ -47,21 +51,80 @@ const ExportData = memo((props) => {
 
     let isDownload = false;
 
+    const downloadPDF = (rowFilteredValues, rowFilteredHeader) => {
+        const unit = "pt";
+        const size = "A4"; // Use A1, A2, A3 or A4
+        const orientation = "landscape"; // portrait or landscape
+
+        const marginLeft = 30;
+        const doc = new jsPDF(orientation, unit, size);
+
+        doc.setFontSize(15);
+        const title = "iCargo Neo Report";
+
+        const content = {
+            startY: 50,
+            head: rowFilteredHeader,
+            body: rowFilteredValues,
+            tableWidth: "wrap", // 'auto'|'wrap'|'number'
+            headStyles: { fillColor: [102, 102, 255] },
+            styles: {
+                fontSize: 12,
+                overflowX: "visible",
+                overflowY: "visible"
+            },
+            theme: "grid", // 'striped'|'grid'|'plain'|'css'
+            overflow: "visible", // 'linebreak'|'ellipsize'|'visible'|'hidden'
+            cellWidth: "auto",
+            margin: { top: 15, right: 30, bottom: 10, left: 30 }
+        };
+
+        doc.text(title, marginLeft, 40);
+        doc.autoTable(content);
+        doc.save("iCargo Neo Report.pdf");
+
+        isDownload = false;
+    };
+
+    const downloadCSVFile = (filteredRowValue) => {
+        const fileType =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        const fileExtension = ".csv";
+        const fileName = "iCargo Neo Report";
+        const ws = XLSX.utils.json_to_sheet(filteredRowValue);
+        const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+        const excelBuffer = XLSX.write(wb, { bookType: "csv", type: "array" });
+        const data = new Blob([excelBuffer], { type: fileType });
+        FileSaver.saveAs(data, fileName + fileExtension);
+    };
+
+    const downloadXLSFile = (filteredRowValue) => {
+        const fileType =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        const fileExtension = ".xlsx";
+        const fileName = "iCargo Neo Report";
+        const ws = XLSX.utils.json_to_sheet(filteredRowValue);
+        const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: fileType });
+        FileSaver.saveAs(data, fileName + fileExtension);
+    };
+
     const exportRowData = () => {
         isDownload = true;
-        let filteredRow = [];
-        let filteredRowValues = [];
-        let filteredRowHeader = [];
+        const filteredRow = [];
+        const filteredRowValues = [];
+        const filteredRowHeader = [];
 
         setWarning("");
 
         if (managedColumns.length > 0 && downloadTypes.length > 0) {
             const rowLength = rows && rows.length > 0 ? rows.length : 0;
             rows.forEach((rowDetails, index) => {
-                let row = rowDetails.original;
-                let filteredColumnVal = {};
-                let rowFilteredValues = [];
-                let rowFilteredHeader = [];
+                const row = rowDetails.original;
+                const filteredColumnVal = {};
+                const rowFilteredValues = [];
+                const rowFilteredHeader = [];
                 managedColumns.forEach((columnName) => {
                     const {
                         Header,
@@ -74,7 +137,7 @@ const ExportData = memo((props) => {
                     const accessorRowValue = row[accessor];
                     let columnValue = "";
                     let columnHeader = "";
-                    //For grid columns (not the one in expanded section)
+                    // For grid columns (not the one in expanded section)
                     if (accessor) {
                         if (
                             isInnerCellsPresent &&
@@ -90,12 +153,7 @@ const ExportData = memo((props) => {
                                         columnValue = item[
                                             innerCellAccessor
                                         ].toString();
-                                        columnHeader =
-                                            Header +
-                                            " - " +
-                                            innerCellHeader +
-                                            "_" +
-                                            index;
+                                        columnHeader = `${Header} - ${innerCellHeader}_${index}`;
                                         filteredColumnVal[
                                             columnHeader
                                         ] = columnValue;
@@ -104,8 +162,7 @@ const ExportData = memo((props) => {
                                     });
                                 } else if (innerCellAccessorValue) {
                                     columnValue = innerCellAccessorValue;
-                                    columnHeader =
-                                        Header + " - " + innerCellHeader;
+                                    columnHeader = `${Header} - ${innerCellHeader}`;
                                     filteredColumnVal[
                                         columnHeader
                                     ] = columnValue;
@@ -121,7 +178,7 @@ const ExportData = memo((props) => {
                             rowFilteredHeader.push(columnHeader);
                         }
                     } else if (displayInExpandedRegion && isInnerCellsPresent) {
-                        //For column in the expanded section
+                        // For column in the expanded section
                         originalInnerCells.forEach((expandedCell) => {
                             const expandedCellAccessor = expandedCell.accessor;
                             const expandedCellHeader = expandedCell.Header;
@@ -156,7 +213,7 @@ const ExportData = memo((props) => {
                     filteredRowHeader.push(rowFilteredHeader);
             });
 
-            downloadTypes.map((item) => {
+            downloadTypes.forEach((item) => {
                 if (item === "pdf") {
                     downloadPDF(filteredRowValues, filteredRowHeader);
                 } else if (item === "excel") {
@@ -165,66 +222,13 @@ const ExportData = memo((props) => {
                     downloadCSVFile(filteredRow);
                 }
             });
-        } else {
-            if (managedColumns.length === 0 && downloadTypes.length === 0) {
-                setWarning("Select at least one column and a file type");
-            } else if (managedColumns.length === 0) {
-                setWarning("Select at least one column");
-            } else if (downloadTypes.length === 0) {
-                setWarning("Select at least one file type");
-            }
+        } else if (managedColumns.length === 0 && downloadTypes.length === 0) {
+            setWarning("Select at least one column and a file type");
+        } else if (managedColumns.length === 0) {
+            setWarning("Select at least one column");
+        } else if (downloadTypes.length === 0) {
+            setWarning("Select at least one file type");
         }
-    };
-
-    const downloadPDF = (rowFilteredValues, rowFilteredHeader) => {
-        const unit = "pt";
-        const size = "A4"; // Use A1, A2, A3 or A4
-        const orientation = "landscape"; // portrait or landscape
-
-        const doc = new jsPDF(orientation, unit, size);
-
-        doc.setFontSize(12);
-        const title = "iCargo Neo Report";
-
-        const content = {
-            startY: 50,
-            head: rowFilteredHeader,
-            body: rowFilteredValues,
-            tableWidth: "wrap", //'auto'|'wrap'|'number'
-            headStyles: { fillColor: [102, 102, 255] },
-            theme: "grid", //'striped'|'grid'|'plain'|'css'
-            margin: { top: 15, right: 30, bottom: 10, left: 30 }
-        };
-
-        doc.text(title, 30, 40);
-        doc.autoTable(content);
-        doc.save("iCargo Neo Report.pdf");
-
-        isDownload = false;
-    };
-
-    const downloadCSVFile = (filteredRowValue) => {
-        const fileType =
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-        const fileExtension = ".csv";
-        const fileName = "iCargo Neo Report";
-        const ws = XLSX.utils.json_to_sheet(filteredRowValue);
-        const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-        const excelBuffer = XLSX.write(wb, { bookType: "csv", type: "array" });
-        const data = new Blob([excelBuffer], { type: fileType });
-        FileSaver.saveAs(data, fileName + fileExtension);
-    };
-
-    const downloadXLSFile = (filteredRowValue) => {
-        const fileType =
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-        const fileExtension = ".xlsx";
-        const fileName = "iCargo Neo Report";
-        const ws = XLSX.utils.json_to_sheet(filteredRowValue);
-        const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-        const data = new Blob([excelBuffer], { type: fileType });
-        FileSaver.saveAs(data, fileName + fileExtension);
     };
 
     const filterColumnsList = (event) => {
@@ -326,7 +330,7 @@ const ExportData = memo((props) => {
                     <div className="neo-popover__export export__grid">
                         <div className="export__chooser">
                             <div className="export__header">
-                                <div className="">
+                                <div>
                                     <strong>Export Data</strong>
                                 </div>
                             </div>
@@ -384,11 +388,12 @@ const ExportData = memo((props) => {
                             <div className="export__header">
                                 <div className="export__headerTxt" />
                                 <div className="export__close">
-                                    <i
-                                        className="fa fa-times"
-                                        aria-hidden="true"
-                                        onClick={toggleExportDataOverlay}
-                                    />
+                                    <i onClick={toggleExportDataOverlay}>
+                                        <img
+                                            src={IconClose}
+                                            alt="Export Overlay Close Icon"
+                                        />
+                                    </i>
                                 </div>
                             </div>
                             <div className="export__as">Export As</div>
@@ -406,11 +411,12 @@ const ExportData = memo((props) => {
                                         />
                                     </div>
                                     <div className="export__file">
-                                        <i
-                                            className="fa fa-file-pdf-o"
-                                            aria-hidden="true"
-                                        />
-                                        <br />
+                                        <i>
+                                            <img
+                                                src={IconPdf}
+                                                alt="PDF Export Icon"
+                                            />
+                                        </i>
                                         <strong>PDF</strong>
                                     </div>
                                 </div>
@@ -427,11 +433,12 @@ const ExportData = memo((props) => {
                                         />
                                     </div>
                                     <div className="export__file">
-                                        <i
-                                            className="fa fa-file-excel-o"
-                                            aria-hidden="true"
-                                        />
-                                        <br />
+                                        <i>
+                                            <img
+                                                src={IconExcel}
+                                                alt="Excel Export Icon"
+                                            />
+                                        </i>
                                         <strong>Excel</strong>
                                     </div>
                                 </div>
@@ -448,11 +455,12 @@ const ExportData = memo((props) => {
                                         />
                                     </div>
                                     <div className="export__file">
-                                        <i
-                                            className="fa fa-file-text-o"
-                                            aria-hidden="true"
-                                        />
-                                        <br />
+                                        <i>
+                                            <img
+                                                src={IconCsv}
+                                                alt="CSV Export Icon"
+                                            />
+                                        </i>
                                         <strong>CSV</strong>
                                     </div>
                                 </div>
@@ -500,9 +508,11 @@ ExportData.propTypes = {
     isExportOverlayOpen: PropTypes.any,
     toggleExportDataOverlay: PropTypes.any,
     rows: PropTypes.any,
+    columns: PropTypes.any,
     originalColumns: PropTypes.any,
     isExpandContentAvailable: PropTypes.any,
-    additionalColumn: PropTypes.any
+    additionalColumn: PropTypes.any,
+    isRowExpandEnabled: PropTypes.any
 };
 
 export default ExportData;
