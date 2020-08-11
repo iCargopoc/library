@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Spreadsheet from "spreadsheet";
 import CargoData from "./data.json";
+import { faSave } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //import { fetchData } from "./getData";
 
 const App = (props) => {
@@ -9,7 +11,6 @@ const App = (props) => {
     //Set state value for variable to hold grid data
     const [data, setData] = useState();
     const rows = CargoData;
-
     // Spreadsheet page size
     const pageSize = 500;
     const maxLeftPinnedColumn = 5;
@@ -575,13 +576,29 @@ const App = (props) => {
      * Method To save the rows
      * @param {*} rows is the updated row values
      */
-    const saveRows = (rows) => {
-        console.log("savedData:", rows);
+    const updatedRows = ({ fromRow, toRow, updated, action }) => {
+        let tempData=[...data];
+                const temp = tempData.slice();
+                for (let i = fromRow; i <= toRow; i++) {
+                    temp[i] = {
+                        ...temp[i],
+                        ...updated
+                    };
+                }
+        setData(temp);
+        console.log("UpdatedRows:", temp);
+    };
+
+    const handleSave = () => {
+        console.log(data);
     };
 
     if (data) {
         return (
             <div>
+                <div style={{width: "26px",height:"26px",backgroundColor: "skyblue",cursor:"pointer" }}className="saveIcon" onClick={handleSave}>
+                    <FontAwesomeIcon style={{width: "18px",height:"18px"}} title="Group Sort" icon={faSave} />
+                </div>
                 <Spreadsheet
                     rows={data.slice(0, pageSize)}
                     dataSet={data}
@@ -592,7 +609,7 @@ const App = (props) => {
                     updateCellData={updateCellData}
                     selectBulkData={selectBulkData}
                     maxLeftPinnedColumn={maxLeftPinnedColumn}
-                    saveRows={saveRows}
+                    updatedRows={updatedRows}
                 />
             </div>
         );
