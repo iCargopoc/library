@@ -31,7 +31,7 @@ const SortingList = (props) => {
     const [, drop] = useDrop({ accept: ItemTypes.SORT_ITEM });
 
     return (
-        <>
+        <React.Fragment key="SortingListFragment">
             <div ref={drop} style={{ display: "flex", flexWrap: "wrap" }}>
                 {sortOptions && sortOptions.length > 0 ? (
                     <ul>
@@ -44,7 +44,7 @@ const SortingList = (props) => {
                     return (
                         <SortItem
                             id={index}
-                            key={index}
+                            key={sortOption}
                             sortOption={sortOption}
                             originalColumns={props.originalColumns}
                             moveSort={moveSort}
@@ -58,7 +58,7 @@ const SortingList = (props) => {
                     );
                 })}
             </div>
-        </>
+        </React.Fragment>
     );
 };
 

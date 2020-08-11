@@ -155,37 +155,35 @@ const ColumnReordering = memo((props) => {
             } else {
                 setRemarksColumnToManage([]);
             }
-        } else {
+        } else if (checked) {
             // If column checkbox is checked
-            if (checked) {
-                // Find the index of selected column from original column array and also find the user selected column
-                let indexOfColumnToAdd = originalColumns.findIndex((column) => {
-                    return column.Header === value;
-                });
-                const itemToAdd = originalColumns[indexOfColumnToAdd];
+            // Find the index of selected column from original column array and also find the user selected column
+            let indexOfColumnToAdd = originalColumns.findIndex((column) => {
+                return column.Header === value;
+            });
+            const itemToAdd = originalColumns[indexOfColumnToAdd];
 
-                // Loop through the managedColumns array to find the position of the column that is present previous to the user selected column
-                // Find index of that previous column in original column list and push the new column next to that position
-                let prevItemIndex = -1;
-                while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
-                    indexOfColumnToAdd -= 1;
-                    prevItemIndex = findIndexOfItem(
-                        "column",
-                        managedColumns,
-                        indexOfColumnToAdd
-                    );
-                }
-
-                const newColumnsList = [...managedColumns];
-                newColumnsList.splice(prevItemIndex + 1, 0, itemToAdd);
-                setManagedColumns(newColumnsList);
-            } else {
-                setManagedColumns(
-                    managedColumns.filter((column) => {
-                        return column.Header !== value;
-                    })
+            // Loop through the managedColumns array to find the position of the column that is present previous to the user selected column
+            // Find index of that previous column in original column list and push the new column next to that position
+            let prevItemIndex = -1;
+            while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
+                indexOfColumnToAdd -= 1;
+                prevItemIndex = findIndexOfItem(
+                    "column",
+                    managedColumns,
+                    indexOfColumnToAdd
                 );
             }
+
+            const newColumnsList = [...managedColumns];
+            newColumnsList.splice(prevItemIndex + 1, 0, itemToAdd);
+            setManagedColumns(newColumnsList);
+        } else {
+            setManagedColumns(
+                managedColumns.filter((column) => {
+                    return column.Header !== value;
+                })
+            );
         }
     };
 
@@ -235,14 +233,15 @@ const ColumnReordering = memo((props) => {
             } else {
                 setStateColumnList(
                     stateColumnList.map((column) => {
+                        const updatedColumn = column;
                         if (column.Header === columnheader) {
-                            column.innerCells = column.innerCells.filter(
+                            updatedColumn.innerCells = column.innerCells.filter(
                                 (cell) => {
                                     return cell.Header !== value;
                                 }
                             );
                         }
-                        return column;
+                        return updatedColumn;
                     })
                 );
             }
@@ -275,7 +274,8 @@ const ColumnReordering = memo((props) => {
     const resetInnerCells = (columnList) => {
         if (columnList && columnList.length) {
             return columnList.map((column) => {
-                column.innerCells = column.originalInnerCells;
+                const newColumn = column;
+                newColumn.innerCells = column.originalInnerCells;
                 return column;
             });
         }
@@ -332,11 +332,11 @@ const ColumnReordering = memo((props) => {
                                         Select All
                                     </div>
                                 </div>
-                                {searchedColumns.map((column, index) => {
+                                {searchedColumns.map((column) => {
                                     return (
                                         <div
                                             className="column__wrap"
-                                            key={index}
+                                            key={column.Header}
                                         >
                                             <div className="column__checkbox">
                                                 <input
@@ -415,11 +415,13 @@ const ColumnReordering = memo((props) => {
                                             remarksColumnToManage[0]
                                                 .originalInnerCells.length > 0
                                                 ? remarksColumnToManage[0].originalInnerCells.map(
-                                                      (cell, index) => {
+                                                      (cell) => {
                                                           return (
                                                               <div
                                                                   className="column__wrap"
-                                                                  key={index}
+                                                                  key={
+                                                                      cell.Header
+                                                                  }
                                                               >
                                                                   <div className="column__checkbox">
                                                                       <input

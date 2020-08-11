@@ -102,13 +102,14 @@ const Grid = memo((props) => {
     const updateRowInGrid = (original, updatedRow) => {
         setItems((old) =>
             old.map((row) => {
+                let newRow = row;
                 if (
                     Object.entries(row).toString() ===
                     Object.entries(original).toString()
                 ) {
-                    row = updatedRow;
+                    newRow = updatedRow;
                 }
-                return row;
+                return newRow;
             })
         );
         if (updateRowData) {
@@ -154,15 +155,17 @@ const Grid = memo((props) => {
     // Process data to be rendered to expanded view and return that data to the render function
     const displayExpandedContent = (row) => {
         const { original } = row;
+        const additionalColumnObj = additionalColumn;
         if (original) {
             return (
                 <AdditionalColumnContext.Provider
-                    value={{ additionalColumn: additionalColumn }}
+                    value={{ additionalColumn: additionalColumnObj }}
                 >
                     {renderExpandedContent(original, AdditionalColumnTag)}
                 </AdditionalColumnContext.Provider>
             );
         }
+        return null;
     };
     // #endregion
 
@@ -179,7 +182,7 @@ const Grid = memo((props) => {
                 // Return value of the filter method
                 let returnValue = false;
                 // Loop through all column values for each row
-                processedColumns.map((column) => {
+                processedColumns.forEach((column) => {
                     // Do search for each column
                     returnValue =
                         returnValue ||
@@ -193,14 +196,14 @@ const Grid = memo((props) => {
 
     // Add logic to calculate height of each row, based on the content of  or more columns
     // This can be used only if developer using the component has not passed a function to calculate row height
-    const calculateDefaultRowHeight = (row, gridColumns) => {
+    const calculateDefaultRowHeight = (row, columnsInGrid) => {
         // Minimum height for each row
         let rowHeight = 50;
-        if (gridColumns && gridColumns.length > 0 && row) {
+        if (columnsInGrid && columnsInGrid.length > 0 && row) {
             // Get properties of a row
             const { original, isExpanded } = row;
             // Find the column with maximum width configured, from grid columns list
-            const columnWithMaxWidth = [...gridColumns].sort((a, b) => {
+            const columnWithMaxWidth = [...columnsInGrid].sort((a, b) => {
                 return b.width - a.width;
             })[0];
             // Get column properties including the user resized column width (totalFlexWidth)
@@ -234,14 +237,25 @@ const Grid = memo((props) => {
     // #region - Group sorting logic
     // Function to return sorting logic based on the user selected order of sort
     const compareValues = (compareOrder, v1, v2) => {
+        let returnValue = 0;
         if (compareOrder === "Ascending") {
-            return v1 > v2 ? 1 : v1 < v2 ? -1 : 0;
+            if (v1 > v2) {
+                returnValue = 1;
+            } else if (v1 < v2) {
+                returnValue = -1;
+            }
+            return returnValue;
         }
-        return v1 < v2 ? 1 : v1 > v2 ? -1 : 0;
+        if (v1 < v2) {
+            returnValue = 1;
+        } else if (v1 > v2) {
+            returnValue = -1;
+        }
+        return returnValue;
     };
     // Function to return sorted data
     const getSortedData = (originalData) => {
-        return originalData.sort(function (x, y) {
+        return originalData.sort((x, y) => {
             let compareResult = 0;
             groupSortOptions.forEach((option) => {
                 const { sortBy, sortOn, order } = option;
@@ -268,7 +282,7 @@ const Grid = memo((props) => {
     // Gets called when page scroll reaches the bottom of the grid.
     // Fetch the next set of data and append it to the variable holding grid data and update the state value.
     // Also update the hasNextPage state value to False once API response is empty, to avoid unwanted API calls.
-    const loadNextPage = (...args) => {
+    const loadNextPage = () => {
         if (hasNextPage) {
             setIsLoading(true);
             setIsNextPageLoading(true);
@@ -284,10 +298,11 @@ const Grid = memo((props) => {
     useEffect(() => {
         // Add duplicate copy of inner cells to be used for data chooser
         processedColumns.map((column) => {
+            const columnTpProcess = column;
             if (column.innerCells) {
-                column.originalInnerCells = column.innerCells;
+                columnTpProcess.originalInnerCells = column.innerCells;
             }
-            return column;
+            return columnTpProcess;
         });
         if (additionalColumn) {
             const { innerCells } = additionalColumn;

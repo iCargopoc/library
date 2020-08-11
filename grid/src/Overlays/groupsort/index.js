@@ -120,7 +120,10 @@ const GroupSort = memo((props) => {
                         <div className="neo-popover__title">
                             <h2>Sort</h2>
                             <div className="neo-popover__close">
-                                <i onClick={toggleGroupSortOverLay}>
+                                <i
+                                    aria-hidden="true"
+                                    onClick={toggleGroupSortOverLay}
+                                >
                                     <img
                                         src={IconClose}
                                         alt="Group Sort Close Icon"

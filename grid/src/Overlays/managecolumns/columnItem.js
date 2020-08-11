@@ -21,10 +21,12 @@ const ColumnItem = ({
             isDragging: monitor.isDragging()
         }),
         end: (dropResult, monitor) => {
-            const { id: droppedId, originalIndex } = monitor.getItem();
+            const monitorGetItemValue = monitor.getItem();
+            const { id: droppedId } = monitorGetItemValue;
+            const newOriginalIndex = monitorGetItemValue.originalIndex;
             const didDrop = monitor.didDrop();
             if (!didDrop) {
-                moveColumn(droppedId, originalIndex);
+                moveColumn(droppedId, newOriginalIndex);
             }
         }
     });
@@ -57,9 +59,12 @@ const ColumnItem = ({
                 <div>{Header}</div>
                 <div className="column__innerCells__wrap">
                     {originalInnerCells && originalInnerCells.length > 0
-                        ? originalInnerCells.map((cell, index) => {
+                        ? originalInnerCells.map((cell) => {
                               return (
-                                  <div className="column__wrap" key={index}>
+                                  <div
+                                      className="column__wrap"
+                                      key={cell.Header}
+                                  >
                                       <div className="column__checkbox">
                                           <input
                                               type="checkbox"

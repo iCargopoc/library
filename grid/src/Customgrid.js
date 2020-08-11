@@ -208,17 +208,8 @@ const Customgrid = memo((props) => {
                     width: 35,
                     maxWidth: 35,
                     Header: ({ getToggleAllRowsSelectedProps }) => {
-                        const headerSelectProps = {
-                            ...getToggleAllRowsSelectedProps()
-                        };
                         return (
-                            <RowSelector
-                                checked={headerSelectProps.checked}
-                                indeterminate={headerSelectProps.indeterminate}
-                                onChange={headerSelectProps.onChange}
-                                style={headerSelectProps.style}
-                                title={headerSelectProps.title}
-                            />
+                            <RowSelector {...getToggleAllRowsSelectedProps()} />
                         );
                     },
                     Cell: ({ row }) => (
