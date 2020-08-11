@@ -8,13 +8,13 @@
     font-family: $font-family;
     font-size: rem(12);
     ::placeholder {
-        color: #bbb;
+        color: var(--placeholder);
     }
     ::-ms-input-placeholder {
-        color: #bbb;
+        color: var(--placeholder);
     }
     ::-ms-input-placeholder {
-        color: #bbb;
+        color: var(--placeholder);
     }
     .error {
         color: var(--danger);
@@ -23,8 +23,8 @@
         height: 25px;
         border-radius: 3px;
         padding: 1px 0 0 3px;
-        font-size: 12px;
+        font-size: rem(12);
         color: #000;
-        border: #cfd0d0 solid 1px;
+        border: var(--border-grey) solid 1px;
     }
 }

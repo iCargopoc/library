@@ -2,6 +2,7 @@ import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
+import IconNav from "../../Images/icon-nav.svg";
 import SortCopy from "../../Images/SortCopy.svg";
 import SortDelete from "../../Images/SortDelete.svg";
 
@@ -97,9 +98,10 @@ const SortItem = ({
                 <div
                     ref={(node) => drag(drop(node))}
                     style={{ cursor: "move" }}
-                    className=""
                 >
-                    <i className="fa fa-navicon" />
+                    <i>
+                        <img src={IconNav} alt="Group Sort Drag Icon" />
+                    </i>
                 </div>
             </div>
 

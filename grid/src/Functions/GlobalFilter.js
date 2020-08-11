@@ -23,7 +23,7 @@ const GlobalFilter = memo(({ globalFilter, setGlobalFilter }) => {
                 placeholder="Search"
             />
             <i>
-                <img src={IconSearch} />
+                <img src={IconSearch} alt="Global Search Icon" />
             </i>
         </div>
     );

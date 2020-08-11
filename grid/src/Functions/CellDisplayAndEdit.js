@@ -3,6 +3,9 @@ import ClickAwayListener from "react-click-away-listener";
 import CellDisplayAndEditTag from "./CellDisplayAndEditTag";
 import { CellDisplayAndEditContext } from "../Utilities/TagsContext";
 import PropTypes from "prop-types";
+import IconPencil from "../Images/icon-pencil.svg";
+import IconTick from "../Images/icon-tick.svg";
+import IconCancel from "../Images/icon-cancel.svg";
 
 const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
     const { column } = row;
@@ -59,10 +62,12 @@ const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
                                 role="presentation"
                                 onClick={openEdit}
                             >
-                                <i
-                                    className="fa fa-pencil"
-                                    aria-hidden="true"
-                                />
+                                <i>
+                                    <img
+                                        src={IconPencil}
+                                        alt="Cell Edit Icon"
+                                    />
+                                </i>
                             </div>
                         ) : null}
                         {cellDisplayContent}
@@ -71,18 +76,28 @@ const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
                                 {cellEditContent}
                                 <button
                                     type="button"
-                                    aria-label="Mute volume"
+                                    aria-label="Cell Edit Save Button"
                                     className="ok"
                                     data-testid="ok"
                                     onClick={saveEdit}
-                                />
+                                >
+                                    <img
+                                        src={IconTick}
+                                        alt="Cell Edit Save Icon"
+                                    />
+                                </button>
                                 <button
                                     type="button"
-                                    aria-label="Mute volume"
+                                    aria-label="Cell Edit Cancel Button"
                                     className="cancel"
                                     data-testid="cancel"
                                     onClick={closeEdit}
-                                />
+                                >
+                                    <img
+                                        src={IconCancel}
+                                        alt="Cell Edit Cancel Icon"
+                                    />
+                                </button>
                             </div>
                         ) : null}
                     </div>
@@ -95,10 +110,7 @@ const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
 CellDisplayAndEdit.propTypes = {
     row: PropTypes.any,
     columns: PropTypes.any,
-    updateRowInGrid: PropTypes.any,
-    cellKey: PropTypes.any,
-    columnKey: PropTypes.any,
-    children: PropTypes.any
+    updateRowInGrid: PropTypes.any
 };
 
 export default CellDisplayAndEdit;

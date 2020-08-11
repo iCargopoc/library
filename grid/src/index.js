@@ -1,4 +1,5 @@
 import React, { memo, useMemo, useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
     extractColumns,
     extractAdditionalColumn
@@ -6,19 +7,19 @@ import {
 import { AdditionalColumnContext } from "./Utilities/TagsContext";
 import AdditionalColumnTag from "./Functions/AdditionalColumnTag";
 import Customgrid from "./Customgrid";
+// eslint-disable-next-line import/no-unresolved
 import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
-import PropTypes from "prop-types";
 
 const Grid = memo((props) => {
     const {
         title,
         gridHeight,
         gridWidth,
+        loadData,
         columns,
         columnToExpand,
         rowActions,
         rowActionCallback,
-        fetchData,
         getRowEditOverlay,
         updateRowData,
         deleteRowData,
@@ -55,8 +56,8 @@ const Grid = memo((props) => {
             // Enter if cell value is array
             if (rowAccessorValue.length > 0) {
                 // Loop through cell array value and check if searched text is present
-                rowAccessorValue.map((value) => {
-                    innerCells.map((cell) => {
+                rowAccessorValue.forEach((value) => {
+                    innerCells.forEach((cell) => {
                         const dataAccessor = value[cell.accessor];
                         if (
                             dataAccessor &&
@@ -71,7 +72,7 @@ const Grid = memo((props) => {
                 });
             } else {
                 // If cell value is an object, loop through inner cells and check if searched text is present
-                innerCells.map((cell) => {
+                innerCells.forEach((cell) => {
                     const dataAccessor = original[accessor][cell.accessor];
                     if (
                         dataAccessor &&
@@ -166,7 +167,7 @@ const Grid = memo((props) => {
     // #endregion
 
     // Add logic for doing global search in the grid
-    const globalSearchLogic = (rows, columns, filterValue) => {
+    const globalSearchLogic = (rows, filterValue) => {
         // Enter search logic only if rows and columns are available
         if (filterValue && processedColumns.length > 0) {
             // convert user searched text to lower case
@@ -268,11 +269,10 @@ const Grid = memo((props) => {
     // Fetch the next set of data and append it to the variable holding grid data and update the state value.
     // Also update the hasNextPage state value to False once API response is empty, to avoid unwanted API calls.
     const loadNextPage = (...args) => {
-        const newIndex = args && args.length > 0 ? args[0] : -1;
-        if (newIndex >= 0 && hasNextPage) {
+        if (hasNextPage) {
             setIsLoading(true);
             setIsNextPageLoading(true);
-            fetchData(newIndex).then((data) => {
+            loadData().then((data) => {
                 setIsLoading(false);
                 setHasNextPage(data && data.length > 0);
                 setIsNextPageLoading(false);
@@ -298,7 +298,7 @@ const Grid = memo((props) => {
 
         // Make API call to fetch initial set of data.
         setIsLoading(true);
-        fetchData(0).then((data) => {
+        loadData().then((data) => {
             setIsLoading(false);
             setItems(data);
         });
@@ -375,14 +375,14 @@ Grid.propTypes = {
     gridWidth: PropTypes.any,
     columns: PropTypes.any,
     columnToExpand: PropTypes.any,
-    fetchData: PropTypes.any,
+    loadData: PropTypes.any,
     getRowEditOverlay: PropTypes.any,
     updateRowData: PropTypes.any,
     deleteRowData: PropTypes.any,
     selectBulkData: PropTypes.any,
     calculateRowHeight: PropTypes.any,
-    cellKey: PropTypes.any,
-    children: PropTypes.any
+    rowActions: PropTypes.any,
+    rowActionCallback: PropTypes.any
 };
 
 export default Grid;
