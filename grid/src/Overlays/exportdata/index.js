@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from "react";
 import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
-import jsPDF from "jspdf";
+import JsPdf from "jspdf";
 import "jspdf-autotable";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
@@ -57,7 +57,7 @@ const ExportData = memo((props) => {
         const orientation = "landscape"; // portrait or landscape
 
         const marginLeft = 30;
-        const doc = new jsPDF(orientation, unit, size);
+        const doc = new JsPdf(orientation, unit, size);
 
         doc.setFontSize(15);
         const title = "iCargo Neo Report";
@@ -149,17 +149,21 @@ const ExportData = memo((props) => {
                                 const innerCellAccessorValue =
                                     accessorRowValue[innerCellAccessor];
                                 if (accessorRowValue.length > 0) {
-                                    accessorRowValue.forEach((item, index) => {
-                                        columnValue = item[
-                                            innerCellAccessor
-                                        ].toString();
-                                        columnHeader = `${Header} - ${innerCellHeader}_${index}`;
-                                        filteredColumnVal[
-                                            columnHeader
-                                        ] = columnValue;
-                                        rowFilteredValues.push(columnValue);
-                                        rowFilteredHeader.push(columnHeader);
-                                    });
+                                    accessorRowValue.forEach(
+                                        (item, itemIndex) => {
+                                            columnValue = item[
+                                                innerCellAccessor
+                                            ].toString();
+                                            columnHeader = `${Header} - ${innerCellHeader}_${itemIndex}`;
+                                            filteredColumnVal[
+                                                columnHeader
+                                            ] = columnValue;
+                                            rowFilteredValues.push(columnValue);
+                                            rowFilteredHeader.push(
+                                                columnHeader
+                                            );
+                                        }
+                                    );
                                 } else if (innerCellAccessorValue) {
                                     columnValue = innerCellAccessorValue;
                                     columnHeader = `${Header} - ${innerCellHeader}`;
@@ -276,7 +280,7 @@ const ExportData = memo((props) => {
         // If column checkbox is checked
         if (checked) {
             // Find the index of selected column from original column array and also find the user selected column
-            let indexOfColumnToAdd = updatedColumns.findIndex((column) => {
+            const indexOfColumnToAdd = updatedColumns.findIndex((column) => {
                 return column.Header === value;
             });
             const itemToAdd = updatedColumns[indexOfColumnToAdd];
@@ -284,14 +288,15 @@ const ExportData = memo((props) => {
             // Loop through the managedColumns array to find the position of the column that is present previous to the user selected column
             // Find index of that previous column and push the new column to add in that position
             let prevItemIndex = -1;
-            while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
-                prevItemIndex = managedColumns.findIndex((column) => {
-                    return (
-                        column.Header ===
-                        updatedColumns[indexOfColumnToAdd - 1].Header
-                    );
-                });
-                indexOfColumnToAdd -= 1;
+            for (let i = indexOfColumnToAdd; i > 0; i--) {
+                if (prevItemIndex === -1) {
+                    prevItemIndex = managedColumns.findIndex((column) => {
+                        return (
+                            column.Header ===
+                            updatedColumns[indexOfColumnToAdd - 1].Header
+                        );
+                    });
+                }
             }
 
             const newColumnsList = managedColumns.slice(0); // Copying state value
@@ -358,11 +363,11 @@ const ExportData = memo((props) => {
                                         Select All
                                     </div>
                                 </div>
-                                {searchedColumns.map((column, index) => {
+                                {searchedColumns.map((column) => {
                                     return (
                                         <div
                                             className="export__wrap"
-                                            key={index}
+                                            key={column.Header}
                                         >
                                             <div className="export__checkbox">
                                                 <input
@@ -388,7 +393,10 @@ const ExportData = memo((props) => {
                             <div className="export__header">
                                 <div className="export__headerTxt" />
                                 <div className="export__close">
-                                    <i onClick={toggleExportDataOverlay}>
+                                    <i
+                                        aria-hidden="true"
+                                        onClick={toggleExportDataOverlay}
+                                    >
                                         <img
                                             src={IconClose}
                                             alt="Export Overlay Close Icon"

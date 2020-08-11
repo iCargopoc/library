@@ -24,10 +24,12 @@ const SortItem = ({
             isDragging: monitor.isDragging()
         }),
         end: (dropResult, monitor) => {
-            const { id: droppedId, originalIndex } = monitor.getItem();
+            const monitorGetItemValue = monitor.getItem();
+            const { id: droppedId } = monitorGetItemValue;
+            const newOriginalIndex = monitorGetItemValue.originalIndex;
             const didDrop = monitor.didDrop();
             if (!didDrop) {
-                moveSort(droppedId, originalIndex);
+                moveSort(droppedId, newOriginalIndex);
             }
         }
     });
@@ -112,8 +114,11 @@ const SortItem = ({
                         onChange={changeSortByOptions}
                         value={sortOption.sortBy}
                     >
-                        {originalColumns.map((orgItem, index) => (
-                            <option key={index} value={orgItem.accessor}>
+                        {originalColumns.map((orgItem) => (
+                            <option
+                                key={orgItem.Header}
+                                value={orgItem.accessor}
+                            >
                                 {orgItem.Header}
                             </option>
                         ))}
@@ -130,9 +135,9 @@ const SortItem = ({
                         {getInncerCellsOfColumn(sortOption.sortBy) &&
                         getInncerCellsOfColumn(sortOption.sortBy).length > 0 ? (
                             getInncerCellsOfColumn(sortOption.sortBy).map(
-                                (innerCellItem, innerCellIndex) => (
+                                (innerCellItem) => (
                                     <option
-                                        key={innerCellIndex}
+                                        key={innerCellItem.Header}
                                         value={innerCellItem.accessor}
                                     >
                                         {innerCellItem.Header}

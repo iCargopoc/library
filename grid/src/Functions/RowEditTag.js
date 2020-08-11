@@ -14,11 +14,19 @@ const RowEditTag = (props) => {
         );
         if (selectedColumn && cellKey) {
             if (checkInnerCells(selectedColumn, cellKey)) {
-                return <> {props.children}</>;
+                return (
+                    <React.Fragment key="RowEditFragment">
+                        {props.children}
+                    </React.Fragment>
+                );
             }
         } else if (!selectedColumn && isRowExpandEnabled && additionalColumn) {
             if (checkInnerCells(additionalColumn, columnKey)) {
-                return <> {props.children}</>;
+                return (
+                    <React.Fragment key="RowEditFragment">
+                        {props.children}
+                    </React.Fragment>
+                );
             }
         }
     }

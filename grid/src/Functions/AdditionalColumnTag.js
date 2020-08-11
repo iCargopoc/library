@@ -10,7 +10,11 @@ const AdditionalColumnTag = (props) => {
 
     if (additionalColumn && cellKey) {
         if (checkInnerCells(additionalColumn, cellKey)) {
-            return <> {props.children}</>;
+            return (
+                <React.Fragment key="AdditionalColumnFragment">
+                    {props.children}
+                </React.Fragment>
+            );
         }
     }
     return null;

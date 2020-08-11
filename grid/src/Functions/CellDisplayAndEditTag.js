@@ -13,11 +13,19 @@ const CellDisplayAndEditTag = (props) => {
             (col) => col.accessor === columnKey
         );
         if (checkInnerCells(selectedColumn, cellKey)) {
-            return <> {props.children}</>;
+            return (
+                <React.Fragment key="CellDisplayAndEditFragment">
+                    {props.children}
+                </React.Fragment>
+            );
         }
     } else if (cellKey) {
         if (checkInnerCells(column, cellKey)) {
-            return <> {props.children}</>;
+            return (
+                <React.Fragment key="CellDisplayAndEditFragment">
+                    {props.children}
+                </React.Fragment>
+            );
         }
     }
     return null;

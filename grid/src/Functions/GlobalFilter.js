@@ -1,13 +1,13 @@
 import React, { memo, useState } from "react";
 import { useAsyncDebounce } from "react-table";
-import IconSearch from "../Images/icon-search.svg";
 import PropTypes from "prop-types";
+import IconSearch from "../Images/icon-search.svg";
 
 const GlobalFilter = memo(({ globalFilter, setGlobalFilter }) => {
     const [value, setValue] = useState(globalFilter);
 
-    const onChange = useAsyncDebounce((value) => {
-        setGlobalFilter(value || undefined);
+    const onChange = useAsyncDebounce((changedValue) => {
+        setGlobalFilter(changedValue || undefined);
     }, 200);
 
     return (

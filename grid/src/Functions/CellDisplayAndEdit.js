@@ -1,8 +1,8 @@
 import React, { memo, useState } from "react";
 import ClickAwayListener from "react-click-away-listener";
+import PropTypes from "prop-types";
 import CellDisplayAndEditTag from "./CellDisplayAndEditTag";
 import { CellDisplayAndEditContext } from "../Utilities/TagsContext";
-import PropTypes from "prop-types";
 import IconPencil from "../Images/icon-pencil.svg";
 import IconTick from "../Images/icon-tick.svg";
 import IconCancel from "../Images/icon-cancel.svg";
@@ -48,9 +48,11 @@ const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
                   getUpdatedRowValue
               )
             : null;
+        const columnsToPass = columns;
+        const columnToPass = column;
         return (
             <CellDisplayAndEditContext.Provider
-                value={{ columns: columns, column: column }}
+                value={{ columns: columnsToPass, column: columnToPass }}
             >
                 <ClickAwayListener onClickAway={closeEdit}>
                     <div
@@ -105,6 +107,7 @@ const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
             </CellDisplayAndEditContext.Provider>
         );
     }
+    return null;
 });
 
 CellDisplayAndEdit.propTypes = {
