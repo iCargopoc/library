@@ -48,6 +48,7 @@ const ColumnItem = ({
         <div style={{ opacity }}>
             <div className="column__reorder">
                 <div
+                    data-testid="columnItem"
                     ref={(node) => drag(drop(node))}
                     style={{ cursor: "move" }}
                     className="column_drag"
@@ -63,7 +64,7 @@ const ColumnItem = ({
                               return (
                                   <div
                                       className="column__wrap"
-                                      key={cell.Header}
+                                      key={`${cell.Header}_${cell.accessor}`}
                                   >
                                       <div className="column__checkbox">
                                           <input

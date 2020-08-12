@@ -367,7 +367,7 @@ const ExportData = memo((props) => {
                                     return (
                                         <div
                                             className="export__wrap"
-                                            key={column.Header}
+                                            key={column.columnId}
                                         >
                                             <div className="export__checkbox">
                                                 <input

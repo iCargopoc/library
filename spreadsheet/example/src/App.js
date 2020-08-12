@@ -27,8 +27,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "date",
@@ -41,8 +40,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "segmentfrom",
@@ -55,8 +53,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: "segmentfrom"
+            dataSource: []
         },
         {
             key: "revenue",
@@ -69,8 +66,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "yeild",
@@ -83,8 +79,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "segmentto",
@@ -97,8 +92,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: "segmentto"
+            dataSource: []
         },
         {
             key: "flightModel",
@@ -110,8 +104,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "numeric",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "bodyType",
@@ -124,8 +117,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "type",
@@ -138,8 +130,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "startTime",
@@ -152,8 +143,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "endTime",
@@ -166,8 +156,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "status",
@@ -180,8 +169,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "additionalStatus",
@@ -194,8 +182,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "timeStatus",
@@ -208,8 +195,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "weightpercentage",
@@ -222,8 +208,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "weightvalue",
@@ -236,8 +221,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "volumepercentage",
@@ -250,8 +234,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "volumevalue",
@@ -264,8 +247,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "uldposition1",
@@ -278,8 +260,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "uldvalue1",
@@ -292,8 +273,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "uldposition2",
@@ -306,8 +286,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "uldvalue2",
@@ -320,8 +299,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "uldposition3",
@@ -334,8 +312,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "uldvalue3",
@@ -348,8 +325,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "uldposition4",
@@ -362,8 +338,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "uldvalue4",
@@ -376,8 +351,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
 
         {
@@ -391,8 +365,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "queuedBookingSR",
@@ -405,8 +378,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         },
         {
             key: "queuedBookingvolume",
@@ -419,8 +391,7 @@ const App = (props) => {
             filterable: true,
             width: 150,
             filterType: "autoCompleteFilter",
-            dataSource: [],
-            dataSourceType: ""
+            dataSource: []
         }
     ];
 
@@ -548,13 +519,13 @@ const App = (props) => {
 
     //binding the required values of dropDown to the dataSource field in columns
     columns.forEach((item) => {
-        if (item.dataSourceType === "segmentto") {
+        if (item.key === "segmentto") {
             let tempArray = [];
             segmenToCode.forEach((it) => {
                 tempArray.push({ id: it, value: it });
             });
             item.dataSource = tempArray;
-        } else if (item.dataSourceType === "segmentfrom") {
+        } else if (item.key === "segmentfrom") {
             let tempArray = [];
             segmentFromCode.forEach((it) => {
                 tempArray.push({ id: it, value: it });
@@ -572,16 +543,36 @@ const App = (props) => {
     }, [rows]);
 
     /**
-     * Method To save the rows
+     * Method To render updated rows
      * @param {*} rows is the updated row values
      */
-    const saveRows = (rows) => {
-        console.log("savedData:", rows);
+    const updatedRows = ({ fromRow, toRow, updated }) => {
+        let tempData = [...data];
+        const temp = tempData.slice();
+        for (let i = fromRow; i <= toRow; i++) {
+            temp[i] = {
+                ...temp[i],
+                ...updated
+            };
+        }
+        setData(temp);
+        console.log("UpdatedRows:", temp);
+    };
+
+    /**
+     * Method return updated rows
+     */
+    const handleSave = () => {
+        console.log(data);
     };
 
     if (data) {
         return (
             <div>
+                {/* click on button will load updated records in spreadsheet*/}
+                {/* <button type="button" onClick={handleSave}>
+                    Load Data
+                </button> */}
                 <Spreadsheet
                     rows={data.slice(0, pageSize)}
                     dataSet={data}
@@ -592,7 +583,7 @@ const App = (props) => {
                     updateCellData={updateCellData}
                     selectBulkData={selectBulkData}
                     maxLeftPinnedColumn={maxLeftPinnedColumn}
-                    saveRows={saveRows}
+                    updatedRows={updatedRows}
                 />
             </div>
         );

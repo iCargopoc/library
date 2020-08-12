@@ -44,7 +44,7 @@ const SortingList = (props) => {
                     return (
                         <SortItem
                             id={index}
-                            key={sortOption}
+                            key={index}
                             sortOption={sortOption}
                             originalColumns={props.originalColumns}
                             moveSort={moveSort}

@@ -7,14 +7,6 @@ import React, { Component } from "react";
 
 import { Toolbar, Data, Filters, Editors } from "react-data-grid-addons";
 import { FormControl } from "react-bootstrap";
-import {
-    faSortAmountDown,
-    faColumns,
-    faShareAlt,
-    faSortDown,
-    faSave
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 import ExtDataGrid from "./common/extDataGrid";
 import { applyFormula } from "./utilities/utils";
@@ -23,6 +15,13 @@ import ErrorMessage from "./common/ErrorMessage";
 import ColumnReordering from "./overlays/column_chooser/Chooser";
 import Sorting from "./overlays/sorting/Sorting";
 import ExportData from "./overlays/export_data/ExportData";
+import IconColumns from "./Images/icon-columns.svg";
+import IconShare from "./Images/icon-share.svg";
+import IconGroupSort from "./Images/icon-group-sort.svg";
+import IconFilter from "./Images/icon-filter.svg";
+import IconSearch from "./Images/icon-search.svg";
+// eslint-disable-next-line import/no-unresolved
+import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 
 const { DropDownEditor } = Editors;
 const selectors = Data.Selectors;
@@ -35,7 +34,7 @@ class Spreadsheet extends Component {
         super(props);
         const airportCodes = [];
         const { dataSet, pageSize } = this.props;
-        
+
         const dataSetVar = JSON.parse(JSON.stringify(dataSet));
         this.state = {
             warningStatus: "",
@@ -826,6 +825,7 @@ class Spreadsheet extends Component {
         }
 
         if (action !== "COPY_PASTE") {
+            this.props.updatedRows({ fromRow, toRow, updated, action });
             this.setState((state) => {
                 const rows = state.rows.slice();
                 for (let i = fromRow; i <= toRow; i++) {
@@ -837,20 +837,6 @@ class Spreadsheet extends Component {
 
                 return {
                     rows
-                };
-            });
-            
-            this.setState((state) => {
-                const dataSet = state.dataSet.slice();
-                for (let i = fromRow; i <= toRow; i++) {
-                    dataSet[i] = {
-                        ...dataSet[i],
-                        ...updated
-                    };
-                }
-
-                return {
-                    dataSet
                 };
             });
 
@@ -1148,60 +1134,57 @@ class Spreadsheet extends Component {
     render() {
         return (
             <div onScroll={this.handleScroll}>
-                <div className="parentDiv">
-                    <div className="totalCount">
-                        Showing <strong> {this.state.count} </strong> records
+                <div className="neo-grid-header">
+                    <div className="neo-grid-header__results">
+                        Showing &nbsp;<strong> {this.state.count} </strong>{" "}
+                        &nbsp; records
                     </div>
-                    <div className="globalSearch">
-                        <i className="fa fa-search" />
-                        <FormControl
-                            className="globalSeachInput"
-                            type="text"
-                            placeholder="Search"
-                            onChange={(e) => {
-                                this.handleSearchValue(e.target.value);
-                                const srchRows = this.getSearchRecords(e);
-                                this.globalSearchLogic(e, srchRows);
-                            }}
-                            value={this.state.searchValue}
-                        />
+                    <div className="neo-grid-header__utilities">
+                        <i>
+                            <img src={IconFilter} alt="Column Filter Icon" />
+                        </i>
+                        <div className="txt-wrap">
+                            <input
+                                type="text"
+                                onChange={(e) => {
+                                    this.handleSearchValue(e.target.value);
+                                    const srchRows = this.getSearchRecords(e);
+                                    this.globalSearchLogic(e, srchRows);
+                                }}
+                                value={this.state.searchValue}
+                                className="txt"
+                                placeholder="Search"
+                            />
+                            <i>
+                                <img
+                                    src={IconSearch}
+                                    alt="Global Search Icon"
+                                />
+                            </i>
+                        </div>
+                        <div
+                            className="filterIcons"
+                            onClick={this.sortingPanel}
+                        >
+                            <img src={IconGroupSort} alt="Group sort Icon" />
+                        </div>
+                        {this.state.sortingPanelComponent}
+                        <div
+                            className="filterIcons"
+                            onClick={this.columnReorderingPannel}
+                        >
+                            <img src={IconColumns} alt="collumn-chooser-icon" />
+                        </div>
+                        {this.state.columnReorderingComponent}
+                        <div className="filterIcons">
+                            <img
+                                src={IconShare}
+                                alt="Export Data Icon"
+                                onClick={this.exportColumnData}
+                            />
+                        </div>
+                        {this.state.exportComponent}
                     </div>
-                    <div className="filterIcons" onClick={this.save}>
-                        <FontAwesomeIcon title="Group Sort" icon={faSave} />
-                    </div>
-                    <div className="filterIcons" onClick={this.sortingPanel}>
-                        <FontAwesomeIcon
-                            title="Group Sort"
-                            icon={faSortAmountDown}
-                        />
-                        <FontAwesomeIcon
-                            icon={faSortDown}
-                            className="filterArrow"
-                        />
-                    </div>
-                    {this.state.sortingPanelComponent}
-                    <div
-                        className="filterIcons"
-                        onClick={this.columnReorderingPannel}
-                    >
-                        <FontAwesomeIcon
-                            title="Column Chooser"
-                            icon={faColumns}
-                        />
-                        <FontAwesomeIcon
-                            icon={faSortDown}
-                            className="filterArrow"
-                        />
-                    </div>
-                    {this.state.columnReorderingComponent}
-                    <div className="filterIcons">
-                        <FontAwesomeIcon
-                            title="Export"
-                            icon={faShareAlt}
-                            onClick={this.exportColumnData}
-                        />
-                    </div>
-                    {this.state.exportComponent}
                 </div>
                 <ErrorMessage
                     className="errorDiv"

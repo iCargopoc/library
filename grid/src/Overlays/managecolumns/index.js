@@ -336,7 +336,7 @@ const ColumnReordering = memo((props) => {
                                     return (
                                         <div
                                             className="column__wrap"
-                                            key={column.Header}
+                                            key={column.columnId}
                                         >
                                             <div className="column__checkbox">
                                                 <input
@@ -419,9 +419,7 @@ const ColumnReordering = memo((props) => {
                                                           return (
                                                               <div
                                                                   className="column__wrap"
-                                                                  key={
-                                                                      cell.Header
-                                                                  }
+                                                                  key={`${cell.Header}_${cell.accessor}`}
                                                               >
                                                                   <div className="column__checkbox">
                                                                       <input

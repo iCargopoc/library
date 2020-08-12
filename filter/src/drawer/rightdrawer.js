@@ -4,7 +4,7 @@ import AutoComplete from "../types/AutoCompleteComponent";
 import FieldComponent from "../types/DateTimeComponent";
 import Condition from "../types/ConditionalComponent";
 import TextComponents from "../types/TextComponents";
-import saveLogo from "./images/icon-save.svg";
+import saveLogo from "../images/save-icon.svg";
 
 const RightDrawer = (props) => {
     const [showSavePopup, setShowSavePopup] = useState("none");

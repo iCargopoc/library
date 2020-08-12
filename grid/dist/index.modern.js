@@ -1,4 +1,4 @@
-import React__default, { createContext, useContext, Fragment as Fragment$1, memo, useState, forwardRef, useRef, useEffect, createRef, useMemo, useCallback } from 'react';
+import React__default, { createContext, useContext, memo, useState, forwardRef, useRef, useEffect, createRef, useMemo, useCallback } from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import { useAsyncDebounce, useTable, useFilters, useGlobalFilter, useSortBy, useExpanded, useRowSelect, useFlexLayout, useResizeColumns } from 'react-table';
 import { VariableSizeList } from 'react-window';
@@ -9,7 +9,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import MultiBackend, { TouchTransition } from 'react-dnd-multi-backend';
 import update from 'immutability-helper';
-import jsPDF from 'jspdf';
+import JsPdf from 'jspdf';
 import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
 import { utils, write } from 'xlsx';
@@ -1131,11 +1131,15 @@ const CellDisplayAndEditTag = props => {
     const selectedColumn = columns.find(col => col.accessor === columnKey);
 
     if (checkInnerCells(selectedColumn, cellKey)) {
-      return /*#__PURE__*/React__default.createElement(Fragment$1, null, " ", props.children);
+      return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+        key: "CellDisplayAndEditFragment"
+      }, props.children);
     }
   } else if (cellKey) {
     if (checkInnerCells(column, cellKey)) {
-      return /*#__PURE__*/React__default.createElement(Fragment$1, null, " ", props.children);
+      return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+        key: "CellDisplayAndEditFragment"
+      }, props.children);
     }
   }
 
@@ -1196,10 +1200,12 @@ const CellDisplayAndEdit = memo(({
     };
     const cellDisplayContent = column.displayCell(originalRowValue, CellDisplayAndEditTag);
     const cellEditContent = column.editCell ? column.editCell(originalRowValue, CellDisplayAndEditTag, getUpdatedRowValue) : null;
+    const columnsToPass = columns;
+    const columnToPass = column;
     return /*#__PURE__*/React__default.createElement(CellDisplayAndEditContext.Provider, {
       value: {
-        columns: columns,
-        column: column
+        columns: columnsToPass,
+        column: columnToPass
       }
     }, /*#__PURE__*/React__default.createElement(ClickAwayListener, {
       onClickAway: closeEdit
@@ -1234,6 +1240,8 @@ const CellDisplayAndEdit = memo(({
       alt: "Cell Edit Cancel Icon"
     }))) : null)));
   }
+
+  return null;
 });
 CellDisplayAndEdit.propTypes = {
   row: propTypes.any,
@@ -1341,7 +1349,9 @@ const AdditionalColumnTag = props => {
 
   if (additionalColumn && cellKey) {
     if (checkInnerCells(additionalColumn, cellKey)) {
-      return /*#__PURE__*/React__default.createElement(Fragment$1, null, " ", props.children);
+      return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+        key: "AdditionalColumnFragment"
+      }, props.children);
     }
   }
 
@@ -1407,8 +1417,8 @@ const GlobalFilter = memo(({
   setGlobalFilter
 }) => {
   const [value, setValue] = useState(globalFilter);
-  const onChange = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined);
+  const onChange = useAsyncDebounce(changedValue => {
+    setGlobalFilter(changedValue || undefined);
   }, 200);
   return /*#__PURE__*/React__default.createElement("div", {
     className: "txt-wrap"
@@ -1548,11 +1558,15 @@ const RowEditTag = props => {
 
     if (selectedColumn && cellKey) {
       if (checkInnerCells(selectedColumn, cellKey)) {
-        return /*#__PURE__*/React__default.createElement(Fragment$1, null, " ", props.children);
+        return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+          key: "RowEditFragment"
+        }, props.children);
       }
     } else if (!selectedColumn && isRowExpandEnabled && additionalColumn) {
       if (checkInnerCells(additionalColumn, columnKey)) {
-        return /*#__PURE__*/React__default.createElement(Fragment$1, null, " ", props.children);
+        return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+          key: "RowEditFragment"
+        }, props.children);
       }
     }
   }
@@ -1687,14 +1701,15 @@ const ColumnItem = ({
       isDragging: monitor.isDragging()
     }),
     end: (dropResult, monitor) => {
+      const monitorGetItemValue = monitor.getItem();
       const {
-        id: droppedId,
-        originalIndex
-      } = monitor.getItem();
+        id: droppedId
+      } = monitorGetItemValue;
+      const newOriginalIndex = monitorGetItemValue.originalIndex;
       const didDrop = monitor.didDrop();
 
       if (!didDrop) {
-        moveColumn(droppedId, originalIndex);
+        moveColumn(droppedId, newOriginalIndex);
       }
     }
   });
@@ -1732,10 +1747,10 @@ const ColumnItem = ({
     alt: "Column Chooser Drag Icon"
   }))), /*#__PURE__*/React__default.createElement("div", null, Header), /*#__PURE__*/React__default.createElement("div", {
     className: "column__innerCells__wrap"
-  }, originalInnerCells && originalInnerCells.length > 0 ? originalInnerCells.map((cell, index) => {
+  }, originalInnerCells && originalInnerCells.length > 0 ? originalInnerCells.map(cell => {
     return /*#__PURE__*/React__default.createElement("div", {
       className: "column__wrap",
-      key: index
+      key: `${cell.Header}_${cell.accessor}`
     }, /*#__PURE__*/React__default.createElement("div", {
       className: "column__checkbox"
     }, /*#__PURE__*/React__default.createElement("input", {
@@ -1789,15 +1804,17 @@ const ColumnsList = props => {
   const [, drop] = useDrop({
     accept: ItemTypes.COLUMN
   });
-  return /*#__PURE__*/React__default.createElement(Fragment$1, null, /*#__PURE__*/React__default.createElement("div", {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+    key: "ColumnManageFragment"
+  }, /*#__PURE__*/React__default.createElement("div", {
     ref: drop,
     style: {
       display: "flex",
       flexWrap: "wrap"
     }
-  }, columnsToManage.map((column, index) => {
+  }, columnsToManage.map(column => {
     return /*#__PURE__*/React__default.createElement(ColumnItem, {
-      key: index,
+      key: column.columnId,
       id: `${column.columnId}`,
       Header: `${column.Header}`,
       moveColumn: moveColumn,
@@ -1939,27 +1956,25 @@ const ColumnReordering = memo(props => {
       } else {
         setRemarksColumnToManage([]);
       }
-    } else {
-      if (checked) {
-        let indexOfColumnToAdd = originalColumns.findIndex(column => {
-          return column.Header === value;
-        });
-        const itemToAdd = originalColumns[indexOfColumnToAdd];
-        let prevItemIndex = -1;
+    } else if (checked) {
+      let indexOfColumnToAdd = originalColumns.findIndex(column => {
+        return column.Header === value;
+      });
+      const itemToAdd = originalColumns[indexOfColumnToAdd];
+      let prevItemIndex = -1;
 
-        while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
-          indexOfColumnToAdd -= 1;
-          prevItemIndex = findIndexOfItem("column", managedColumns, indexOfColumnToAdd);
-        }
-
-        const newColumnsList = [...managedColumns];
-        newColumnsList.splice(prevItemIndex + 1, 0, itemToAdd);
-        setManagedColumns(newColumnsList);
-      } else {
-        setManagedColumns(managedColumns.filter(column => {
-          return column.Header !== value;
-        }));
+      while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
+        indexOfColumnToAdd -= 1;
+        prevItemIndex = findIndexOfItem("column", managedColumns, indexOfColumnToAdd);
       }
+
+      const newColumnsList = [...managedColumns];
+      newColumnsList.splice(prevItemIndex + 1, 0, itemToAdd);
+      setManagedColumns(newColumnsList);
+    } else {
+      setManagedColumns(managedColumns.filter(column => {
+        return column.Header !== value;
+      }));
     }
   };
 
@@ -1998,13 +2013,15 @@ const ColumnReordering = memo(props => {
         setStateColumnList(newColumnsList);
       } else {
         setStateColumnList(stateColumnList.map(column => {
+          const updatedColumn = column;
+
           if (column.Header === columnheader) {
-            column.innerCells = column.innerCells.filter(cell => {
+            updatedColumn.innerCells = column.innerCells.filter(cell => {
               return cell.Header !== value;
             });
           }
 
-          return column;
+          return updatedColumn;
         }));
       }
     }
@@ -2033,7 +2050,8 @@ const ColumnReordering = memo(props => {
   const resetInnerCells = columnList => {
     if (columnList && columnList.length) {
       return columnList.map(column => {
-        column.innerCells = column.originalInnerCells;
+        const newColumn = column;
+        newColumn.innerCells = column.originalInnerCells;
         return column;
       });
     }
@@ -2078,10 +2096,10 @@ const ColumnReordering = memo(props => {
       onChange: selectAllColumns
     })), /*#__PURE__*/React__default.createElement("div", {
       className: "column__selectTxt"
-    }, "Select All")), searchedColumns.map((column, index) => {
+    }, "Select All")), searchedColumns.map(column => {
       return /*#__PURE__*/React__default.createElement("div", {
         className: "column__wrap",
-        key: index
+        key: column.columnId
       }, /*#__PURE__*/React__default.createElement("div", {
         className: "column__checkbox"
       }, /*#__PURE__*/React__default.createElement("input", {
@@ -2124,10 +2142,10 @@ const ColumnReordering = memo(props => {
       className: "column__reorder full-width"
     }, /*#__PURE__*/React__default.createElement("div", null, remarksColumnToManage[0].Header), /*#__PURE__*/React__default.createElement("div", {
       className: "column__innerCells__wrap"
-    }, remarksColumnToManage[0].originalInnerCells && remarksColumnToManage[0].originalInnerCells.length > 0 ? remarksColumnToManage[0].originalInnerCells.map((cell, index) => {
+    }, remarksColumnToManage[0].originalInnerCells && remarksColumnToManage[0].originalInnerCells.length > 0 ? remarksColumnToManage[0].originalInnerCells.map(cell => {
       return /*#__PURE__*/React__default.createElement("div", {
         className: "column__wrap",
-        key: index
+        key: `${cell.Header}_${cell.accessor}`
       }, /*#__PURE__*/React__default.createElement("div", {
         className: "column__checkbox"
       }, /*#__PURE__*/React__default.createElement("input", {
@@ -2202,14 +2220,15 @@ const SortItem = ({
       isDragging: monitor.isDragging()
     }),
     end: (dropResult, monitor) => {
+      const monitorGetItemValue = monitor.getItem();
       const {
-        id: droppedId,
-        originalIndex
-      } = monitor.getItem();
+        id: droppedId
+      } = monitorGetItemValue;
+      const newOriginalIndex = monitorGetItemValue.originalIndex;
       const didDrop = monitor.didDrop();
 
       if (!didDrop) {
-        moveSort(droppedId, originalIndex);
+        moveSort(droppedId, newOriginalIndex);
       }
     }
   });
@@ -2284,8 +2303,8 @@ const SortItem = ({
     className: "custom__ctrl",
     onChange: changeSortByOptions,
     value: sortOption.sortBy
-  }, originalColumns.map((orgItem, index) => /*#__PURE__*/React__default.createElement("option", {
-    key: index,
+  }, originalColumns.map(orgItem => /*#__PURE__*/React__default.createElement("option", {
+    key: orgItem.columnId,
     value: orgItem.accessor
   }, orgItem.Header))))), /*#__PURE__*/React__default.createElement("div", {
     className: "sort__reorder"
@@ -2295,8 +2314,8 @@ const SortItem = ({
     className: "custom__ctrl",
     onChange: changeSortOnOptions,
     value: sortOption.sortOn
-  }, getInncerCellsOfColumn(sortOption.sortBy) && getInncerCellsOfColumn(sortOption.sortBy).length > 0 ? getInncerCellsOfColumn(sortOption.sortBy).map((innerCellItem, innerCellIndex) => /*#__PURE__*/React__default.createElement("option", {
-    key: innerCellIndex,
+  }, getInncerCellsOfColumn(sortOption.sortBy) && getInncerCellsOfColumn(sortOption.sortBy).length > 0 ? getInncerCellsOfColumn(sortOption.sortBy).map(innerCellItem => /*#__PURE__*/React__default.createElement("option", {
+    key: `${innerCellItem.Header}_${innerCellItem.accessor}`,
     value: innerCellItem.accessor
   }, innerCellItem.Header)) : /*#__PURE__*/React__default.createElement("option", {
     key: 0,
@@ -2368,7 +2387,9 @@ const SortingList = props => {
   const [, drop] = useDrop({
     accept: ItemTypes$1.SORT_ITEM
   });
-  return /*#__PURE__*/React__default.createElement(Fragment$1, null, /*#__PURE__*/React__default.createElement("div", {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+    key: "SortingListFragment"
+  }, /*#__PURE__*/React__default.createElement("div", {
     ref: drop,
     style: {
       display: "flex",
@@ -2500,6 +2521,7 @@ const GroupSort = memo(props => {
     }, /*#__PURE__*/React__default.createElement("h2", null, "Sort"), /*#__PURE__*/React__default.createElement("div", {
       className: "neo-popover__close"
     }, /*#__PURE__*/React__default.createElement("i", {
+      "aria-hidden": "true",
       onClick: toggleGroupSortOverLay
     }, /*#__PURE__*/React__default.createElement("img", {
       src: IconClose,
@@ -2589,7 +2611,7 @@ const ExportData = memo(props => {
     const size = "A4";
     const orientation = "landscape";
     const marginLeft = 30;
-    const doc = new jsPDF(orientation, unit, size);
+    const doc = new JsPdf(orientation, unit, size);
     doc.setFontSize(15);
     const title = "iCargo Neo Report";
     const content = {
@@ -2697,9 +2719,9 @@ const ExportData = memo(props => {
                 const innerCellAccessorValue = accessorRowValue[innerCellAccessor];
 
                 if (accessorRowValue.length > 0) {
-                  accessorRowValue.forEach((item, index) => {
+                  accessorRowValue.forEach((item, itemIndex) => {
                     columnValue = item[innerCellAccessor].toString();
-                    columnHeader = `${Header} - ${innerCellHeader}_${index}`;
+                    columnHeader = `${Header} - ${innerCellHeader}_${itemIndex}`;
                     filteredColumnVal[columnHeader] = columnValue;
                     rowFilteredValues.push(columnValue);
                     rowFilteredHeader.push(columnHeader);
@@ -2814,17 +2836,18 @@ const ExportData = memo(props => {
     } = currentTarget;
 
     if (checked) {
-      let indexOfColumnToAdd = updatedColumns.findIndex(column => {
+      const indexOfColumnToAdd = updatedColumns.findIndex(column => {
         return column.Header === value;
       });
       const itemToAdd = updatedColumns[indexOfColumnToAdd];
       let prevItemIndex = -1;
 
-      while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
-        prevItemIndex = managedColumns.findIndex(column => {
-          return column.Header === updatedColumns[indexOfColumnToAdd - 1].Header;
-        });
-        indexOfColumnToAdd -= 1;
+      for (let i = indexOfColumnToAdd; i > 0; i--) {
+        if (prevItemIndex === -1) {
+          prevItemIndex = managedColumns.findIndex(column => {
+            return column.Header === updatedColumns[indexOfColumnToAdd - 1].Header;
+          });
+        }
       }
 
       const newColumnsList = managedColumns.slice(0);
@@ -2885,10 +2908,10 @@ const ExportData = memo(props => {
       onChange: selectAllColumns
     })), /*#__PURE__*/React__default.createElement("div", {
       className: "export__txt"
-    }, "Select All")), searchedColumns.map((column, index) => {
+    }, "Select All")), searchedColumns.map(column => {
       return /*#__PURE__*/React__default.createElement("div", {
         className: "export__wrap",
-        key: index
+        key: column.columnId
       }, /*#__PURE__*/React__default.createElement("div", {
         className: "export__checkbox"
       }, /*#__PURE__*/React__default.createElement("input", {
@@ -2908,6 +2931,7 @@ const ExportData = memo(props => {
     }), /*#__PURE__*/React__default.createElement("div", {
       className: "export__close"
     }, /*#__PURE__*/React__default.createElement("i", {
+      "aria-hidden": "true",
       onClick: toggleExportDataOverlay
     }, /*#__PURE__*/React__default.createElement("img", {
       src: IconClose,
@@ -3143,15 +3167,7 @@ const Customgrid = memo(props => {
       Header: ({
         getToggleAllRowsSelectedProps
       }) => {
-        const headerSelectProps = { ...getToggleAllRowsSelectedProps()
-        };
-        return /*#__PURE__*/React__default.createElement(RowSelector, {
-          checked: headerSelectProps.checked,
-          indeterminate: headerSelectProps.indeterminate,
-          onChange: headerSelectProps.onChange,
-          style: headerSelectProps.style,
-          title: headerSelectProps.title
-        });
+        return /*#__PURE__*/React__default.createElement(RowSelector, getToggleAllRowsSelectedProps());
       },
       Cell: ({
         row
@@ -3455,11 +3471,13 @@ const Grid = memo(props => {
 
   const updateRowInGrid = (original, updatedRow) => {
     setItems(old => old.map(row => {
+      let newRow = row;
+
       if (Object.entries(row).toString() === Object.entries(original).toString()) {
-        row = updatedRow;
+        newRow = updatedRow;
       }
 
-      return row;
+      return newRow;
     }));
 
     if (updateRowData) {
@@ -3486,14 +3504,17 @@ const Grid = memo(props => {
     const {
       original
     } = row;
+    const additionalColumnObj = additionalColumn;
 
     if (original) {
       return /*#__PURE__*/React__default.createElement(AdditionalColumnContext.Provider, {
         value: {
-          additionalColumn: additionalColumn
+          additionalColumn: additionalColumnObj
         }
       }, renderExpandedContent(original, AdditionalColumnTag));
     }
+
+    return null;
   };
 
   const globalSearchLogic = (rows, filterValue) => {
@@ -3504,7 +3525,7 @@ const Grid = memo(props => {
           original
         } = row;
         let returnValue = false;
-        processedColumns.map(column => {
+        processedColumns.forEach(column => {
           returnValue = returnValue || searchColumn(column, original, searchText);
         });
         return returnValue;
@@ -3514,15 +3535,15 @@ const Grid = memo(props => {
     return rows;
   };
 
-  const calculateDefaultRowHeight = (row, gridColumns) => {
+  const calculateDefaultRowHeight = (row, columnsInGrid) => {
     let rowHeight = 50;
 
-    if (gridColumns && gridColumns.length > 0 && row) {
+    if (columnsInGrid && columnsInGrid.length > 0 && row) {
       const {
         original,
         isExpanded
       } = row;
-      const columnWithMaxWidth = [...gridColumns].sort((a, b) => {
+      const columnWithMaxWidth = [...columnsInGrid].sort((a, b) => {
         return b.width - a.width;
       })[0];
       const {
@@ -3548,15 +3569,29 @@ const Grid = memo(props => {
   };
 
   const compareValues = (compareOrder, v1, v2) => {
+    let returnValue = 0;
+
     if (compareOrder === "Ascending") {
-      return v1 > v2 ? 1 : v1 < v2 ? -1 : 0;
+      if (v1 > v2) {
+        returnValue = 1;
+      } else if (v1 < v2) {
+        returnValue = -1;
+      }
+
+      return returnValue;
     }
 
-    return v1 < v2 ? 1 : v1 > v2 ? -1 : 0;
+    if (v1 < v2) {
+      returnValue = 1;
+    } else if (v1 > v2) {
+      returnValue = -1;
+    }
+
+    return returnValue;
   };
 
   const getSortedData = originalData => {
-    return originalData.sort(function (x, y) {
+    return originalData.sort((x, y) => {
       let compareResult = 0;
       groupSortOptions.forEach(option => {
         const {
@@ -3575,7 +3610,7 @@ const Grid = memo(props => {
     setGroupSortOptions(sortOptions);
   };
 
-  const loadNextPage = (...args) => {
+  const loadNextPage = () => {
     if (hasNextPage) {
       setIsLoading(true);
       setIsNextPageLoading(true);
@@ -3590,11 +3625,13 @@ const Grid = memo(props => {
 
   useEffect(() => {
     processedColumns.map(column => {
+      const columnTpProcess = column;
+
       if (column.innerCells) {
-        column.originalInnerCells = column.innerCells;
+        columnTpProcess.originalInnerCells = column.innerCells;
       }
 
-      return column;
+      return columnTpProcess;
     });
 
     if (additionalColumn) {

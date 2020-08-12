@@ -116,7 +116,7 @@ const SortItem = ({
                     >
                         {originalColumns.map((orgItem) => (
                             <option
-                                key={orgItem.Header}
+                                key={orgItem.columnId}
                                 value={orgItem.accessor}
                             >
                                 {orgItem.Header}
@@ -137,7 +137,7 @@ const SortItem = ({
                             getInncerCellsOfColumn(sortOption.sortBy).map(
                                 (innerCellItem) => (
                                     <option
-                                        key={innerCellItem.Header}
+                                        key={`${innerCellItem.Header}_${innerCellItem.accessor}`}
                                         value={innerCellItem.accessor}
                                     >
                                         {innerCellItem.Header}

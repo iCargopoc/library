@@ -13,7 +13,7 @@ var reactDndTouchBackend = require('react-dnd-touch-backend');
 var MultiBackend = require('react-dnd-multi-backend');
 var MultiBackend__default = _interopDefault(MultiBackend);
 var update = _interopDefault(require('immutability-helper'));
-var jsPDF = _interopDefault(require('jspdf'));
+var JsPdf = _interopDefault(require('jspdf'));
 require('jspdf-autotable');
 var FileSaver = require('file-saver');
 var XLSX = require('xlsx');
@@ -1164,11 +1164,15 @@ var CellDisplayAndEditTag = function CellDisplayAndEditTag(props) {
     });
 
     if (checkInnerCells(selectedColumn, cellKey)) {
-      return /*#__PURE__*/React__default.createElement(React.Fragment, null, " ", props.children);
+      return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+        key: "CellDisplayAndEditFragment"
+      }, props.children);
     }
   } else if (cellKey) {
     if (checkInnerCells(column, cellKey)) {
-      return /*#__PURE__*/React__default.createElement(React.Fragment, null, " ", props.children);
+      return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+        key: "CellDisplayAndEditFragment"
+      }, props.children);
     }
   }
 
@@ -1230,10 +1234,12 @@ var CellDisplayAndEdit = React.memo(function (_ref) {
 
     var cellDisplayContent = column.displayCell(originalRowValue, CellDisplayAndEditTag);
     var cellEditContent = column.editCell ? column.editCell(originalRowValue, CellDisplayAndEditTag, getUpdatedRowValue) : null;
+    var columnsToPass = columns;
+    var columnToPass = column;
     return /*#__PURE__*/React__default.createElement(CellDisplayAndEditContext.Provider, {
       value: {
-        columns: columns,
-        column: column
+        columns: columnsToPass,
+        column: columnToPass
       }
     }, /*#__PURE__*/React__default.createElement(ClickAwayListener, {
       onClickAway: closeEdit
@@ -1268,6 +1274,8 @@ var CellDisplayAndEdit = React.memo(function (_ref) {
       alt: "Cell Edit Cancel Icon"
     }))) : null)));
   }
+
+  return null;
 });
 CellDisplayAndEdit.propTypes = {
   row: propTypes.any,
@@ -1365,7 +1373,9 @@ var AdditionalColumnTag = function AdditionalColumnTag(props) {
 
   if (additionalColumn && cellKey) {
     if (checkInnerCells(additionalColumn, cellKey)) {
-      return /*#__PURE__*/React__default.createElement(React.Fragment, null, " ", props.children);
+      return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+        key: "AdditionalColumnFragment"
+      }, props.children);
     }
   }
 
@@ -1435,8 +1445,8 @@ var GlobalFilter = React.memo(function (_ref) {
       value = _useState[0],
       setValue = _useState[1];
 
-  var _onChange = reactTable.useAsyncDebounce(function (value) {
-    setGlobalFilter(value || undefined);
+  var _onChange = reactTable.useAsyncDebounce(function (changedValue) {
+    setGlobalFilter(changedValue || undefined);
   }, 200);
 
   return /*#__PURE__*/React__default.createElement("div", {
@@ -1574,11 +1584,15 @@ var RowEditTag = function RowEditTag(props) {
 
     if (selectedColumn && cellKey) {
       if (checkInnerCells(selectedColumn, cellKey)) {
-        return /*#__PURE__*/React__default.createElement(React.Fragment, null, " ", props.children);
+        return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+          key: "RowEditFragment"
+        }, props.children);
       }
     } else if (!selectedColumn && isRowExpandEnabled && additionalColumn) {
       if (checkInnerCells(additionalColumn, columnKey)) {
-        return /*#__PURE__*/React__default.createElement(React.Fragment, null, " ", props.children);
+        return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+          key: "RowEditFragment"
+        }, props.children);
       }
     }
   }
@@ -1715,14 +1729,13 @@ var ColumnItem = function ColumnItem(_ref) {
       };
     },
     end: function end(dropResult, monitor) {
-      var _monitor$getItem = monitor.getItem(),
-          droppedId = _monitor$getItem.id,
-          originalIndex = _monitor$getItem.originalIndex;
-
+      var monitorGetItemValue = monitor.getItem();
+      var droppedId = monitorGetItemValue.id;
+      var newOriginalIndex = monitorGetItemValue.originalIndex;
       var didDrop = monitor.didDrop();
 
       if (!didDrop) {
-        moveColumn(droppedId, originalIndex);
+        moveColumn(droppedId, newOriginalIndex);
       }
     }
   }),
@@ -1767,10 +1780,10 @@ var ColumnItem = function ColumnItem(_ref) {
     alt: "Column Chooser Drag Icon"
   }))), /*#__PURE__*/React__default.createElement("div", null, Header), /*#__PURE__*/React__default.createElement("div", {
     className: "column__innerCells__wrap"
-  }, originalInnerCells && originalInnerCells.length > 0 ? originalInnerCells.map(function (cell, index) {
+  }, originalInnerCells && originalInnerCells.length > 0 ? originalInnerCells.map(function (cell) {
     return /*#__PURE__*/React__default.createElement("div", {
       className: "column__wrap",
-      key: index
+      key: cell.Header + "_" + cell.accessor
     }, /*#__PURE__*/React__default.createElement("div", {
       className: "column__checkbox"
     }, /*#__PURE__*/React__default.createElement("input", {
@@ -1826,15 +1839,17 @@ var ColumnsList = function ColumnsList(props) {
   }),
       drop = _useDrop[1];
 
-  return /*#__PURE__*/React__default.createElement(React.Fragment, null, /*#__PURE__*/React__default.createElement("div", {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+    key: "ColumnManageFragment"
+  }, /*#__PURE__*/React__default.createElement("div", {
     ref: drop,
     style: {
       display: "flex",
       flexWrap: "wrap"
     }
-  }, columnsToManage.map(function (column, index) {
+  }, columnsToManage.map(function (column) {
     return /*#__PURE__*/React__default.createElement(ColumnItem, {
-      key: index,
+      key: column.columnId,
       id: "" + column.columnId,
       Header: "" + column.Header,
       moveColumn: moveColumn,
@@ -1983,27 +1998,25 @@ var ColumnReordering = React.memo(function (props) {
       } else {
         setRemarksColumnToManage([]);
       }
-    } else {
-      if (checked) {
-        var indexOfColumnToAdd = originalColumns.findIndex(function (column) {
-          return column.Header === value;
-        });
-        var itemToAdd = originalColumns[indexOfColumnToAdd];
-        var prevItemIndex = -1;
+    } else if (checked) {
+      var indexOfColumnToAdd = originalColumns.findIndex(function (column) {
+        return column.Header === value;
+      });
+      var itemToAdd = originalColumns[indexOfColumnToAdd];
+      var prevItemIndex = -1;
 
-        while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
-          indexOfColumnToAdd -= 1;
-          prevItemIndex = findIndexOfItem("column", managedColumns, indexOfColumnToAdd);
-        }
-
-        var newColumnsList = [].concat(managedColumns);
-        newColumnsList.splice(prevItemIndex + 1, 0, itemToAdd);
-        setManagedColumns(newColumnsList);
-      } else {
-        setManagedColumns(managedColumns.filter(function (column) {
-          return column.Header !== value;
-        }));
+      while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
+        indexOfColumnToAdd -= 1;
+        prevItemIndex = findIndexOfItem("column", managedColumns, indexOfColumnToAdd);
       }
+
+      var newColumnsList = [].concat(managedColumns);
+      newColumnsList.splice(prevItemIndex + 1, 0, itemToAdd);
+      setManagedColumns(newColumnsList);
+    } else {
+      setManagedColumns(managedColumns.filter(function (column) {
+        return column.Header !== value;
+      }));
     }
   };
 
@@ -2034,13 +2047,15 @@ var ColumnReordering = React.memo(function (props) {
         setStateColumnList(newColumnsList);
       } else {
         setStateColumnList(stateColumnList.map(function (column) {
+          var updatedColumn = column;
+
           if (column.Header === columnheader) {
-            column.innerCells = column.innerCells.filter(function (cell) {
+            updatedColumn.innerCells = column.innerCells.filter(function (cell) {
               return cell.Header !== value;
             });
           }
 
-          return column;
+          return updatedColumn;
         }));
       }
     }
@@ -2069,7 +2084,8 @@ var ColumnReordering = React.memo(function (props) {
   var resetInnerCells = function resetInnerCells(columnList) {
     if (columnList && columnList.length) {
       return columnList.map(function (column) {
-        column.innerCells = column.originalInnerCells;
+        var newColumn = column;
+        newColumn.innerCells = column.originalInnerCells;
         return column;
       });
     }
@@ -2114,10 +2130,10 @@ var ColumnReordering = React.memo(function (props) {
       onChange: selectAllColumns
     })), /*#__PURE__*/React__default.createElement("div", {
       className: "column__selectTxt"
-    }, "Select All")), searchedColumns.map(function (column, index) {
+    }, "Select All")), searchedColumns.map(function (column) {
       return /*#__PURE__*/React__default.createElement("div", {
         className: "column__wrap",
-        key: index
+        key: column.columnId
       }, /*#__PURE__*/React__default.createElement("div", {
         className: "column__checkbox"
       }, /*#__PURE__*/React__default.createElement("input", {
@@ -2160,10 +2176,10 @@ var ColumnReordering = React.memo(function (props) {
       className: "column__reorder full-width"
     }, /*#__PURE__*/React__default.createElement("div", null, remarksColumnToManage[0].Header), /*#__PURE__*/React__default.createElement("div", {
       className: "column__innerCells__wrap"
-    }, remarksColumnToManage[0].originalInnerCells && remarksColumnToManage[0].originalInnerCells.length > 0 ? remarksColumnToManage[0].originalInnerCells.map(function (cell, index) {
+    }, remarksColumnToManage[0].originalInnerCells && remarksColumnToManage[0].originalInnerCells.length > 0 ? remarksColumnToManage[0].originalInnerCells.map(function (cell) {
       return /*#__PURE__*/React__default.createElement("div", {
         className: "column__wrap",
-        key: index
+        key: cell.Header + "_" + cell.accessor
       }, /*#__PURE__*/React__default.createElement("div", {
         className: "column__checkbox"
       }, /*#__PURE__*/React__default.createElement("input", {
@@ -2238,14 +2254,13 @@ var SortItem = function SortItem(_ref) {
       };
     },
     end: function end(dropResult, monitor) {
-      var _monitor$getItem = monitor.getItem(),
-          droppedId = _monitor$getItem.id,
-          originalIndex = _monitor$getItem.originalIndex;
-
+      var monitorGetItemValue = monitor.getItem();
+      var droppedId = monitorGetItemValue.id;
+      var newOriginalIndex = monitorGetItemValue.originalIndex;
       var didDrop = monitor.didDrop();
 
       if (!didDrop) {
-        moveSort(droppedId, originalIndex);
+        moveSort(droppedId, newOriginalIndex);
       }
     }
   }),
@@ -2326,9 +2341,9 @@ var SortItem = function SortItem(_ref) {
     className: "custom__ctrl",
     onChange: changeSortByOptions,
     value: sortOption.sortBy
-  }, originalColumns.map(function (orgItem, index) {
+  }, originalColumns.map(function (orgItem) {
     return /*#__PURE__*/React__default.createElement("option", {
-      key: index,
+      key: orgItem.columnId,
       value: orgItem.accessor
     }, orgItem.Header);
   })))), /*#__PURE__*/React__default.createElement("div", {
@@ -2339,9 +2354,9 @@ var SortItem = function SortItem(_ref) {
     className: "custom__ctrl",
     onChange: changeSortOnOptions,
     value: sortOption.sortOn
-  }, getInncerCellsOfColumn(sortOption.sortBy) && getInncerCellsOfColumn(sortOption.sortBy).length > 0 ? getInncerCellsOfColumn(sortOption.sortBy).map(function (innerCellItem, innerCellIndex) {
+  }, getInncerCellsOfColumn(sortOption.sortBy) && getInncerCellsOfColumn(sortOption.sortBy).length > 0 ? getInncerCellsOfColumn(sortOption.sortBy).map(function (innerCellItem) {
     return /*#__PURE__*/React__default.createElement("option", {
-      key: innerCellIndex,
+      key: innerCellItem.Header + "_" + innerCellItem.accessor,
       value: innerCellItem.accessor
     }, innerCellItem.Header);
   }) : /*#__PURE__*/React__default.createElement("option", {
@@ -2416,7 +2431,9 @@ var SortingList = function SortingList(props) {
   }),
       drop = _useDrop[1];
 
-  return /*#__PURE__*/React__default.createElement(React.Fragment, null, /*#__PURE__*/React__default.createElement("div", {
+  return /*#__PURE__*/React__default.createElement(React__default.Fragment, {
+    key: "SortingListFragment"
+  }, /*#__PURE__*/React__default.createElement("div", {
     ref: drop,
     style: {
       display: "flex",
@@ -2553,6 +2570,7 @@ var GroupSort = React.memo(function (props) {
     }, /*#__PURE__*/React__default.createElement("h2", null, "Sort"), /*#__PURE__*/React__default.createElement("div", {
       className: "neo-popover__close"
     }, /*#__PURE__*/React__default.createElement("i", {
+      "aria-hidden": "true",
       onClick: toggleGroupSortOverLay
     }, /*#__PURE__*/React__default.createElement("img", {
       src: IconClose,
@@ -2653,7 +2671,7 @@ var ExportData = React.memo(function (props) {
     var size = "A4";
     var orientation = "landscape";
     var marginLeft = 30;
-    var doc = new jsPDF(orientation, unit, size);
+    var doc = new JsPdf(orientation, unit, size);
     doc.setFontSize(15);
     var title = "iCargo Neo Report";
     var content = {
@@ -2759,9 +2777,9 @@ var ExportData = React.memo(function (props) {
                 var innerCellAccessorValue = accessorRowValue[innerCellAccessor];
 
                 if (accessorRowValue.length > 0) {
-                  accessorRowValue.forEach(function (item, index) {
+                  accessorRowValue.forEach(function (item, itemIndex) {
                     columnValue = item[innerCellAccessor].toString();
-                    columnHeader = Header + " - " + innerCellHeader + "_" + index;
+                    columnHeader = Header + " - " + innerCellHeader + "_" + itemIndex;
                     filteredColumnVal[columnHeader] = columnValue;
                     rowFilteredValues.push(columnValue);
                     rowFilteredHeader.push(columnHeader);
@@ -2879,11 +2897,12 @@ var ExportData = React.memo(function (props) {
         var itemToAdd = updatedColumns[indexOfColumnToAdd];
         var prevItemIndex = -1;
 
-        while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
-          prevItemIndex = managedColumns.findIndex(function (column) {
-            return column.Header === updatedColumns[indexOfColumnToAdd - 1].Header;
-          });
-          indexOfColumnToAdd -= 1;
+        for (var i = indexOfColumnToAdd; i > 0; i--) {
+          if (prevItemIndex === -1) {
+            prevItemIndex = managedColumns.findIndex(function (column) {
+              return column.Header === updatedColumns[indexOfColumnToAdd - 1].Header;
+            });
+          }
         }
 
         var newColumnsList = managedColumns.slice(0);
@@ -2944,10 +2963,10 @@ var ExportData = React.memo(function (props) {
       onChange: selectAllColumns
     })), /*#__PURE__*/React__default.createElement("div", {
       className: "export__txt"
-    }, "Select All")), searchedColumns.map(function (column, index) {
+    }, "Select All")), searchedColumns.map(function (column) {
       return /*#__PURE__*/React__default.createElement("div", {
         className: "export__wrap",
-        key: index
+        key: column.columnId
       }, /*#__PURE__*/React__default.createElement("div", {
         className: "export__checkbox"
       }, /*#__PURE__*/React__default.createElement("input", {
@@ -2967,6 +2986,7 @@ var ExportData = React.memo(function (props) {
     }), /*#__PURE__*/React__default.createElement("div", {
       className: "export__close"
     }, /*#__PURE__*/React__default.createElement("i", {
+      "aria-hidden": "true",
       onClick: toggleExportDataOverlay
     }, /*#__PURE__*/React__default.createElement("img", {
       src: IconClose,
@@ -3221,16 +3241,7 @@ var Customgrid = React.memo(function (props) {
         maxWidth: 35,
         Header: function Header(_ref) {
           var getToggleAllRowsSelectedProps = _ref.getToggleAllRowsSelectedProps;
-
-          var headerSelectProps = _extends({}, getToggleAllRowsSelectedProps());
-
-          return /*#__PURE__*/React__default.createElement(RowSelector, {
-            checked: headerSelectProps.checked,
-            indeterminate: headerSelectProps.indeterminate,
-            onChange: headerSelectProps.onChange,
-            style: headerSelectProps.style,
-            title: headerSelectProps.title
-          });
+          return /*#__PURE__*/React__default.createElement(RowSelector, getToggleAllRowsSelectedProps());
         },
         Cell: function Cell(_ref2) {
           var row = _ref2.row;
@@ -3562,11 +3573,13 @@ var Grid = React.memo(function (props) {
   var updateRowInGrid = function updateRowInGrid(original, updatedRow) {
     setItems(function (old) {
       return old.map(function (row) {
+        var newRow = row;
+
         if (Object.entries(row).toString() === Object.entries(original).toString()) {
-          row = updatedRow;
+          newRow = updatedRow;
         }
 
-        return row;
+        return newRow;
       });
     });
 
@@ -3596,14 +3609,17 @@ var Grid = React.memo(function (props) {
 
   var displayExpandedContent = function displayExpandedContent(row) {
     var original = row.original;
+    var additionalColumnObj = additionalColumn;
 
     if (original) {
       return /*#__PURE__*/React__default.createElement(AdditionalColumnContext.Provider, {
         value: {
-          additionalColumn: additionalColumn
+          additionalColumn: additionalColumnObj
         }
       }, renderExpandedContent(original, AdditionalColumnTag));
     }
+
+    return null;
   };
 
   var globalSearchLogic = function globalSearchLogic(rows, filterValue) {
@@ -3612,7 +3628,7 @@ var Grid = React.memo(function (props) {
       return rows.filter(function (row) {
         var original = row.original;
         var returnValue = false;
-        processedColumns.map(function (column) {
+        processedColumns.forEach(function (column) {
           returnValue = returnValue || searchColumn(column, original, searchText);
         });
         return returnValue;
@@ -3622,13 +3638,13 @@ var Grid = React.memo(function (props) {
     return rows;
   };
 
-  var calculateDefaultRowHeight = function calculateDefaultRowHeight(row, gridColumns) {
+  var calculateDefaultRowHeight = function calculateDefaultRowHeight(row, columnsInGrid) {
     var rowHeight = 50;
 
-    if (gridColumns && gridColumns.length > 0 && row) {
+    if (columnsInGrid && columnsInGrid.length > 0 && row) {
       var original = row.original,
           isExpanded = row.isExpanded;
-      var columnWithMaxWidth = [].concat(gridColumns).sort(function (a, b) {
+      var columnWithMaxWidth = [].concat(columnsInGrid).sort(function (a, b) {
         return b.width - a.width;
       })[0];
       var id = columnWithMaxWidth.id,
@@ -3652,11 +3668,25 @@ var Grid = React.memo(function (props) {
   };
 
   var compareValues = function compareValues(compareOrder, v1, v2) {
+    var returnValue = 0;
+
     if (compareOrder === "Ascending") {
-      return v1 > v2 ? 1 : v1 < v2 ? -1 : 0;
+      if (v1 > v2) {
+        returnValue = 1;
+      } else if (v1 < v2) {
+        returnValue = -1;
+      }
+
+      return returnValue;
     }
 
-    return v1 < v2 ? 1 : v1 > v2 ? -1 : 0;
+    if (v1 < v2) {
+      returnValue = 1;
+    } else if (v1 > v2) {
+      returnValue = -1;
+    }
+
+    return returnValue;
   };
 
   var getSortedData = function getSortedData(originalData) {
@@ -3692,11 +3722,13 @@ var Grid = React.memo(function (props) {
 
   React.useEffect(function () {
     processedColumns.map(function (column) {
+      var columnTpProcess = column;
+
       if (column.innerCells) {
-        column.originalInnerCells = column.innerCells;
+        columnTpProcess.originalInnerCells = column.innerCells;
       }
 
-      return column;
+      return columnTpProcess;
     });
 
     if (additionalColumn) {

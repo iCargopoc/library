@@ -1,18 +1,14 @@
 /* eslint-disable react/destructuring-assignment */
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faTimes,
-    faFilePdf,
-    faFileExcel,
-    faFileCsv
-} from "@fortawesome/free-solid-svg-icons";
-
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import PropTypes from "prop-types";
+import IconCsv from "../../Images/icon-csv.svg";
+import IconExcel from "../../Images/icon-excel.svg";
+import IconPdf from "../../Images/icon-pdf.svg";
+import IconClose from "../../Images/icon-close.svg";
 
 let downLaodFileType = [];
 class ExportData extends React.Component {
@@ -214,8 +210,11 @@ class ExportData extends React.Component {
 
     render() {
         return (
-            <div className="exports--grid" ref={this.setWrapperRef}>
-                <div className="export__grid">
+            <div
+                className="neo-popover neo-popover--exports exports--grid"
+                ref={this.setWrapperRef}
+            >
+                <div className="neo-popover__export export__grid">
                     <div className="export__chooser">
                         <div className="export__header">
                             <div className="">
@@ -278,11 +277,12 @@ class ExportData extends React.Component {
                         <div className="export__header">
                             <div className="export__headerTxt" />
                             <div className="export__close">
-                                <FontAwesomeIcon
-                                    icon={faTimes}
-                                    className="icon-close"
-                                    onClick={this.props.closeExport}
-                                />
+                                <i onClick={this.props.closeExport}>
+                                    <img
+                                        src={IconClose}
+                                        alt="Export Overlay Close Icon"
+                                    />
+                                </i>
                             </div>
                         </div>
                         <div className="export__as">Export as</div>
@@ -297,14 +297,17 @@ class ExportData extends React.Component {
                                     />
                                 </div>
                                 <div className="export__file">
-                                    <FontAwesomeIcon
-                                        icon={faFilePdf}
-                                        className="temp"
-                                    />
+                                    <i>
+                                        <img
+                                            src={IconPdf}
+                                            alt="PDF Export Icon"
+                                        />
+                                    </i>
+                                    <strong>PDF</strong>
                                 </div>
                             </div>
                             <div className="export__reorder">
-                                <div className="">
+                                <div className="check-wrap">
                                     <input
                                         type="checkbox"
                                         name="excel"
@@ -313,10 +316,13 @@ class ExportData extends React.Component {
                                     />
                                 </div>
                                 <div className="export__file">
-                                    <FontAwesomeIcon
-                                        icon={faFileExcel}
-                                        className="temp"
-                                    />
+                                    <i>
+                                        <img
+                                            src={IconExcel}
+                                            alt="Excel Export Icon"
+                                        />
+                                    </i>
+                                    <strong>Excel</strong>
                                 </div>
                             </div>
                             <div className="export__reorder">
@@ -329,19 +335,21 @@ class ExportData extends React.Component {
                                     />
                                 </div>
                                 <div className="export__file">
-                                    <FontAwesomeIcon
-                                        icon={faFileCsv}
-                                        className="temp"
-                                    />
+                                    <i>
+                                        <img
+                                            src={IconCsv}
+                                            alt="CSV Export Icon"
+                                        />
+                                    </i>
+
+                                    <strong>CSV</strong>
                                 </div>
                             </div>
                             <div className="exportWarning">
-                                <span
-                                    style={{ display: this.state.clickTag }}
-                                    className="alert alert-danger"
-                                >
-                                    You have not selected{" "}
-                                    <strong>{this.state.warning}</strong>
+                                <span style={{ display: this.state.clickTag }}>
+                                    <strong>
+                                        Select at least one file type
+                                    </strong>
                                 </span>
                             </div>
                         </div>
