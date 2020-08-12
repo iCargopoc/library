@@ -266,6 +266,7 @@ class ColumnReordering extends React.Component {
                             <div className="column__wrap column__headertxt">
                                 <div className="column__checkbox">
                                     <input
+                                        data-testid="one"
                                         type="checkbox"
                                         id="selectallcolumncheckbox"
                                         onChange={() =>

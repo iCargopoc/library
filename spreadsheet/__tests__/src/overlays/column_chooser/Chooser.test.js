@@ -76,6 +76,7 @@ test("chooser", () => {
   component.componentWillUnmount();
   component.resetColumnReorderList();
   component.selectAllToColumnReOrderList();
+  component.selectAllToColumnReOrderList();
   component.addToColumnReorderEntityList("Segment From");
   component.filterColumnReorderList({ target: { value: "FlightNo" } });
   component.filterColumnReorderList({ target: { value: "" } });
@@ -84,6 +85,7 @@ test("chooser", () => {
   component.handleClickOutside({
     target: "div.parentDiv",
   });
+  
 });
 describe("chooser", () => {
   const props = {
@@ -146,10 +148,15 @@ describe("chooser", () => {
   // });
   test("triggers onChange event", () => {
     let component = ReactDOM.render(<ColumnReordering {...props} />, container);
-    screen.debug();
-    const element = screen.getByTestId("checkboxFlightNo");
-    fireEvent.change(screen.getByTestId("checkboxFlightNo"), {
-      target: { value: "FlightNo" },
+    //screen.debug();
+    //const element = screen.getByTestId("checkboxFlightNo");
+    const name=screen.getByTestId("one")
+    fireEvent.change(name, {
+      target: { checked: true },
+    });
+    const named=screen.getByTestId("addPin")
+    fireEvent.change(named, {
+      target: { checked: true },
     });
     // screen.debug();
 

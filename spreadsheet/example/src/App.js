@@ -576,15 +576,15 @@ const App = (props) => {
      * Method To save the rows
      * @param {*} rows is the updated row values
      */
-    const updatedRows = ({ fromRow, toRow, updated, action }) => {
-        let tempData=[...data];
-                const temp = tempData.slice();
-                for (let i = fromRow; i <= toRow; i++) {
-                    temp[i] = {
-                        ...temp[i],
-                        ...updated
-                    };
-                }
+    const updatedRows = ({ fromRow, toRow, updated }) => {
+        let tempData = [...data];
+        const temp = tempData.slice();
+        for (let i = fromRow; i <= toRow; i++) {
+            temp[i] = {
+                ...temp[i],
+                ...updated
+            };
+        }
         setData(temp);
         console.log("UpdatedRows:", temp);
     };
@@ -596,8 +596,21 @@ const App = (props) => {
     if (data) {
         return (
             <div>
-                <div style={{width: "26px",height:"26px",backgroundColor: "skyblue",cursor:"pointer" }}className="saveIcon" onClick={handleSave}>
-                    <FontAwesomeIcon style={{width: "18px",height:"18px"}} title="Group Sort" icon={faSave} />
+                <div
+                    style={{
+                        width: "26px",
+                        height: "26px",
+                        backgroundColor: "skyblue",
+                        cursor: "pointer"
+                    }}
+                    className="saveIcon"
+                    onClick={handleSave}
+                >
+                    <FontAwesomeIcon
+                        style={{ width: "18px", height: "18px" }}
+                        title="Group Sort"
+                        icon={faSave}
+                    />
                 </div>
                 <Spreadsheet
                     rows={data.slice(0, pageSize)}

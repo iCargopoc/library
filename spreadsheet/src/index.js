@@ -19,7 +19,7 @@ import ExtDataGrid from "./common/extDataGrid";
 import { applyFormula } from "./utilities/utils";
 import DatePicker from "./functions/DatePicker";
 import ErrorMessage from "./common/ErrorMessage";
-import ColumnReordering from "./overlays/column_chooser/Chooser";
+import ColumnReordering from "./overlays/column_chooser/chooser";
 import Sorting from "./overlays/sorting/Sorting";
 import ExportData from "./overlays/export_data/ExportData";
 
