@@ -1,394 +1,330 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<ColumnReordering /> render correctly date component 1`] = `
-<div
-  className="columns--grid"
->
+exports[`render the chooser 1`] = `
+<DocumentFragment>
   <div
-    className="column__grid"
+    class="neo-popover neo-popover--column columns--grid"
   >
     <div
-      className="column__chooser"
+      class="neo-popover__column column__grid"
     >
       <div
-        className="column__header"
+        class="column__chooser"
       >
         <div
-          className=""
-        >
-          <strong>
-            Column Chooser
-          </strong>
-        </div>
-      </div>
-      <div
-        className="column__body"
-      >
-        <div>
-          <input
-            className="custom__ctrl"
-            onChange={[Function]}
-            placeholder="Search column"
-            type="text"
-          />
-        </div>
-        <div
-          className="column__wrap column__headertxt"
+          class="column__header"
         >
           <div
-            className="column__checkbox"
+            class=""
           >
+            <strong>
+              Column Chooser
+            </strong>
+          </div>
+        </div>
+        <div
+          class="column__body"
+        >
+          <div>
             <input
-              checked={true}
-              id="selectallcolumncheckbox"
-              onChange={[Function]}
-              type="checkbox"
+              class="custom__ctrl"
+              placeholder="Search column"
+              type="text"
             />
           </div>
           <div
-            className="column__txt"
-          >
-            Select all
-          </div>
-        </div>
-        <div
-          className="column__wrap"
-        >
-          <div
-            className="column__checkbox"
-          >
-            <input
-              checked={true}
-              id="checkboxtoselectreorder_FlightNo"
-              onChange={[Function]}
-              type="checkbox"
-            />
-          </div>
-          <div
-            className="column__txt"
-          >
-            FlightNo
-          </div>
-        </div>
-        <div
-          className="column__wrap"
-        >
-          <div
-            className="column__checkbox"
-          >
-            <input
-              checked={true}
-              id="checkboxtoselectreorder_Date"
-              onChange={[Function]}
-              type="checkbox"
-            />
-          </div>
-          <div
-            className="column__txt"
-          >
-            Date
-          </div>
-        </div>
-        <div
-          className="column__wrap"
-        >
-          <div
-            className="column__checkbox"
-          >
-            <input
-              checked={true}
-              id="checkboxtoselectreorder_Segment From"
-              onChange={[Function]}
-              type="checkbox"
-            />
-          </div>
-          <div
-            className="column__txt"
-          >
-            Segment From
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      className="column__settings"
-    >
-      <div
-        className="column__header"
-      >
-        <div
-          className="column__headerTxt"
-        >
-          <strong>
-            Column Setting
-          </strong>
-        </div>
-        <div
-          className="column__close"
-        >
-          <svg
-            aria-hidden="true"
-            className="svg-inline--fa fa-times fa-w-11 icon-close"
-            data-icon="times"
-            data-prefix="fas"
-            focusable="false"
-            onClick={[Function]}
-            role="img"
-            style={Object {}}
-            viewBox="0 0 352 512"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
-              fill="currentColor"
-              style={Object {}}
-            />
-          </svg>
-        </div>
-      </div>
-      <div
-        className="column__header"
-      >
-        <div
-          className="column__headerTxt"
-        >
-          <strong>
-                Selected Column Count :
-             
-            3
-          </strong>
-        </div>
-        <div
-          className="column__headerTxt"
-        >
-          <strong
-            style={
-              Object {
-                "color": "red",
-              }
-            }
-          >
-                Maximum Count Of Left Pin Columns REACHED
-          </strong>
-        </div>
-      </div>
-      <div
-        className="column__body"
-      >
-        <div
-          style={
-            Object {
-              "display": "flex",
-              "flexWrap": "wrap",
-            }
-          }
-        >
-          <div
-            style={
-              Object {
-                "cursor": "move",
-                "opacity": 1,
-              }
-            }
+            class="column__selectAll"
           >
             <div
-              className="column__reorder"
+              class="column__checkbox"
             >
-              <div
-                className=""
-              >
-                <svg
-                  aria-hidden="true"
-                  className="svg-inline--fa fa-align-justify fa-w-14 "
-                  data-icon="align-justify"
-                  data-prefix="fas"
-                  focusable="false"
-                  role="img"
-                  style={Object {}}
-                  viewBox="0 0 448 512"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M432 416H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"
-                    fill="currentColor"
-                    style={Object {}}
-                  />
-                </svg>
-              </div>
-              <div
-                className="column__reorder__name"
-              >
-                FlightNo
-              </div>
-              <div
-                className="column__wrap"
-              >
-                <div
-                  className="column__checkbox"
-                >
-                  <input
-                    checked={true}
-                    disabled={false}
-                    id="checkBoxToPinLeft_FlightNo"
-                    onChange={[Function]}
-                    type="checkbox"
-                  />
-                </div>
-                <div
-                  className="column__txt"
-                >
-                  Pin Left
-                </div>
-              </div>
+              <input
+                checked=""
+                data-testid="selectAllColumns"
+                id="selectallcolumncheckbox"
+                type="checkbox"
+              />
+            </div>
+            <div
+              class="column__txt"
+            >
+              Select all
             </div>
           </div>
           <div
-            style={
-              Object {
-                "cursor": "move",
-                "opacity": 1,
-              }
-            }
+            class="column__wrap"
           >
             <div
-              className="column__reorder"
+              class="column__checkbox"
             >
-              <div
-                className=""
-              >
-                <svg
-                  aria-hidden="true"
-                  className="svg-inline--fa fa-align-justify fa-w-14 "
-                  data-icon="align-justify"
-                  data-prefix="fas"
-                  focusable="false"
-                  role="img"
-                  style={Object {}}
-                  viewBox="0 0 448 512"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M432 416H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"
-                    fill="currentColor"
-                    style={Object {}}
-                  />
-                </svg>
-              </div>
-              <div
-                className="column__reorder__name"
-              >
-                Date
-              </div>
-              <div
-                className="column__wrap"
-              >
-                <div
-                  className="column__checkbox"
-                >
-                  <input
-                    checked={true}
-                    disabled={false}
-                    id="checkBoxToPinLeft_Date"
-                    onChange={[Function]}
-                    type="checkbox"
-                  />
-                </div>
-                <div
-                  className="column__txt"
-                >
-                  Pin Left
-                </div>
-              </div>
+              <input
+                checked=""
+                data-testid="checkBox"
+                id="checkboxtoselectreorder_FlightNo"
+                type="checkbox"
+              />
+            </div>
+            <div
+              class="column__txt"
+            >
+              FlightNo
             </div>
           </div>
           <div
-            style={
-              Object {
-                "cursor": "move",
-                "opacity": 1,
-              }
-            }
+            class="column__wrap"
           >
             <div
-              className="column__reorder"
+              class="column__checkbox"
             >
-              <div
-                className=""
-              >
-                <svg
-                  aria-hidden="true"
-                  className="svg-inline--fa fa-align-justify fa-w-14 "
-                  data-icon="align-justify"
-                  data-prefix="fas"
-                  focusable="false"
-                  role="img"
-                  style={Object {}}
-                  viewBox="0 0 448 512"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M432 416H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm0-128H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"
-                    fill="currentColor"
-                    style={Object {}}
-                  />
-                </svg>
-              </div>
-              <div
-                className="column__reorder__name"
-              >
-                Segment From
-              </div>
-              <div
-                className="column__wrap"
-              >
-                <div
-                  className="column__checkbox"
-                >
-                  <input
-                    checked={false}
-                    disabled={false}
-                    id="checkBoxToPinLeft_Segment From"
-                    onChange={[Function]}
-                    type="checkbox"
-                  />
-                </div>
-                <div
-                  className="column__txt"
-                >
-                  Pin Left
-                </div>
-              </div>
+              <input
+                checked=""
+                data-testid="checkBox"
+                id="checkboxtoselectreorder_Date"
+                type="checkbox"
+              />
+            </div>
+            <div
+              class="column__txt"
+            >
+              Date
+            </div>
+          </div>
+          <div
+            class="column__wrap"
+          >
+            <div
+              class="column__checkbox"
+            >
+              <input
+                checked=""
+                data-testid="checkBox"
+                id="checkboxtoselectreorder_Segment From"
+                type="checkbox"
+              />
+            </div>
+            <div
+              class="column__txt"
+            >
+              Segment From
             </div>
           </div>
         </div>
       </div>
       <div
-        className="column__footer"
+        class="column__settings"
       >
         <div
-          className="column__btns"
+          class="column__header"
         >
-          <button
-            className="btns"
-            onClick={[Function]}
+          <div
+            class="column__headerTxt"
           >
-            Reset
-          </button>
-          <button
-            className="btns"
-            onClick={[Function]}
+            <strong>
+              Column Settings
+            </strong>
+          </div>
+          <div
+            class="column__close"
           >
-            Cancel
-          </button>
-          <button
-            className="btns btns__save"
-            onClick={[Function]}
+            <i>
+              <img
+                alt="Column chooser Close Icon"
+                src="[object Object]"
+              />
+            </i>
+          </div>
+        </div>
+        <div
+          class="column__body"
+        >
+          <div
+            class="column__info"
           >
-            Save
-          </button>
+            <strong>
+                  Selected Column Count : 3
+            </strong>
+            <strong>
+                  Left Pinned Column Count Remaining : 2
+            </strong>
+          </div>
+          <div
+            data-testid="columnItem"
+            style="display: flex; flex-wrap: wrap;"
+          >
+            <div
+              style="cursor: move; opacity: 1;"
+            >
+              <div
+                class="column__reorder"
+              >
+                <div
+                  class="column_drag"
+                  style="cursor: move;"
+                >
+                  <i>
+                    <img
+                      alt="Column Chooser Drag Icon"
+                      src="[object Object]"
+                    />
+                  </i>
+                </div>
+                <div
+                  class="column__reorder__name"
+                >
+                  FlightNo
+                </div>
+                <div
+                  class="column__innerCells__wrap"
+                >
+                  <div
+                    class="column__wrap"
+                  >
+                    <div
+                      class="column__checkbox"
+                    >
+                      <input
+                        checked=""
+                        id="checkBoxToPinLeft_FlightNo"
+                        role="button"
+                        type="checkbox"
+                      />
+                    </div>
+                    <div
+                      class="column__txt"
+                    >
+                      Pin Left
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="cursor: move; opacity: 1;"
+            >
+              <div
+                class="column__reorder"
+              >
+                <div
+                  class="column_drag"
+                  style="cursor: move;"
+                >
+                  <i>
+                    <img
+                      alt="Column Chooser Drag Icon"
+                      src="[object Object]"
+                    />
+                  </i>
+                </div>
+                <div
+                  class="column__reorder__name"
+                >
+                  Date
+                </div>
+                <div
+                  class="column__innerCells__wrap"
+                >
+                  <div
+                    class="column__wrap"
+                  >
+                    <div
+                      class="column__checkbox"
+                    >
+                      <input
+                        checked=""
+                        id="checkBoxToPinLeft_Date"
+                        role="button"
+                        type="checkbox"
+                      />
+                    </div>
+                    <div
+                      class="column__txt"
+                    >
+                      Pin Left
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="cursor: move; opacity: 1;"
+            >
+              <div
+                class="column__reorder"
+              >
+                <div
+                  class="column_drag"
+                  style="cursor: move;"
+                >
+                  <i>
+                    <img
+                      alt="Column Chooser Drag Icon"
+                      src="[object Object]"
+                    />
+                  </i>
+                </div>
+                <div
+                  class="column__reorder__name"
+                >
+                  Segment From
+                </div>
+                <div
+                  class="column__innerCells__wrap"
+                >
+                  <div
+                    class="column__wrap"
+                  >
+                    <div
+                      class="column__checkbox"
+                    >
+                      <input
+                        checked=""
+                        id="checkBoxToPinLeft_Segment From"
+                        role="button"
+                        type="checkbox"
+                      />
+                    </div>
+                    <div
+                      class="column__txt"
+                    >
+                      Pin Left
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="column__footer"
+        >
+          <div
+            class="column__btns"
+          >
+            <button
+              class="btns"
+              data-testid="resetButton"
+              type="button"
+            >
+              Reset
+            </button>
+            <button
+              class="btns"
+              data-testid="cancelButton"
+              type="button"
+            >
+              Cancel
+            </button>
+            <button
+              class="btns btns__save"
+              data-testid="saveButton"
+              type="button"
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;

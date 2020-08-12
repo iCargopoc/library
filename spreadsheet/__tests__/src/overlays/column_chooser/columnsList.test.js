@@ -1,7 +1,6 @@
-import React, { Fragment } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import { render, screen, fireEvent, getByRole } from "@testing-library/react";
-import ReactTestUtils, { act } from "react-dom/test-utils";
+import { render, fireEvent } from "@testing-library/react";
 import ColumnsList from "../../../../src/overlays/column_chooser/columnsList";
 import ColumnItem from "../../../../src/overlays/column_chooser/columnItem";
 import { DndProvider } from "react-dnd";
@@ -56,6 +55,20 @@ describe("<ColumnsList />", () => {
             </DndProvider>,
             container
         );
+        const { getAllByTestId } = render(
+            <DndProvider
+                backend={TouchBackend}
+                options={{ enableMouseEvents: true }}
+            >
+                <ColumnsList
+                    columnsArray={columns}
+                    handleReorderList={handleReorderList}
+                />
+            </DndProvider>
+        );
+        expect(getAllByTestId("columnItem")).toHaveLength(2);
+        const item = getAllByTestId("columnItem")[0];
+        fireEvent.drag(item);
     });
 });
 

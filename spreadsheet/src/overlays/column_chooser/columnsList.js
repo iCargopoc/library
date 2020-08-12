@@ -50,7 +50,11 @@ const ColumnsList = (props) => {
 
     return (
         <Fragment>
-            <div ref={drop} style={{ display: "flex", flexWrap: "wrap" }}>
+            <div
+                data-testid="columnItem"
+                ref={drop}
+                style={{ display: "flex", flexWrap: "wrap" }}
+            >
                 {columns.map((column) => (
                     <ColumnItem
                         role="columnItem"
