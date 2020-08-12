@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import RightDrawer from "./drawer/RightDrawer";
 import LeftDrawer from "./drawer/LeftDrawer";
 import MainFilterPanel from "./panel/MainFilterPanel";
+// eslint-disable-next-line import/no-unresolved
+import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 
 /**
  * Component handling clock outside close of Drawer
@@ -1694,7 +1696,7 @@ export default function Filter(props) {
   return (
     <div ref={ref}>
       {showApplyFilter && (
-        <div className="filter--grid" ref={ref}>
+        <div className="neo-filter filter--grid" ref={ref}>
           <div className="filter__wrap">
             <div className="filter__list">
               <LeftDrawer

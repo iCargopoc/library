@@ -1,18 +1,14 @@
 /* eslint-disable react/destructuring-assignment */
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faTimes,
-    faFilePdf,
-    faFileExcel,
-    faFileCsv
-} from "@fortawesome/free-solid-svg-icons";
-
-import JSPDF from "jspdf";
+import jsPDF from "jspdf";
 import "jspdf-autotable";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import PropTypes from "prop-types";
+import IconCsv from "../../Images/icon-csv.svg";
+import IconExcel from "../../Images/icon-excel.svg";
+import IconPdf from "../../Images/icon-pdf.svg";
+import IconClose from "../../Images/icon-close.svg";
 
 let downLaodFileType = [];
 class ExportData extends React.Component {
@@ -23,7 +19,6 @@ class ExportData extends React.Component {
             columnEntityList: this.props.columnsList,
             isAllSelected: true,
             downLaodFileType: [],
-            filteredRow: [],
             warning: "",
             clickTag: "none"
         };
@@ -100,105 +95,92 @@ class ExportData extends React.Component {
     };
 
     exportRowData = () => {
-        const columnVlaueList = this.state.columnEntityList;
+        const columnValueList = this.state.columnEntityList;
+        let filteredRow = [];
+        let filteredRowValues = [];
+        let filteredRowHeader = [];
+
         if (
-            columnVlaueList.length > 0 &&
+            columnValueList.length > 0 &&
             this.state.downLaodFileType.length > 0
         ) {
-            this.props.rows.forEach((row) => {
-                const keys = Object.getOwnPropertyNames(row);
-                const filteredColumnVal = {};
-                keys.forEach(function (key) {
-                    columnVlaueList.forEach((columnName) => {
-                        if (columnName.key === key)
-                            filteredColumnVal[key] = row[key];
-                    });
+            const rows = this.props.rows;
+            const rowLength = rows && rows.length > 0 ? rows.length : 0;
+            rows.forEach((row, index) => {
+                let filteredColumnVal = {};
+                let rowFilteredValues = [];
+                let rowFilteredHeader = [];
+                columnValueList.forEach((columnName) => {
+                    const { key, name } = columnName;
+                    filteredColumnVal[name] = row[key];
+                    rowFilteredValues.push(row[key]);
+                    rowFilteredHeader.push(name);
                 });
-                this.state.filteredRow.push(filteredColumnVal);
+                filteredRow.push(filteredColumnVal);
+                filteredRowValues.push(rowFilteredValues);
+                if (rowLength === index + 1)
+                    filteredRowHeader.push(rowFilteredHeader);
             });
 
             this.state.downLaodFileType.forEach((item) => {
-                if (item === "pdf") this.downloadPDF();
-                else if (item === "excel") this.downloadXLSFile();
-                else this.downloadCSVFile();
+                if (item === "pdf") {
+                    this.downloadPDF(filteredRowValues, filteredRowHeader);
+                } else if (item === "excel") {
+                    this.downloadXLSFile(filteredRow);
+                } else {
+                    this.downloadCSVFile(filteredRow);
+                }
             });
         }
     };
 
-    downloadPDF = () => {
+    downloadPDF = (rowFilteredValues, rowFilteredHeader) => {
         const unit = "pt";
         const size = "A4"; // Use A1, A2, A3 or A4
         const orientation = "landscape"; // portrait or landscape
 
-        const marginLeft = 300;
-        const doc = new JSPDF(orientation, unit, size);
+        const doc = new jsPDF(orientation, unit, size);
 
-        doc.setFontSize(15);
-
-        const title = "iCargo Report";
-        const headers = [
-            this.state.columnEntityList.map((column) => {
-                return column.name;
-            })
-        ];
-        const dataValues = [];
-        this.props.rows.forEach((row) => {
-            const keys = Object.keys(row);
-            const filteredColumnVal = [];
-            this.state.columnEntityList.forEach((columnName) => {
-                keys.forEach((key) => {
-                    if (columnName.key === key)
-                        filteredColumnVal.push(row[key]);
-                });
-            });
-            dataValues.push(filteredColumnVal);
-        });
+        doc.setFontSize(12);
+        const title = "iCargo Neo Report";
 
         const content = {
             startY: 50,
-            head: headers,
-            body: dataValues
+            head: rowFilteredHeader,
+            body: rowFilteredValues,
+            tableWidth: "wrap", //'auto'|'wrap'|'number'
+            headStyles: { fillColor: [102, 102, 255] },
+            theme: "grid", //'striped'|'grid'|'plain'|'css'
+            margin: { top: 15, right: 30, bottom: 10, left: 30 }
         };
 
-        doc.text(title, marginLeft, 40);
+        doc.text(title, 30, 40);
         doc.autoTable(content);
-        doc.save("report.pdf");
+        doc.save("iCargo Neo Report.pdf");
     };
 
-    downloadCSVFile = () => {
+    downloadCSVFile = (filteredRowValue) => {
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".csv";
-        const fileName = "CSVDownload";
-        const ws = XLSX.utils.json_to_sheet(this.state.filteredRow);
+        const fileName = "iCargo Neo Report";
+        const ws = XLSX.utils.json_to_sheet(filteredRowValue);
         const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
         const excelBuffer = XLSX.write(wb, { bookType: "csv", type: "array" });
         const data = new Blob([excelBuffer], { type: fileType });
         FileSaver.saveAs(data, fileName + fileExtension);
     };
 
-    downloadXLSFile = () => {
+    downloadXLSFile = (filteredRowValue) => {
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".xlsx";
-        const fileName = "XLSXDownload";
-        const ws = XLSX.utils.json_to_sheet(this.state.filteredRow);
+        const fileName = "iCargo Neo Report";
+        const ws = XLSX.utils.json_to_sheet(filteredRowValue);
         const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
         const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
         const data = new Blob([excelBuffer], { type: fileType });
         FileSaver.saveAs(data, fileName + fileExtension);
-    };
-
-    columnSearchLogic = (e) => {
-        const searchKey = String(e.target.value).toLowerCase();
-        const filteredRows = this.props.columnsList.filter((item) => {
-            return item.name.toLowerCase().includes(searchKey);
-        });
-        if (!filteredRows.length) {
-            this.setState({ columnValueList: this.props.columnsList });
-        } else {
-            this.setState({ columnValueList: filteredRows });
-        }
     };
 
     exportValidation = () => {
@@ -228,8 +210,11 @@ class ExportData extends React.Component {
 
     render() {
         return (
-            <div className="exports--grid" ref={this.setWrapperRef}>
-                <div className="export__grid">
+            <div
+                className="neo-popover neo-popover--exports exports--grid"
+                ref={this.setWrapperRef}
+            >
+                <div className="neo-popover__export export__grid">
                     <div className="export__chooser">
                         <div className="export__header">
                             <div className="">
@@ -292,11 +277,12 @@ class ExportData extends React.Component {
                         <div className="export__header">
                             <div className="export__headerTxt" />
                             <div className="export__close">
-                                <FontAwesomeIcon
-                                    icon={faTimes}
-                                    className="icon-close"
-                                    onClick={this.props.closeExport}
-                                />
+                                <i onClick={this.props.closeExport}>
+                                    <img
+                                        src={IconClose}
+                                        alt="Export Overlay Close Icon"
+                                    />
+                                </i>
                             </div>
                         </div>
                         <div className="export__as">Export as</div>
@@ -311,14 +297,17 @@ class ExportData extends React.Component {
                                     />
                                 </div>
                                 <div className="export__file">
-                                    <FontAwesomeIcon
-                                        icon={faFilePdf}
-                                        className="temp"
-                                    />
+                                    <i>
+                                        <img
+                                            src={IconPdf}
+                                            alt="PDF Export Icon"
+                                        />
+                                    </i>
+                                    <strong>PDF</strong>
                                 </div>
                             </div>
                             <div className="export__reorder">
-                                <div className="">
+                                <div className="check-wrap">
                                     <input
                                         type="checkbox"
                                         name="excel"
@@ -327,10 +316,13 @@ class ExportData extends React.Component {
                                     />
                                 </div>
                                 <div className="export__file">
-                                    <FontAwesomeIcon
-                                        icon={faFileExcel}
-                                        className="temp"
-                                    />
+                                    <i>
+                                        <img
+                                            src={IconExcel}
+                                            alt="Excel Export Icon"
+                                        />
+                                    </i>
+                                    <strong>Excel</strong>
                                 </div>
                             </div>
                             <div className="export__reorder">
@@ -343,19 +335,21 @@ class ExportData extends React.Component {
                                     />
                                 </div>
                                 <div className="export__file">
-                                    <FontAwesomeIcon
-                                        icon={faFileCsv}
-                                        className="temp"
-                                    />
+                                    <i>
+                                        <img
+                                            src={IconCsv}
+                                            alt="CSV Export Icon"
+                                        />
+                                    </i>
+
+                                    <strong>CSV</strong>
                                 </div>
                             </div>
                             <div className="exportWarning">
-                                <span
-                                    style={{ display: this.state.clickTag }}
-                                    className="alert alert-danger"
-                                >
-                                    You have not selected{" "}
-                                    <strong>{this.state.warning}</strong>
+                                <span style={{ display: this.state.clickTag }}>
+                                    <strong>
+                                        Select at least one file type
+                                    </strong>
                                 </span>
                             </div>
                         </div>

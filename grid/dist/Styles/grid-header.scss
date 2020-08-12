@@ -27,7 +27,7 @@
                 width: 1px;
                 left: 0;
                 top: 3px;
-                background: #26577d;
+                background: var(--default);
             }
         }
     }
@@ -37,12 +37,7 @@
         .txt-wrap {
             position: relative;
             .txt {
-                height: 25px;
-                border-radius: 3px;
                 padding: 1px 0 0 23px;
-                font-size: 12px;
-                color: #000;
-                border: #cfd0d0 solid 1px;
             }
             i {
                 position: absolute;

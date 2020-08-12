@@ -26,27 +26,20 @@ $secondary-font: Arial, segoe ui;
 
 :root {
     --default: rgba(26, 72, 105);
-    --default_hover: rgba(40, 70, 91);
-    --primary: rgba(0, 164, 170);
-    --primary-light: rgba(0, 164, 170, 0.1);
-    --primary_hover: #06808d;
     --secondary: #f9fafb;
-    --tertiary: rgba(0, 164, 170, 0.7);
-    --linkcolor: #00b4b4;
-    --info: #11cdef;
     --text-light: #566a81;
-    --text-dark: #212529;
     --titlecolor: rgba(26, 72, 105);
-    --reserved: rgba(26, 72, 105, 0.5);
+    --button-blue:#0e4bda;
     --danger: #ff0000;
-    --success: #2dce89;
-    --grey: #76728c;
     --white: #fff;
-    --orange: #fb6340;
-    --border: rgba(26, 72, 105, 0.25);
+    --dark-grey:#9ea2a5;
+    --light-grey:#ccc;
     --border-grey: #d8d8d8;
-    --placeholder: rgba(26, 72, 105, 0.9);
+    --placeholder: #bbbbbb;
     --box-shadow: rgba(32, 77, 111, 0.2);
+    --scroll-track:#f1f1f1;
+    --scroll-thumb:#c1c1c1;
     --focus: #199ed8;
+    --border-table:#d2d5de;
     --em-base: 16;
 }

@@ -6,6 +6,7 @@ import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
 import ColumnsList from "./columnsList";
+import IconClose from "../../Images/icon-close.svg";
 
 const ColumnReordering = memo((props) => {
     const {
@@ -154,37 +155,35 @@ const ColumnReordering = memo((props) => {
             } else {
                 setRemarksColumnToManage([]);
             }
-        } else {
+        } else if (checked) {
             // If column checkbox is checked
-            if (checked) {
-                // Find the index of selected column from original column array and also find the user selected column
-                let indexOfColumnToAdd = originalColumns.findIndex((column) => {
-                    return column.Header === value;
-                });
-                const itemToAdd = originalColumns[indexOfColumnToAdd];
+            // Find the index of selected column from original column array and also find the user selected column
+            let indexOfColumnToAdd = originalColumns.findIndex((column) => {
+                return column.Header === value;
+            });
+            const itemToAdd = originalColumns[indexOfColumnToAdd];
 
-                // Loop through the managedColumns array to find the position of the column that is present previous to the user selected column
-                // Find index of that previous column in original column list and push the new column next to that position
-                let prevItemIndex = -1;
-                while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
-                    indexOfColumnToAdd -= 1;
-                    prevItemIndex = findIndexOfItem(
-                        "column",
-                        managedColumns,
-                        indexOfColumnToAdd
-                    );
-                }
-
-                const newColumnsList = [...managedColumns];
-                newColumnsList.splice(prevItemIndex + 1, 0, itemToAdd);
-                setManagedColumns(newColumnsList);
-            } else {
-                setManagedColumns(
-                    managedColumns.filter((column) => {
-                        return column.Header !== value;
-                    })
+            // Loop through the managedColumns array to find the position of the column that is present previous to the user selected column
+            // Find index of that previous column in original column list and push the new column next to that position
+            let prevItemIndex = -1;
+            while (indexOfColumnToAdd > 0 && prevItemIndex === -1) {
+                indexOfColumnToAdd -= 1;
+                prevItemIndex = findIndexOfItem(
+                    "column",
+                    managedColumns,
+                    indexOfColumnToAdd
                 );
             }
+
+            const newColumnsList = [...managedColumns];
+            newColumnsList.splice(prevItemIndex + 1, 0, itemToAdd);
+            setManagedColumns(newColumnsList);
+        } else {
+            setManagedColumns(
+                managedColumns.filter((column) => {
+                    return column.Header !== value;
+                })
+            );
         }
     };
 
@@ -234,14 +233,15 @@ const ColumnReordering = memo((props) => {
             } else {
                 setStateColumnList(
                     stateColumnList.map((column) => {
+                        const updatedColumn = column;
                         if (column.Header === columnheader) {
-                            column.innerCells = column.innerCells.filter(
+                            updatedColumn.innerCells = column.innerCells.filter(
                                 (cell) => {
                                     return cell.Header !== value;
                                 }
                             );
                         }
-                        return column;
+                        return updatedColumn;
                     })
                 );
             }
@@ -274,7 +274,8 @@ const ColumnReordering = memo((props) => {
     const resetInnerCells = (columnList) => {
         if (columnList && columnList.length) {
             return columnList.map((column) => {
-                column.innerCells = column.originalInnerCells;
+                const newColumn = column;
+                newColumn.innerCells = column.originalInnerCells;
                 return column;
             });
         }
@@ -303,7 +304,7 @@ const ColumnReordering = memo((props) => {
                     <div className="neo-popover__column column__grid">
                         <div className="column__chooser">
                             <div className="column__header">
-                                <div className="">
+                                <div>
                                     <strong>Column Chooser</strong>
                                 </div>
                             </div>
@@ -331,11 +332,11 @@ const ColumnReordering = memo((props) => {
                                         Select All
                                     </div>
                                 </div>
-                                {searchedColumns.map((column, index) => {
+                                {searchedColumns.map((column) => {
                                     return (
                                         <div
                                             className="column__wrap"
-                                            key={index}
+                                            key={column.columnId}
                                         >
                                             <div className="column__checkbox">
                                                 <input
@@ -378,10 +379,12 @@ const ColumnReordering = memo((props) => {
                                     role="presentation"
                                     onClick={toggleManageColumns}
                                 >
-                                    <i
-                                        className="fa fa-times"
-                                        aria-hidden="true"
-                                    />
+                                    <i>
+                                        <img
+                                            src={IconClose}
+                                            alt="Column chooser Close Icon"
+                                        />
+                                    </i>
                                 </div>
                             </div>
                             <div className="column__body">
@@ -403,7 +406,7 @@ const ColumnReordering = memo((props) => {
                                 {remarksColumnToManage &&
                                 remarksColumnToManage.length > 0 ? (
                                     <div className="column__reorder full-width">
-                                        <div className="">
+                                        <div>
                                             {remarksColumnToManage[0].Header}
                                         </div>
                                         <div className="column__innerCells__wrap">
@@ -412,11 +415,11 @@ const ColumnReordering = memo((props) => {
                                             remarksColumnToManage[0]
                                                 .originalInnerCells.length > 0
                                                 ? remarksColumnToManage[0].originalInnerCells.map(
-                                                      (cell, index) => {
+                                                      (cell) => {
                                                           return (
                                                               <div
                                                                   className="column__wrap"
-                                                                  key={index}
+                                                                  key={`${cell.Header}_${cell.accessor}`}
                                                               >
                                                                   <div className="column__checkbox">
                                                                       <input

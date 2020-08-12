@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useDrop } from "react-dnd";
 import update from "immutability-helper";
 import PropTypes from "prop-types";
@@ -38,12 +38,12 @@ const ColumnsList = (props) => {
     const [, drop] = useDrop({ accept: ItemTypes.COLUMN });
 
     return (
-        <>
+        <React.Fragment key="ColumnManageFragment">
             <div ref={drop} style={{ display: "flex", flexWrap: "wrap" }}>
-                {columnsToManage.map((column, index) => {
+                {columnsToManage.map((column) => {
                     return (
                         <ColumnItem
-                            key={index}
+                            key={column.columnId}
                             id={`${column.columnId}`}
                             Header={`${column.Header}`}
                             moveColumn={moveColumn}
@@ -55,7 +55,7 @@ const ColumnsList = (props) => {
                     );
                 })}
             </div>
-        </>
+        </React.Fragment>
     );
 };
 

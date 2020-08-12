@@ -15,15 +15,22 @@ export const extractColumns = (
     const modifiedColumns = [];
     // Loop through the columns configuration and create required column structure
     filteredColumns.forEach((column, index) => {
-        const { innerCells, accessor, sortValue } = column;
+        const { originalInnerCells, innerCells, accessor, sortValue } = column;
         const isInnerCellsPresent = innerCells && innerCells.length > 0;
+        const isOriginalInnerCellsPresent =
+            originalInnerCells && originalInnerCells.length > 0;
         const elem = column;
 
         // Add column Id
         elem.columnId = `column_${index}`;
 
-        //Add an indentifier that this is a column not for expanded region
+        // Add an indentifier that this is a column not for expanded region
         elem.displayInExpandedRegion = false;
+
+        // If there are no copies of original Cells create a new copy from Inner cells
+        if (!isOriginalInnerCellsPresent && isInnerCellsPresent) {
+            elem.originalInnerCells = innerCells;
+        }
 
         // Configure Cell function (which is used by react-table component), based on the user defined function displayCell
         if (!elem.Cell && elem.displayCell) {
@@ -81,21 +88,29 @@ export const extractColumns = (
 };
 
 export const extractAdditionalColumn = (additionalColumn, isDesktop) => {
-    const { innerCells } = additionalColumn;
+    const { originalInnerCells, innerCells } = additionalColumn;
     const isInnerCellsPresent = innerCells && innerCells.length > 0;
+    const isOriginalInnerCellsPresent =
+        originalInnerCells && originalInnerCells.length > 0;
     const element = additionalColumn;
 
     // Add column Id
     element.columnId = `ExpandColumn`;
 
-    //Add an indentifier that this is a column for expanded region
+    // Add an indentifier that this is a column for expanded region
     element.displayInExpandedRegion = true;
 
     // Remove iPad only columns from desktop and vice-versa
     if (isInnerCellsPresent) {
-        element.innerCells = innerCells.filter((cell) => {
+        const filteredInnerCells = innerCells.filter((cell) => {
             return isDesktop ? !cell.onlyInTablet : !cell.onlyInDesktop;
         });
+        element.innerCells = filteredInnerCells;
+        // If there are no copies of original Cells create a new copy from Inner cells
+        if (!isOriginalInnerCellsPresent) {
+            element.originalInnerCells = filteredInnerCells;
+        }
     }
+
     return additionalColumn;
 };

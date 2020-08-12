@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useDrop } from "react-dnd";
 import update from "immutability-helper";
 import PropTypes from "prop-types";
@@ -31,7 +31,7 @@ const SortingList = (props) => {
     const [, drop] = useDrop({ accept: ItemTypes.SORT_ITEM });
 
     return (
-        <>
+        <React.Fragment key="SortingListFragment">
             <div ref={drop} style={{ display: "flex", flexWrap: "wrap" }}>
                 {sortOptions && sortOptions.length > 0 ? (
                     <ul>
@@ -58,7 +58,7 @@ const SortingList = (props) => {
                     );
                 })}
             </div>
-        </>
+        </React.Fragment>
     );
 };
 

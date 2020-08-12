@@ -1,4 +1,5 @@
 import React, { memo, useMemo, useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
     extractColumns,
     extractAdditionalColumn
@@ -6,19 +7,19 @@ import {
 import { AdditionalColumnContext } from "./Utilities/TagsContext";
 import AdditionalColumnTag from "./Functions/AdditionalColumnTag";
 import Customgrid from "./Customgrid";
+// eslint-disable-next-line import/no-unresolved
 import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
-import PropTypes from "prop-types";
 
 const Grid = memo((props) => {
     const {
         title,
         gridHeight,
         gridWidth,
+        loadData,
         columns,
         columnToExpand,
         rowActions,
         rowActionCallback,
-        fetchData,
         getRowEditOverlay,
         updateRowData,
         deleteRowData,
@@ -55,8 +56,8 @@ const Grid = memo((props) => {
             // Enter if cell value is array
             if (rowAccessorValue.length > 0) {
                 // Loop through cell array value and check if searched text is present
-                rowAccessorValue.map((value) => {
-                    innerCells.map((cell) => {
+                rowAccessorValue.forEach((value) => {
+                    innerCells.forEach((cell) => {
                         const dataAccessor = value[cell.accessor];
                         if (
                             dataAccessor &&
@@ -71,7 +72,7 @@ const Grid = memo((props) => {
                 });
             } else {
                 // If cell value is an object, loop through inner cells and check if searched text is present
-                innerCells.map((cell) => {
+                innerCells.forEach((cell) => {
                     const dataAccessor = original[accessor][cell.accessor];
                     if (
                         dataAccessor &&
@@ -101,13 +102,14 @@ const Grid = memo((props) => {
     const updateRowInGrid = (original, updatedRow) => {
         setItems((old) =>
             old.map((row) => {
+                let newRow = row;
                 if (
                     Object.entries(row).toString() ===
                     Object.entries(original).toString()
                 ) {
-                    row = updatedRow;
+                    newRow = updatedRow;
                 }
-                return row;
+                return newRow;
             })
         );
         if (updateRowData) {
@@ -153,20 +155,22 @@ const Grid = memo((props) => {
     // Process data to be rendered to expanded view and return that data to the render function
     const displayExpandedContent = (row) => {
         const { original } = row;
+        const additionalColumnObj = additionalColumn;
         if (original) {
             return (
                 <AdditionalColumnContext.Provider
-                    value={{ additionalColumn: additionalColumn }}
+                    value={{ additionalColumn: additionalColumnObj }}
                 >
                     {renderExpandedContent(original, AdditionalColumnTag)}
                 </AdditionalColumnContext.Provider>
             );
         }
+        return null;
     };
     // #endregion
 
     // Add logic for doing global search in the grid
-    const globalSearchLogic = (rows, columns, filterValue) => {
+    const globalSearchLogic = (rows, filterValue) => {
         // Enter search logic only if rows and columns are available
         if (filterValue && processedColumns.length > 0) {
             // convert user searched text to lower case
@@ -178,7 +182,7 @@ const Grid = memo((props) => {
                 // Return value of the filter method
                 let returnValue = false;
                 // Loop through all column values for each row
-                processedColumns.map((column) => {
+                processedColumns.forEach((column) => {
                     // Do search for each column
                     returnValue =
                         returnValue ||
@@ -192,14 +196,14 @@ const Grid = memo((props) => {
 
     // Add logic to calculate height of each row, based on the content of  or more columns
     // This can be used only if developer using the component has not passed a function to calculate row height
-    const calculateDefaultRowHeight = (row, gridColumns) => {
+    const calculateDefaultRowHeight = (row, columnsInGrid) => {
         // Minimum height for each row
         let rowHeight = 50;
-        if (gridColumns && gridColumns.length > 0 && row) {
+        if (columnsInGrid && columnsInGrid.length > 0 && row) {
             // Get properties of a row
             const { original, isExpanded } = row;
             // Find the column with maximum width configured, from grid columns list
-            const columnWithMaxWidth = [...gridColumns].sort((a, b) => {
+            const columnWithMaxWidth = [...columnsInGrid].sort((a, b) => {
                 return b.width - a.width;
             })[0];
             // Get column properties including the user resized column width (totalFlexWidth)
@@ -233,14 +237,25 @@ const Grid = memo((props) => {
     // #region - Group sorting logic
     // Function to return sorting logic based on the user selected order of sort
     const compareValues = (compareOrder, v1, v2) => {
+        let returnValue = 0;
         if (compareOrder === "Ascending") {
-            return v1 > v2 ? 1 : v1 < v2 ? -1 : 0;
+            if (v1 > v2) {
+                returnValue = 1;
+            } else if (v1 < v2) {
+                returnValue = -1;
+            }
+            return returnValue;
         }
-        return v1 < v2 ? 1 : v1 > v2 ? -1 : 0;
+        if (v1 < v2) {
+            returnValue = 1;
+        } else if (v1 > v2) {
+            returnValue = -1;
+        }
+        return returnValue;
     };
     // Function to return sorted data
     const getSortedData = (originalData) => {
-        return originalData.sort(function (x, y) {
+        return originalData.sort((x, y) => {
             let compareResult = 0;
             groupSortOptions.forEach((option) => {
                 const { sortBy, sortOn, order } = option;
@@ -267,12 +282,11 @@ const Grid = memo((props) => {
     // Gets called when page scroll reaches the bottom of the grid.
     // Fetch the next set of data and append it to the variable holding grid data and update the state value.
     // Also update the hasNextPage state value to False once API response is empty, to avoid unwanted API calls.
-    const loadNextPage = (...args) => {
-        const newIndex = args && args.length > 0 ? args[0] : -1;
-        if (newIndex >= 0 && hasNextPage) {
+    const loadNextPage = () => {
+        if (hasNextPage) {
             setIsLoading(true);
             setIsNextPageLoading(true);
-            fetchData(newIndex).then((data) => {
+            loadData().then((data) => {
                 setIsLoading(false);
                 setHasNextPage(data && data.length > 0);
                 setIsNextPageLoading(false);
@@ -284,10 +298,11 @@ const Grid = memo((props) => {
     useEffect(() => {
         // Add duplicate copy of inner cells to be used for data chooser
         processedColumns.map((column) => {
+            const columnTpProcess = column;
             if (column.innerCells) {
-                column.originalInnerCells = column.innerCells;
+                columnTpProcess.originalInnerCells = column.innerCells;
             }
-            return column;
+            return columnTpProcess;
         });
         if (additionalColumn) {
             const { innerCells } = additionalColumn;
@@ -298,7 +313,7 @@ const Grid = memo((props) => {
 
         // Make API call to fetch initial set of data.
         setIsLoading(true);
-        fetchData(0).then((data) => {
+        loadData().then((data) => {
             setIsLoading(false);
             setItems(data);
         });
@@ -375,14 +390,14 @@ Grid.propTypes = {
     gridWidth: PropTypes.any,
     columns: PropTypes.any,
     columnToExpand: PropTypes.any,
-    fetchData: PropTypes.any,
+    loadData: PropTypes.any,
     getRowEditOverlay: PropTypes.any,
     updateRowData: PropTypes.any,
     deleteRowData: PropTypes.any,
     selectBulkData: PropTypes.any,
     calculateRowHeight: PropTypes.any,
-    cellKey: PropTypes.any,
-    children: PropTypes.any
+    rowActions: PropTypes.any,
+    rowActionCallback: PropTypes.any
 };
 
 export default Grid;

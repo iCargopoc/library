@@ -2,6 +2,7 @@ import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
+import IconNav from "../../Images/icon-nav.svg";
 import SortCopy from "../../Images/SortCopy.svg";
 import SortDelete from "../../Images/SortDelete.svg";
 
@@ -23,10 +24,12 @@ const SortItem = ({
             isDragging: monitor.isDragging()
         }),
         end: (dropResult, monitor) => {
-            const { id: droppedId, originalIndex } = monitor.getItem();
+            const monitorGetItemValue = monitor.getItem();
+            const { id: droppedId } = monitorGetItemValue;
+            const newOriginalIndex = monitorGetItemValue.originalIndex;
             const didDrop = monitor.didDrop();
             if (!didDrop) {
-                moveSort(droppedId, originalIndex);
+                moveSort(droppedId, newOriginalIndex);
             }
         }
     });
@@ -97,9 +100,10 @@ const SortItem = ({
                 <div
                     ref={(node) => drag(drop(node))}
                     style={{ cursor: "move" }}
-                    className=""
                 >
-                    <i className="fa fa-navicon" />
+                    <i>
+                        <img src={IconNav} alt="Group Sort Drag Icon" />
+                    </i>
                 </div>
             </div>
 
@@ -110,8 +114,11 @@ const SortItem = ({
                         onChange={changeSortByOptions}
                         value={sortOption.sortBy}
                     >
-                        {originalColumns.map((orgItem, index) => (
-                            <option key={index} value={orgItem.accessor}>
+                        {originalColumns.map((orgItem) => (
+                            <option
+                                key={orgItem.columnId}
+                                value={orgItem.accessor}
+                            >
                                 {orgItem.Header}
                             </option>
                         ))}
@@ -128,9 +135,9 @@ const SortItem = ({
                         {getInncerCellsOfColumn(sortOption.sortBy) &&
                         getInncerCellsOfColumn(sortOption.sortBy).length > 0 ? (
                             getInncerCellsOfColumn(sortOption.sortBy).map(
-                                (innerCellItem, innerCellIndex) => (
+                                (innerCellItem) => (
                                     <option
-                                        key={innerCellIndex}
+                                        key={`${innerCellItem.Header}_${innerCellItem.accessor}`}
                                         value={innerCellItem.accessor}
                                     >
                                         {innerCellItem.Header}

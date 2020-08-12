@@ -2,18 +2,14 @@
 /* eslint no-unused-expressions: ["error", {"allowTernary": true }] */
 /* eslint-disable react/no-access-state-in-setstate */
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faTimes,
-    faAlignJustify,
-    faTrash,
-    faPlus,
-    faCopy
-} from "@fortawesome/free-solid-svg-icons";
 import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import PropTypes from "prop-types";
 import SortingList from "./SortingList";
+import IconClose from "../../Images/icon-close.svg";
+import IconNav from "../../Images/icon-nav.svg";
+import SortCopy from "../../Images/SortCopy.svg";
+import SortDelete from "../../Images/SortDelete.svg";
 
 class App extends React.Component {
     constructor(props) {
@@ -89,7 +85,12 @@ class App extends React.Component {
                             </div>
 
                             <div className="sort__icon">
-                                <FontAwesomeIcon icon={faAlignJustify} />
+                                <i>
+                                    <img
+                                        src={IconNav}
+                                        alt="Group Sort Drag Icon"
+                                    />
+                                </i>
                             </div>
                         </div>
 
@@ -171,11 +172,9 @@ class App extends React.Component {
                             </div>
 
                             <div className="sort__icon">
-                                <FontAwesomeIcon
-                                    icon={faCopy}
-                                    title="Copy"
-                                    onClick={() => this.copy(index)}
-                                />
+                                <i>
+                                    <img src={SortCopy} alt="copy sort" />
+                                </i>
                             </div>
                         </div>
 
@@ -185,11 +184,9 @@ class App extends React.Component {
                             </div>
 
                             <div className="sort__icon">
-                                <FontAwesomeIcon
-                                    icon={faTrash}
-                                    title="Delete"
-                                    onClick={() => this.remove(index)}
-                                />
+                                <i>
+                                    <img src={SortDelete} alt="copy sort" />
+                                </i>
                             </div>
                         </div>
                     </div>
@@ -251,85 +248,75 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="sorts--grid" ref={this.setWrapperRef}>
-                <div className="sort__grid">
-                    <div className="sort__settings">
-                        <div className="sort__header">
-                            <div className="sort__headerTxt">
-                                <strong>Sort </strong>
-                            </div>
-
-                            <div className="sort__close">
-                                <FontAwesomeIcon
-                                    className="icon-close"
-                                    icon={faTimes}
-                                    onClick={() => this.props.closeSorting()}
+            <div className="neo-popover" ref={this.setWrapperRef}>
+                <div className="neo-popover__sort">
+                    <div className="neo-popover__title">
+                        <h2>Sort</h2>
+                        <div className="neo-popover__close">
+                            <i onClick={() => this.props.closeSorting()}>
+                                <img
+                                    src={IconClose}
+                                    alt="Group Sort Close Icon"
                                 />
-                            </div>
+                            </i>
                         </div>
+                    </div>
 
-                        <div className="sort__body">
-                            <DndProvider
-                                backend={TouchBackend}
-                                options={{ enableMouseEvents: true }}
-                            >
-                                <SortingList
-                                    handleReorderListOfSort={
-                                        this.handleReorderListOfSort
-                                    }
-                                    sortsArray={this.createColumnsArrayFromProps(
-                                        this.state.sortingOrderList
-                                    )}
-                                />
-                            </DndProvider>
-                            <div className="sort-warning">
-                                {this.state.errorMessage ? (
-                                    <span className="alert alert-danger">
-                                        Sort by opted are same, Please choose
-                                        different one.
-                                    </span>
-                                ) : (
-                                    ""
+                    <div className="neo-popover__content">
+                        <DndProvider
+                            backend={TouchBackend}
+                            options={{ enableMouseEvents: true }}
+                        >
+                            <SortingList
+                                handleReorderListOfSort={
+                                    this.handleReorderListOfSort
+                                }
+                                sortsArray={this.createColumnsArrayFromProps(
+                                    this.state.sortingOrderList
                                 )}
-                            </div>
+                            />
+                        </DndProvider>
+                    </div>
+                    <div className="sort-warning">
+                        {this.state.errorMessage ? (
+                            <span className="alert alert-danger">
+                                Sort by opted are same, Please choose different
+                                one.
+                            </span>
+                        ) : (
+                            ""
+                        )}
+                    </div>
+                    <div className="sort__new">
+                        <div
+                            role="presentation"
+                            className="sort__section"
+                            onClick={() => this.add()}
+                            onKeyDown={() => this.add()}
+                        >
+                            <span>+</span>
+                            <div className="sort__txt">New Sort</div>
                         </div>
-                        <div className="sort__new">
-                            <div className="sort__section">
-                                <FontAwesomeIcon
-                                    icon={faPlus}
-                                    className="sort__icon"
-                                />
-                                <div
-                                    role="button"
-                                    tabIndex={0}
-                                    className="sort__txt"
-                                    onClick={() => this.add()}
-                                    onKeyDown={() => this.add()}
-                                >
-                                    New Sort
-                                </div>
-                            </div>
-                        </div>
-                        <div className="sort__footer">
-                            <div className="sort__btns">
-                                <button
-                                    type="button"
-                                    className="btns"
-                                    onClick={this.clearAll}
-                                >
-                                    Clear All
-                                </button>
+                    </div>
+                    <div className="sort__footer">
+                        <div className="sort__btns">
+                            <button
+                                type="button"
+                                className="btns"
+                                onClick={this.clearAll}
+                            >
+                                Clear All
+                            </button>
 
-                                <button
-                                    type="button"
-                                    className="btns btns__save"
-                                    onClick={() =>
-                                        this.updateTableAsPerSortCondition()
-                                    }
-                                >
-                                    Ok
-                                </button>
-                            </div>
+                            <button
+                                type="button"
+                                className="btns btns__save"
+                                onClick={() =>
+                                    this.updateTableAsPerSortCondition()
+                                }
+                            >
+                                Ok
+                            </button>
                         </div>
                     </div>
                 </div>

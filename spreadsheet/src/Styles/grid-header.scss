@@ -1,0 +1,56 @@
+@function rem($size, $base: $em-base) {
+    $remSize: $size / $em-base;
+    @return #{$remSize}rem;
+}
+.neo-grid-header {
+    background-color: var(--secondary);
+    display: flex;
+    padding: 20px 15px;
+    justify-content: space-between;
+    &__results {
+        display: flex;
+        font-size: rem(14);
+        color: var(--titlecolor);
+        font-weight: $font-weight-bold;
+        .showing {
+            margin-left: 5px;
+            padding-left: 5px;
+            position: relative;
+            &:before {
+                content: "";
+                position: absolute;
+                height: 15px;
+                width: 1px;
+                left: 0;
+                top: 3px;
+                background: #26577d;
+            }
+        }
+    }
+    &__utilities {
+        display: flex;
+        align-items: center;
+        .txt-wrap {
+            position: relative;
+            .txt {
+                padding-left: 23px;
+            }
+            i {
+                position: absolute;
+                left: 7px;
+                top: 7px;
+            }
+        }
+        .utilities-icon {
+            margin-left: 10px;
+            border: var(--border-grey) solid 1px;
+            padding: 0 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            line-height: 1px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+        }
+    }
+}

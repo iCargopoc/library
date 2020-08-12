@@ -1,8 +1,8 @@
 import React, { memo, useState } from "react";
-import { RowEditContext } from "../Utilities/TagsContext";
-import RowEditTag from "./RowEditTag";
 import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
+import { RowEditContext } from "../Utilities/TagsContext";
+import RowEditTag from "./RowEditTag";
 
 const RowEditOverLay = memo(
     ({
@@ -38,9 +38,9 @@ const RowEditOverLay = memo(
         return (
             <RowEditContext.Provider
                 value={{
-                    columns: columns,
-                    additionalColumn: additionalColumn,
-                    isRowExpandEnabled: isRowExpandEnabled
+                    columns,
+                    additionalColumn,
+                    isRowExpandEnabled
                 }}
             >
                 <ClickAwayListener
@@ -77,10 +77,7 @@ RowEditOverLay.propTypes = {
     additionalColumn: PropTypes.any,
     getRowEditOverlay: PropTypes.any,
     closeRowEditOverlay: PropTypes.any,
-    updateRowInGrid: PropTypes.any,
-    cellKey: PropTypes.any,
-    columnKey: PropTypes.any,
-    children: PropTypes.any
+    updateRowInGrid: PropTypes.any
 };
 
 export default RowEditOverLay;
