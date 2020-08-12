@@ -56,10 +56,9 @@ const ExportData = memo((props) => {
         const size = "A4"; // Use A1, A2, A3 or A4
         const orientation = "landscape"; // portrait or landscape
 
-        const marginLeft = 30;
         const doc = new JsPdf(orientation, unit, size);
 
-        doc.setFontSize(15);
+        doc.setFontSize(12);
         const title = "iCargo Neo Report";
 
         const content = {
@@ -68,18 +67,11 @@ const ExportData = memo((props) => {
             body: rowFilteredValues,
             tableWidth: "wrap", // 'auto'|'wrap'|'number'
             headStyles: { fillColor: [102, 102, 255] },
-            styles: {
-                fontSize: 12,
-                overflowX: "visible",
-                overflowY: "visible"
-            },
             theme: "grid", // 'striped'|'grid'|'plain'|'css'
-            overflow: "visible", // 'linebreak'|'ellipsize'|'visible'|'hidden'
-            cellWidth: "auto",
-            margin: { top: 15, right: 30, bottom: 10, left: 30 }
+            margin: { top: 30, right: 30, bottom: 10, left: 30 }
         };
 
-        doc.text(title, marginLeft, 40);
+        doc.text(title, 30, 40);
         doc.autoTable(content);
         doc.save("iCargo Neo Report.pdf");
 

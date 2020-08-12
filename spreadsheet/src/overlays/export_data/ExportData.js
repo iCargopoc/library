@@ -139,7 +139,7 @@ class ExportData extends React.Component {
         const size = "A4"; // Use A1, A2, A3 or A4
         const orientation = "landscape"; // portrait or landscape
 
-        const doc = new jsPDF(orientation, unit, size);
+        const doc = new JsPdf(orientation, unit, size);
 
         doc.setFontSize(12);
         const title = "iCargo Neo Report";
@@ -148,10 +148,10 @@ class ExportData extends React.Component {
             startY: 50,
             head: rowFilteredHeader,
             body: rowFilteredValues,
-            tableWidth: "wrap", //'auto'|'wrap'|'number'
+            tableWidth: "wrap", // 'auto'|'wrap'|'number'
             headStyles: { fillColor: [102, 102, 255] },
-            theme: "grid", //'striped'|'grid'|'plain'|'css'
-            margin: { top: 15, right: 30, bottom: 10, left: 30 }
+            theme: "grid", // 'striped'|'grid'|'plain'|'css'
+            margin: { top: 30, right: 30, bottom: 10, left: 30 }
         };
 
         doc.text(title, 30, 40);
