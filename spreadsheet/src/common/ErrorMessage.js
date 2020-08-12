@@ -2,7 +2,7 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { useState, useEffect } from "react";
 import { SEARCH_NOT_FOUNT_ERROR } from "./ErrorConstants";
-import IconClose from "../Images/icon-close.svg";
+import { ReactComponent as IconClose } from "../images/icon-close.svg";
 
 const ErrorMessage = (props) => {
     const [status, setStatus] = useState(props.status);
@@ -15,9 +15,15 @@ const ErrorMessage = (props) => {
                 <div className="alert alert-danger" role="alert">
                     {SEARCH_NOT_FOUNT_ERROR}
                 </div>
-                <div className="notification-close">
+                <div
+                    className="notification-close"
+                    onClick={() => {
+                        props.closeWarningStatus();
+                        props.clearSearchValue();
+                    }}
+                >
                     <i>
-                        <img src={IconClose} alt="Close Icon" />
+                        <IconClose />
                     </i>
                 </div>
             </div>

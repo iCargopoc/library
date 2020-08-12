@@ -6,7 +6,7 @@ import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
 import ColumnsList from "./columnsList";
-import IconClose from "../../Images/icon-close.svg";
+import { ReactComponent as IconClose } from "../../Images/icon-close.svg";
 
 const ColumnReordering = memo((props) => {
     const {
@@ -380,10 +380,7 @@ const ColumnReordering = memo((props) => {
                                     onClick={toggleManageColumns}
                                 >
                                     <i>
-                                        <img
-                                            src={IconClose}
-                                            alt="Column chooser Close Icon"
-                                        />
+                                        <IconClose />
                                     </i>
                                 </div>
                             </div>

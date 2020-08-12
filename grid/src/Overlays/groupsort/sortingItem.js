@@ -2,9 +2,9 @@ import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
-import IconNav from "../../Images/icon-nav.svg";
-import SortCopy from "../../Images/SortCopy.svg";
-import SortDelete from "../../Images/SortDelete.svg";
+import { ReactComponent as IconNav } from "../../Images/icon-nav.svg";
+import { ReactComponent as SortCopy } from "../../Images/SortCopy.svg";
+import { ReactComponent as SortDelete } from "../../Images/SortDelete.svg";
 
 const SortItem = ({
     id,
@@ -102,7 +102,7 @@ const SortItem = ({
                     style={{ cursor: "move" }}
                 >
                     <i>
-                        <img src={IconNav} alt="Group Sort Drag Icon" />
+                        <IconNav />
                     </i>
                 </div>
             </div>
@@ -171,7 +171,7 @@ const SortItem = ({
                     onClick={copySort}
                 >
                     <i>
-                        <img src={SortCopy} alt="copy sort" />
+                        <SortCopy />
                     </i>
                 </div>
             </div>
@@ -182,7 +182,7 @@ const SortItem = ({
                     onClick={deleteSort}
                 >
                     <i>
-                        <img src={SortDelete} alt="copy sort" />
+                        <SortDelete />
                     </i>
                 </div>
             </div>

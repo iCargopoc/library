@@ -9,8 +9,8 @@ import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import PropTypes from "prop-types";
 import ColumnsList from "./columnsList";
-import IconClose from "../../Images/icon-close.svg";
-import IconJustify from "../../Images/icon-align-justify.svg";
+import { ReactComponent as IconClose } from "../../images/icon-close.svg";
+import { ReactComponent as IconJustify } from "../../images/icon-align-justify.svg";
 
 class ColumnReordering extends React.Component {
     constructor(props) {
@@ -169,10 +169,7 @@ class ColumnReordering extends React.Component {
                     <div className="column__reorder" key={item}>
                         <div style={{ cursor: "move" }} className="column_drag">
                             <i>
-                                <img
-                                    src={IconJustify}
-                                    alt="Column Chooser Drag Icon"
-                                />
+                                <IconJustify />
                             </i>
                         </div>
                         <div className="column__reorder__name">{item}</div>
@@ -322,12 +319,14 @@ class ColumnReordering extends React.Component {
                             <div className="column__headerTxt">
                                 <strong>Column Settings</strong>
                             </div>
-                            <div className="column__close">
+                            <div
+                                className="column__close"
+                                onClick={() =>
+                                    this.props.closeColumnReOrdering()
+                                }
+                            >
                                 <i>
-                                    <img
-                                        src={IconClose}
-                                        alt="Column chooser Close Icon"
-                                    />
+                                    <IconClose />
                                 </i>
                             </div>
                         </div>

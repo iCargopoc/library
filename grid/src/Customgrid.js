@@ -29,13 +29,13 @@ import RowDeleteOverLay from "./Functions/RowDeleteOverLay";
 import ColumnReordering from "./Overlays/managecolumns";
 import GroupSort from "./Overlays/groupsort";
 import ExportData from "./Overlays/exportdata";
-import IconColumns from "./Images/icon-columns.svg";
-import IconAngle from "./Images/icon-angle.svg";
-import IconFilter from "./Images/icon-filter.svg";
-import IconShare from "./Images/icon-share.svg";
-import IconGroupSort from "./Images/icon-group-sort.svg";
-import IconSort from "./Images/icon-sort.svg";
-import IconEdit from "./Images/icon-edit.png";
+import { ReactComponent as IconColumns } from "./Images/icon-columns.svg";
+import { ReactComponent as IconAngle } from "./Images/icon-angle.svg";
+import { ReactComponent as IconFilter } from "./Images/icon-filter.svg";
+import { ReactComponent as IconShare } from "./Images/icon-share.svg";
+import { ReactComponent as IconGroupSort } from "./Images/icon-group-sort.svg";
+import { ReactComponent as IconSort } from "./Images/icon-sort.svg";
+import { ReactComponent as IconEdit } from "./Images/icon-edit.svg";
 
 const listRef = createRef(null);
 
@@ -242,14 +242,12 @@ const Customgrid = memo((props) => {
                                         {...row.getToggleRowExpandedProps()}
                                     >
                                         <i>
-                                            <img
+                                            <IconAngle
                                                 className={
                                                     row.isExpanded
                                                         ? "icon-arrow-up"
                                                         : "icon-arrow-down"
                                                 }
-                                                src={IconAngle}
-                                                alt="Row Collapse Icon"
                                             />
                                         </i>
                                     </span>
@@ -362,7 +360,7 @@ const Customgrid = memo((props) => {
                         onClick={toggleColumnFilter}
                     >
                         <i>
-                            <img src={IconFilter} alt="Column Filter Icon" />
+                            <IconFilter />
                         </i>
                     </div>
                     <div
@@ -371,16 +369,16 @@ const Customgrid = memo((props) => {
                         onClick={bulkSelector}
                     >
                         <i>
-                            <img src={IconEdit} alt="Bulk Export Icon" />
+                            <IconEdit />
                         </i>
                     </div>
                     <div
-                        className="utilities-icon bulk-select"
+                        className="utilities-icon group-sort"
                         role="presentation"
                         onClick={toggleGroupSortOverLay}
                     >
                         <i>
-                            <img src={IconGroupSort} alt="Group sort Icon" />
+                            <IconGroupSort />
                         </i>
                     </div>
                     <div
@@ -389,16 +387,16 @@ const Customgrid = memo((props) => {
                         onClick={toggleManageColumns}
                     >
                         <i>
-                            <img src={IconColumns} alt="collumn-chooser-icon" />
+                            <IconColumns />
                         </i>
                     </div>
                     <div
-                        className="utilities-icon manage-columns"
+                        className="utilities-icon export-data"
                         role="presentation"
                         onClick={toggleExportDataOverlay}
                     >
                         <i>
-                            <img src={IconShare} alt="Export Data Icon" />
+                            <IconShare />
                         </i>
                     </div>
                 </div>
@@ -458,16 +456,12 @@ const Customgrid = memo((props) => {
                                                     <span>
                                                         {column.isSorted ? (
                                                             <i>
-                                                                <img
+                                                                <IconSort
                                                                     className={
                                                                         column.isSortedDesc
                                                                             ? "sort-asc"
                                                                             : "sort-desc"
                                                                     }
-                                                                    src={
-                                                                        IconSort
-                                                                    }
-                                                                    alt="Export Overlay Close Icon"
                                                                 />
                                                             </i>
                                                         ) : (

@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react";
 import { useAsyncDebounce } from "react-table";
 import PropTypes from "prop-types";
-import IconSearch from "../Images/icon-search.svg";
+import { ReactComponent as IconSearch } from "../Images/icon-search.svg";
 
 const GlobalFilter = memo(({ globalFilter, setGlobalFilter }) => {
     const [value, setValue] = useState(globalFilter);
@@ -23,7 +23,7 @@ const GlobalFilter = memo(({ globalFilter, setGlobalFilter }) => {
                 placeholder="Search"
             />
             <i>
-                <img src={IconSearch} alt="Global Search Icon" />
+                <IconSearch />
             </i>
         </div>
     );

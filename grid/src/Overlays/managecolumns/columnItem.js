@@ -2,7 +2,7 @@ import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
-import IconJustify from "../../Images/icon-align-justify.svg";
+import { ReactComponent as IconJustify } from "../../Images/icon-align-justify.svg";
 
 const ColumnItem = ({
     id,
@@ -54,7 +54,7 @@ const ColumnItem = ({
                     className="column_drag"
                 >
                     <i>
-                        <img src={IconJustify} alt="Column Chooser Drag Icon" />
+                        <IconJustify />
                     </i>
                 </div>
                 <div>{Header}</div>

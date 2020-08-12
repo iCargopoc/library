@@ -3,28 +3,29 @@
     @return #{$remSize}rem;
 }
 
-.grid-component-container {
+body {
     color: var(--text-light);
     font-family: $font-family;
     font-size: rem(12);
-    ::placeholder {
-        color: #bbb;
-    }
-    ::-ms-input-placeholder {
-        color: #bbb;
-    }
-    ::-ms-input-placeholder {
-        color: #bbb;
-    }
-    .error {
-        color: var(--danger);
-    }
-    .txt {
-        height: 25px;
-        border-radius: 3px;
-        padding: 1px 0 0 3px;
-        font-size: 12px;
-        color: #000;
-        border: #cfd0d0 solid 1px;
-    }
+}
+::placeholder {
+    color: #bbb;
+}
+
+::-ms-input-placeholder {
+    color: #bbb;
+}
+::-ms-input-placeholder {
+    color: #bbb;
+}
+.error {
+    color: var(--danger);
+}
+.txt {
+    height: 25px;
+    border-radius: 3px;
+    padding: 1px 0 0 3px;
+    font-size: 12px;
+    color: #000;
+    border: #cfd0d0 solid 1px;
 }

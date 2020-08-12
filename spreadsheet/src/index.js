@@ -15,11 +15,12 @@ import ErrorMessage from "./common/ErrorMessage";
 import ColumnReordering from "./overlays/column_chooser/Chooser";
 import Sorting from "./overlays/sorting/Sorting";
 import ExportData from "./overlays/export_data/ExportData";
-import IconColumns from "./Images/icon-columns.svg";
-import IconShare from "./Images/icon-share.svg";
-import IconGroupSort from "./Images/icon-group-sort.svg";
-import IconFilter from "./Images/icon-filter.svg";
-import IconSearch from "./Images/icon-search.svg";
+import { ReactComponent as IconColumns } from "./images/icon-columns.svg";
+import { ReactComponent as IconShare } from "./images/icon-share.svg";
+import { ReactComponent as IconGroupSort } from "./images/icon-group-sort.svg";
+import { ReactComponent as IconFilter } from "./images/icon-filter.svg";
+import { ReactComponent as IconSearch } from "./images/icon-search.svg";
+
 // eslint-disable-next-line import/no-unresolved
 import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 
@@ -1140,9 +1141,6 @@ class Spreadsheet extends Component {
                         &nbsp; records
                     </div>
                     <div className="neo-grid-header__utilities">
-                        <i>
-                            <img src={IconFilter} alt="Column Filter Icon" />
-                        </i>
                         <div className="txt-wrap">
                             <input
                                 type="text"
@@ -1156,32 +1154,28 @@ class Spreadsheet extends Component {
                                 placeholder="Search"
                             />
                             <i>
-                                <img
-                                    src={IconSearch}
-                                    alt="Global Search Icon"
-                                />
+                                <IconSearch />
                             </i>
                         </div>
                         <div
                             className="filterIcons"
                             onClick={this.sortingPanel}
                         >
-                            <img src={IconGroupSort} alt="Group sort Icon" />
+                            <IconGroupSort />
                         </div>
                         {this.state.sortingPanelComponent}
                         <div
                             className="filterIcons"
                             onClick={this.columnReorderingPannel}
                         >
-                            <img src={IconColumns} alt="collumn-chooser-icon" />
+                            <IconColumns />
                         </div>
                         {this.state.columnReorderingComponent}
-                        <div className="filterIcons">
-                            <img
-                                src={IconShare}
-                                alt="Export Data Icon"
-                                onClick={this.exportColumnData}
-                            />
+                        <div
+                            className="filterIcons"
+                            onClick={this.exportColumnData}
+                        >
+                            <IconShare />
                         </div>
                         {this.state.exportComponent}
                     </div>

@@ -3,9 +3,9 @@ import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
 import CellDisplayAndEditTag from "./CellDisplayAndEditTag";
 import { CellDisplayAndEditContext } from "../Utilities/TagsContext";
-import IconPencil from "../Images/icon-pencil.svg";
-import IconTick from "../Images/icon-tick.svg";
-import IconCancel from "../Images/icon-cancel.svg";
+import { ReactComponent as IconPencil } from "../Images/icon-pencil.svg";
+import { ReactComponent as IconTick } from "../Images/icon-tick.svg";
+import { ReactComponent as IconCancel } from "../Images/icon-cancel.svg";
 
 const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
     const { column } = row;
@@ -65,10 +65,7 @@ const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
                                 onClick={openEdit}
                             >
                                 <i>
-                                    <img
-                                        src={IconPencil}
-                                        alt="Cell Edit Icon"
-                                    />
+                                    <IconPencil />
                                 </i>
                             </div>
                         ) : null}
@@ -83,10 +80,7 @@ const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
                                     data-testid="ok"
                                     onClick={saveEdit}
                                 >
-                                    <img
-                                        src={IconTick}
-                                        alt="Cell Edit Save Icon"
-                                    />
+                                    <IconTick />
                                 </button>
                                 <button
                                     type="button"
@@ -95,10 +89,7 @@ const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
                                     data-testid="cancel"
                                     onClick={closeEdit}
                                 >
-                                    <img
-                                        src={IconCancel}
-                                        alt="Cell Edit Cancel Icon"
-                                    />
+                                    <IconCancel />
                                 </button>
                             </div>
                         ) : null}

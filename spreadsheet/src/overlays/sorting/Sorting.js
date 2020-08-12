@@ -6,10 +6,10 @@ import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import PropTypes from "prop-types";
 import SortingList from "./SortingList";
-import IconClose from "../../Images/icon-close.svg";
-import IconNav from "../../Images/icon-nav.svg";
-import SortCopy from "../../Images/SortCopy.svg";
-import SortDelete from "../../Images/SortDelete.svg";
+import { ReactComponent as IconClose } from "../../images/icon-close.svg";
+import { ReactComponent as IconNav } from "../../images/icon-nav.svg";
+import { ReactComponent as SortCopy } from "../../images/SortCopy.svg";
+import { ReactComponent as SortDelete } from "../../images/SortDelete.svg";
 
 class App extends React.Component {
     constructor(props) {
@@ -86,10 +86,7 @@ class App extends React.Component {
 
                             <div className="sort__icon">
                                 <i>
-                                    <img
-                                        src={IconNav}
-                                        alt="Group Sort Drag Icon"
-                                    />
+                                    <IconNav />
                                 </i>
                             </div>
                         </div>
@@ -171,10 +168,11 @@ class App extends React.Component {
                                 <div>&nbsp;</div>
                             </div>
 
-                            <div className="sort__icon">
-                                <i>
-                                    <img src={SortCopy} alt="copy sort" />
-                                </i>
+                            <div
+                                className="sort__icon"
+                                onClick={() => this.copy(index)}
+                            >
+                                <SortCopy />
                             </div>
                         </div>
 
@@ -183,10 +181,11 @@ class App extends React.Component {
                                 <div>&nbsp;</div>
                             </div>
 
-                            <div className="sort__icon">
-                                <i>
-                                    <img src={SortDelete} alt="copy sort" />
-                                </i>
+                            <div
+                                className="sort__icon"
+                                onClick={() => this.remove(index)}
+                            >
+                                <SortDelete />
                             </div>
                         </div>
                     </div>
@@ -254,10 +253,7 @@ class App extends React.Component {
                         <h2>Sort</h2>
                         <div className="neo-popover__close">
                             <i onClick={() => this.props.closeSorting()}>
-                                <img
-                                    src={IconClose}
-                                    alt="Group Sort Close Icon"
-                                />
+                                <IconClose />
                             </i>
                         </div>
                     </div>

@@ -1,14 +1,14 @@
 /* eslint-disable react/destructuring-assignment */
 import React from "react";
-import jsPDF from "jspdf";
+import JsPdf from "jspdf";
 import "jspdf-autotable";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import PropTypes from "prop-types";
-import IconCsv from "../../Images/icon-csv.svg";
-import IconExcel from "../../Images/icon-excel.svg";
-import IconPdf from "../../Images/icon-pdf.svg";
-import IconClose from "../../Images/icon-close.svg";
+import { ReactComponent as IconCsv } from "../../images/icon-csv.svg";
+import { ReactComponent as IconExcel } from "../../images/icon-excel.svg";
+import { ReactComponent as IconPdf } from "../../images/icon-pdf.svg";
+import { ReactComponent as IconClose } from "../../images/icon-close.svg";
 
 let downLaodFileType = [];
 class ExportData extends React.Component {
@@ -139,7 +139,7 @@ class ExportData extends React.Component {
         const size = "A4"; // Use A1, A2, A3 or A4
         const orientation = "landscape"; // portrait or landscape
 
-        const doc = new jsPDF(orientation, unit, size);
+        const doc = new JsPdf(orientation, unit, size);
 
         doc.setFontSize(12);
         const title = "iCargo Neo Report";
@@ -148,10 +148,10 @@ class ExportData extends React.Component {
             startY: 50,
             head: rowFilteredHeader,
             body: rowFilteredValues,
-            tableWidth: "wrap", //'auto'|'wrap'|'number'
+            tableWidth: "wrap", // 'auto'|'wrap'|'number'
             headStyles: { fillColor: [102, 102, 255] },
-            theme: "grid", //'striped'|'grid'|'plain'|'css'
-            margin: { top: 15, right: 30, bottom: 10, left: 30 }
+            theme: "grid", // 'striped'|'grid'|'plain'|'css'
+            margin: { top: 30, right: 30, bottom: 10, left: 30 }
         };
 
         doc.text(title, 30, 40);
@@ -278,10 +278,7 @@ class ExportData extends React.Component {
                             <div className="export__headerTxt" />
                             <div className="export__close">
                                 <i onClick={this.props.closeExport}>
-                                    <img
-                                        src={IconClose}
-                                        alt="Export Overlay Close Icon"
-                                    />
+                                    <IconClose />
                                 </i>
                             </div>
                         </div>
@@ -298,10 +295,7 @@ class ExportData extends React.Component {
                                 </div>
                                 <div className="export__file">
                                     <i>
-                                        <img
-                                            src={IconPdf}
-                                            alt="PDF Export Icon"
-                                        />
+                                        <IconPdf />
                                     </i>
                                     <strong>PDF</strong>
                                 </div>
@@ -317,10 +311,7 @@ class ExportData extends React.Component {
                                 </div>
                                 <div className="export__file">
                                     <i>
-                                        <img
-                                            src={IconExcel}
-                                            alt="Excel Export Icon"
-                                        />
+                                        <IconExcel />
                                     </i>
                                     <strong>Excel</strong>
                                 </div>
@@ -336,10 +327,7 @@ class ExportData extends React.Component {
                                 </div>
                                 <div className="export__file">
                                     <i>
-                                        <img
-                                            src={IconCsv}
-                                            alt="CSV Export Icon"
-                                        />
+                                        <IconCsv />
                                     </i>
 
                                     <strong>CSV</strong>

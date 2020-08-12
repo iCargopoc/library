@@ -1,10 +1,10 @@
-import React, { forwardRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import AutoComplete from "../types/AutoCompleteComponent";
 import FieldComponent from "../types/DateTimeComponent";
 import Condition from "../types/ConditionalComponent";
 import TextComponents from "../types/TextComponents";
-import saveLogo from "../images/save-icon.svg";
+import { ReactComponent as SaveLogo } from "../images/save-icon.svg";
 
 const RightDrawer = (props) => {
     const [showSavePopup, setShowSavePopup] = useState("none");
@@ -116,8 +116,8 @@ const RightDrawer = (props) => {
                 </div>
                 <div className="filter__btn">
                     <div className="filter__save">
-                        <Button className="button-save" variant="">
-                            <img src={saveLogo} onClick={props.openShowSavePopUp} alt="save icon" />
+                        <Button className="button-save" variant="" onClick={props.openShowSavePopUp}>
+                            <SaveLogo />
                             <span>SAVE</span>
                         </Button>
                     </div>
