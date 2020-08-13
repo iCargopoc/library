@@ -1,0 +1,18 @@
+[ignore]
+.*/__tests__/.*
+.*/__stories/.*
+
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+module.name_mapper.extension='scss' -> '<PROJECT_ROOT>/SCSSFlowStub.js.flow'
+
+[strict]
+
+[untyped]
+.*/node_modules

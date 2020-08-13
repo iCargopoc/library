@@ -7,10 +7,10 @@
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faAlignJustify } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import ColumnsList from "./columnsList";
+import { ReactComponent as IconClose } from "../../images/icon-close.svg";
+import { ReactComponent as IconJustify } from "../../images/icon-align-justify.svg";
 
 class ColumnReordering extends React.Component {
     constructor(props) {
@@ -167,35 +167,39 @@ class ColumnReordering extends React.Component {
                 id: item,
                 text: (
                     <div className="column__reorder" key={item}>
-                        <div className="">
-                            <FontAwesomeIcon icon={faAlignJustify} />
+                        <div style={{ cursor: "move" }} className="column_drag">
+                            <i>
+                                <IconJustify />
+                            </i>
                         </div>
                         <div className="column__reorder__name">{item}</div>
-                        <div className="column__wrap">
-                            <div className="column__checkbox">
-                                <input
-                                    role="button"
-                                    type="checkbox"
-                                    id={`checkBoxToPinLeft_${item}`}
-                                    checked={this.state.leftPinnedColumList.includes(
-                                        item
-                                    )}
-                                    disabled={
-                                        this.state.maxLeftPinnedColumn -
-                                            this.state.leftPinnedColumList
-                                                .length <=
-                                        0
-                                            ? !this.state.leftPinnedColumList.includes(
-                                                  item
-                                              )
-                                            : false
-                                    }
-                                    onChange={() =>
-                                        this.reArrangeLeftPinnedColumn(item)
-                                    }
-                                />
+                        <div className="column__innerCells__wrap">
+                            <div className="column__wrap">
+                                <div className="column__checkbox">
+                                    <input
+                                        role="button"
+                                        type="checkbox"
+                                        id={`checkBoxToPinLeft_${item}`}
+                                        checked={this.state.leftPinnedColumList.includes(
+                                            item
+                                        )}
+                                        disabled={
+                                            this.state.maxLeftPinnedColumn -
+                                                this.state.leftPinnedColumList
+                                                    .length <=
+                                            0
+                                                ? !this.state.leftPinnedColumList.includes(
+                                                      item
+                                                  )
+                                                : false
+                                        }
+                                        onChange={() =>
+                                            this.reArrangeLeftPinnedColumn(item)
+                                        }
+                                    />
+                                </div>
+                                <div className="column__txt">Pin Left</div>
                             </div>
-                            <div className="column__txt">Pin Left</div>
                         </div>
                     </div>
                 )
@@ -246,8 +250,11 @@ class ColumnReordering extends React.Component {
 
     render() {
         return (
-            <div className="columns--grid" ref={this.setWrapperRef}>
-                <div className="column__grid">
+            <div
+                className="neo-popover neo-popover--column columns--grid"
+                ref={this.setWrapperRef}
+            >
+                <div className="neo-popover__column column__grid">
                     <div className="column__chooser">
                         <div className="column__header">
                             <div className="">
@@ -263,9 +270,10 @@ class ColumnReordering extends React.Component {
                                     onChange={this.filterColumnReorderList}
                                 />
                             </div>
-                            <div className="column__wrap column__headertxt">
+                            <div className="column__selectAll">
                                 <div className="column__checkbox">
                                     <input
+                                        data-testid="selectAllColumns"
                                         type="checkbox"
                                         id="selectallcolumncheckbox"
                                         onChange={() =>
@@ -285,6 +293,7 @@ class ColumnReordering extends React.Component {
                                     <div className="column__wrap" key={item}>
                                         <div className="column__checkbox">
                                             <input
+                                                data-testid="checkBox"
                                                 type="checkbox"
                                                 id={`checkboxtoselectreorder_${item}`}
                                                 checked={this.state.columnReorderEntityList.includes(
@@ -308,26 +317,26 @@ class ColumnReordering extends React.Component {
                     <div className="column__settings">
                         <div className="column__header">
                             <div className="column__headerTxt">
-                                <strong>Column Setting</strong>
+                                <strong>Column Settings</strong>
                             </div>
-                            <div className="column__close">
-                                <FontAwesomeIcon
-                                    className="icon-close"
-                                    icon={faTimes}
-                                    onClick={() =>
-                                        this.props.closeColumnReOrdering()
-                                    }
-                                />
+                            <div
+                                className="column__close"
+                                onClick={() =>
+                                    this.props.closeColumnReOrdering()
+                                }
+                            >
+                                <i>
+                                    <IconClose />
+                                </i>
                             </div>
                         </div>
-                        <div className="column__header">
-                            <div className="column__headerTxt">
+
+                        <div className="column__body">
+                            <div className="column__info">
                                 <strong>
                                     &nbsp; &nbsp; Selected Column Count :{" "}
                                     {this.state.columnReorderEntityList.length}
                                 </strong>
-                            </div>
-                            <div className="column__headerTxt">
                                 {this.state.maxLeftPinnedColumn -
                                     this.state.leftPinnedColumList.length >
                                 0 ? (
@@ -345,8 +354,6 @@ class ColumnReordering extends React.Component {
                                     </strong>
                                 )}
                             </div>
-                        </div>
-                        <div className="column__body">
                             <DndProvider
                                 backend={TouchBackend}
                                 options={{ enableMouseEvents: true }}
@@ -362,6 +369,7 @@ class ColumnReordering extends React.Component {
                         <div className="column__footer">
                             <div className="column__btns">
                                 <button
+                                    data-testid="resetButton"
                                     type="button"
                                     className="btns"
                                     onClick={() =>
@@ -371,6 +379,7 @@ class ColumnReordering extends React.Component {
                                     Reset
                                 </button>
                                 <button
+                                    data-testid="cancelButton"
                                     type="button"
                                     className="btns"
                                     onClick={() =>
@@ -380,6 +389,7 @@ class ColumnReordering extends React.Component {
                                     Cancel
                                 </button>
                                 <button
+                                    data-testid="saveButton"
                                     type="button"
                                     className="btns btns__save"
                                     onClick={() =>

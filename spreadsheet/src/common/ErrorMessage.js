@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { SEARCH_NOT_FOUNT_ERROR } from "./ErrorConstants";
+import { ReactComponent as IconClose } from "../images/icon-close.svg";
 
 const ErrorMessage = (props) => {
     const [status, setStatus] = useState(props.status);
@@ -16,14 +15,16 @@ const ErrorMessage = (props) => {
                 <div className="alert alert-danger" role="alert">
                     {SEARCH_NOT_FOUNT_ERROR}
                 </div>
-                <div className="notification-close">
-                    <FontAwesomeIcon
-                        icon={faTimes}
-                        onClick={() => {
-                            props.closeWarningStatus();
-                            props.clearSearchValue();
-                        }}
-                    />
+                <div
+                    className="notification-close"
+                    onClick={() => {
+                        props.closeWarningStatus();
+                        props.clearSearchValue();
+                    }}
+                >
+                    <i>
+                        <IconClose />
+                    </i>
                 </div>
             </div>
         );

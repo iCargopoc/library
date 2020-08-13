@@ -4,19 +4,12 @@ htm,
 body {
     margin: 0;
 }
-/*************To be moved to component*/
-::placeholder {
-    color: #bbb;
+ul,
+li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
-
-::-ms-input-placeholder {
-    color: #bbb;
-}
-
-::-ms-input-placeholder {
-    color: #bbb;
-}
-
 /*  Application Styles
 *  ------------------------------------------------------ */
 .flight-details strong {
@@ -91,7 +84,7 @@ body {
 .uld-details strong {
     color: #566a81;
     font-weight: normal;
-    margin-left: 7px;
+    margin-left: 4px;
 }
 .revenue-details span {
     display: block;

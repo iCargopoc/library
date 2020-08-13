@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import PropTypes from "prop-types";
 
 const DefaultColumnFilter = memo(({ column: { filterValue, setFilter } }) => {
     return (
@@ -12,5 +13,9 @@ const DefaultColumnFilter = memo(({ column: { filterValue, setFilter } }) => {
         />
     );
 });
+
+DefaultColumnFilter.propTypes = {
+    column: PropTypes.any
+};
 
 export default DefaultColumnFilter;

@@ -1,6 +1,8 @@
 import React from "react";
 import { useDrag, useDrop } from "react-dnd";
+import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
+import { ReactComponent as IconJustify } from "../../Images/icon-align-justify.svg";
 
 const ColumnItem = ({
     id,
@@ -19,10 +21,12 @@ const ColumnItem = ({
             isDragging: monitor.isDragging()
         }),
         end: (dropResult, monitor) => {
-            const { id: droppedId, originalIndex } = monitor.getItem();
+            const monitorGetItemValue = monitor.getItem();
+            const { id: droppedId } = monitorGetItemValue;
+            const newOriginalIndex = monitorGetItemValue.originalIndex;
             const didDrop = monitor.didDrop();
             if (!didDrop) {
-                moveColumn(droppedId, originalIndex);
+                moveColumn(droppedId, newOriginalIndex);
             }
         }
     });
@@ -44,18 +48,24 @@ const ColumnItem = ({
         <div style={{ opacity }}>
             <div className="column__reorder">
                 <div
+                    data-testid="columnItem"
                     ref={(node) => drag(drop(node))}
                     style={{ cursor: "move" }}
-                    className=""
+                    className="column_drag"
                 >
-                    <i className="fa fa-align-justify" aria-hidden="true"></i>
+                    <i>
+                        <IconJustify />
+                    </i>
                 </div>
-                <div className="">{Header}</div>
+                <div>{Header}</div>
                 <div className="column__innerCells__wrap">
                     {originalInnerCells && originalInnerCells.length > 0
-                        ? originalInnerCells.map((cell, index) => {
+                        ? originalInnerCells.map((cell) => {
                               return (
-                                  <div className="column__wrap" key={index}>
+                                  <div
+                                      className="column__wrap"
+                                      key={`${cell.Header}_${cell.accessor}`}
+                                  >
                                       <div className="column__checkbox">
                                           <input
                                               type="checkbox"
@@ -66,7 +76,7 @@ const ColumnItem = ({
                                                   cell.Header
                                               )}
                                               onChange={selectInnerCells}
-                                          ></input>
+                                          />
                                       </div>
                                       <div className="column__txt">
                                           {cell.Header}
@@ -79,6 +89,16 @@ const ColumnItem = ({
             </div>
         </div>
     );
+};
+
+ColumnItem.propTypes = {
+    id: PropTypes.any,
+    Header: PropTypes.any,
+    moveColumn: PropTypes.any,
+    findColumn: PropTypes.any,
+    originalInnerCells: PropTypes.any,
+    isInnerCellSelected: PropTypes.any,
+    selectInnerCells: PropTypes.any
 };
 
 export default ColumnItem;

@@ -1,8 +1,10 @@
 import React from "react";
 import { useDrag, useDrop } from "react-dnd";
+import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
-import SortCopy from "../../Images/SortCopy.svg";
-import SortDelete from "../../Images/SortDelete.svg";
+import { ReactComponent as IconNav } from "../../Images/icon-nav.svg";
+import { ReactComponent as SortCopy } from "../../Images/SortCopy.svg";
+import { ReactComponent as SortDelete } from "../../Images/SortDelete.svg";
 
 const SortItem = ({
     id,
@@ -22,10 +24,12 @@ const SortItem = ({
             isDragging: monitor.isDragging()
         }),
         end: (dropResult, monitor) => {
-            const { id: droppedId, originalIndex } = monitor.getItem();
+            const monitorGetItemValue = monitor.getItem();
+            const { id: droppedId } = monitorGetItemValue;
+            const newOriginalIndex = monitorGetItemValue.originalIndex;
             const didDrop = monitor.didDrop();
             if (!didDrop) {
-                moveSort(droppedId, originalIndex);
+                moveSort(droppedId, newOriginalIndex);
             }
         }
     });
@@ -96,9 +100,10 @@ const SortItem = ({
                 <div
                     ref={(node) => drag(drop(node))}
                     style={{ cursor: "move" }}
-                    className=""
                 >
-                    <i className="fa fa-navicon"></i>
+                    <i>
+                        <IconNav />
+                    </i>
                 </div>
             </div>
 
@@ -109,8 +114,11 @@ const SortItem = ({
                         onChange={changeSortByOptions}
                         value={sortOption.sortBy}
                     >
-                        {originalColumns.map((orgItem, index) => (
-                            <option key={index} value={orgItem.accessor}>
+                        {originalColumns.map((orgItem) => (
+                            <option
+                                key={orgItem.columnId}
+                                value={orgItem.accessor}
+                            >
                                 {orgItem.Header}
                             </option>
                         ))}
@@ -127,9 +135,9 @@ const SortItem = ({
                         {getInncerCellsOfColumn(sortOption.sortBy) &&
                         getInncerCellsOfColumn(sortOption.sortBy).length > 0 ? (
                             getInncerCellsOfColumn(sortOption.sortBy).map(
-                                (innerCellItem, innerCellIndex) => (
+                                (innerCellItem) => (
                                     <option
-                                        key={innerCellIndex}
+                                        key={`${innerCellItem.Header}_${innerCellItem.accessor}`}
                                         value={innerCellItem.accessor}
                                     >
                                         {innerCellItem.Header}
@@ -157,25 +165,40 @@ const SortItem = ({
                 </div>
             </div>
             <div className="sort__reorder">
-                <div className="sort__icon" type={"button"} onClick={copySort}>
+                <div
+                    className="sort__icon"
+                    role="presentation"
+                    onClick={copySort}
+                >
                     <i>
-                        <img src={SortCopy} alt="copy sort" />
+                        <SortCopy />
                     </i>
                 </div>
             </div>
             <div className="sort__reorder">
                 <div
                     className="sort__icon"
-                    type={"button"}
+                    role="presentation"
                     onClick={deleteSort}
                 >
                     <i>
-                        <img src={SortDelete} alt="copy sort" />
+                        <SortDelete />
                     </i>
                 </div>
             </div>
         </div>
     );
+};
+
+SortItem.propTypes = {
+    id: PropTypes.any,
+    sortOption: PropTypes.any,
+    originalColumns: PropTypes.any,
+    moveSort: PropTypes.any,
+    findSort: PropTypes.any,
+    updateSingleSortingOption: PropTypes.any,
+    copySortOption: PropTypes.any,
+    deleteSortOption: PropTypes.any
 };
 
 export default SortItem;

@@ -1,11 +1,13 @@
 import React, { memo, useState } from "react";
 import { useAsyncDebounce } from "react-table";
+import PropTypes from "prop-types";
+import { ReactComponent as IconSearch } from "../Images/icon-search.svg";
 
 const GlobalFilter = memo(({ globalFilter, setGlobalFilter }) => {
     const [value, setValue] = useState(globalFilter);
 
-    const onChange = useAsyncDebounce((value) => {
-        setGlobalFilter(value || undefined);
+    const onChange = useAsyncDebounce((changedValue) => {
+        setGlobalFilter(changedValue || undefined);
     }, 200);
 
     return (
@@ -20,9 +22,16 @@ const GlobalFilter = memo(({ globalFilter, setGlobalFilter }) => {
                 className="txt"
                 placeholder="Search"
             />
-            <i className="fa fa-search fa-6" aria-hidden="true"></i>
+            <i>
+                <IconSearch />
+            </i>
         </div>
     );
 });
+
+GlobalFilter.propTypes = {
+    globalFilter: PropTypes.any,
+    setGlobalFilter: PropTypes.any
+};
 
 export default GlobalFilter;
