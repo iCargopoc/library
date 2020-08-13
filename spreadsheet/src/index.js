@@ -35,9 +35,9 @@ class Spreadsheet extends Component {
         super(props);
         const airportCodes = [];
         const { dataSet, pageSize } = this.props;
-        // this.props.airportCodes.forEach((item) => {
-        //     airportCodes.push({ id: item, value: item });
-        // });
+        this.props.airportCodes.forEach((item) => {
+            airportCodes.push({ id: item, value: item });
+        });
         const dataSetVar = JSON.parse(JSON.stringify(dataSet));
         this.state = {
             warningStatus: "",
@@ -70,13 +70,8 @@ class Spreadsheet extends Component {
                 const colItem = item;
                 if (colItem.editor === "DatePicker") {
                     colItem.editor = DatePicker;
-                } else if (
-                    colItem.editor === "DropDown" &&
-                    colItem.dataSource
-                ) {
-                    colItem.editor = (
-                        <DropDownEditor options={colItem.dataSource} />
-                    );
+                } else if (colItem.editor === "DropDown") {
+                    colItem.editor = <DropDownEditor options={airportCodes} />;
                 } else if (colItem.editor === "Text") {
                     colItem.editor = "text";
                 } else {
@@ -846,20 +841,6 @@ class Spreadsheet extends Component {
                 };
             });
             this.setState((state) => {
-                const dataSet = state.dataSet.slice();
-                for (let i = fromRow; i <= toRow; i++) {
-                    dataSet[i] = {
-                        ...dataSet[i],
-                        ...updated
-                    };
-                }
-
-                return {
-                    dataSet
-                };
-            });
-
-            this.setState((state) => {
                 const filteringRows = state.filteringRows.slice();
                 for (let i = fromRow; i <= toRow; i++) {
                     filteringRows[i] = {
@@ -1093,7 +1074,7 @@ class Spreadsheet extends Component {
     };
 
     save = () => {
-        this.props.saveRows(this.state.dataSet);
+        console.log("save");
     };
 
     clearAllFilters = () => {

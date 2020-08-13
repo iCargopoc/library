@@ -1,14 +1,14 @@
-import React, { useState, useEffect, Fragment, Component } from 'react';
-import { Toolbar, Editors, Data, Filters } from 'react-data-grid-addons';
-import { FormControl } from 'react-bootstrap';
-import { faTimes, faAlignJustify, faCopy, faTrash, faPlus, faFilePdf, faFileExcel, faFileCsv, faSave, faSortAmountDown, faSortDown, faColumns, faShareAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect, Component } from 'react';
 import ReactDataGrid from 'react-data-grid';
+import { Toolbar, Editors, Data, Filters } from 'react-data-grid-addons';
+import { range } from 'lodash';
+import { FormControl } from 'react-bootstrap';
+import { faTimes, faAlignJustify, faCopy, faTrash, faPlus, faFilePdf, faFileExcel, faFileCsv, faSortAmountDown, faSortDown, faColumns, faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDrag, useDrop, DndProvider } from 'react-dnd';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import update from 'immutability-helper';
-import JSPDF from 'jspdf';
+import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
 import { utils, write } from 'xlsx';
@@ -19,37 +19,41 @@ class ExtDataGrid extends ReactDataGrid {
     this.dataGridComponent = document.getElementsByClassName("react-grid-Viewport")[0];
     window.addEventListener("resize", this.metricsUpdated);
 
+    if (this.props.cellRangeSelection) {
+      this.dataGridComponent.addEventListener("mouseup", this.onWindowMouseUp);
+    }
+
     this.metricsUpdated();
   }
 
   componentWillUnmount() {
     this._mounted = false;
     window.removeEventListener("resize", this.metricsUpdated);
+    this.dataGridComponent.removeEventListener("mouseup", this.onWindowMouseUp);
   }
 
 }
 
 const applyFormula = (obj, columnName) => {
-  const val = obj;
-  const item = val[columnName].toString();
+  let item = obj[columnName].toString();
 
   if (item && item.charAt(0) === "=") {
-    const operation = item.split("(");
-    const value = operation[1].substring(0, operation[1].length - 1).split(/[,:]/);
+    var operation = item.split("(");
+    var value = operation[1].substring(0, operation[1].length - 1).split(/[,:]/);
 
     switch (operation[0]) {
       case "=SUM":
       case "=ADD":
       case "=sum":
       case "=add":
-        val[columnName] = value.reduce(function (a, b) {
+        obj[columnName] = value.reduce(function (a, b) {
           return Number(a) + Number(b);
         });
         break;
 
       case "=MUL":
       case "=mul":
-        val[columnName] = value.reduce(function (a, b) {
+        obj[columnName] = value.reduce(function (a, b) {
           return Number(a) * Number(b);
         });
         break;
@@ -58,19 +62,19 @@ const applyFormula = (obj, columnName) => {
       case "=sub":
       case "=DIFF":
       case "=diff":
-        val[columnName] = value.reduce(function (a, b) {
+        obj[columnName] = value.reduce(function (a, b) {
           return Number(a) - Number(b);
         });
         break;
 
       case "=min":
       case "=MIN":
-        val[columnName] = Math.min.apply(Math, value);
+        obj[columnName] = Math.min.apply(Math, value);
         break;
 
       case "=max":
       case "=MAX":
-        val[columnName] = Math.max.apply(Math, value);
+        obj[columnName] = Math.max.apply(Math, value);
         break;
 
       default:
@@ -78,7 +82,7 @@ const applyFormula = (obj, columnName) => {
     }
   }
 
-  return val;
+  return obj;
 };
 
 class DatePicker extends React.Component {
@@ -93,18 +97,17 @@ class DatePicker extends React.Component {
     this.onValueChanged = this.onValueChanged.bind(this);
   }
 
-  onValueChanged(ev) {
-    this.setState({
-      value: ev.target.value
-    });
+  getInputNode() {
+    return this.input;
   }
 
   getValue() {
-    const updated = {};
-    const date = new Date(this.state.value);
+    var updated = {};
+    let date;
+    date = new Date(this.state.value);
     const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
       year: "numeric",
-      month: "numeric",
+      month: "short",
       day: "2-digit"
     });
     const [{
@@ -114,12 +117,14 @@ class DatePicker extends React.Component {
     },, {
       value: year
     }] = dateTimeFormat.formatToParts(date);
-    updated[this.props.column.key] = `${year}-${month}-${day}`;
+    updated[this.props.column.key] = `${day}-${month}-${year}`;
     return updated;
   }
 
-  getInputNode() {
-    return this.input;
+  onValueChanged(ev) {
+    this.setState({
+      value: ev.target.value
+    });
   }
 
   render() {
@@ -134,9 +139,6 @@ class DatePicker extends React.Component {
   }
 
 }
-DatePicker.propTypes = {
-  column: PropTypes.string
-};
 
 const SEARCH_NOT_FOUNT_ERROR = "No Records found!";
 
@@ -156,14 +158,12 @@ const ErrorMessage = props => {
       className: "notification-close"
     }, /*#__PURE__*/React.createElement(FontAwesomeIcon, {
       icon: faTimes,
-      onClick: () => {
+      onClick: e => {
         props.closeWarningStatus();
         props.clearSearchValue();
       }
     })));
-  }
-
-  return /*#__PURE__*/React.createElement("div", null);
+  } else return /*#__PURE__*/React.createElement("div", null);
 };
 
 const ItemTypes = {
@@ -229,23 +229,8 @@ const ColumnItem = ({
   }, text);
 };
 
-ColumnItem.propTypes = {
-  id: PropTypes.any,
-  text: PropTypes.any,
-  moveColumn: PropTypes.any,
-  findColumn: PropTypes.any
-};
-
 const ColumnsList = props => {
   const [columns, setColumns] = useState([...props.columnsArray]);
-
-  const findColumn = id => {
-    const column = columns.filter(c => `${c.id}` === id)[0];
-    return {
-      column,
-      index: columns.indexOf(column)
-    };
-  };
 
   const moveColumn = (id, atIndex) => {
     const {
@@ -255,7 +240,7 @@ const ColumnsList = props => {
     setColumns(update(columns, {
       $splice: [[index, 1], [atIndex, 0, column]]
     }));
-    const values = [];
+    let values = [];
     let temp = [];
     temp = update(columns, {
       $splice: [[index, 1], [atIndex, 0, column]]
@@ -266,13 +251,21 @@ const ColumnsList = props => {
     props.handleReorderList(values);
   };
 
+  const findColumn = id => {
+    const column = columns.filter(c => `${c.id}` === id)[0];
+    return {
+      column,
+      index: columns.indexOf(column)
+    };
+  };
+
   const [, drop] = useDrop({
     accept: ItemTypes.COLUMN
   });
   React.useEffect(() => {
     setColumns(props.columnsArray);
   }, [props.columnsArray]);
-  return /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     ref: drop,
     style: {
       display: "flex",
@@ -285,11 +278,6 @@ const ColumnsList = props => {
     moveColumn: moveColumn,
     findColumn: findColumn
   }))));
-};
-
-ColumnsList.propTypes = {
-  columnsArray: PropTypes.any,
-  handleReorderList: PropTypes.any
 };
 
 class ColumnReordering extends React.Component {
@@ -306,8 +294,8 @@ class ColumnReordering extends React.Component {
 
     this.selectAllToColumnReOrderList = () => {
       this.resetColumnReorderList();
-      let existingColumnReorderEntityList = this.state.columnReorderEntityList;
-      let isExistingAllSelect = this.state.isAllSelected;
+      var existingColumnReorderEntityList = this.state.columnReorderEntityList;
+      var isExistingAllSelect = this.state.isAllSelected;
 
       if (!isExistingAllSelect) {
         existingColumnReorderEntityList = this.props.columns.map(item => item.name);
@@ -325,30 +313,30 @@ class ColumnReordering extends React.Component {
     };
 
     this.addToColumnReorderEntityList = typeToBeAdded => {
-      let existingColumnReorderEntityList = this.state.columnReorderEntityList;
-      let existingLeftPinnedList = this.state.leftPinnedColumList;
+      var existingColumnReorderEntityList = this.state.columnReorderEntityList;
+      var existingLeftPinnedList = this.state.leftPinnedColumList;
 
       if (!existingColumnReorderEntityList.includes(typeToBeAdded)) {
-        let indexOfInsertion = this.state.columnSelectList.findIndex(item => item === typeToBeAdded);
+        var indexOfInsertion = this.state.columnSelectList.findIndex(item => item === typeToBeAdded);
 
         while (indexOfInsertion > 0) {
           if (existingColumnReorderEntityList.includes(this.state.columnSelectList[indexOfInsertion - 1])) {
             if (!existingLeftPinnedList.includes(this.state.columnSelectList[indexOfInsertion - 1])) {
               indexOfInsertion = existingColumnReorderEntityList.findIndex(item => item === this.state.columnSelectList[indexOfInsertion - 1]);
-              indexOfInsertion += 1;
+              indexOfInsertion = indexOfInsertion + 1;
               break;
             } else {
-              indexOfInsertion -= 1;
+              indexOfInsertion = indexOfInsertion - 1;
             }
           } else {
-            indexOfInsertion -= 1;
+            indexOfInsertion = indexOfInsertion - 1;
           }
         }
 
         existingColumnReorderEntityList.splice(indexOfInsertion, 0, typeToBeAdded);
       } else {
         existingColumnReorderEntityList = existingColumnReorderEntityList.filter(item => {
-          if (item !== typeToBeAdded) return item;else return "";
+          if (item !== typeToBeAdded) return item;
         });
 
         if (existingLeftPinnedList.includes(typeToBeAdded)) {
@@ -364,8 +352,8 @@ class ColumnReordering extends React.Component {
     };
 
     this.filterColumnReorderList = e => {
-      const searchKey = String(e.target.value).toLowerCase();
-      const existingList = this.props.columns.map(item => item.name);
+      var searchKey = String(e.target.value).toLowerCase();
+      var existingList = this.props.columns.map(item => item.name);
       let filtererdColumnReorderList = [];
 
       if (searchKey.length > 0) {
@@ -399,11 +387,9 @@ class ColumnReordering extends React.Component {
           }, /*#__PURE__*/React.createElement("div", {
             className: "column__checkbox"
           }, /*#__PURE__*/React.createElement("input", {
-            role: "button",
             type: "checkbox",
-            id: `checkBoxToPinLeft_${item}`,
             checked: this.state.leftPinnedColumList.includes(item),
-            disabled: this.state.maxLeftPinnedColumn - this.state.leftPinnedColumList.length <= 0 ? !this.state.leftPinnedColumList.includes(item) : false,
+            disabled: this.state.maxLeftPinnedColumn - this.state.leftPinnedColumList.length <= 0 ? this.state.leftPinnedColumList.includes(item) ? false : true : false,
             onChange: () => this.reArrangeLeftPinnedColumn(item)
           })), /*#__PURE__*/React.createElement("div", {
             className: "column__txt"
@@ -413,8 +399,8 @@ class ColumnReordering extends React.Component {
     };
 
     this.reArrangeLeftPinnedColumn = columHeaderName => {
-      let existingLeftPinnedList = this.state.leftPinnedColumList;
-      let existingColumnReorderEntityList = this.state.columnReorderEntityList;
+      var existingLeftPinnedList = this.state.leftPinnedColumList;
+      var existingColumnReorderEntityList = this.state.columnReorderEntityList;
 
       if (!existingLeftPinnedList.includes(columHeaderName)) {
         existingLeftPinnedList.unshift(columHeaderName);
@@ -425,10 +411,9 @@ class ColumnReordering extends React.Component {
       this.setState({
         leftPinnedColumList: existingLeftPinnedList
       });
-      existingLeftPinnedList.forEach(item => {
+      existingLeftPinnedList.map(item => {
         existingColumnReorderEntityList = existingColumnReorderEntityList.filter(subItem => subItem !== item);
         existingColumnReorderEntityList.unshift(item);
-        return null;
       });
       this.setState({
         columnReorderEntityList: existingColumnReorderEntityList
@@ -468,7 +453,7 @@ class ColumnReordering extends React.Component {
     }
   }
 
-  render() {
+  render(props) {
     return /*#__PURE__*/React.createElement("div", {
       className: "columns--grid",
       ref: this.setWrapperRef
@@ -493,7 +478,6 @@ class ColumnReordering extends React.Component {
       className: "column__checkbox"
     }, /*#__PURE__*/React.createElement("input", {
       type: "checkbox",
-      id: "selectallcolumncheckbox",
       onChange: () => this.selectAllToColumnReOrderList(),
       checked: this.state.columnReorderEntityList.length === this.props.columns.length
     })), /*#__PURE__*/React.createElement("div", {
@@ -506,7 +490,6 @@ class ColumnReordering extends React.Component {
         className: "column__checkbox"
       }, /*#__PURE__*/React.createElement("input", {
         type: "checkbox",
-        id: `checkboxtoselectreorder_${item}`,
         checked: this.state.columnReorderEntityList.includes(item),
         onChange: () => this.addToColumnReorderEntityList(item)
       })), /*#__PURE__*/React.createElement("div", {
@@ -549,31 +532,18 @@ class ColumnReordering extends React.Component {
     }, /*#__PURE__*/React.createElement("div", {
       className: "column__btns"
     }, /*#__PURE__*/React.createElement("button", {
-      type: "button",
       className: "btns",
       onClick: () => this.resetColumnReorderList()
     }, "Reset"), /*#__PURE__*/React.createElement("button", {
-      type: "button",
       className: "btns",
       onClick: () => this.props.closeColumnReOrdering()
     }, "Cancel"), /*#__PURE__*/React.createElement("button", {
-      type: "button",
       className: "btns btns__save",
       onClick: () => this.props.updateTableAsPerRowChooser(this.state.columnReorderEntityList, this.state.leftPinnedColumList)
     }, "Save"))))));
   }
 
 }
-
-ColumnReordering.propTypes = {
-  headerKeys: PropTypes.any,
-  columns: PropTypes.any,
-  existingPinnedHeadersList: PropTypes.any,
-  maxLeftPinnedColumn: PropTypes.any,
-  closeColumnReOrdering: PropTypes.any,
-  handleheaderNameList: PropTypes.any,
-  updateTableAsPerRowChooser: PropTypes.any
-};
 
 const ItemTypes$1 = {
   CARD: "sort"
@@ -638,23 +608,8 @@ const Card = ({
   }, text);
 };
 
-Card.propTypes = {
-  id: PropTypes.any,
-  text: PropTypes.any,
-  moveCard: PropTypes.any,
-  findCard: PropTypes.any
-};
-
 const SortingList = props => {
   const [cards, setCards] = useState([...props.sortsArray]);
-
-  const findCard = id => {
-    const card = cards.filter(c => `${c.id}` === id)[0];
-    return {
-      card,
-      index: cards.indexOf(card)
-    };
-  };
 
   const moveCard = (id, atIndex) => {
     const {
@@ -664,7 +619,7 @@ const SortingList = props => {
     setCards(update(cards, {
       $splice: [[index, 1], [atIndex, 0, card]]
     }));
-    const values = [];
+    let values = [];
     let temp = [];
     temp = update(cards, {
       $splice: [[index, 1], [atIndex, 0, card]]
@@ -675,13 +630,21 @@ const SortingList = props => {
     props.handleReorderListOfSort(values);
   };
 
+  const findCard = id => {
+    const card = cards.filter(c => `${c.id}` === id)[0];
+    return {
+      card,
+      index: cards.indexOf(card)
+    };
+  };
+
   const [, drop] = useDrop({
     accept: ItemTypes$1.CARD
   });
   React.useEffect(() => {
     setCards(props.sortsArray);
   }, [props.sortsArray]);
-  return /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     ref: drop,
     style: {
       display: "flex",
@@ -696,19 +659,14 @@ const SortingList = props => {
   }))));
 };
 
-SortingList.propTypes = {
-  sortsArray: PropTypes.any,
-  handleReorderListOfSort: PropTypes.any
-};
-
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.add = () => {
-      const rowList = [...this.state.rowList];
+      let rowList = [...this.state.rowList];
       rowList.push(true);
-      const existingSortingOrderList = this.state.sortingOrderList;
+      var existingSortingOrderList = this.state.sortingOrderList;
       existingSortingOrderList.push({
         sortBy: this.props.columnFieldValue[0],
         order: "Ascending",
@@ -721,7 +679,7 @@ class App extends React.Component {
     };
 
     this.copy = i => {
-      const rowList = [...this.state.sortingOrderList];
+      let rowList = [...this.state.sortingOrderList];
       rowList.push(JSON.parse(JSON.stringify(rowList[i])));
       this.setState({
         sortingOrderList: rowList
@@ -730,24 +688,17 @@ class App extends React.Component {
 
     this.clearAll = () => {
       this.setState({
-        sortingOrderList: [],
-        errorMessage: false
+        sortingOrderList: []
       });
       this.props.clearAllSortingParams();
     };
 
     this.remove = i => {
-      const sortingOrderList = [...this.state.sortingOrderList];
+      let sortingOrderList = [...this.state.sortingOrderList];
       sortingOrderList.splice(i, 1);
       this.setState({
         sortingOrderList
       });
-
-      if (sortingOrderList.length <= 1) {
-        this.setState({
-          errorMessage: false
-        });
-      }
     };
 
     this.createColumnsArrayFromProps = rowsValue => {
@@ -756,7 +707,7 @@ class App extends React.Component {
           id: index,
           text: /*#__PURE__*/React.createElement("div", {
             className: "sort__bodyContent",
-            key: row
+            key: index
           }, /*#__PURE__*/React.createElement("div", {
             className: "sort__reorder"
           }, /*#__PURE__*/React.createElement("div", {
@@ -776,8 +727,8 @@ class App extends React.Component {
             name: "sortBy",
             onChange: e => this.captureSortingFeildValues(e, index, "sortBy"),
             value: row.sortBy
-          }, this.props.columnFieldValue.map(item => /*#__PURE__*/React.createElement("option", {
-            key: item
+          }, this.props.columnFieldValue.map((item, index) => /*#__PURE__*/React.createElement("option", {
+            key: index
           }, item))))), /*#__PURE__*/React.createElement("div", {
             className: "sort__reorder"
           }, /*#__PURE__*/React.createElement("div", {
@@ -826,18 +777,18 @@ class App extends React.Component {
     };
 
     this.captureSortingFeildValues = (event, index, sortingKey) => {
-      const existingSortingOrderList = this.state.sortingOrderList;
+      var existingSortingOrderList = this.state.sortingOrderList;
 
       if (sortingKey === "sortBy") {
-        existingSortingOrderList[index].sortBy = event.target.value;
+        existingSortingOrderList[index]["sortBy"] = event.target.value;
       }
 
       if (sortingKey === "order") {
-        existingSortingOrderList[index].order = event.target.value;
+        existingSortingOrderList[index]["order"] = event.target.value;
       }
 
-      if (existingSortingOrderList[index].sortOn === "" || existingSortingOrderList[index].sortOn === undefined) {
-        existingSortingOrderList[index].sortOn = "Value";
+      if (existingSortingOrderList[index]["sortOn"] === "" || existingSortingOrderList[index]["sortOn"] === undefined) {
+        existingSortingOrderList[index]["sortOn"] = "Value";
       }
 
       this.setState({
@@ -853,10 +804,7 @@ class App extends React.Component {
       }) : this.setState({
         errorMessage: false
       });
-
-      if (!showError) {
-        this.props.setTableAsPerSortingParams(this.state.sortingOrderList);
-      }
+      !showError ? this.props.setTableAsPerSortingParams(this.state.sortingOrderList) : '';
     };
 
     this.handleReorderListOfSort = reOrderedIndexList => {
@@ -865,6 +813,7 @@ class App extends React.Component {
 
     this.state = {
       rowList: [true],
+      rows: [],
       sortingOrderList: this.props.sortingParamsObjectList === undefined ? [] : this.props.sortingParamsObjectList,
       errorMessage: false
     };
@@ -921,6 +870,9 @@ class App extends React.Component {
     })), /*#__PURE__*/React.createElement("div", {
       className: "sort-warning"
     }, this.state.errorMessage ? /*#__PURE__*/React.createElement("span", {
+      style: {
+        display: this.state.clickTag
+      },
       className: "alert alert-danger"
     }, "Sort by opted are same, Please choose different one.") : "")), /*#__PURE__*/React.createElement("div", {
       className: "sort__new"
@@ -930,36 +882,22 @@ class App extends React.Component {
       icon: faPlus,
       className: "sort__icon"
     }), /*#__PURE__*/React.createElement("div", {
-      role: "button",
-      tabIndex: 0,
       className: "sort__txt",
-      onClick: () => this.add(),
-      onKeyDown: () => this.add()
+      onClick: () => this.add()
     }, "New Sort"))), /*#__PURE__*/React.createElement("div", {
       className: "sort__footer"
     }, /*#__PURE__*/React.createElement("div", {
       className: "sort__btns"
     }, /*#__PURE__*/React.createElement("button", {
-      type: "button",
       className: "btns",
       onClick: this.clearAll
     }, "Clear All"), /*#__PURE__*/React.createElement("button", {
-      type: "button",
       className: "btns btns__save",
       onClick: () => this.updateTableAsPerSortCondition()
     }, "Ok"))))));
   }
 
 }
-
-App.propTypes = {
-  sortingParamsObjectList: PropTypes.any,
-  closeSorting: PropTypes.any,
-  columnFieldValue: PropTypes.any,
-  clearAllSortingParams: PropTypes.any,
-  setTableAsPerSortingParams: PropTypes.any,
-  handleTableSortSwap: PropTypes.any
-};
 
 let downLaodFileType = [];
 
@@ -983,7 +921,7 @@ class ExportData extends React.Component {
     };
 
     this.addToColumnEntityList = typeToBeAdded => {
-      let existingColumnEntityList = this.state.columnEntityList;
+      var existingColumnEntityList = this.state.columnEntityList;
 
       if (!existingColumnEntityList.includes(typeToBeAdded)) {
         existingColumnEntityList.push(typeToBeAdded);
@@ -1006,7 +944,7 @@ class ExportData extends React.Component {
           downLaodFileType
         });
       } else {
-        downLaodFileType.forEach(function (value, index) {
+        downLaodFileType.map(function (value, index) {
           if (value === event.target.value) {
             downLaodFileType = downLaodFileType.splice(index, value);
           }
@@ -1023,7 +961,7 @@ class ExportData extends React.Component {
       if (columnVlaueList.length > 0 && this.state.downLaodFileType.length > 0) {
         this.props.rows.forEach(row => {
           const keys = Object.getOwnPropertyNames(row);
-          const filteredColumnVal = {};
+          var filteredColumnVal = {};
           keys.forEach(function (key) {
             columnVlaueList.forEach(columnName => {
               if (columnName.key === key) filteredColumnVal[key] = row[key];
@@ -1031,7 +969,7 @@ class ExportData extends React.Component {
           });
           this.state.filteredRow.push(filteredColumnVal);
         });
-        this.state.downLaodFileType.forEach(item => {
+        this.state.downLaodFileType.map(item => {
           if (item === "pdf") this.downloadPDF();else if (item === "excel") this.downloadXLSFile();else this.downloadCSVFile();
         });
       }
@@ -1042,16 +980,16 @@ class ExportData extends React.Component {
       const size = "A4";
       const orientation = "landscape";
       const marginLeft = 300;
-      const doc = new JSPDF(orientation, unit, size);
+      const doc = new jsPDF(orientation, unit, size);
       doc.setFontSize(15);
       const title = "iCargo Report";
       const headers = [this.state.columnEntityList.map(column => {
         return column.name;
       })];
-      const dataValues = [];
+      var dataValues = [];
       this.props.rows.forEach(row => {
         const keys = Object.keys(row);
-        const filteredColumnVal = [];
+        var filteredColumnVal = [];
         this.state.columnEntityList.forEach(columnName => {
           keys.forEach(key => {
             if (columnName.key === key) filteredColumnVal.push(row[key]);
@@ -1059,7 +997,7 @@ class ExportData extends React.Component {
         });
         dataValues.push(filteredColumnVal);
       });
-      const content = {
+      let content = {
         startY: 50,
         head: headers,
         body: dataValues
@@ -1113,7 +1051,7 @@ class ExportData extends React.Component {
 
     this.columnSearchLogic = e => {
       const searchKey = String(e.target.value).toLowerCase();
-      const filteredRows = this.props.columnsList.filter(item => {
+      let filteredRows = this.props.columnsList.filter(item => {
         return item.name.toLowerCase().includes(searchKey);
       });
 
@@ -1129,8 +1067,8 @@ class ExportData extends React.Component {
     };
 
     this.exportValidation = () => {
-      const columnLength = this.state.columnEntityList.length;
-      const fileLength = this.state.downLaodFileType.length;
+      let columnLength = this.state.columnEntityList.length;
+      let fileLength = this.state.downLaodFileType.length;
 
       if (columnLength > 0 && fileLength > 0) {
         this.exportRowData();
@@ -1165,8 +1103,8 @@ class ExportData extends React.Component {
 
     this.state = {
       columnValueList: this.props.columnsList,
-      columnEntityList: this.props.columnsList,
-      isAllSelected: true,
+      columnEntityList: [],
+      isAllSelected: false,
       downLaodFileType: [],
       filteredRow: [],
       warning: "",
@@ -1220,13 +1158,12 @@ class ExportData extends React.Component {
     }, /*#__PURE__*/React.createElement("div", {
       className: "export__checkbox"
     }, /*#__PURE__*/React.createElement("input", {
-      className: "selectColumn",
       type: "checkbox",
       onChange: () => this.selectAllToColumnList(),
       checked: this.state.isAllSelected
     })), /*#__PURE__*/React.createElement("div", {
       className: "export__txt"
-    }, "Select All")), this.state.columnValueList && this.state.columnValueList.length > 0 ? this.state.columnValueList.map(column => {
+    }, "Select All")), this.state.columnValueList.length > 0 ? this.state.columnValueList.map((column, index) => {
       return /*#__PURE__*/React.createElement("div", {
         className: "export__wrap",
         key: column.key
@@ -1304,18 +1241,16 @@ class ExportData extends React.Component {
         display: this.state.clickTag
       },
       className: "alert alert-danger"
-    }, "You have not selected", " ", /*#__PURE__*/React.createElement("strong", null, this.state.warning)))), /*#__PURE__*/React.createElement("div", {
+    }, "You haven't selected ", /*#__PURE__*/React.createElement("strong", null, this.state.warning)))), /*#__PURE__*/React.createElement("div", {
       className: "export__footer"
     }, /*#__PURE__*/React.createElement("div", {
       className: "export__btns"
     }, /*#__PURE__*/React.createElement("button", {
-      type: "button",
       className: "btns",
       onClick: () => this.props.closeExport()
     }, "Cancel"), /*#__PURE__*/React.createElement("button", {
-      type: "button",
       className: "btns btns__save",
-      onClick: () => {
+      onClick: e => {
         this.exportValidation();
       }
     }, "Export"))))));
@@ -1323,15 +1258,18 @@ class ExportData extends React.Component {
 
 }
 
-ExportData.propTypes = {
-  columnsList: PropTypes.any,
-  closeExport: PropTypes.any,
-  rows: PropTypes.any
-};
+const {
+  DraggableHeader: {
+    DraggableContainer
+  }
+} = require("react-data-grid-addons");
 
 const {
   DropDownEditor
 } = Editors;
+
+const defaultParsePaste = str => str.split(/\r\n|\n|\r/).map(row => row.split("\t"));
+
 const selectors = Data.Selectors;
 let swapList = [];
 let swapSortList = [];
@@ -1340,475 +1278,84 @@ const {
   NumericFilter
 } = Filters;
 
-class Spreadsheet extends Component {
+class spreadsheet extends Component {
   constructor(props) {
-    var _this;
-
     super(props);
-    _this = this;
 
-    this.handleTableSortSwap = reorderedSwap => {
-      swapSortList = reorderedSwap;
-    };
+    this.updateRows = (startIdx, newRows) => {
+      this.setState(state => {
+        const rows = state.rows.slice();
 
-    this.updateTableAsPerRowChooser = (inComingColumnsHeaderList, pinnedColumnsList) => {
-      let existingColumnsHeaderList = this.props.columns;
-      existingColumnsHeaderList = existingColumnsHeaderList.filter(item => {
-        return inComingColumnsHeaderList.includes(item.name);
-      });
-      let rePositionedArray = existingColumnsHeaderList;
-      let singleHeaderOneList;
-
-      if (pinnedColumnsList.length > 0) {
-        pinnedColumnsList.slice(0).reverse().forEach((item, index) => {
-          singleHeaderOneList = existingColumnsHeaderList.filter(subItem => item === subItem.name);
-          rePositionedArray = this.arrayMove(existingColumnsHeaderList, existingColumnsHeaderList.indexOf(singleHeaderOneList[0]), index);
-        });
-      }
-
-      if (swapList.length > 0) {
-        swapList.slice(0).forEach((item, index) => {
-          singleHeaderOneList = existingColumnsHeaderList.filter(subItem => {
-            return item === subItem.name;
-          });
-          rePositionedArray = this.arrayMove(existingColumnsHeaderList, existingColumnsHeaderList.indexOf(singleHeaderOneList[0]), index);
-        });
-      }
-
-      existingColumnsHeaderList = rePositionedArray;
-      existingColumnsHeaderList.forEach((headerItem, index) => {
-        if (headerItem.frozen !== undefined && headerItem.frozen === true) {
-          existingColumnsHeaderList[index].frozen = false;
+        for (let i = 0; i < newRows.length; i++) {
+          if (startIdx + i < rows.length) {
+            rows[startIdx + i] = { ...rows[startIdx + i],
+              ...newRows[i]
+            };
+          }
         }
 
-        if (pinnedColumnsList.includes(headerItem.name)) {
-          existingColumnsHeaderList[index].frozen = true;
-        }
-      });
-
-      const toTop = (key, value) => (a, b) => (b[key] === value) - (a[key] === value);
-
-      existingColumnsHeaderList.sort(toTop("frozen", true));
-      this.setState({
-        columns: existingColumnsHeaderList
-      });
-      const tempList = [];
-      existingColumnsHeaderList.forEach(item => {
-        tempList.push(item.name);
-      });
-
-      if (swapList.length > 0) {
-        for (let i = 0; i < tempList.length; i++) {
-          if (tempList[i] === swapList[i]) this.setState({
-              pinnedReorder: true
-            });
-        }
-      }
-
-      this.closeColumnReOrdering();
-      swapList = [];
-      this.setState({
-        pinnedReorder: false
-      });
-    };
-
-    this.arrayMove = (arr, oldIndex, newIndex) => {
-      if (newIndex >= arr.length) {
-        let k = newIndex - arr.length + 1;
-
-        while (k--) {
-          arr.push(undefined);
-        }
-      }
-
-      arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
-      return arr;
-    };
-
-    this.columnReorderingPannel = () => {
-      this.setState({
-        selectedIndexes: []
-      });
-      const headerNameList = [];
-      const existingPinnedHeadersList = [];
-      this.state.columns.filter(item => item.frozen !== undefined && item.frozen === true).map(item => existingPinnedHeadersList.push(item.name));
-      this.state.columns.map(item => headerNameList.push(item.name));
-      this.setState({
-        columnReorderingComponent: /*#__PURE__*/React.createElement(ColumnReordering, Object.assign({
-          maxLeftPinnedColumn: this.props.maxLeftPinnedColumn,
-          updateTableAsPerRowChooser: this.updateTableAsPerRowChooser,
-          headerKeys: headerNameList,
-          closeColumnReOrdering: this.closeColumnReOrdering,
-          existingPinnedHeadersList: existingPinnedHeadersList,
-          handleheaderNameList: this.handleheaderNameList
-        }, this.props))
-      });
-    };
-
-    this.closeColumnReOrdering = () => {
-      this.setState({
-        columnReorderingComponent: null
-      });
-    };
-
-    this.handleSearchValue = value => {
-      this.setState({
-        searchValue: value
-      });
-    };
-
-    this.clearSearchValue = () => {
-      this.setState({
-        searchValue: ""
-      });
-      this.setState({
-        filteringRows: this.state.filteringRows
-      });
-    };
-
-    this.sortingPanel = () => {
-      this.setState({
-        selectedIndexes: []
-      });
-      const columnField = [];
-      this.state.columns.map(item => columnField.push(item.name));
-      this.setState({
-        sortingPanelComponent: /*#__PURE__*/React.createElement(App, {
-          setTableAsPerSortingParams: args => this.setTableAsPerSortingParams(args),
-          sortingParamsObjectList: this.state.sortingParamsObjectList,
-          handleTableSortSwap: this.handleTableSortSwap,
-          clearAllSortingParams: this.clearAllSortingParams,
-          columnFieldValue: columnField,
-          closeSorting: this.closeSorting
-        })
-      });
-    };
-
-    this.closeSorting = () => {
-      this.setState({
-        sortingPanelComponent: null,
-        sortingOrderSwapList: []
-      });
-      swapSortList = [];
-    };
-
-    this.clearAllSortingParams = () => {
-      const hasSingleSortkey = this.state.sortDirection !== "NONE" && this.state.sortColumn !== "";
-      let dataRows = this.getFilterResult([...this.state.dataSet]);
-
-      if (this.state.searchValue !== "") {
-        const searchKey = String(this.state.searchValue).toLowerCase();
-        dataRows = dataRows.filter(item => {
-          return Object.values(item).toString().toLowerCase().includes(searchKey);
-        });
-      }
-
-      if (hasSingleSortkey) {
-        dataRows = this.getSingleSortResult(dataRows);
-      }
-
-      this.setState({
-        rows: dataRows.slice(0, this.state.pageIndex * this.state.pageRowCount),
-        subDataSet: dataRows
-      });
-    };
-
-    this.exportColumnData = () => {
-      let exportData = this.state.dataSet;
-
-      if (this.isSubset()) {
-        exportData = this.state.subDataSet;
-      }
-
-      this.setState({
-        selectedIndexes: []
-      });
-      this.setState({
-        exportComponent: /*#__PURE__*/React.createElement(ExportData, {
-          rows: exportData,
-          columnsList: this.state.columns,
-          closeExport: this.closeExport
-        })
-      });
-    };
-
-    this.closeExport = () => {
-      this.setState({
-        exportComponent: null
-      });
-    };
-
-    this.setTableAsPerSortingParams = tableSortList => {
-      const hasFilter = Object.keys(this.state.junk).length > 0;
-      const hasSearchKey = String(this.state.searchValue).toLowerCase() !== "";
-      const hasSingleSortkey = this.state.sortDirection !== "NONE" && this.state.sortColumn !== "";
-      let existingRows = [...this.state.dataSet];
-
-      if (hasFilter || hasSearchKey || hasSingleSortkey) {
-        existingRows = [...this.state.subDataSet];
-      }
-
-      let sortingOrderNameList = [];
-      tableSortList.forEach(item => {
-        let nameOfItem = "";
-        Object.keys(this.state.rows[0]).forEach(rowItem => {
-          if (rowItem.toLowerCase() === this.toCamelCase(item.sortBy).toLowerCase()) {
-            nameOfItem = rowItem;
-          }
-        });
-        const typeOfItem = this.state.rows[0][item.sortBy === nameOfItem];
-
-        if (typeof typeOfItem === "number") {
-          sortingOrderNameList.push({
-            name: nameOfItem,
-            primer: parseInt,
-            reverse: item.order !== "Ascending"
-          });
-        } else {
-          sortingOrderNameList.push({
-            name: nameOfItem,
-            reverse: item.order !== "Ascending"
-          });
-        }
-      });
-
-      if (swapSortList.length > 0) {
-        const existingSortingOrderSwapList = this.state.sortingOrderSwapList;
-        swapSortList.forEach((item, index) => {
-          const stringOfItemIndex = `${item}${index}`;
-
-          if (item !== index && !existingSortingOrderSwapList.includes(stringOfItemIndex.split("").reverse().join(""))) {
-            existingSortingOrderSwapList.push(stringOfItemIndex);
-            sortingOrderNameList = this.arrayMove(sortingOrderNameList, item, index);
-            tableSortList = this.arrayMove(tableSortList, item, index);
-          }
-
-          this.setState({
-            sortingOrderSwapList: existingSortingOrderSwapList
-          });
-        });
-      }
-
-      existingRows.sort(sortBy(...sortingOrderNameList));
-      this.setState({
-        rows: existingRows.slice(0, this.state.pageIndex * this.state.pageRowCount),
-        subDataSet: existingRows,
-        sortingParamsObjectList: tableSortList
-      });
-      this.closeSorting();
-    };
-
-    this.groupSort = (tableSortList, existingRows) => {
-      let sortingOrderNameList = [];
-      tableSortList.forEach(item => {
-        let nameOfItem = "";
-        Object.keys(this.state.rows[0]).forEach(rowItem => {
-          if (rowItem.toLowerCase() === this.toCamelCase(item.sortBy).toLowerCase()) {
-            nameOfItem = rowItem;
-          }
-        });
-        const typeOfItem = this.state.rows[0][item.sortBy === nameOfItem];
-
-        if (typeof typeOfItem === "number") {
-          sortingOrderNameList.push({
-            name: nameOfItem,
-            primer: parseInt,
-            reverse: item.order !== "Ascending"
-          });
-        } else {
-          sortingOrderNameList.push({
-            name: nameOfItem,
-            reverse: item.order !== "Ascending"
-          });
-        }
-      });
-
-      if (swapSortList.length > 0) {
-        const existingSortingOrderSwapList = this.state.sortingOrderSwapList;
-        swapSortList.forEach((item, index) => {
-          const stringOfItemIndex = `${item}${index}`;
-
-          if (item !== index && !existingSortingOrderSwapList.includes(stringOfItemIndex.split("").reverse().join(""))) {
-            existingSortingOrderSwapList.push(stringOfItemIndex);
-            sortingOrderNameList = this.arrayMove(sortingOrderNameList, item, index);
-            tableSortList = this.arrayMove(tableSortList, item, index);
-          }
-
-          this.setState({
-            sortingOrderSwapList: existingSortingOrderSwapList
-          });
-        });
-      }
-
-      return existingRows.sort(sortBy(...sortingOrderNameList));
-    };
-
-    this.toCamelCase = str => {
-      return str.replace(/\s(.)/g, function ($1) {
-        return $1.toUpperCase();
-      }).replace(/\s/g, "").replace(/^(.)/, function ($1) {
-        return $1.toLowerCase();
-      });
-    };
-
-    this.handleheaderNameList = reordered => {
-      swapList = reordered;
-    };
-
-    this.getSingleSortResult = data => {
-      if (this.state.sortDirection !== "NONE" && this.state.sortColumn !== "") {
-        const sortColumn = this.state.sortColumn;
-        const sortDirection = this.state.sortDirection;
-        this.setState({
-          selectedIndexes: []
-        });
-
-        const comparer = (a, b) => {
-          if (sortDirection === "ASC") {
-            return a[sortColumn] > b[sortColumn] ? 1 : -1;
-          }
-
-          if (sortDirection === "DESC") {
-            return a[sortColumn] < b[sortColumn] ? 1 : -1;
-          }
-
-          return 0;
+        return {
+          rows
         };
-
-        return sortDirection === "NONE" ? data : [...data].sort(comparer);
-      }
-
-      return data;
+      });
     };
 
-    this.sortRows = (data, sortColumn, sortDirection) => {
-      this.setState({
-        selectedIndexes: []
-      });
-
-      const comparer = (a, b) => {
-        if (sortDirection === "ASC") {
-          return a[sortColumn] > b[sortColumn] ? 1 : -1;
-        }
-
-        if (sortDirection === "DESC") {
-          return a[sortColumn] < b[sortColumn] ? 1 : -1;
-        }
-      };
-
-      const hasFilter = Object.keys(this.state.junk).length > 0;
-      const hasSearchKey = String(this.state.searchValue).toLowerCase() !== "";
-      const hasGropSortKeys = this.state.sortingParamsObjectList && this.state.sortingParamsObjectList.length > 0;
-      let dtRows = [];
-
-      if (hasFilter || hasSearchKey || hasGropSortKeys) {
-        dtRows = this.state.subDataSet;
-      } else {
-        dtRows = this.state.dataSet;
-      }
-
-      const result = [...dtRows].sort(comparer);
-      this.setState({
-        rows: result.slice(0, this.state.pageIndex * this.state.pageRowCount),
-        subDataSet: result,
-        selectedIndexes: [],
-        sortColumn: sortDirection === "NONE" ? "" : sortColumn,
-        sortDirection
-      });
-      return sortDirection === "NONE" ? data : this.state.rows;
+    this.rowGetter = i => {
+      const {
+        rows
+      } = this.state;
+      return rows[i];
     };
 
-    this.getSlicedRows = async function (filters, rowsToSplit, firstResult) {
-      let data = [];
+    this.handleCopy = e => {
+      e.preventDefault();
+      const {
+        topLeft,
+        botRight
+      } = this.state;
+      const text = range(topLeft.rowIdx, botRight.rowIdx + 1).map(rowIdx => this.state.columns.slice(topLeft.colIdx - 1, botRight.colIdx).map(col => this.rowGetter(rowIdx)[col.key]).join("\t")).join("\n");
+      e.clipboardData.setData("text/plain", text);
+    };
 
-      if (rowsToSplit.length > 0) {
-        const chunks = [];
-
-        while (rowsToSplit.length) {
-          chunks.push(rowsToSplit.splice(0, 500));
-        }
-
-        let index = 0;
-        chunks.forEach(async function (arr) {
-          _this.getRowsAsync(arr, filters).then(async function (dt) {
-            index++;
-            data = [...data, ...dt];
-
-            if (index === chunks.length) {
-              let dtSet = [...firstResult, ...data];
-
-              if (_this.state.searchValue !== "") {
-                const searchKey = String(_this.state.searchValue).toLowerCase();
-                dtSet = dtSet.filter(item => {
-                  return Object.values(item).toString().toLowerCase().includes(searchKey);
-                });
-              }
-
-              dtSet = _this.getSingleSortResult(dtSet);
-
-              if (_this.state.sortingParamsObjectList && _this.state.sortingParamsObjectList.length > 0) {
-                dtSet = _this.groupSort(_this.state.sortingParamsObjectList, dtSet);
-              }
-
-              const rw = dtSet.slice(0, _this.state.pageIndex * _this.state.pageRowCount);
-              await _this.setStateAsync({
-                subDataSet: dtSet,
-                rows: rw,
-                tempRows: rw,
-                count: rw.length
-              });
-
-              if (dtSet.length === 0) {
-                _this.handleWarningStatus();
-              } else {
-                _this.closeWarningStatus(rw);
-              }
-            }
-          });
+    this.handlePaste = e => {
+      e.preventDefault();
+      const {
+        topLeft
+      } = this.state;
+      const newRows = [];
+      const pasteData = defaultParsePaste(e.clipboardData.getData("text/plain"));
+      pasteData.forEach(row => {
+        const rowData = {};
+        this.state.columns.slice(topLeft.colIdx - 1, topLeft.colIdx - 1 + row.length).forEach((col, j) => {
+          rowData[col.key] = row[j];
         });
-      }
+        newRows.push(rowData);
+      });
+      this.updateRows(topLeft.rowIdx, newRows);
     };
 
-    this.getRowsAsync = async function (rows, filters) {
-      let filterVal = { ...filters
-      };
-
-      if (Object.keys(filters).length <= 0) {
-        filterVal = {};
-      }
-
-      selectors.getRows({
-        rows: [],
-        filters: {}
-      });
-      return selectors.getRows({
-        rows: rows,
-        filters: filterVal
-      });
-    };
-
-    this.getrows = (rows, filters) => {
-      let filterVal = { ...filters
-      };
-
-      if (Object.keys(filters).length <= 0) {
-        filterVal = {};
-      }
-
-      selectors.getRows({
-        rows: [],
-        filters: {}
-      });
-      return selectors.getRows({
-        rows: rows,
-        filters: filterVal
-      });
-    };
-
-    this.onRowsDeselected = rows => {
-      const rowIndexes = rows.map(r => r.rowIdx);
+    this.setSelection = args => {
       this.setState({
-        selectedIndexes: this.state.selectedIndexes.filter(i => rowIndexes.indexOf(i) === -1)
+        topLeft: {
+          rowIdx: args.topLeft.rowIdx,
+          colIdx: args.topLeft.idx
+        },
+        botRight: {
+          rowIdx: args.bottomRight.rowIdx,
+          colIdx: args.bottomRight.idx
+        }
+      });
+    };
+
+    this.handleWarningStatus = () => {
+      this.setState({
+        warningStatus: "invalid"
+      });
+    };
+
+    this.closeWarningStatus = () => {
+      this.setState({
+        warningStatus: ""
       });
     };
 
@@ -1823,9 +1370,7 @@ class Spreadsheet extends Component {
         if (updated[item.key] !== null && updated[item.key] !== undefined) {
           columnName = item.key;
           return true;
-        }
-
-        return false;
+        } else return false;
       });
 
       if (filter.length > 0) {
@@ -1844,19 +1389,6 @@ class Spreadsheet extends Component {
 
           return {
             rows
-          };
-        });
-        this.setState(state => {
-          const dataSet = state.dataSet.slice();
-
-          for (let i = fromRow; i <= toRow; i++) {
-            dataSet[i] = { ...dataSet[i],
-              ...updated
-            };
-          }
-
-          return {
-            dataSet
           };
         });
         this.setState(state => {
@@ -1902,10 +1434,15 @@ class Spreadsheet extends Component {
       }
     };
 
-    this.handleFilterChange = async function (value) {
-      const {
-        junk
-      } = _this.state;
+    this.onRowsDeselected = rows => {
+      let rowIndexes = rows.map(r => r.rowIdx);
+      this.setState({
+        selectedIndexes: this.state.selectedIndexes.filter(i => rowIndexes.indexOf(i) === -1)
+      });
+    };
+
+    this.handleFilterChange = value => {
+      let junk = this.state.junk;
 
       if (!(value.filterTerm == null) && !(value.filterTerm.length <= 0)) {
         junk[value.column.key] = value;
@@ -1913,233 +1450,322 @@ class Spreadsheet extends Component {
         delete junk[value.column.key];
       }
 
-      _this.setState({
+      this.setState({
         junk
       });
-
-      const hasFilter = Object.keys(junk).length > 0;
-
-      const firstPage = _this.state.dataSet.slice(0, _this.state.pageRowCount);
-
-      let data = _this.getrows(firstPage, _this.state.junk);
-
-      await _this.setStateAsync({
+      const data = this.getrows(this.state.filteringRows, this.state.junk);
+      this.setState({
         rows: data,
         tempRows: data,
-        count: data.length,
-        subDataSet: hasFilter ? data : [],
-        pageIndex: hasFilter ? _this.state.pageIndex : 1
+        count: data.length
       });
-
-      if (hasFilter) {
-        const rowsRemaining = _this.state.dataSet.slice(_this.state.pageRowCount, _this.state.dataSet.length);
-
-        _this.getSlicedRows(_this.state.junk, rowsRemaining, data);
-      } else {
-        let rowsRemaining = _this.state.dataSet;
-
-        if (_this.state.searchValue !== "") {
-          const searchKey = String(_this.state.searchValue).toLowerCase();
-          rowsRemaining = rowsRemaining.filter(item => {
-            return Object.values(item).toString().toLowerCase().includes(searchKey);
-          });
-        }
-
-        rowsRemaining = _this.getSingleSortResult(rowsRemaining);
-
-        if (_this.state.sortingParamsObjectList && _this.state.sortingParamsObjectList.length > 0) {
-          rowsRemaining = _this.groupSort(_this.state.sortingParamsObjectList, rowsRemaining);
-        }
-
-        const rw = rowsRemaining.slice(0, _this.state.pageIndex * _this.state.pageRowCount);
-        await _this.setStateAsync({
-          subDataSet: rowsRemaining,
-          rows: rw,
-          tempRows: rw,
-          count: rw.length
-        });
-        data = rw;
-      }
 
       if (data.length === 0) {
-        _this.handleWarningStatus();
+        this.handleWarningStatus();
       } else {
-        _this.closeWarningStatus(data);
+        this.closeWarningStatus();
       }
     };
 
-    this.isAtBottom = event => {
-      const {
-        target
-      } = event;
-      const isbtm = target.clientHeight + target.scrollTop >= target.scrollHeight - 10;
-      return isbtm;
+    this.getrows = (rows, filters) => {
+      if (Object.keys(filters).length <= 0) {
+        filters = {};
+      }
+
+      selectors.getRows({
+        rows: [],
+        filters: {}
+      });
+      return selectors.getRows({
+        rows: rows,
+        filters: filters
+      });
     };
 
-    this.loadMoreRows = (from, newRowsCount) => {
-      return new Promise(resolve => {
-        let to = from + newRowsCount;
+    this.sortRows = (data, sortColumn, sortDirection) => {
+      this.setState({
+        selectedIndexes: []
+      });
 
-        if (this.isSubset() && this.state.subDataSet.length > 0) {
-          to = to < this.state.subDataSet.length ? to : this.state.subDataSet.length;
-          resolve(this.state.subDataSet.slice(from, to));
+      const comparer = (a, b) => {
+        if (sortDirection === "ASC") {
+          return a[sortColumn] > b[sortColumn] ? 1 : -1;
+        } else if (sortDirection === "DESC") {
+          return a[sortColumn] < b[sortColumn] ? 1 : -1;
+        }
+      };
+
+      this.setState({
+        rows: [...data].sort(comparer)
+      });
+      return sortDirection === "NONE" ? data : this.state.rows;
+    };
+
+    this.onHeaderDrop = (source, target) => {
+      const stateCopy = Object.assign({}, this.state);
+      const columnSourceIndex = this.state.columns.findIndex(i => i.key === source);
+      const columnTargetIndex = this.state.columns.findIndex(i => i.key === target);
+      stateCopy.columns.splice(columnTargetIndex, 0, stateCopy.columns.splice(columnSourceIndex, 1)[0]);
+      const emptyColumns = Object.assign({}, this.state, {
+        columns: []
+      });
+      this.setState(emptyColumns);
+      const reorderedColumns = Object.assign({}, this.state, {
+        columns: stateCopy.columns
+      });
+      this.setState(reorderedColumns);
+    };
+
+    this.handleheaderNameList = reordered => {
+      swapList = reordered;
+    };
+
+    this.handleTableSortSwap = reorderedSwap => {
+      swapSortList = reorderedSwap;
+    };
+
+    this.updateTableAsPerRowChooser = (inComingColumnsHeaderList, pinnedColumnsList) => {
+      let existingColumnsHeaderList = this.props.columns;
+      existingColumnsHeaderList = existingColumnsHeaderList.filter(item => {
+        return inComingColumnsHeaderList.includes(item.name);
+      });
+      let rePositionedArray = existingColumnsHeaderList;
+      let singleHeaderOneList;
+
+      if (pinnedColumnsList.length > 0) {
+        pinnedColumnsList.slice(0).reverse().map((item, index) => {
+          singleHeaderOneList = existingColumnsHeaderList.filter(subItem => item === subItem.name);
+          rePositionedArray = this.array_move(existingColumnsHeaderList, existingColumnsHeaderList.indexOf(singleHeaderOneList[0]), index);
+        });
+      }
+
+      if (swapList.length > 0) {
+        swapList.slice(0).map((item, index) => {
+          singleHeaderOneList = existingColumnsHeaderList.filter(subItem => {
+            return item === subItem.name;
+          });
+          rePositionedArray = this.array_move(existingColumnsHeaderList, existingColumnsHeaderList.indexOf(singleHeaderOneList[0]), index);
+        });
+      }
+
+      existingColumnsHeaderList = rePositionedArray;
+      existingColumnsHeaderList.map((headerItem, index) => {
+        if (headerItem.frozen !== undefined && headerItem.frozen === true) {
+          existingColumnsHeaderList[index]["frozen"] = false;
+        }
+
+        if (pinnedColumnsList.includes(headerItem.name)) {
+          existingColumnsHeaderList[index]["frozen"] = true;
+        }
+      });
+
+      const toTop = (key, value) => (a, b) => (b[key] === value) - (a[key] === value);
+
+      existingColumnsHeaderList.sort(toTop("frozen", true));
+      this.setState({
+        columns: existingColumnsHeaderList
+      });
+      existingColumnsHeaderList.forEach(item => {
+      });
+
+      this.closeColumnReOrdering();
+      swapList = [];
+    };
+
+    this.array_move = (arr, old_index, new_index) => {
+      if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+
+        while (k--) {
+          arr.push(undefined);
+        }
+      }
+
+      arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+      return arr;
+    };
+
+    this.columnReorderingPannel = () => {
+      this.setState({
+        selectedIndexes: []
+      });
+      var headerNameList = [];
+      var existingPinnedHeadersList = [];
+      this.state.columns.filter(item => item.frozen !== undefined && item.frozen === true).map(item => existingPinnedHeadersList.push(item.name));
+      this.state.columns.map(item => headerNameList.push(item.name));
+      this.setState({
+        columnReorderingComponent: /*#__PURE__*/React.createElement(ColumnReordering, Object.assign({
+          maxLeftPinnedColumn: this.props.maxLeftPinnedColumn,
+          updateTableAsPerRowChooser: this.updateTableAsPerRowChooser,
+          headerKeys: headerNameList,
+          closeColumnReOrdering: this.closeColumnReOrdering,
+          existingPinnedHeadersList: existingPinnedHeadersList,
+          handleheaderNameList: this.handleheaderNameList
+        }, this.props))
+      });
+    };
+
+    this.closeColumnReOrdering = () => {
+      this.setState({
+        columnReorderingComponent: null
+      });
+    };
+
+    this.handleSearchValue = value => {
+      this.setState({
+        searchValue: value
+      });
+    };
+
+    this.clearSearchValue = () => {
+      this.setState({
+        searchValue: ""
+      });
+      this.setState({
+        filteringRows: this.state.filteringRows
+      });
+    };
+
+    this.sortingPanel = () => {
+      this.setState({
+        selectedIndexes: []
+      });
+      let columnField = [];
+      this.state.columns.map(item => columnField.push(item.name));
+      this.setState({
+        sortingPanelComponent: /*#__PURE__*/React.createElement(App, {
+          setTableAsPerSortingParams: args => this.setTableAsPerSortingParams(args),
+          sortingParamsObjectList: this.state.sortingParamsObjectList,
+          handleTableSortSwap: this.handleTableSortSwap,
+          clearAllSortingParams: this.clearAllSortingParams,
+          columnFieldValue: columnField,
+          closeSorting: this.closeSorting
+        })
+      });
+    };
+
+    this.closeSorting = () => {
+      this.setState({
+        sortingPanelComponent: null,
+        sortingOrderSwapList: []
+      });
+      swapSortList = [];
+    };
+
+    this.clearAllSortingParams = () => {
+      this.setState({
+        rows: this.props.rows
+      });
+    };
+
+    this.exportColumnData = () => {
+      this.setState({
+        selectedIndexes: []
+      });
+      this.setState({
+        exportComponent: /*#__PURE__*/React.createElement(ExportData, {
+          rows: this.state.rows,
+          columnsList: this.state.columns,
+          closeExport: this.closeExport
+        })
+      });
+    };
+
+    this.closeExport = () => {
+      this.setState({
+        exportComponent: null
+      });
+    };
+
+    this.handleColumnResize = (idx, width) => {
+      let columnArray = [...this.state.columns];
+      columnArray.forEach(item => {
+        if (item.name === this.state.columns[idx - 1].name) {
+          item.width = width;
+        }
+      });
+      this.setState({
+        columns: columnArray
+      });
+    };
+
+    this.setTableAsPerSortingParams = tableSortList => {
+      var existingRows = this.state.rows;
+      var sortingOrderNameList = [];
+      tableSortList.map((item, index) => {
+        var nameOfItem = "";
+        Object.keys(this.state.rows[0]).map(rowItem => {
+          if (rowItem.toLowerCase() === this.toCamelCase(item.sortBy).toLowerCase()) {
+            nameOfItem = rowItem;
+          }
+        });
+        var typeOfItem = this.state.rows[0][item.sortBy === nameOfItem];
+
+        if (typeof typeOfItem === "number") {
+          sortingOrderNameList.push({
+            name: nameOfItem,
+            primer: parseInt,
+            reverse: item.order === "Ascending" ? false : true
+          });
         } else {
-          resolve(this.state.dataSet.slice(from, to));
+          sortingOrderNameList.push({
+            name: nameOfItem,
+            reverse: item.order === "Ascending" ? false : true
+          });
         }
       });
-    };
 
-    this.handleScroll = async function (event) {
-      if (!_this.isAtBottom(event)) return;
-      const newRows = await _this.loadMoreRows(_this.state.pageIndex * _this.state.pageRowCount, _this.state.pageRowCount);
+      if (swapSortList.length > 0) {
+        var existingSortingOrderSwapList = this.state.sortingOrderSwapList;
+        swapSortList.map((item, index) => {
+          var stringOfItemIndex = item + "" + index;
 
-      if (newRows && newRows.length > 0) {
-        let length = 0;
+          if (item !== index && !existingSortingOrderSwapList.includes(stringOfItemIndex.split("").reverse().join(""))) {
+            existingSortingOrderSwapList.push(stringOfItemIndex);
+            sortingOrderNameList = this.array_move(sortingOrderNameList, item, index);
+            tableSortList = this.array_move(tableSortList, item, index);
+          }
 
-        _this.setState(prev => {
-          length = prev.rows.length + newRows.length;
-        });
-
-        _this.setState({
-          rows: [..._this.state.rows, ...newRows],
-          count: length,
-          pageIndex: _this.state.pageIndex + 1
+          this.setState({
+            sortingOrderSwapList: existingSortingOrderSwapList
+          });
         });
       }
-    };
 
-    this.globalSearchLogic = (e, updatedRows) => {
-      const searchKey = String(e.target.value).toLowerCase();
-      const filteredRows = updatedRows.filter(item => {
-        return Object.values(item).toString().toLowerCase().includes(searchKey);
-      });
-
-      if (!filteredRows.length) {
-        this.setState({
-          warningStatus: "invalid",
-          rows: [],
-          count: 0
-        });
-      } else {
-        const rowSlice = filteredRows.slice(0, this.state.pageIndex * this.state.pageRowCount);
-        this.setState({
-          warningStatus: "",
-          rows: rowSlice,
-          subDataSet: filteredRows,
-          count: rowSlice.length
-        });
-      }
-    };
-
-    this.handleWarningStatus = () => {
+      existingRows.sort(sort_by(...sortingOrderNameList));
       this.setState({
-        warningStatus: "invalid"
+        rows: existingRows,
+        sortingParamsObjectList: tableSortList
+      });
+      this.closeSorting();
+    };
+
+    this.toCamelCase = str => {
+      return str.replace(/\s(.)/g, function ($1) {
+        return $1.toUpperCase();
+      }).replace(/\s/g, "").replace(/^(.)/, function ($1) {
+        return $1.toLowerCase();
       });
     };
 
-    this.closeWarningStatus = val => {
-      let rVal = val;
-
-      if (!rVal) {
-        const hasSingleSortkey = this.state.sortDirection !== "NONE" && this.state.sortColumn !== "";
-        const hasGropSortKeys = this.state.sortingParamsObjectList && this.state.sortingParamsObjectList.length > 0;
-        let dataRows = this.getFilterResult([...this.state.dataSet]);
-
-        if (hasSingleSortkey) {
-          dataRows = this.getSingleSortResult(dataRows);
-        }
-
-        if (hasGropSortKeys) {
-          dataRows = this.groupSort(this.state.sortingParamsObjectList, dataRows);
-        }
-
-        rVal = dataRows.slice(0, this.state.pageIndex * this.state.pageRowCount);
-      }
-
-      this.setState({
-        warningStatus: "",
-        rows: rVal,
-        count: rVal.length
+    const airportCodes = [];
+    this.props.airportCodes.forEach(item => {
+      airportCodes.push({
+        id: item,
+        value: item
       });
-    };
-
-    this.save = () => {
-      this.props.saveRows(this.state.dataSet);
-    };
-
-    this.clearAllFilters = () => {
-      const hasSingleSortkey = this.state.sortDirection !== "NONE" && this.state.sortColumn !== "";
-      const hasGropSortKeys = this.state.sortingParamsObjectList && this.state.sortingParamsObjectList.length > 0;
-      let dtSet = this.getSearchResult(this.state.dataSet);
-
-      if (hasSingleSortkey) {
-        dtSet = this.getSingleSortResult(dtSet);
-      }
-
-      if (hasGropSortKeys) {
-        dtSet = this.groupSort(this.state.sortingParamsObjectList, dtSet);
-      }
-
-      const rVal = dtSet.slice(0, this.state.pageIndex * this.state.pageRowCount);
-      this.setState({
-        rows: rVal,
-        count: rVal.length,
-        subDataSet: dtSet
-      });
-    };
-
-    this.getSearchResult = data => {
-      let dtSet = data;
-      const searchKey = String(this.state.searchValue).toLowerCase();
-
-      if (searchKey !== "") {
-        dtSet = dtSet.filter(item => {
-          return Object.values(item).toString().toLowerCase().includes(searchKey);
-        });
-      }
-
-      return dtSet;
-    };
-
-    this.getFilterResult = data => {
-      let dataRows = [];
-
-      if (Object.keys(this.state.junk).length > 0) {
-        const rowsToSplit = [...data];
-        const chunks = [];
-
-        while (rowsToSplit.length) {
-          chunks.push(rowsToSplit.splice(0, 500));
-        }
-
-        chunks.forEach(arr => {
-          const dt = this.getrows(arr, this.state.junk);
-          dataRows = [...dataRows, ...dt];
-        });
-      } else {
-        dataRows = [...data];
-      }
-
-      return dataRows;
-    };
-    const {
-      dataSet: _dataSet,
-      pageSize
-    } = this.props;
-    const dataSetVar = JSON.parse(JSON.stringify(_dataSet));
+    });
     this.state = {
       warningStatus: "",
       height: 680,
+      displayNoRows: "none",
+      searchIconDisplay: "",
       searchValue: "",
-      sortColumn: "",
-      sortDirection: "NONE",
-      pageRowCount: pageSize,
-      pageIndex: 1,
-      dataSet: dataSetVar,
-      subDataSet: [],
-      rows: dataSetVar ? dataSetVar.slice(0, 500) : [],
+      filter: {},
+      rows: this.props.rows,
       selectedIndexes: [],
       junk: {},
+      topLeft: {},
       columnReorderingComponent: null,
       exportComponent: null,
       filteringRows: this.props.rows,
@@ -2148,31 +1774,30 @@ class Spreadsheet extends Component {
       count: this.props.rows.length,
       sortingOrderSwapList: [],
       sortingParamsObjectList: [],
-      pinnedReorder: false,
       columns: this.props.columns.map(item => {
-        const colItem = item;
-
-        if (colItem.editor === "DatePicker") {
-          colItem.editor = DatePicker;
-        } else if (colItem.editor === "DropDown" && colItem.dataSource) {
-          colItem.editor = /*#__PURE__*/React.createElement(DropDownEditor, {
-            options: colItem.dataSource
+        if (item.editor === "DatePicker") {
+          item.editor = DatePicker;
+        } else if (item.editor === "DropDown") {
+          item.editor = /*#__PURE__*/React.createElement(DropDownEditor, {
+            options: airportCodes
           });
-        } else if (colItem.editor === "Text") {
-          colItem.editor = "text";
+        } else if (item.editor === "Text") {
+          item.editor = "text";
         } else {
-          colItem.editor = null;
+          item.editor = null;
         }
 
-        if (colItem.filterType === "numeric") {
-          colItem.filterRenderer = NumericFilter;
+        if (item.filterType === "numeric") {
+          item.filterRenderer = NumericFilter;
         } else {
-          colItem.filterRenderer = AutoCompleteFilter;
+          item.filterRenderer = AutoCompleteFilter;
         }
 
-        return colItem;
+        return item;
       })
     };
+    document.addEventListener("copy", this.handleCopy);
+    document.addEventListener("paste", this.handlePaste);
     this.handleSearchValue = this.handleSearchValue.bind(this);
     this.clearSearchValue = this.clearSearchValue.bind(this);
     this.handleFilterChange = this.handleFilterChange.bind(this);
@@ -2181,17 +1806,27 @@ class Spreadsheet extends Component {
     });
   }
 
-  UNSAFE_componentWillReceiveProps(props) {
-    this.setState({
-      rows: props.rows,
-      count: props.count,
-      warningStatus: props.status
-    });
+  componentDidUpdate(prevProps) {
+    const resizeEvent = document.createEvent("HTMLEvents");
+    resizeEvent.initEvent("resize", true, false);
+    window.dispatchEvent(resizeEvent);
   }
 
-  setStateAsync(stateObj) {
-    return new Promise(resolve => {
-      this.setState(stateObj, resolve);
+  componentWillReceiveProps(props) {
+    this.setState({
+      rows: props.rows
+    });
+    this.setState({
+      status: props.status
+    });
+    this.setState({
+      textValue: props.textValue
+    });
+    this.setState({
+      count: props.count
+    });
+    this.setState({
+      warningStatus: props.status
     });
   }
 
@@ -2204,49 +1839,8 @@ class Spreadsheet extends Component {
     });
   }
 
-  componentDidUpdate() {
-    const resizeEvent = document.createEvent("HTMLEvents");
-    resizeEvent.initEvent("resize", true, false);
-    window.dispatchEvent(resizeEvent);
-  }
-
-  getSearchRecords(e) {
-    const searchKey = String(e.target.value).toLowerCase();
-    const hasFilter = Object.keys(this.state.junk).length > 0;
-    const hasSingleSortkey = this.state.sortDirection !== "NONE" && this.state.sortColumn !== "";
-    const hasGropSortKeys = this.state.sortingParamsObjectList && this.state.sortingParamsObjectList.length > 0;
-    let rowsToSearch = [];
-
-    if (this.state.searchValue.startsWith(searchKey) || searchKey === "") {
-      rowsToSearch = this.getFilterResult([...this.state.dataSet]);
-
-      if (hasSingleSortkey) {
-        rowsToSearch = this.getSingleSortResult(rowsToSearch);
-      }
-
-      if (hasGropSortKeys) {
-        rowsToSearch = this.groupSort(this.state.sortingParamsObjectList, rowsToSearch);
-      }
-
-      return rowsToSearch;
-    }
-
-    if (hasFilter || hasSingleSortkey || searchKey.length > 1 || hasGropSortKeys) return this.state.subDataSet;
-    return this.state.dataSet;
-  }
-
-  isSubset() {
-    if (Object.keys(this.state.junk).length > 0 || this.state.sortDirection !== "NONE" || this.state.searchValue !== "" || this.state.sortingParamsObjectList && this.state.sortingParamsObjectList.length > 0) {
-      return true;
-    }
-
-    return false;
-  }
-
   render() {
-    return /*#__PURE__*/React.createElement("div", {
-      onScroll: this.handleScroll
-    }, /*#__PURE__*/React.createElement("div", {
+    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
       className: "parentDiv"
     }, /*#__PURE__*/React.createElement("div", {
       className: "totalCount"
@@ -2260,16 +1854,9 @@ class Spreadsheet extends Component {
       placeholder: "Search",
       onChange: e => {
         this.handleSearchValue(e.target.value);
-        const srchRows = this.getSearchRecords(e);
-        this.globalSearchLogic(e, srchRows);
+        this.props.globalSearchLogic(e, this.state.tempRows);
       },
       value: this.state.searchValue
-    })), /*#__PURE__*/React.createElement("div", {
-      className: "filterIcons",
-      onClick: this.save
-    }, /*#__PURE__*/React.createElement(FontAwesomeIcon, {
-      title: "Group Sort",
-      icon: faSave
     })), /*#__PURE__*/React.createElement("div", {
       className: "filterIcons",
       onClick: this.sortingPanel
@@ -2297,11 +1884,15 @@ class Spreadsheet extends Component {
     })), this.state.exportComponent), /*#__PURE__*/React.createElement(ErrorMessage, {
       className: "errorDiv",
       status: this.state.warningStatus,
-      closeWarningStatus: () => {
+      closeWarningStatus: e => {
+        this.props.closeWarningStatus();
         this.closeWarningStatus();
       },
       clearSearchValue: this.clearSearchValue
-    }), /*#__PURE__*/React.createElement(ExtDataGrid, {
+    }), /*#__PURE__*/React.createElement(DraggableContainer, {
+      className: "gridDiv",
+      onHeaderDrop: this.onHeaderDrop
+    }, /*#__PURE__*/React.createElement(ExtDataGrid, {
       toolbar: /*#__PURE__*/React.createElement(Toolbar, {
         enableFilter: true
       }),
@@ -2316,9 +1907,11 @@ class Spreadsheet extends Component {
         this.setState({
           junk: {}
         });
-        this.clearAllFilters();
       },
-      onColumnResize: (idx, width) => console.log(`Column ${idx} has been resized to ${width}`),
+      onColumnResize: (idx, width) => {
+        console.log(`Column ${idx} has been resized to ${width}`);
+        this.handleColumnResize(idx, width);
+      },
       onAddFilter: filter => this.handleFilterChange(filter),
       rowSelection: {
         showCheckbox: true,
@@ -2329,29 +1922,25 @@ class Spreadsheet extends Component {
           indexes: this.state.selectedIndexes
         }
       },
-      onGridSort: (sortColumn, sortDirection) => this.sortRows(this.state.filteringRows, sortColumn, sortDirection),
-      globalSearch: this.globalSearchLogic,
-      handleWarningStatus: this.handleWarningStatus,
-      closeWarningStatus: this.closeWarningStatus
-    }));
+      onGridSort: (sortColumn, sortDirection) => this.sortRows(this.state.filteringRows, sortColumn, sortDirection)
+    })));
   }
 
 }
 
-let sortBy;
+var sort_by;
 
 (function () {
-  const defaultCmp = function (a, b) {
-    if (a === b) return 0;
+  var default_cmp = function (a, b) {
+    if (a == b) return 0;
     return a < b ? -1 : 1;
-  };
-
-  const getCmpFunc = function (primer, reverse) {
-    let cmp = defaultCmp;
+  },
+      getCmpFunc = function (primer, reverse) {
+    var cmp = default_cmp;
 
     if (primer) {
       cmp = function (a, b) {
-        return defaultCmp(primer(a), primer(b));
+        return default_cmp(primer(a), primer(b));
       };
     }
 
@@ -2364,34 +1953,34 @@ let sortBy;
     return cmp;
   };
 
-  sortBy = function () {
-    const fields = [];
-    const nFields = arguments.length;
-    let field;
-    let name;
-    let cmp;
+  sort_by = function () {
+    var fields = [],
+        n_fields = arguments.length,
+        field,
+        name,
+        cmp;
 
-    for (let i = 0; i < nFields; i++) {
+    for (var i = 0; i < n_fields; i++) {
       field = arguments[i];
 
       if (typeof field === "string") {
         name = field;
-        cmp = defaultCmp;
+        cmp = default_cmp;
       } else {
         name = field.name;
         cmp = getCmpFunc(field.primer, field.reverse);
       }
 
       fields.push({
-        name,
-        cmp
+        name: name,
+        cmp: cmp
       });
     }
 
     return function (A, B) {
-      let result;
+      var name, cmp, result;
 
-      for (let i = 0, l = nFields; i < l; i++) {
+      for (var i = 0, l = n_fields; i < l; i++) {
         result = 0;
         field = fields[i];
         name = field.name;
@@ -2405,21 +1994,5 @@ let sortBy;
   };
 })();
 
-Spreadsheet.propTypes = {
-  airportCodes: PropTypes.any,
-  rows: PropTypes.any,
-  columns: PropTypes.any,
-  status: PropTypes.any,
-  count: PropTypes.any,
-  updateCellData: PropTypes.any,
-  selectBulkData: PropTypes.any,
-  pinnedReorder: PropTypes.any,
-  maxLeftPinnedColumn: PropTypes.any,
-  globalSearchLogic: PropTypes.any,
-  closeWarningStatus: PropTypes.any,
-  dataSet: PropTypes.any,
-  pageSize: PropTypes.any
-};
-
-export default Spreadsheet;
+export default spreadsheet;
 //# sourceMappingURL=index.modern.js.map

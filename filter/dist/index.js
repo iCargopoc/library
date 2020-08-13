@@ -699,6 +699,20 @@ var SavedFilters = function SavedFilters(props) {
   var savedFilters = localStorage.getItem("savedFilters");
   savedFilters = savedFilters ? JSON.parse(savedFilters) : [];
 
+  var addToFavourite = function addToFavourite(item) {
+    if (item.color === "#bcbdd1") {
+      item.color = "#2680e8";
+    } else {
+      item.color = "#bcbdd1";
+    }
+
+    console.log(savedFilters);
+    savedFilters.map(function (filterArray, index) {
+      console.log(filterArray.color);
+    });
+    props.addingToFavourite(item);
+  };
+
   var savedFilter = savedFilters.map(function (filterArray, index) {
     return /*#__PURE__*/React__default.createElement("div", {
       key: index
@@ -718,7 +732,16 @@ var SavedFilters = function SavedFilters(props) {
         props.handleListFilter();
         props.addSavedFilters(filterArray);
       }
-    }, Object.keys(filterArray)[0])));
+    }, Object.keys(filterArray)[0]), /*#__PURE__*/React__default.createElement(reactFontawesome.FontAwesomeIcon, {
+      style: {
+        color: filterArray.color
+      },
+      icon: freeSolidSvgIcons.faStar,
+      className: "marginLeft",
+      onClick: function onClick(e) {
+        addToFavourite(filterArray);
+      }
+    })));
   });
 
   if (showFilter) {

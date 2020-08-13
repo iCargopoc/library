@@ -1,7 +1,7 @@
 import React__default, { useState, useEffect, useRef } from 'react';
 import { Form, Button, Accordion } from 'react-bootstrap';
 import { Multiselect } from 'multiselect-react-dropdown';
-import { faTimes, faCheck, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faCheck, faStar, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Card from 'react-bootstrap/Card';
 
@@ -640,6 +640,20 @@ const SavedFilters = props => {
   let savedFilters = localStorage.getItem("savedFilters");
   savedFilters = savedFilters ? JSON.parse(savedFilters) : [];
 
+  const addToFavourite = item => {
+    if (item.color === "#bcbdd1") {
+      item.color = "#2680e8";
+    } else {
+      item.color = "#bcbdd1";
+    }
+
+    console.log(savedFilters);
+    savedFilters.map((filterArray, index) => {
+      console.log(filterArray.color);
+    });
+    props.addingToFavourite(item);
+  };
+
   const savedFilter = savedFilters.map((filterArray, index) => {
     return /*#__PURE__*/React__default.createElement("div", {
       key: index
@@ -659,7 +673,16 @@ const SavedFilters = props => {
         props.handleListFilter();
         props.addSavedFilters(filterArray);
       }
-    }, Object.keys(filterArray)[0])));
+    }, Object.keys(filterArray)[0]), /*#__PURE__*/React__default.createElement(FontAwesomeIcon, {
+      style: {
+        color: filterArray.color
+      },
+      icon: faStar,
+      className: "marginLeft",
+      onClick: e => {
+        addToFavourite(filterArray);
+      }
+    })));
   });
 
   if (showFilter) {
