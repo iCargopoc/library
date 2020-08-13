@@ -224,6 +224,7 @@ class ExportData extends React.Component {
                         <div className="export__body">
                             <div>
                                 <input
+                                    data-testid="searchExport"
                                     type="text"
                                     placeholder="Search export"
                                     className="custom__ctrl"
@@ -233,6 +234,7 @@ class ExportData extends React.Component {
                             <div className="export__wrap export__headertxt">
                                 <div className="export__checkbox">
                                     <input
+                                        data-testid="selectColumns"
                                         className="selectColumn"
                                         type="checkbox"
                                         onChange={() =>

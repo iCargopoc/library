@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Spreadsheet from "spreadsheet";
 import CargoData from "./data.json";
-import { faSave } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //import { fetchData } from "./getData";
 
 const App = (props) => {

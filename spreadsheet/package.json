@@ -94,6 +94,7 @@
         "dist"
     ],
     "dependencies": {
+        "idempotent-babel-polyfill": "^7.4.4",
         "lodash": "^4.17.19",
         "prop-types": "^15.7.2"
     }

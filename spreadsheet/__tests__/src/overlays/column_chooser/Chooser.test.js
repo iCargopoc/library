@@ -1,8 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ColumnReordering from "../../../../src/overlays/column_chooser/Chooser";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import ReactTestUtils, { act } from "react-dom/test-utils";
 import { render, screen, fireEvent, getByRole } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
