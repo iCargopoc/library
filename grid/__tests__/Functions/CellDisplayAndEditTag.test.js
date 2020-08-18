@@ -2,8 +2,8 @@
 import React from "react";
 import { render, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { CellDisplayAndEditContext } from "../../../src/Utilities/TagsContext";
-import CellDisplayAndEditTag from "../../../src/Functions/CellDisplayAndEditTag";
+import { CellDisplayAndEditContext } from "../../src/Utilities/TagsContext";
+import CellDisplayAndEditTag from "../../src/Functions/CellDisplayAndEditTag";
 
 describe("CellDisplayAndEditTag unit test", () => {
     const columnsMockData = [

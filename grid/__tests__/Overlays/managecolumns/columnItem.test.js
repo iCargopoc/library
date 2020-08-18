@@ -5,8 +5,8 @@ import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
-import ColumnItem from "../../../../src/Overlays/managecolumns/columnItem";
-import ColumnsList from "../../../../src/Overlays/managecolumns/columnsList";
+import ColumnItem from "../../../src/Overlays/managecolumns/columnItem";
+import ColumnsList from "../../../src/Overlays/managecolumns/columnsList";
 import "@testing-library/jest-dom/extend-expect";
 
 const HTML5toTouch = {

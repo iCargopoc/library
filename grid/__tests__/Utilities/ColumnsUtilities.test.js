@@ -3,7 +3,7 @@ import React from "react";
 import {
     extractColumns,
     extractAdditionalColumn
-} from "../../../src/Utilities/ColumnsUtilities";
+} from "../../src/Utilities/ColumnsUtilities";
 
 const mockFlightDisplayCell = jest.fn((rowData, DisplayTag) => {
     const { flightno, date } = rowData.flight;

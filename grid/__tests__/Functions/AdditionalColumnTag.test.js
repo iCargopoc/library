@@ -2,8 +2,8 @@
 import React from "react";
 import { render, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { AdditionalColumnContext } from "../../../src/Utilities/TagsContext";
-import AdditionalColumnTag from "../../../src/Functions/AdditionalColumnTag";
+import { AdditionalColumnContext } from "../../src/Utilities/TagsContext";
+import AdditionalColumnTag from "../../src/Functions/AdditionalColumnTag";
 
 describe("AdditionalColumnTag unit test", () => {
     const additionalColumnMockData = {

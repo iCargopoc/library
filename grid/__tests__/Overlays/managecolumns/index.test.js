@@ -6,7 +6,7 @@ import "@testing-library/jest-dom/extend-expect";
 import { act } from "react-dom/test-utils";
 /* eslint-disable no-unused-vars */
 import regeneratorRuntime from "regenerator-runtime";
-import ColumnReordering from "../../../../src/Overlays/managecolumns/index";
+import ColumnReordering from "../../../src/Overlays/managecolumns/index";
 
 describe("ColumnReordering unit test", () => {
     const mockUpdateColumnStructure = jest.fn();

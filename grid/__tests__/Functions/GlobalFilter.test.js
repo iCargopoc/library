@@ -4,7 +4,7 @@ import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 /* eslint-disable no-unused-vars */
 import regeneratorRuntime from "regenerator-runtime";
-import GlobalFilter from "../../../src/Functions/GlobalFilter";
+import GlobalFilter from "../../src/Functions/GlobalFilter";
 
 describe("render global search", () => {
     const mockSetGlobalFilter = jest.fn();

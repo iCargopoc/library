@@ -6,7 +6,7 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import "@testing-library/jest-dom/extend-expect";
 import { render, screen } from "@testing-library/react";
-import SortingList from "../../../../src/Overlays/groupsort/sortingList";
+import SortingList from "../../../src/Overlays/groupsort/sortingList";
 
 const HTML5toTouch = {
     backends: [

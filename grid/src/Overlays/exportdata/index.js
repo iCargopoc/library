@@ -3,7 +3,6 @@ import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
 import JsPdf from "jspdf";
 import "jspdf-autotable";
-import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import { ReactComponent as IconCsv } from "../../Images/icon-csv.svg";
 import { ReactComponent as IconExcel } from "../../Images/icon-excel.svg";
@@ -78,7 +77,7 @@ const ExportData = memo((props) => {
         isDownload = false;
     };
 
-    const downloadCSVFile = (filteredRowValue) => {
+    const downloadCSVFile = async (filteredRowValue) => {
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".csv";
@@ -87,10 +86,16 @@ const ExportData = memo((props) => {
         const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
         const excelBuffer = XLSX.write(wb, { bookType: "csv", type: "array" });
         const data = new Blob([excelBuffer], { type: fileType });
-        FileSaver.saveAs(data, fileName + fileExtension);
+        const href = await URL.createObjectURL(data);
+        const link = document.createElement("a");
+        link.href = href;
+        link.download = fileName + fileExtension;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
-    const downloadXLSFile = (filteredRowValue) => {
+    const downloadXLSFile = async (filteredRowValue) => {
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".xlsx";
@@ -99,7 +104,13 @@ const ExportData = memo((props) => {
         const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
         const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
         const data = new Blob([excelBuffer], { type: fileType });
-        FileSaver.saveAs(data, fileName + fileExtension);
+        const href = await URL.createObjectURL(data);
+        const link = document.createElement("a");
+        link.href = href;
+        link.download = fileName + fileExtension;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     const exportRowData = () => {

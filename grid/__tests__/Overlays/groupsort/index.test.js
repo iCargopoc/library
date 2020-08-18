@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import { render, cleanup } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
-import GroupSort from "../../../../src/Overlays/groupsort/index";
+import GroupSort from "../../../src/Overlays/groupsort/index";
 
 describe("Group Sort-index test Cases", () => {
     const isGroupSortLayOverOpen = true;

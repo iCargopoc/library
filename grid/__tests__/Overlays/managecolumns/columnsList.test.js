@@ -6,7 +6,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
-import ColumnsList from "../../../../src/Overlays/managecolumns/columnsList";
+import ColumnsList from "../../../src/Overlays/managecolumns/columnsList";
 
 describe("ColumnsList unit test", () => {
     const HTML5toTouch = {

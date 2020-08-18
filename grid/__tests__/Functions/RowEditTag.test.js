@@ -2,8 +2,8 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import RowEditTag from "../../../src/Functions/RowEditTag";
-import { RowEditContext } from "../../../src/Utilities/TagsContext";
+import RowEditTag from "../../src/Functions/RowEditTag";
+import { RowEditContext } from "../../src/Utilities/TagsContext";
 
 const columnsdata = [
     {

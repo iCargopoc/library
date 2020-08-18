@@ -1,8 +1,10 @@
 /* eslint-disable no-undef */
 import React from "react";
-import { render, cleanup, fireEvent } from "@testing-library/react";
+import { render, waitFor, cleanup, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import ExportData from "../../../../src/Overlays/exportdata/index";
+/* eslint-disable no-unused-vars */
+import regeneratorRuntime from "regenerator-runtime";
+import ExportData from "../../../src/Overlays/exportdata/index";
 
 describe("Export Data unit test", () => {
     HTMLCanvasElement.prototype.getContext = () => {
@@ -390,7 +392,7 @@ describe("Export Data unit test", () => {
         fireEvent.click(selectSingleCheck);
         expect(selectSingleCheck.checked).toEqual(true);
     });
-    it("should check all file types and export data", () => {
+    it("should check all file types and export data", async () => {
         const { getByTestId } = render(
             <ExportData
                 isExportOverlayOpen
@@ -404,6 +406,7 @@ describe("Export Data unit test", () => {
             />,
             container
         );
+        const gricContainer = await waitFor(() => container);
         const selectAllCheck = getByTestId("select-all-checkbox");
         expect(selectAllCheck.checked).toEqual(true);
         const selectPdf = getByTestId("chk_pdf_test");

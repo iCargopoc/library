@@ -2,7 +2,6 @@
 import React from "react";
 import JsPdf from "jspdf";
 import "jspdf-autotable";
-import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import PropTypes from "prop-types";
 import ClickAwayListener from "react-click-away-listener";
@@ -148,7 +147,7 @@ class ExportData extends React.Component {
         doc.save("iCargo Neo Report.pdf");
     };
 
-    downloadCSVFile = (filteredRowValue) => {
+    downloadCSVFile = async (filteredRowValue) => {
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".csv";
@@ -157,10 +156,16 @@ class ExportData extends React.Component {
         const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
         const excelBuffer = XLSX.write(wb, { bookType: "csv", type: "array" });
         const data = new Blob([excelBuffer], { type: fileType });
-        FileSaver.saveAs(data, fileName + fileExtension);
+        const href = await URL.createObjectURL(data);
+        const link = document.createElement("a");
+        link.href = href;
+        link.download = fileName + fileExtension;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
-    downloadXLSFile = (filteredRowValue) => {
+    downloadXLSFile = async (filteredRowValue) => {
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".xlsx";
@@ -169,7 +174,13 @@ class ExportData extends React.Component {
         const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
         const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
         const data = new Blob([excelBuffer], { type: fileType });
-        FileSaver.saveAs(data, fileName + fileExtension);
+        const href = await URL.createObjectURL(data);
+        const link = document.createElement("a");
+        link.href = href;
+        link.download = fileName + fileExtension;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     exportValidation = () => {

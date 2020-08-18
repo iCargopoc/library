@@ -2,7 +2,7 @@
 import { render, fireEvent } from "@testing-library/react";
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import RowDeleteOverLay from "../../../src/Functions/RowDeleteOverLay";
+import RowDeleteOverLay from "../../src/Functions/RowDeleteOverLay";
 
 describe("render delete", () => {
     it("should render delete and Cancel buttons", () => {

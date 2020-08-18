@@ -3,7 +3,7 @@ import React from "react";
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { act } from "react-dom/test-utils";
-import RowSelector from "../../../src/Functions/RowSelector";
+import RowSelector from "../../src/Functions/RowSelector";
 
 const rowData = {
     indeterminate: true,
