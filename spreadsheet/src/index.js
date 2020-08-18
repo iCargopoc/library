@@ -20,7 +20,7 @@ import { ReactComponent as IconGroupSort } from "./images/icon-group-sort.svg";
 import { ReactComponent as IconSearch } from "./images/icon-search.svg";
 
 // eslint-disable-next-line import/no-unresolved
-//import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
+import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 
 const { DropDownEditor } = Editors;
 const selectors = Data.Selectors;

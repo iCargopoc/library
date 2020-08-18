@@ -766,6 +766,26 @@ test("Spreadsheet - getSingleSortResult", () => {
             });
     });
 });
+test("Spreadsheet - getSingleSortResult 1", () => {
+    act(() => {
+        const component = ReactTestUtils.renderIntoDocument(
+            <Spreadsheet {...props} columns={[...columns]} />
+        );
+        component.handleTableSortSwap([1, 0]);
+        component
+            .setStateAsync({
+                dataSet: [...data.slice(0, pageSize)],
+                sortDirection: "test",
+                sortColumn: "FlightNo"
+            })
+            .then(() => {
+                const d = component.getSingleSortResult([
+                    ...data.slice(0, pageSize)
+                ]);
+                expect(d).not.toBeNull();
+            });
+    });
+});
 
 test("Spreadsheet - getSingleSortResult 2", () => {
     act(() => {
@@ -913,6 +933,26 @@ test("Spreadsheet - onRowsDeselected", () => {
 
         const d = component.onRowsDeselected([...data.slice(0, pageSize)]);
         expect(d).not.toBeNull();
+    });
+});
+
+test("Spreadsheet - onRowsDeselected 1", () => {
+    act(() => {
+        const component = ReactTestUtils.renderIntoDocument(
+            <Spreadsheet {...props} columns={[...columns]} />
+        );
+        let arr = [];
+        for (let i = 0; i < 5; i++) {
+            arr.push({ rowIdx: i });
+        }
+        component
+            .setStateAsync({
+                selectedIndexes: [0, 1, 2, 3, 4]
+            })
+            .then(() => {
+                const d = component.onRowsDeselected(arr);
+                expect(d).not.toBeNull();
+            });
     });
 });
 
@@ -1189,6 +1229,32 @@ test("Spreadsheet - closeWarningStatus", () => {
     });
 });
 
+test("Spreadsheet - closeWarningStatus 2", () => {
+    act(() => {
+        const component = ReactTestUtils.renderIntoDocument(
+            <Spreadsheet {...props} columns={[...columns]} />
+        );
+        component
+            .setStateAsync({
+                dataSet: [...data.slice(0, 3)],
+                sortDirection: "DESC",
+                sortColumn: "FlightNo",
+                pageIndex: 1,
+                pageRowCount: 1,
+                sortingParamsObjectList: [
+                    {
+                        order: "Ascending",
+                        sortBy: "FlightNo",
+                        sortOn: "Value"
+                    }
+                ]
+            })
+            .then(() => {
+                const r = component.closeWarningStatus();
+                expect(r).not.toBeNull();
+            });
+    });
+});
 test("Spreadsheet - save", () => {
     act(() => {
         const component = ReactTestUtils.renderIntoDocument(
@@ -1393,6 +1459,62 @@ test("Spreadsheet - handleFilterChange 6 ", () => {
             })
             .then(() => {
                 const d = component.handleFilterChange(filterVal);
+                expect(d).not.toBeNull();
+            });
+    });
+});
+test("Spreadsheet - setTableAsPerSortingParams 2", () => {
+    act(() => {
+        const component = ReactTestUtils.renderIntoDocument(
+            <Spreadsheet {...props} columns={[...columns]} />
+        );
+        component.handleTableSortSwap([1, 0]);
+        component
+            .setStateAsync({
+                dataSet: [...data.slice(0, pageSize)],
+                searchValue: "",
+                sortDirection: "ASC",
+                sortColumn: "",
+                sortingOrderSwapList: []
+            })
+            .then(() => {
+                const d = component.setTableAsPerSortingParams([
+                    {},
+                    {
+                        order: "Ascending",
+                        sortBy: "bodyType",
+                        sortOn: "Value"
+                    }
+                ]);
+                expect(d).not.toBeNull();
+            });
+    });
+});
+test("Spreadsheet - getSlicedRows 3", () => {
+    act(() => {
+        const component = ReactTestUtils.renderIntoDocument(
+            <Spreadsheet {...props} columns={[...columns]} />
+        );
+        const filters = JSON.parse(
+            '{"segmentto":{"filterTerm":[{"value":"CCC","label":"CCC"}],"column":{"rowType":"filter","key":"segmentto","name":"Segment To","draggable":false,"editor":{"key":null,"ref":null,"props":{"options":[{"id":"AAA","value":"AAA"},{"id":"AAB","value":"AAB"},{"id":"AAC","value":"AAC"},{"id":"ABA","value":"ABA"},{"id":"ABB","value":"ABB"},{"id":"ABC","value":"ABC"},{"id":"ACA","value":"ACA"},{"id":"ACB","value":"ACB"},{"id":"ACC","value":"ACC"},{"id":"BAA","value":"BAA"},{"id":"BAB","value":"BAB"},{"id":"BAC","value":"BAC"},{"id":"BBA","value":"BBA"},{"id":"BBB","value":"BBB"},{"id":"BBC","value":"BBC"},{"id":"BCA","value":"BCA"},{"id":"BCB","value":"BCB"},{"id":"BCC","value":"BCC"},{"id":"CAA","value":"CAA"},{"id":"CAB","value":"CAB"},{"id":"CAC","value":"CAC"},{"id":"CBA","value":"CBA"},{"id":"CBB","value":"CBB"},{"id":"CBC","value":"CBC"},{"id":"CCA","value":"CCA"},{"id":"CCB","value":"CCB"},{"id":"CCC","value":"CCC"},{"id":"XXX","value":"XXX"},{"id":"XXY","value":"XXY"},{"id":"XXZ","value":"XXZ"},{"id":"XYX","value":"XYX"},{"id":"XYY","value":"XYY"},{"id":"XYZ","value":"XYZ"},{"id":"XZX","value":"XZX"},{"id":"XZY","value":"XZY"},{"id":"XZZ","value":"XZZ"},{"id":"YXX","value":"YXX"},{"id":"YXY","value":"YXY"},{"id":"YXZ","value":"YXZ"},{"id":"YYX","value":"YYX"},{"id":"YYY","value":"YYY"},{"id":"YYZ","value":"YYZ"},{"id":"YZX","value":"YZX"},{"id":"YZY","value":"YZY"},{"id":"YZZ","value":"YZZ"},{"id":"ZXX","value":"ZXX"},{"id":"ZXY","value":"ZXY"},{"id":"ZXZ","value":"ZXZ"},{"id":"ZYX","value":"ZYX"},{"id":"ZYY","value":"ZYY"},{"id":"ZYZ","value":"ZYZ"},{"id":"ZZX","value":"ZZX"},{"id":"ZZY","value":"ZZY"},{"id":"ZZZ","value":"ZZZ"}]},"_owner":null,"_store":{}},"formulaApplicable":false,"sortable":true,"resizable":true,"filterable":true,"width":150,"filterType":"autoCompleteFilter","dataSource":[{"id":"AAA","value":"AAA"},{"id":"AAB","value":"AAB"},{"id":"AAC","value":"AAC"},{"id":"ABA","value":"ABA"},{"id":"ABB","value":"ABB"},{"id":"ABC","value":"ABC"},{"id":"ACA","value":"ACA"},{"id":"ACB","value":"ACB"},{"id":"ACC","value":"ACC"},{"id":"BAA","value":"BAA"},{"id":"BAB","value":"BAB"},{"id":"BAC","value":"BAC"},{"id":"BBA","value":"BBA"},{"id":"BBB","value":"BBB"},{"id":"BBC","value":"BBC"},{"id":"BCA","value":"BCA"},{"id":"BCB","value":"BCB"},{"id":"BCC","value":"BCC"},{"id":"CAA","value":"CAA"},{"id":"CAB","value":"CAB"},{"id":"CAC","value":"CAC"},{"id":"CBA","value":"CBA"},{"id":"CBB","value":"CBB"},{"id":"CBC","value":"CBC"},{"id":"CCA","value":"CCA"},{"id":"CCB","value":"CCB"},{"id":"CCC","value":"CCC"},{"id":"XXX","value":"XXX"},{"id":"XXY","value":"XXY"},{"id":"XXZ","value":"XXZ"},{"id":"XYX","value":"XYX"},{"id":"XYY","value":"XYY"},{"id":"XYZ","value":"XYZ"},{"id":"XZX","value":"XZX"},{"id":"XZY","value":"XZY"},{"id":"XZZ","value":"XZZ"},{"id":"YXX","value":"YXX"},{"id":"YXY","value":"YXY"},{"id":"YXZ","value":"YXZ"},{"id":"YYX","value":"YYX"},{"id":"YYY","value":"YYY"},{"id":"YYZ","value":"YYZ"},{"id":"YZX","value":"YZX"},{"id":"YZY","value":"YZY"},{"id":"YZZ","value":"YZZ"},{"id":"ZXX","value":"ZXX"},{"id":"ZXY","value":"ZXY"},{"id":"ZXZ","value":"ZXZ"},{"id":"ZYX","value":"ZYX"},{"id":"ZYY","value":"ZYY"},{"id":"ZYZ","value":"ZYZ"},{"id":"ZZX","value":"ZZX"},{"id":"ZZY","value":"ZZY"},{"id":"ZZZ","value":"ZZZ"}],"dataSourceType":"segmentto","left":810,"idx":6},"rawValue":[{"value":"ZYY","label":"ZYY"}]}}'
+        );
+        console.log("getSlicedRows 3");
+        component
+            .setStateAsync({
+                subDataSet: [...data.slice(0, 1)],
+                dataSet: [...data.slice(0, 1)],
+                searchValue: "testttststt",
+                pageIndex: 1,
+                pageRowCount: 1,
+                sortingParamsObjectList: [],
+                junk: []
+            })
+            .then(() => {
+                const d = component.getSlicedRows(
+                    filters,
+                    [...data.slice(0, 1)],
+                    []
+                );
                 expect(d).not.toBeNull();
             });
     });

@@ -7,7 +7,7 @@ import ReactTestUtils, { act } from "react-dom/test-utils";
 import { render, fireEvent, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import ExportData from "../../../src/overlays/export_data/ExportData";
-
+import "idempotent-babel-polyfill";
 let container;
 
 beforeEach(() => {
