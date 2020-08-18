@@ -3,7 +3,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ReactTestUtils, { act } from "react-dom/test-utils";
-import DatePicker from "../../../src/functions/DatePicker";
+import DatePicker from "../../src/functions/DatePicker";
 
 let container;
 

@@ -3,7 +3,7 @@
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
-import ErrorMessage from "../../../src/common/ErrorMessage";
+import ErrorMessage from "../../src/common/ErrorMessage";
 import "@testing-library/jest-dom/extend-expect";
 
 let container = null;

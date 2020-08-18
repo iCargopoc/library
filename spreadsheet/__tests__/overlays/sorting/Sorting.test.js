@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import ReactTestUtils, { act } from "react-dom/test-utils";
 import { render, fireEvent } from "@testing-library/react";
-import Sorting from "../../../../src/overlays/sorting/Sorting";
+import Sorting from "../../../src/overlays/sorting/Sorting";
 import "@testing-library/jest-dom/extend-expect";
 
 let container;

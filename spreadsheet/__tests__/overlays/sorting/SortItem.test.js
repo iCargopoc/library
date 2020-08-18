@@ -5,7 +5,7 @@ import { act } from "react-dom/test-utils";
 import { render } from "@testing-library/react";
 import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
-import SortItem from "../../../../src/overlays/sorting/SortItem";
+import SortItem from "../../../src/overlays/sorting/SortItem";
 import "@testing-library/jest-dom/extend-expect";
 
 let container;

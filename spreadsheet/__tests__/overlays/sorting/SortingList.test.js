@@ -6,7 +6,7 @@ import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
-import SortingList from "../../../../src/overlays/sorting/SortingList";
+import SortingList from "../../../src/overlays/sorting/SortingList";
 import "@testing-library/jest-dom/extend-expect";
 
 let container;

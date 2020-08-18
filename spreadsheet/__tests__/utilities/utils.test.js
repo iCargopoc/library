@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-import { applyFormula } from "../../../src/utilities/utils";
+import { applyFormula } from "../../src/utilities/utils";
 import "@testing-library/jest-dom/extend-expect";
 
 test("Utils - applyFormula - addition test", () => {

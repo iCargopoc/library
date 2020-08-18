@@ -487,34 +487,34 @@ const App = (props) => {
     //Gets called when there is a cell edit
     const updateCellData = (fromRow, toRow, value, updateType) => {
         if (updateType === "CELL_UPDATE") {
-            console.log(
-                "Starting row:",
-                fromRow,
-                "updated-Value:",
-                value,
-                "Updation-Type:",
-                updateType,
-                "Ending Row:",
-                toRow
-            );
+            // console.log(
+            //     "Starting row:",
+            //     fromRow,
+            //     "updated-Value:",
+            //     value,
+            //     "Updation-Type:",
+            //     updateType,
+            //     "Ending Row:",
+            //     toRow
+            // );
         }
         if (updateType === "CELL_DRAG") {
-            console.log(
-                "fromRow:",
-                fromRow,
-                "toRow:",
-                toRow,
-                "updated-Value:",
-                value,
-                "Updation-Type:",
-                updateType
-            );
+            // console.log(
+            //     "fromRow:",
+            //     fromRow,
+            //     "toRow:",
+            //     toRow,
+            //     "updated-Value:",
+            //     value,
+            //     "Updation-Type:",
+            //     updateType
+            // );
         }
     };
 
     //Gets called when row bulk edit is done
     const selectBulkData = (selectedRows) => {
-        console.log("selectedRows:", selectedRows);
+        //console.log("selectedRows:", selectedRows);
     };
 
     //binding the required values of dropDown to the dataSource field in columns
@@ -556,14 +556,14 @@ const App = (props) => {
             };
         }
         setData(temp);
-        console.log("UpdatedRows:", temp);
+        //console.log("UpdatedRows:", temp);
     };
 
     /**
      * Method return updated rows
      */
     const handleSave = () => {
-        console.log(data);
+        //console.log(data);
     };
 
     if (data) {

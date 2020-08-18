@@ -3,7 +3,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ReactTestUtils, { act } from "react-dom/test-utils";
-import ExtDataGrid from "../../../src/common/extDataGrid";
+import ExtDataGrid from "../../src/common/extDataGrid";
 import "@testing-library/jest-dom/extend-expect";
 
 let container;

@@ -20,7 +20,7 @@ import { ReactComponent as IconGroupSort } from "./images/icon-group-sort.svg";
 import { ReactComponent as IconSearch } from "./images/icon-search.svg";
 
 // eslint-disable-next-line import/no-unresolved
-import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
+//import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 
 const { DropDownEditor } = Editors;
 const selectors = Data.Selectors;
@@ -808,6 +808,17 @@ class Spreadsheet extends Component {
      * @param {*} action is type of edit action performed
      */
     onGridRowsUpdated = ({ fromRow, toRow, updated, action }) => {
+        let updatedRow = "";
+        let updatedValue = "";
+        console.log({ fromRow, toRow, updated, action });
+        console.log("change", updated);
+        for (let update in updated) {
+            updatedRow = update;
+            updatedValue = updated[update];
+        }
+        if (updatedValue.match(/=sum\((\d+(?:,\s*\d+)*)\)/g)) {
+            console.log(updatedRow);
+        }
         let columnName = "";
         const filter = this.formulaAppliedCols.filter((item) => {
             if (updated[item.key] !== null && updated[item.key] !== undefined) {
@@ -940,7 +951,6 @@ class Spreadsheet extends Component {
                     rowsRemaining
                 );
             }
-
             const rw = rowsRemaining.slice(
                 0,
                 this.state.pageIndex * this.state.pageRowCount
@@ -1199,7 +1209,9 @@ class Spreadsheet extends Component {
                     columns={this.state.columns}
                     rowGetter={(i) => this.state.rows[i]}
                     rowsCount={this.state.rows.length}
-                    onGridRowsUpdated={this.onGridRowsUpdated}
+                    onGridRowsUpdated={(e) => {
+                        this.onGridRowsUpdated(e);
+                    }}
                     enableCellSelect
                     onClearFilters={() => {
                         this.setState({ junk: {} });
@@ -1271,7 +1283,6 @@ let sortBy;
         let field;
         let name;
         let cmp;
-
         // preprocess sorting options
         for (let i = 0; i < nFields; i++) {
             // eslint-disable-next-line prefer-rest-params
