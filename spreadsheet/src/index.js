@@ -1301,9 +1301,8 @@ let sortBy;
         }
 
         return function (A, B) {
-            let result;
+            let result = 0;
             for (let i = 0, l = nFields; i < l; i++) {
-                result = 0;
                 field = fields[i];
                 name = field.name;
                 cmp = field.cmp;

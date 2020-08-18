@@ -14,7 +14,6 @@ var ClickAwayListener = _interopDefault(require('react-click-away-listener'));
 var update = _interopDefault(require('immutability-helper'));
 var JsPdf = _interopDefault(require('jspdf'));
 require('jspdf-autotable');
-var FileSaver = require('file-saver');
 var XLSX = require('xlsx');
 require('!style-loader!css-loader!sass-loader!./Styles/main.scss');
 
@@ -1534,45 +1533,67 @@ var ExportData = /*#__PURE__*/function (_React$Component) {
     };
 
     _this.downloadCSVFile = function (filteredRowValue) {
-      var fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-      var fileExtension = ".csv";
-      var fileName = "iCargo Neo Report";
-      var ws = XLSX.utils.json_to_sheet(filteredRowValue);
-      var wb = {
-        Sheets: {
-          data: ws
-        },
-        SheetNames: ["data"]
-      };
-      var excelBuffer = XLSX.write(wb, {
-        bookType: "csv",
-        type: "array"
-      });
-      var data = new Blob([excelBuffer], {
-        type: fileType
-      });
-      FileSaver.saveAs(data, fileName + fileExtension);
+      try {
+        var fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        var fileExtension = ".csv";
+        var fileName = "iCargo Neo Report";
+        var ws = XLSX.utils.json_to_sheet(filteredRowValue);
+        var wb = {
+          Sheets: {
+            data: ws
+          },
+          SheetNames: ["data"]
+        };
+        var excelBuffer = XLSX.write(wb, {
+          bookType: "csv",
+          type: "array"
+        });
+        var data = new Blob([excelBuffer], {
+          type: fileType
+        });
+        return Promise.resolve(URL.createObjectURL(data)).then(function (href) {
+          var link = document.createElement("a");
+          link.href = href;
+          link.download = fileName + fileExtension;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+      } catch (e) {
+        return Promise.reject(e);
+      }
     };
 
     _this.downloadXLSFile = function (filteredRowValue) {
-      var fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-      var fileExtension = ".xlsx";
-      var fileName = "iCargo Neo Report";
-      var ws = XLSX.utils.json_to_sheet(filteredRowValue);
-      var wb = {
-        Sheets: {
-          data: ws
-        },
-        SheetNames: ["data"]
-      };
-      var excelBuffer = XLSX.write(wb, {
-        bookType: "xlsx",
-        type: "array"
-      });
-      var data = new Blob([excelBuffer], {
-        type: fileType
-      });
-      FileSaver.saveAs(data, fileName + fileExtension);
+      try {
+        var fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        var fileExtension = ".xlsx";
+        var fileName = "iCargo Neo Report";
+        var ws = XLSX.utils.json_to_sheet(filteredRowValue);
+        var wb = {
+          Sheets: {
+            data: ws
+          },
+          SheetNames: ["data"]
+        };
+        var excelBuffer = XLSX.write(wb, {
+          bookType: "xlsx",
+          type: "array"
+        });
+        var data = new Blob([excelBuffer], {
+          type: fileType
+        });
+        return Promise.resolve(URL.createObjectURL(data)).then(function (href) {
+          var link = document.createElement("a");
+          link.href = href;
+          link.download = fileName + fileExtension;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+      } catch (e) {
+        return Promise.reject(e);
+      }
     };
 
     _this.exportValidation = function () {
@@ -3048,10 +3069,9 @@ var sortBy;
     }
 
     return function (A, B) {
-      var result;
+      var result = 0;
 
       for (var _i = 0, l = nFields; _i < l; _i++) {
-        result = 0;
         field = fields[_i];
         name = field.name;
         cmp = field.cmp;

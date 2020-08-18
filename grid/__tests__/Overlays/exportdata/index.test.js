@@ -7,6 +7,7 @@ import regeneratorRuntime from "regenerator-runtime";
 import ExportData from "../../../src/Overlays/exportdata/index";
 
 describe("Export Data unit test", () => {
+    jest.setTimeout(30000);
     HTMLCanvasElement.prototype.getContext = () => {
         // return whatever getContext has to return
         return [];

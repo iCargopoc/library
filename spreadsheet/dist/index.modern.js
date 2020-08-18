@@ -10,7 +10,6 @@ import ClickAwayListener from 'react-click-away-listener';
 import update from 'immutability-helper';
 import JsPdf from 'jspdf';
 import 'jspdf-autotable';
-import { saveAs } from 'file-saver';
 import { utils, write } from 'xlsx';
 import '!style-loader!css-loader!sass-loader!./Styles/main.scss';
 
@@ -1355,7 +1354,7 @@ class ExportData extends React__default.Component {
       doc.save("iCargo Neo Report.pdf");
     };
 
-    this.downloadCSVFile = filteredRowValue => {
+    this.downloadCSVFile = async function (filteredRowValue) {
       const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
       const fileExtension = ".csv";
       const fileName = "iCargo Neo Report";
@@ -1373,10 +1372,16 @@ class ExportData extends React__default.Component {
       const data = new Blob([excelBuffer], {
         type: fileType
       });
-      saveAs(data, fileName + fileExtension);
+      const href = await URL.createObjectURL(data);
+      const link = document.createElement("a");
+      link.href = href;
+      link.download = fileName + fileExtension;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     };
 
-    this.downloadXLSFile = filteredRowValue => {
+    this.downloadXLSFile = async function (filteredRowValue) {
       const fileType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
       const fileExtension = ".xlsx";
       const fileName = "iCargo Neo Report";
@@ -1394,7 +1399,13 @@ class ExportData extends React__default.Component {
       const data = new Blob([excelBuffer], {
         type: fileType
       });
-      saveAs(data, fileName + fileExtension);
+      const href = await URL.createObjectURL(data);
+      const link = document.createElement("a");
+      link.href = href;
+      link.download = fileName + fileExtension;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     };
 
     this.exportValidation = () => {
@@ -2756,10 +2767,9 @@ let sortBy;
     }
 
     return function (A, B) {
-      let result;
+      let result = 0;
 
       for (let i = 0, l = nFields; i < l; i++) {
-        result = 0;
         field = fields[i];
         name = field.name;
         cmp = field.cmp;
