@@ -18,6 +18,7 @@ import { ReactComponent as IconColumns } from "./images/icon-columns.svg";
 import { ReactComponent as IconShare } from "./images/icon-share.svg";
 import { ReactComponent as IconGroupSort } from "./images/icon-group-sort.svg";
 import { ReactComponent as IconSearch } from "./images/icon-search.svg";
+import FormulaProcessor from "./functions/FormulaProcessor";
 
 // eslint-disable-next-line import/no-unresolved
 import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
@@ -55,6 +56,11 @@ class Spreadsheet extends Component {
             count: this.props.rows.length,
             sortingOrderSwapList: [],
             sortingParamsObjectList: [],
+            prevRow: null,
+            prevAction: null,
+            columnOneKey: null,
+            columnTwoKey: null,
+
             // eslint-disable-next-line react/no-unused-state
             pinnedReorder: false,
             columns: this.props.columns.map((item) => {
@@ -808,73 +814,161 @@ class Spreadsheet extends Component {
      * @param {*} action is type of edit action performed
      */
     onGridRowsUpdated = ({ fromRow, toRow, updated, action }) => {
-        let updatedRow = "";
+        let updatedArray = [];
         let updatedValue = "";
         console.log({ fromRow, toRow, updated, action });
         console.log("change", updated);
         for (let update in updated) {
-            updatedRow = update;
             updatedValue = updated[update];
         }
-        if (updatedValue.match(/=sum\((\d+(?:,\s*\d+)*)\)/g)) {
-            console.log(updatedRow);
-        }
-        let columnName = "";
-        const filter = this.formulaAppliedCols.filter((item) => {
-            if (updated[item.key] !== null && updated[item.key] !== undefined) {
-                columnName = item.key;
-                return true;
+        if (action === "CELL_UPDATE") {
+            const arr = FormulaProcessor(updatedValue);
+            let col1, col2;
+            let col1Key, col2Key;
+            if (arr.length > 0) {
+                col1 = arr[0];
+                col2 = arr[1];
+                this.state.columns.forEach((item, index) => {
+                    if (index === col1 - 1) {
+                        col1Key = item.key;
+                    } else if (index === col2 - 1) {
+                        col2Key = item.key;
+                    }
+                });
+                updated[Object.keys(updated)] =
+                    Number(this.state.rows[fromRow][col1Key]) +
+                    Number(this.state.rows[fromRow][col2Key]);
+                this.setState({
+                    prevRow: fromRow,
+                    prevAction: action,
+                    columnOneKey: col1Key,
+                    columnTwoKey: col2Key
+                });
             }
-            return false;
-        });
-
-        if (filter.length > 0) {
-            // eslint-disable-next-line no-param-reassign
-            updated = applyFormula(updated, columnName);
         }
+        if (action === "CELL_DRAG") {
+            if (this.state.prevAction === "CELL_UPDATE") {
+                for (let i = fromRow; i <= toRow; i++) {
+                    console.log(
+                        this.state.columnOneKey,
+                        this.state.columnTwoKey
+                    );
+                    updatedArray.push(
+                        Number(this.state.rows[i][this.state.columnOneKey]) +
+                            Number(this.state.rows[i][this.state.columnTwoKey])
+                    );
+                    this.setState({ prevRow: fromRow, prevAction: action });
+                }
+                let columnName = "";
+                const filter = this.formulaAppliedCols.filter((item) => {
+                    if (
+                        updated[item.key] !== null &&
+                        updated[item.key] !== undefined
+                    ) {
+                        columnName = item.key;
+                        return true;
+                    }
+                    return false;
+                });
 
+                if (filter.length > 0) {
+                    // eslint-disable-next-line no-param-reassign
+
+                    updated = applyFormula(updated, columnName);
+                }
+            }
+        }
         if (action !== "COPY_PASTE") {
-            this.props.updatedRows({ fromRow, toRow, updated, action });
-            this.setState((state) => {
-                const rows = state.rows.slice();
-                for (let i = fromRow; i <= toRow; i++) {
-                    rows[i] = {
-                        ...rows[i],
-                        ...updated
-                    };
+            if (
+                action === "CELL_DRAG" &&
+                this.state.prevAction === "CELL_UPDATE"
+            ) {
+                for (let j = 0; j < updatedArray.length; j++) {
+                    this.setState((state) => {
+                        const rows = state.rows.slice();
+                        for (let i = fromRow; i <= toRow; i++) {
+                            rows[i][Object.keys(updated)] =
+                                Number(rows[i][this.state.columnOneKey]) +
+                                Number(rows[i][this.state.columnTwoKey]);
+                        }
+
+                        return {
+                            rows
+                        };
+                    });
+
+                    this.setState((state) => {
+                        const filteringRows = state.filteringRows.slice();
+                        for (let i = fromRow; i <= toRow; i++) {
+                            filteringRows[i][Object.keys(updated)] =
+                                Number(
+                                    filteringRows[i][this.state.columnOneKey]
+                                ) +
+                                Number(
+                                    filteringRows[i][this.state.columnTwoKey]
+                                );
+                        }
+
+                        return {
+                            filteringRows
+                        };
+                    });
+                    this.setState((state) => {
+                        const tempRows = state.tempRows.slice();
+                        for (let i = fromRow; i <= toRow; i++) {
+                            tempRows[i][Object.keys(updated)] =
+                                Number(tempRows[i][this.state.columnOneKey]) +
+                                Number(tempRows[i][this.state.columnTwoKey]);
+                        }
+
+                        return {
+                            tempRows
+                        };
+                    });
                 }
+            } else {
+                this.props.updatedRows({ fromRow, toRow, updated, action });
+                this.setState((state) => {
+                    const rows = state.rows.slice();
+                    for (let i = fromRow; i <= toRow; i++) {
+                        rows[i] = {
+                            ...rows[i],
+                            ...updated
+                        };
+                    }
 
-                return {
-                    rows
-                };
-            });
-
-            this.setState((state) => {
-                const filteringRows = state.filteringRows.slice();
-                for (let i = fromRow; i <= toRow; i++) {
-                    filteringRows[i] = {
-                        ...filteringRows[i],
-                        ...updated
+                    return {
+                        rows
                     };
-                }
+                });
 
-                return {
-                    filteringRows
-                };
-            });
-            this.setState((state) => {
-                const tempRows = state.tempRows.slice();
-                for (let i = fromRow; i <= toRow; i++) {
-                    tempRows[i] = {
-                        ...tempRows[i],
-                        ...updated
+                this.setState((state) => {
+                    const filteringRows = state.filteringRows.slice();
+                    for (let i = fromRow; i <= toRow; i++) {
+                        filteringRows[i] = {
+                            ...filteringRows[i],
+                            ...updated
+                        };
+                    }
+
+                    return {
+                        filteringRows
                     };
-                }
+                });
+                this.setState((state) => {
+                    const tempRows = state.tempRows.slice();
+                    for (let i = fromRow; i <= toRow; i++) {
+                        tempRows[i] = {
+                            ...tempRows[i],
+                            ...updated
+                        };
+                    }
 
-                return {
-                    tempRows
-                };
-            });
+                    return {
+                        tempRows
+                    };
+                });
+            }
         }
         if (this.props.updateCellData) {
             this.props.updateCellData(
