@@ -6,7 +6,7 @@
 
 import React, { Component } from "react";
 import { Toolbar, Data, Filters, Editors } from "react-data-grid-addons";
-import PropTypes from "prop-types";
+import PropTypes, { number } from "prop-types";
 import ExtDataGrid from "./common/extDataGrid";
 import { applyFormula } from "./utilities/utils";
 import DatePicker from "./functions/DatePicker";
@@ -58,8 +58,7 @@ class Spreadsheet extends Component {
             sortingParamsObjectList: [],
             prevRow: null,
             prevAction: null,
-            columnOneKey: null,
-            columnTwoKey: null,
+            columnKeyArray: [],
 
             // eslint-disable-next-line react/no-unused-state
             pinnedReorder: false,
@@ -823,40 +822,33 @@ class Spreadsheet extends Component {
         }
         if (action === "CELL_UPDATE") {
             const arr = FormulaProcessor(updatedValue);
-            let col1, col2;
-            let col1Key, col2Key;
+            let colKeyArray = [];
             if (arr.length > 0) {
-                col1 = arr[0];
-                col2 = arr[1];
-                this.state.columns.forEach((item, index) => {
-                    if (index === col1 - 1) {
-                        col1Key = item.key;
-                    } else if (index === col2 - 1) {
-                        col2Key = item.key;
-                    }
+                arr.forEach((ar) => {
+                    this.state.columns.forEach((item, index) => {
+                        if (index === ar - 1) {
+                            colKeyArray.push(item.key);
+                        }
+                    });
                 });
-                updated[Object.keys(updated)] =
-                    Number(this.state.rows[fromRow][col1Key]) +
-                    Number(this.state.rows[fromRow][col2Key]);
+                let tempSum = 0;
+                colKeyArray.forEach((item) => {
+                    tempSum += Number(this.state.rows[fromRow][item]);
+                });
+                updated[Object.keys(updated)] = tempSum;
+                console.log(updated[Object.keys(updated)]);
                 this.setState({
                     prevRow: fromRow,
                     prevAction: action,
-                    columnOneKey: col1Key,
-                    columnTwoKey: col2Key
+                    columnKeyArray: colKeyArray
                 });
             }
         }
         if (action === "CELL_DRAG") {
             if (this.state.prevAction === "CELL_UPDATE") {
                 for (let i = fromRow; i <= toRow; i++) {
-                    console.log(
-                        this.state.columnOneKey,
-                        this.state.columnTwoKey
-                    );
-                    updatedArray.push(
-                        Number(this.state.rows[i][this.state.columnOneKey]) +
-                            Number(this.state.rows[i][this.state.columnTwoKey])
-                    );
+                    console.log(this.state.columnKeyArray);
+                    updatedArray = [...this.state.columnKeyArray];
                     this.setState({ prevRow: fromRow, prevAction: action });
                 }
                 let columnName = "";
@@ -883,49 +875,48 @@ class Spreadsheet extends Component {
                 action === "CELL_DRAG" &&
                 this.state.prevAction === "CELL_UPDATE"
             ) {
-                for (let j = 0; j < updatedArray.length; j++) {
-                    this.setState((state) => {
-                        const rows = state.rows.slice();
-                        for (let i = fromRow; i <= toRow; i++) {
-                            rows[i][Object.keys(updated)] =
-                                Number(rows[i][this.state.columnOneKey]) +
-                                Number(rows[i][this.state.columnTwoKey]);
-                        }
+                this.setState((state) => {
+                    const rows = state.rows.slice();
+                    for (let i = fromRow; i <= toRow; i++) {
+                        let tempSum = 0;
+                        updatedArray.forEach((item) => {
+                            tempSum += Number(rows[i][item]);
+                        });
+                        rows[i][Object.keys(updated)] = tempSum;
+                    }
+                    return {
+                        rows
+                    };
+                });
 
-                        return {
-                            rows
-                        };
-                    });
+                this.setState((state) => {
+                    const filteringRows = state.filteringRows.slice();
+                    for (let i = fromRow; i <= toRow; i++) {
+                        let tempSum = 0;
+                        updatedArray.forEach((item) => {
+                            tempSum += Number(filteringRows[i][item]);
+                        });
+                        filteringRows[i][Object.keys(updated)] = tempSum;
+                    }
 
-                    this.setState((state) => {
-                        const filteringRows = state.filteringRows.slice();
-                        for (let i = fromRow; i <= toRow; i++) {
-                            filteringRows[i][Object.keys(updated)] =
-                                Number(
-                                    filteringRows[i][this.state.columnOneKey]
-                                ) +
-                                Number(
-                                    filteringRows[i][this.state.columnTwoKey]
-                                );
-                        }
+                    return {
+                        filteringRows
+                    };
+                });
+                this.setState((state) => {
+                    const tempRows = state.tempRows.slice();
+                    for (let i = fromRow; i <= toRow; i++) {
+                        let tempSum = 0;
+                        updatedArray.forEach((item) => {
+                            tempSum += Number(tempRows[i][item]);
+                        });
+                        tempRows[i][Object.keys(updated)] = tempSum;
+                    }
 
-                        return {
-                            filteringRows
-                        };
-                    });
-                    this.setState((state) => {
-                        const tempRows = state.tempRows.slice();
-                        for (let i = fromRow; i <= toRow; i++) {
-                            tempRows[i][Object.keys(updated)] =
-                                Number(tempRows[i][this.state.columnOneKey]) +
-                                Number(tempRows[i][this.state.columnTwoKey]);
-                        }
-
-                        return {
-                            tempRows
-                        };
-                    });
-                }
+                    return {
+                        tempRows
+                    };
+                });
             } else {
                 this.props.updatedRows({ fromRow, toRow, updated, action });
                 this.setState((state) => {

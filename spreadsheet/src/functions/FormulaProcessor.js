@@ -1,24 +1,38 @@
 export default function FormulaProcessor(expression) {
-    let col1 = "";
-    let col2 = "";
-    if (expression.match(/^=sum\((.\w*?),(.\w*?)\)$/g)) {
-        console.log(expression.match(/^=sum\((.\w*?),(.\w*?)\)$/g));
-        const RegCode = /^=sum\((?<col1>.\w*?),(?<col2>.\w*?)\)$/g;
+    let columnArray = [];
+    if (expression.match(/^=sum\((?<one>.\w*?),(?<more>(.\w*?)*?)\)$/g)) {
+        console.log(
+            expression.match(/^=sum\((?<one>.\w*?),(?<more>(.\w*?)*?)\)$/g)
+        );
+        const RegCode = /^=sum\((?<one>.\w*?),(?<more>(.\w*?)*?)\)$$/g;
         const exp = RegCode.exec(expression);
-        const parameter1 = exp.groups.col1;
-        const parameter2 = exp.groups.col2;
+        const parameter1 = exp.groups.one;
+        const parameter2 = exp.groups.more;
         if (parameter1.match(/^(c\d*?)$/i)) {
             const RegCode1 = /^c(?<column>\d*?)$/g;
             const exper1 = RegCode1.exec(parameter1);
-            col1 = exper1.groups.column;
+            columnArray.push(Number(exper1.groups.column));
         }
-        if (parameter2.match(/^(c\d*?)$/i)) {
-            const RegCode2 = /^c(?<column>\d*?)$/g;
-            const exper2 = RegCode2.exec(parameter2);
-            col2 = exper2.groups.column;
+        if (parameter2.length > 1) {
+            const moreParameters = parameter2.split(",");
+            moreParameters.forEach((item) => {
+                if (item.match(/^(c\d*?)$/i)) {
+                    const RegCodes = /^c(?<column>\d*?)$/g;
+                    const expers = RegCodes.exec(item);
+                    columnArray.push(Number(expers.groups.column));
+                }
+            });
+        } else {
+            if (parameter2.match(/^(c\d*?)$/i)) {
+                const RegCode2 = /^c(?<column>\d*?)$/g;
+                const exper2 = RegCode2.exec(parameter2);
+                columnArray.push(Number(exper2.groups.column));
+            }
         }
     }
-    if (col1.length > 0 && col2.length > 0) {
-        return [Number(col1), Number(col2)];
+
+    if (columnArray.length > 1) {
+        console.log(columnArray);
+        return columnArray;
     } else return [];
 }
