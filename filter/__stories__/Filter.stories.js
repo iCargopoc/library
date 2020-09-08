@@ -1,6 +1,7 @@
 import React from "react";
 import Filter from "../src/index";
 import FilterData from "./data.json";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const airport = [
     { key: "AAA", value: "AAA" },

@@ -87,56 +87,12 @@ const App = () => {
     //Configure columns and its related functions
     let columns = [
         {
-            groupHeader: "Id",
             Header: "Id",
             accessor: "travelId",
             width: 50,
             disableFilters: true
         },
         {
-            groupHeader: "Flight & Segment",
-            Header: "Segment",
-            accessor: "segment",
-            width: 100,
-            innerCells: [
-                {
-                    Header: "From",
-                    accessor: "from"
-                },
-                {
-                    Header: "To",
-                    accessor: "to"
-                }
-            ],
-            displayCell: (rowData, DisplayTag) => {
-                const { from, to } = rowData.segment;
-                return (
-                    <div className="segment-details">
-                        <DisplayTag columnKey="segment" cellKey="from">
-                            <span>{from}</span>
-                        </DisplayTag>
-                        <i>
-                            <img src={FlightIcon} alt="segment" />
-                        </i>
-                        <DisplayTag columnKey="segment" cellKey="to">
-                            <span>{to}</span>
-                        </DisplayTag>
-                    </div>
-                );
-            },
-            editCell: (rowData, DisplayTag, rowUpdateCallBack) => {
-                return (
-                    <SegmentEdit
-                        airportCodeList={airportCodeList}
-                        rowData={rowData}
-                        DisplayTag={DisplayTag}
-                        rowUpdateCallBack={rowUpdateCallBack}
-                    />
-                );
-            }
-        },
-        {
-            groupHeader: "Flight & Segment",
             Header: "Flight",
             accessor: "flight",
             width: 100,
@@ -175,7 +131,48 @@ const App = () => {
             }
         },
         {
-            groupHeader: "Details",
+            Header: "Segment",
+            accessor: "segment",
+            width: 100,
+            innerCells: [
+                {
+                    Header: "From",
+                    accessor: "from"
+                },
+                {
+                    Header: "To",
+                    accessor: "to"
+                }
+            ],
+            disableSortBy: true,
+            displayCell: (rowData, DisplayTag) => {
+                const { from, to } = rowData.segment;
+                return (
+                    <div className="segment-details">
+                        <DisplayTag columnKey="segment" cellKey="from">
+                            <span>{from}</span>
+                        </DisplayTag>
+                        <i>
+                            <img src={FlightIcon} alt="segment" />
+                        </i>
+                        <DisplayTag columnKey="segment" cellKey="to">
+                            <span>{to}</span>
+                        </DisplayTag>
+                    </div>
+                );
+            },
+            editCell: (rowData, DisplayTag, rowUpdateCallBack) => {
+                return (
+                    <SegmentEdit
+                        airportCodeList={airportCodeList}
+                        rowData={rowData}
+                        DisplayTag={DisplayTag}
+                        rowUpdateCallBack={rowUpdateCallBack}
+                    />
+                );
+            }
+        },
+        {
             Header: "Details",
             accessor: "details",
             onlyInDesktop: true,
@@ -310,7 +307,6 @@ const App = () => {
             }
         },
         {
-            groupHeader: "Weight",
             Header: "Weight",
             accessor: "weight",
             width: 130,
@@ -350,7 +346,6 @@ const App = () => {
             }
         },
         {
-            groupHeader: "Volume",
             Header: "Volume",
             accessor: "volume",
             width: 100,
@@ -390,7 +385,6 @@ const App = () => {
             }
         },
         {
-            groupHeader: "ULD Positions",
             Header: "ULD Positions",
             accessor: "uldPositions",
             width: 120,
@@ -434,7 +428,6 @@ const App = () => {
             }
         },
         {
-            groupHeader: "Revenue/Yield",
             Header: "Revenue/Yield",
             accessor: "revenue",
             width: 120,
@@ -464,7 +457,6 @@ const App = () => {
             sortValue: "revenue"
         },
         {
-            groupHeader: "SR",
             Header: "SR",
             accessor: "sr",
             width: 90,
@@ -486,7 +478,6 @@ const App = () => {
             }
         },
         {
-            groupHeader: "Queued Booking",
             Header: "Queued Booking",
             accessor: "queuedBooking",
             width: 130,
@@ -611,7 +602,7 @@ const App = () => {
     //Add logic to calculate height of each row, based on the content of  or more columns
     const calculateRowHeight = (row, gridColumns) => {
         //Minimum height for each row
-        let rowHeight = 90;
+        let rowHeight = 50;
         if (gridColumns && gridColumns.length > 0 && row) {
             //Get properties of a row
             const { original, isExpanded } = row;

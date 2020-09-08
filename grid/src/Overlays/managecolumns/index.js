@@ -16,7 +16,6 @@ const ColumnReordering = memo((props) => {
         isExpandContentAvailable,
         additionalColumn
     } = props;
-
     const additionalColumnHeader =
         additionalColumn && additionalColumn.length
             ? additionalColumn[0].Header

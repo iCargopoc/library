@@ -1,16 +1,22 @@
 /* eslint-disable react/destructuring-assignment */
 
 import React, { useEffect, useState } from "react";
-import Card from "react-bootstrap/Card";
-import { Accordion, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { IconUpArrow } from "../Utilities/SvgUtilities";
+import {
+    Accordion,
+    AccordionItem,
+    AccordionItemHeading,
+    AccordionItemButton,
+    AccordionItemPanel
+} from "react-accessible-accordion";
+import { IconUpArrow, IconDownArrow } from "../Utilities/SvgUtilities";
 
 export default function LeftDrawer(props) {
     const [leftDrawData, setLeftDrawData] = useState([]);
     const [leftDrawTemp, setLeftDrawTemp] = useState([]);
-    const [showUpArrow, setShowUpArrow] = useState("");
-    const [showDownArrow, setShowDownArrow] = useState("none");
+    const [showUpArrow, setShowUpArrow] = useState("none");
+    const [showDownArrow, setShowDownArrow] = useState("");
 
     useEffect(() => {
         const typeArray = [];
@@ -44,81 +50,78 @@ export default function LeftDrawer(props) {
     };
 
     const handleAccordian = () => {
-        if (showUpArrow === "" || showDownArrow === "none") {
-            setShowUpArrow("none");
-            setShowDownArrow("");
-        } else {
+        if (showUpArrow === "none" || showDownArrow === "") {
             setShowUpArrow("");
             setShowDownArrow("none");
+        } else {
+            setShowUpArrow("none");
+            setShowDownArrow("");
         }
     };
 
-    const accordianHeads = leftDrawData.map((item) => {
+    const accordianHeads = leftDrawData.map((item, index) => {
         if (item.types && item.types.length > 0) {
             return (
                 <div>
-                    <Accordion>
-                        <Card>
-                            <Accordion.Toggle
-                                data-testid="handleAccordianArrow"
+                    <Accordion allowZeroExpanded className="accordion">
+                        <AccordionItem key={index} className="card">
+                            <AccordionItemHeading
                                 onClick={() => {
                                     handleAccordian();
                                 }}
-                                style={{ fontWeight: item.weight }}
-                                as={Card.Header}
-                                eventKey="1"
+                                className="card-header"
                             >
-                                {item.name}
-                                <div
-                                    className="accordionLeft"
-                                    style={{ display: showUpArrow }}
-                                >
-                                    <IconUpArrow />
-                                </div>
-                                <div
-                                    className="accordionRight"
-                                    style={{ display: showDownArrow }}
-                                >
-                                    <IconUpArrow />
-                                </div>
-                            </Accordion.Toggle>
-                            <Accordion.Collapse eventKey="1">
-                                <Card.Body>
-                                    <ul className="firstAccordion">
-                                        {item.types &&
-                                            item.types.map((type) => {
-                                                return (
-                                                    <li
-                                                        role="presentation"
-                                                        style={{
-                                                            fontWeight:
-                                                                type.weight
-                                                        }}
-                                                        data-testid="firstAccordion"
-                                                        onClick={() => {
-                                                            props.fromLeftToRight(
-                                                                item.name,
-                                                                type.dataType,
-                                                                type.enabled,
-                                                                type.name,
-                                                                item.field,
-                                                                type.condition,
-                                                                type.dataSource,
-                                                                type.validationMessage,
-                                                                type.options
-                                                            );
-                                                            // props.addedFilterCount();
-                                                        }}
-                                                        key={type.name}
-                                                    >
-                                                        {type.name}
-                                                    </li>
-                                                );
-                                            })}
-                                    </ul>
-                                </Card.Body>
-                            </Accordion.Collapse>
-                        </Card>
+                                <AccordionItemButton className="arrows">
+                                    {item.name}
+                                    <div
+                                        className="accordionDown"
+                                        style={{
+                                            display: showDownArrow,
+                                            position: "relative",
+                                            bottom: "47%",
+                                            left: "150%"
+                                        }}
+                                    >
+                                        <IconDownArrow />
+                                    </div>
+                                    <div
+                                        className="accordionUp"
+                                        style={{
+                                            display: showUpArrow,
+                                            position: "relative",
+                                            bottom: "47%",
+                                            left: "150%"
+                                        }}
+                                    >
+                                        <IconUpArrow />
+                                    </div>
+                                </AccordionItemButton>
+                            </AccordionItemHeading>
+                            <AccordionItemPanel className="firstAccordion">
+                                {item.types &&
+                                    item.types.map((type) => {
+                                        return (
+                                            <div
+                                                role="presentation"
+                                                style={{
+                                                    fontWeight: type.weight
+                                                }}
+                                                data-testid="firstAccordion"
+                                                onClick={() => {
+                                                    props.fromLeftToRight(
+                                                        item.name,
+                                                        type.dataType,
+                                                        type.dataSource
+                                                    );
+                                                }}
+                                                key={type.name}
+                                            >
+                                                {type.name}
+                                            </div>
+                                        );
+                                    })}
+                            </AccordionItemPanel>
+                        </AccordionItem>
                     </Accordion>
                 </div>
             );
@@ -126,7 +129,7 @@ export default function LeftDrawer(props) {
         return <div key={item.name} />;
     });
     const fieldHeads = leftDrawData.map((item) => {
-        if (item.field && item.field.length > 0) {
+        if (item.dataType === "DateTime") {
             return (
                 <div className="fieldHeads">
                     <li
@@ -138,13 +141,7 @@ export default function LeftDrawer(props) {
                             props.fromLeftToRight(
                                 item.name,
                                 item.dataType,
-                                item.enabled,
-                                item.types,
-                                item.field,
-                                item.condition,
-                                item.dataSource,
-                                item.validationMessage,
-                                item.options
+                                item.dataSource
                             );
                             // props.addedFilterCount();
                         }}
@@ -186,12 +183,7 @@ export default function LeftDrawer(props) {
     //     return <div key={index} />;
     // });
     const normalHeads = leftDrawData.map((item) => {
-        if (
-            item.field &&
-            item.field.length <= 0 &&
-            item.types &&
-            item.types.length <= 0
-        ) {
+        if (item.dataType === "Text") {
             return (
                 <div className="normalHeads">
                     <li
@@ -203,13 +195,8 @@ export default function LeftDrawer(props) {
                             props.fromLeftToRight(
                                 item.name,
                                 item.dataType,
-                                item.enabled,
-                                item.types,
-                                item.field,
                                 item.condition,
-                                item.dataSource,
-                                item.validationMessage,
-                                item.options
+                                item.dataSource
                             );
                             // props.addedFilterCount();
                         }}

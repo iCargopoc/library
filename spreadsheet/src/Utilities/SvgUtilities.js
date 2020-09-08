@@ -30,16 +30,7 @@ export const IconAngle = (p: Object): React$Element<*> => (
 );
 
 export const IconFilter = (): React$Element<*> => (
-    <Svg
-        width="11px"
-        height="11px"
-        style={{
-            position: "absolute",
-            right: "-20px",
-            top: "8px",
-            zIndex: "9"
-        }}
-    >
+    <Svg width="11px" height="11px">
         <path
             d="M10.486 0c.218 0 .371.102.46.305.088.213.051.396-.11.547l-3.84 3.851V10.5a.467.467 0 01-.304.46.54.54 0 01-.195.04.462.462 0 01-.35-.148l-1.995-2a.481.481 0 01-.148-.352V4.703L.164.852C.003.7-.034.518.054.305A.466.466 0 01.515 0h9.972z"
             fill="#636c8c"

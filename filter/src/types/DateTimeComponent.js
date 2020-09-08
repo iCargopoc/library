@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Form } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { IconTimes } from "../Utilities/SvgUtilities";
+import { ReactComponent as IconTimes } from "../images/icon-close.svg";
 
 export default function FieldComponent(props) {
     const [fieldComponentArr, setFieldComponentArr] = useState([]);
@@ -23,7 +23,7 @@ export default function FieldComponent(props) {
             validationClass = "text-danger";
         }
         return (
-            <div className="filter__input" key={item.name}>
+            <div className="filter__input" key={item}>
                 <div className="filter__input-title" key={1}>
                     <div className="filter__label">
                         <Form.Label>
@@ -61,7 +61,7 @@ export default function FieldComponent(props) {
                             >
                                 <Form.Text>{field.column}</Form.Text>
                             </div>
-                            <div className="filter__split" key={field.name}>
+                            <div className="filter__split" key={field}>
                                 <div className="date-wrap">
                                     <Form.Control
                                         disabled={!item.enabled}

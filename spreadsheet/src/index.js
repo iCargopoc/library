@@ -12,8 +12,7 @@ import {
     IconColumns,
     IconShare,
     IconGroupSort,
-    IconSearch,
-    IconFilter
+    IconSearch
 } from "./Utilities/SvgUtilities";
 import FormulaProcessor from "./functions/FormulaProcessor";
 
@@ -1587,7 +1586,6 @@ class Spreadsheet extends Component {
                             <i>
                                 <IconSearch />
                             </i>
-                            <IconFilter />
                         </div>
                         <div
                             role="presentation"

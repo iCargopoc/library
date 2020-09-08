@@ -6,45 +6,35 @@
                 {
                     "name": "Airport",
                     "dataType": "AutoComplete",
-                    "enabled": true,
                     "dataSource": "Airport",
-                    "validationMessage": "This field is required*",
                     "condition": ["equal to", "greater than", "less than"]
                 },
                 {
                     "name": "Airport Group",
                     "dataType": "AutoComplete",
-                    "enabled": true,
                     "dataSource": "AirportGroup",
-                    "validationMessage": "This field is required*",
                     "condition": ["equal to", "greater than", "less than"]
                 },
                 {
                     "name": "City",
                     "dataType": "AutoComplete",
-                    "enabled": true,
                     "dataSource": "Airport",
-                    "validationMessage": "This field is required*",
                     "condition": ["equal to", "greater than", "less than"]
                 },
                 {
                     "name": "City Group",
                     "dataType": "AutoComplete",
-                    "enabled": true,
+
                     "dataSource": "Airport",
-                    "validationMessage": "This field is required*",
                     "condition": ["equal to", "greater than", "less than"]
                 },
                 {
                     "name": "Country",
                     "dataType": "AutoComplete",
-                    "enabled": true,
                     "dataSource": "Airport",
-                    "validationMessage": "This field is required*",
                     "condition": ["equal to", "greater than", "less than"]
                 }
-            ],
-            "field": []
+            ]
         },
         {
             "name": "Arrival Port",
@@ -52,187 +42,111 @@
                 {
                     "name": "Airport",
                     "dataType": "AutoComplete",
-                    "enabled": true,
                     "dataSource": "Airport",
-                    "validationMessage": "This field is required*",
                     "condition": ["equal to", "greater than", "less than"]
                 },
                 {
                     "name": "Airport Group",
                     "dataType": "AutoComplete",
-                    "enabled": true,
                     "dataSource": "Airport",
-                    "validationMessage": "This field is required*",
                     "condition": ["equal to", "greater than", "less than"]
                 },
                 {
                     "name": "City",
                     "dataType": "AutoComplete",
-                    "enabled": true,
+
                     "dataSource": "Airport",
-                    "validationMessage": "This field is required*",
                     "condition": ["equal to", "greater than", "less than"]
                 },
                 {
                     "name": "City Group",
                     "dataType": "AutoComplete",
-                    "enabled": true,
+
                     "dataSource": "Airport",
-                    "validationMessage": "This field is required*",
                     "condition": ["equal to", "greater than", "less than"]
                 },
                 {
                     "name": "Country",
                     "dataType": "AutoComplete",
-                    "enabled": true,
+
                     "dataSource": "Airport",
-                    "validationMessage": "This field is required*",
                     "condition": ["equal to", "greater than", "less than"]
                 }
-            ],
-            "field": []
+            ]
         },
         {
             "name": "Date",
             "dataType": "DateTime",
-            "enabled": true,
-            "field": [
-                {
-                    "column": "From Date & Time",
-                    "value": ""
-                },
-                {
-                    "column": "To Date & Time",
-                    "value": ""
-                }
-            ],
-            "types": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Booking Profile",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Flight Group",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Flight No",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Yeild",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Service Recovery",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Queued Bookings",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Weight",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Volume",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Aircraft",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Aircraft Classification",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Flight Type",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Flight Status",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Segment Status",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         },
         {
             "name": "Milestone Status",
-            "enabled": false,
             "dataType": "Text",
-            "types": [],
-            "field": [],
-            "validationMessage": "This field is required*",
             "condition": ["equal to", "greater than", "less than"]
         }
     ]

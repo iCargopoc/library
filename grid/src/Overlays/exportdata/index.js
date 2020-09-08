@@ -39,7 +39,7 @@ const ExportData = memo((props) => {
     );
 
     // List of columns + expand based on user selection from manage overlay
-    const updatedColumnsPerUserSelection = [...originalColumns].concat(
+    const updatedColumnsPerUserSelection = [...columns].concat(
         getRemarksColumnIfSelectedByUser()
     );
 

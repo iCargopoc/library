@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Multiselect } from "multiselect-react-dropdown";
 import { Form } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { IconTimes } from "../Utilities/SvgUtilities";
+import { ReactComponent as IconTimes } from "../images/icon-close.svg";
 
 export default function AutoComplete(props) {
     const [autoCompleteArr, setAutoAcompleteArr] = useState([]);
@@ -29,19 +29,9 @@ export default function AutoComplete(props) {
     };
     const autoCompleteDiv = autoCompleteArr.map((item) => {
         let validationClass = "";
-        let displayCondition = "none";
-        let condition = "";
         if (item.validated === false) {
             validationClass = "text-danger";
         }
-        if (item.condition && item.condition.length > 0) {
-            condition = item.condition.map((cond) => {
-                return <option key={cond}>{cond}</option>;
-            });
-        }
-        if (item.enabled === false) {
-            displayCondition = "none";
-        } else displayCondition = "";
         return (
             <div className="filter__input" key={item}>
                 <div className="filter__input-title">
@@ -77,6 +67,7 @@ export default function AutoComplete(props) {
                     <Multiselect
                         data-testid="autoCompleteSelect"
                         id={item.type.concat(item.name)}
+                        disable={!item.enabled}
                         options={item.objectArray}
                         closeIcon="close"
                         displayValue="key"
@@ -87,16 +78,6 @@ export default function AutoComplete(props) {
                         }}
                     />
                 </div>
-                <div
-                    className="displayFlex conditional"
-                    style={{ display: displayCondition }}
-                >
-                    <Form.Group controlId="selectOptions">
-                        <Form.Label>Condition</Form.Label>
-                        <Form.Control as="select">{condition}</Form.Control>
-                    </Form.Group>
-                </div>
-
                 <span id="fieldWarning" className={validationClass}>
                     {item.warning}
                 </span>

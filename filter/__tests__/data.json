@@ -1,0 +1,153 @@
+{
+    "filter": [
+        {
+            "name": "Departure Port",
+            "types": [
+                {
+                    "name": "Airport",
+                    "dataType": "AutoComplete",
+                    "dataSource": "Airport",
+                    "condition": ["equal to", "greater than", "less than"]
+                },
+                {
+                    "name": "Airport Group",
+                    "dataType": "AutoComplete",
+                    "dataSource": "AirportGroup",
+                    "condition": ["equal to", "greater than", "less than"]
+                },
+                {
+                    "name": "City",
+                    "dataType": "AutoComplete",
+                    "dataSource": "Airport",
+                    "condition": ["equal to", "greater than", "less than"]
+                },
+                {
+                    "name": "City Group",
+                    "dataType": "AutoComplete",
+
+                    "dataSource": "Airport",
+                    "condition": ["equal to", "greater than", "less than"]
+                },
+                {
+                    "name": "Country",
+                    "dataType": "AutoComplete",
+                    "dataSource": "Airport",
+                    "condition": ["equal to", "greater than", "less than"]
+                }
+            ]
+        },
+        {
+            "name": "Arrival Port",
+            "types": [
+                {
+                    "name": "Airport",
+                    "dataType": "AutoComplete",
+                    "dataSource": "Airport",
+                    "condition": ["equal to", "greater than", "less than"]
+                },
+                {
+                    "name": "Airport Group",
+                    "dataType": "AutoComplete",
+                    "dataSource": "Airport",
+                    "condition": ["equal to", "greater than", "less than"]
+                },
+                {
+                    "name": "City",
+                    "dataType": "AutoComplete",
+
+                    "dataSource": "Airport",
+                    "condition": ["equal to", "greater than", "less than"]
+                },
+                {
+                    "name": "City Group",
+                    "dataType": "AutoComplete",
+
+                    "dataSource": "Airport",
+                    "condition": ["equal to", "greater than", "less than"]
+                },
+                {
+                    "name": "Country",
+                    "dataType": "AutoComplete",
+
+                    "dataSource": "Airport",
+                    "condition": ["equal to", "greater than", "less than"]
+                }
+            ]
+        },
+        {
+            "name": "Date",
+            "dataType": "DateTime",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Booking Profile",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Flight Group",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Flight No",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Yeild",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Service Recovery",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Queued Bookings",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Weight",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Volume",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Aircraft",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Aircraft Classification",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Flight Type",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Flight Status",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Segment Status",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        },
+        {
+            "name": "Milestone Status",
+            "dataType": "Text",
+            "condition": ["equal to", "greater than", "less than"]
+        }
+    ]
+}

@@ -11,14 +11,12 @@ import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 
 export default function Filter(props) {
     const [showApplyFilter, setApplyFilter] = useState(false);
-    const [autoCompletesValueArray, setAutoCompletesValueArray] = useState([]);
+    const [autoCompletesValueArray] = useState([]);
     const [autoCompletesArray, setAutoCompletesArray] = useState([]);
     const [dateTimesArray, setDateTimesArray] = useState([]);
-    const [dateTimesValueArray, setDateTimesValueArray] = useState([]);
+    const [dateTimesValueArray] = useState([]);
     const [textComponentsArray, setTextComponentsArray] = useState([]);
-    const [textComponentsValueArray, setTextComponentsValueArray] = useState(
-        []
-    );
+    const [textComponentsValueArray] = useState([]);
     const [applyFilterChip, setApplyFilterChip] = useState({});
     const [filterCount, setFilterCount] = useState(0);
     const [filterData, setFilterData] = useState({});
@@ -118,106 +116,9 @@ export default function Filter(props) {
     };
 
     /**
-     * Method To delete the specific element from filter array upon clicking close
-     * @param {*} item is the specific filter element object
-     */
-    /* eslint-disable no-param-reassign */
-    const deleteAutoCompleteElement = (item) => {
-        filterData.filter.forEach((it) => {
-            it.types.forEach((tip) => {
-                if (tip.name === item.type && item.name === it.name) {
-                    tip.weight = 400;
-                }
-            });
-        });
-        let autoCompleteArray = [...autoCompletesArray];
-        const index = autoCompleteArray.findIndex(
-            (x) => x.name === item.name && x.type === item.type
-        );
-        if (index !== -1) {
-            autoCompleteArray.splice(index, 1);
-        } else {
-            autoCompleteArray = [];
-        }
-        setAutoCompletesArray(autoCompleteArray);
-        autoCompleteArray.forEach((aut) => {
-            filterData.filter.forEach((fit) => {
-                if (fit.types && fit.name !== aut.name && fit.weight === 700) {
-                    fit.weight = 400;
-                }
-            });
-        });
-    };
-
-    /**
-     * Method To delete the specific element from filter array upon clicking close
-     * @param {*} item is the specific filter element object
-     */
-    /* eslint-disable no-param-reassign */
-    const deleteDateTimeElement = (item) => {
-        filterData.filter.forEach((it) => {
-            if (it.name === item.name) {
-                it.weight = 400;
-            }
-        });
-        filterData.filter.forEach((it) => {
-            if (it.name === item.name) {
-                item.weight = 400;
-            }
-        });
-        const dateTimeArray = [...dateTimesArray];
-        const index = dateTimeArray.findIndex((x) => x.name === item.name);
-        dateTimeArray.splice(index, 1);
-        // eslint-disable-next-line no-shadow
-        dateTimeArray.forEach((item) => {
-            item.field.forEach((fieldArray) => {
-                fieldArray.value = "";
-            });
-        });
-        setDateTimesArray(dateTimeArray);
-        filterData.filter.forEach((filters) => {
-            if (filters.name === item.name) {
-                item.field.forEach((fieldArray) => {
-                    fieldArray.value = "";
-                });
-            }
-        });
-        if (item === {}) {
-            setDateTimesValueArray([]);
-        }
-    };
-
-    /**
-     * Method To delete the specific element from filter array upon clicking close
-     * @param {*} item is the specific filter element object
-     */
-    const deleteTextComponentElement = (item) => {
-        filterData.filter.forEach((it) => {
-            // Added for no-param-reassign lint errors
-            const deleteItem = it;
-            if (deleteItem.name === item.name) {
-                deleteItem.weight = 400;
-            }
-        });
-        let textComponentArray = [...textComponentsArray];
-        const index = textComponentArray.findIndex(
-            (x) => x.name === item.name && x.dataType === item.dataType
-        );
-        if (index !== -1) {
-            textComponentArray.splice(index, 1);
-        } else {
-            textComponentArray = [];
-        }
-        setTextComponentsArray(textComponentArray);
-    };
-
-    /**
      * Method To reset the right drawer
      */
     const resetDrawer = () => {
-        deleteAutoCompleteElement({});
-        deleteDateTimeElement({});
-        deleteTextComponentElement({});
         setApplyFilterChip({});
         setRecentFilterShow("");
         setFilterShow("none");
@@ -387,28 +288,15 @@ export default function Filter(props) {
         });
         props.savedFilters(obj);
     };
+
     /**
      * Method To create the filter arrays for each specific type based on datatype
      * @param {*} name is the name of the filter
      * @param {*} dataType is the dataType of the filter
-     * @param {*} enabled is initial enabled status of the filter
-     * @param {*} type is the type array of the filter if present
-     * @param {*} field is the field array of the filter if present
      * @param {*} condition is the condition array of the filter if present
-     * @param {*} options is the options array of the filter if present
      */
     /* eslint-disable no-param-reassign */
-    const fromLeftToRight = (
-        name,
-        dataType,
-        enabled,
-        type,
-        field,
-        condition,
-        dataSource,
-        warning,
-        options
-    ) => {
+    const fromLeftToRight = (name, dataType) => {
         setShowSavePopUp("none");
         setSaveWarningLabel("");
         setSaveWarningClassName("");
@@ -417,9 +305,7 @@ export default function Filter(props) {
         if (dataType === "AutoComplete") {
             const value = {
                 name,
-                type,
                 dataType,
-                enabled,
                 objectArray: []
             };
             filterData.filter.forEach((item) => {
@@ -440,25 +326,13 @@ export default function Filter(props) {
                 if (index === -1) {
                     autoCompleteArray.push({
                         name,
-                        type,
-                        dataType,
-                        enabled,
-                        condition,
-                        objectArray: options,
-                        validated: false,
-                        warning
+                        dataType
                     });
                 }
             } else {
                 autoCompleteArray.push({
                     name,
-                    type,
-                    dataType,
-                    enabled,
-                    condition,
-                    objectArray: options,
-                    validated: false,
-                    warning
+                    dataType
                 });
             }
             setAutoCompletesArray(autoCompleteArray);
@@ -466,11 +340,7 @@ export default function Filter(props) {
         if (dataType === "DateTime") {
             const value = {
                 name,
-                dataType,
-                enabled,
-                field,
-                validated: false,
-                warning
+                dataType
             };
             filterData.filter.forEach((item) => {
                 if (item.name === value.name) {
@@ -485,21 +355,13 @@ export default function Filter(props) {
                 if (index === -1) {
                     dateTimeArray.push({
                         name,
-                        dataType,
-                        enabled,
-                        field,
-                        validated: false,
-                        warning
+                        dataType
                     });
                 }
             } else {
                 dateTimeArray.push({
                     name,
-                    dataType,
-                    enabled,
-                    field,
-                    validated: false,
-                    warning
+                    dataType
                 });
             }
             setDateTimesArray(dateTimeArray);
@@ -507,10 +369,7 @@ export default function Filter(props) {
         if (dataType === "Text") {
             const value = {
                 name,
-                dataType,
-                enabled,
-                validated: false,
-                warning
+                dataType
             };
             filterData.filter.forEach((item) => {
                 if (item.name === value.name) {
@@ -526,726 +385,17 @@ export default function Filter(props) {
                 if (index === -1) {
                     textComponentArray.push({
                         name,
-                        dataType,
-                        enabled,
-                        validated: false,
-                        warning
+                        dataType
                     });
                 }
             } else {
                 textComponentArray.push({
                     name,
-                    dataType,
-                    enabled,
-                    validated: false,
-                    warning
+                    dataType
                 });
             }
             setTextComponentsArray(textComponentArray);
         }
-    };
-    /**
-     * Method To create arrays containing values upon change trigger from respective input fields
-     * @param {*} item is the specific filter element object
-     * @param {*} valueArray is the selected multiselect options
-     */
-    /* eslint-disable no-param-reassign */
-    /* eslint-disable no-shadow */
-    const createAutoCompleteArray = (item, valueArray) => {
-        setShowSavePopUp("none");
-        setSaveWarningLabel("");
-        setSaveWarningClassName("");
-        let autoCompleteArray = [...autoCompletesArray];
-        const tempObj = JSON.parse(JSON.stringify(item));
-        tempObj.value = valueArray;
-        const autoCompleteValueArray = [...autoCompletesValueArray];
-        if (autoCompleteValueArray.length > 0) {
-            const index_ = autoCompleteValueArray.findIndex(
-                (x) => x.name === tempObj.name && x.type === tempObj.type
-            );
-            if (index_ === -1) {
-                autoCompleteValueArray.push({
-                    name: tempObj.name,
-                    type: tempObj.type,
-                    dataType: tempObj.dataType,
-                    enabled: tempObj.enabled,
-                    value: tempObj.value
-                });
-            } else {
-                autoCompleteValueArray[index_].value = tempObj.value;
-            }
-
-            autoCompleteValueArray.forEach((valueItem) => {
-                autoCompleteArray.forEach((item) => {
-                    if (
-                        item.name === valueItem.name &&
-                        item.type === valueItem.type
-                    ) {
-                        item.validated = true;
-                        item.warning = "";
-                    }
-                });
-            });
-        } else {
-            autoCompleteValueArray.push({
-                name: tempObj.name,
-                type: tempObj.type,
-                dataType: tempObj.dataType,
-                enabled: tempObj.enabled,
-                value: tempObj.value
-            });
-            // eslint-disable-next-line no-shadow
-            autoCompleteValueArray.forEach((valueItem) => {
-                autoCompleteArray.forEach((item) => {
-                    if (
-                        item.name === valueItem.name &&
-                        item.type === valueItem.type
-                    ) {
-                        item.validated = true;
-                        item.warning = "";
-                    }
-                });
-            });
-        }
-        setAutoCompletesArray(autoCompleteArray);
-        autoCompleteArray = [];
-        setAutoCompletesValueArray(autoCompleteValueArray);
-    };
-
-    /**
-     * Method To toggle the switch to enable and disable the input fields
-     * @param {*} item is the specific filter element object
-     */
-    /* eslint-disable no-param-reassign */
-    const handleAutoCompleteEnabled = (item) => {
-        const autoCompleteArray = [...autoCompletesArray];
-        const index = autoCompleteArray.findIndex(
-            (x) => x.name === item.name && x.type === item.type
-        );
-        if (index !== -1) {
-            autoCompleteArray[index].enabled = !autoCompleteArray[index]
-                .enabled;
-        }
-        // eslint-disable-next-line no-shadow
-        setAutoCompletesArray(autoCompleteArray);
-        if (autoCompletesValueArray.length > 0) {
-            const autoCompleteValueArray = [...autoCompletesValueArray];
-            const index = autoCompleteValueArray.findIndex(
-                (x) => x.name === item.name && x.type === item.type
-            );
-            autoCompleteValueArray[index].enabled = !autoCompleteValueArray[
-                index
-            ].enabled;
-            setAutoCompletesValueArray(autoCompleteValueArray);
-        }
-    };
-
-    /**
-     * Method To toggle the switch to enable and disable the input fields
-     * @param {*} item is the specific filter element object
-     */
-    /* eslint-disable no-param-reassign */
-    const handleDateTimeEnabled = (item) => {
-        const dateTimeArray = [...dateTimesArray];
-        const index = dateTimeArray.findIndex(
-            (x) => x.name === item.name && x.field === item.field
-        );
-        if (index !== -1) {
-            dateTimeArray[index].enabled = !dateTimeArray[index].enabled;
-        }
-        setDateTimesArray(dateTimeArray);
-        // eslint-disable-next-line no-shadow
-        if (dateTimesValueArray.length > 0) {
-            const dateTimeValueArray = [...dateTimesValueArray];
-            const tempArray = [];
-            item.field.forEach((item) => {
-                tempArray.push(item.column);
-            });
-            const index = dateTimeValueArray.findIndex(
-                (x) => x.name === item.name && tempArray.includes(x.fieldValue)
-            );
-            if (index !== -1) {
-                dateTimeValueArray.forEach((item) => {
-                    item.enabled = !item.enabled;
-                });
-            }
-
-            setDateTimesValueArray(dateTimeValueArray);
-        }
-    };
-    /**
-     * Method To create arrays containing values upon change trigger from respective input fields
-     * @param {*} item is the specific filter element object
-     * @param {*} fieldName is the specific type of field/date in which change is happening
-     * @param {*} value is value of the field
-     */
-    /* eslint-disable no-param-reassign */
-    const createDateTimeArray = (item, fieldName, value) => {
-        setShowSavePopUp("none");
-        setSaveWarningLabel("");
-        setSaveWarningClassName("");
-        let dateTimeArray = [...dateTimesArray];
-        const tempObj = JSON.parse(JSON.stringify(item));
-        tempObj.fieldValue = fieldName;
-        tempObj.value = value;
-        const dateTimeValueArray = [...dateTimesValueArray];
-        if (dateTimeValueArray.length > 0) {
-            const index = dateTimeValueArray.findIndex(
-                (x) =>
-                    x.fieldValue === tempObj.fieldValue &&
-                    x.name === tempObj.name
-            );
-            if (index === -1) {
-                dateTimeValueArray.push({
-                    name: tempObj.name,
-                    dataType: tempObj.dataType,
-                    enabled: tempObj.enabled,
-                    fieldValue: tempObj.fieldValue,
-                    value: tempObj.value
-                });
-            } else {
-                dateTimeValueArray[index].value = tempObj.value;
-            }
-            dateTimeValueArray.forEach((valueItem) => {
-                dateTimeArray.forEach((item) => {
-                    if (item.name === valueItem.name) {
-                        item.validated = true;
-                        item.warning = "";
-                    }
-                });
-            });
-        } else {
-            dateTimeValueArray.push({
-                name: tempObj.name,
-                dataType: tempObj.dataType,
-                enabled: tempObj.enabled,
-                fieldValue: tempObj.fieldValue,
-                value: tempObj.value
-            });
-            dateTimeValueArray.forEach((valueItem) => {
-                dateTimeArray.forEach((item) => {
-                    if (item.name === valueItem.name) {
-                        item.validated = true;
-                        item.warning = "";
-                    }
-                });
-            });
-        }
-        setDateTimesValueArray(dateTimeValueArray);
-        dateTimeArray = [...dateTimesArray];
-        if (dateTimeArray.length > 0) {
-            dateTimeArray.forEach((item) => {
-                item.field.forEach((fieldArray) => {
-                    if (fieldArray.column === fieldName) {
-                        fieldArray.value = value;
-                    }
-                });
-            });
-            setDateTimesArray(dateTimeArray);
-        }
-        dateTimeArray = [];
-    };
-    /**
-     * Method to Convert Date to required Format as per value of type
-     * @param {String} inputDate
-     * @param {String} type
-     */
-    const getValueOfDate = (dateValue) => {
-        const date = new Date(dateValue);
-        const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "numeric",
-            seconds: "numeric"
-        });
-        const [
-            { value: month },
-            ,
-            { value: day },
-            ,
-            { value: year },
-            ,
-            { value: hour },
-            ,
-            { value: minute }
-        ] = dateTimeFormat.formatToParts(date);
-        return `${year}-${month}-${day}${"T"}${hour}:${minute}`;
-    };
-    /**
-     * Method To set both from date and to date as todays date
-     */
-    /* eslint-disable no-param-reassign */
-    const addToday = () => {
-        const todayDate = new Date();
-        const dated = getValueOfDate(todayDate);
-        const dateTimeArray = [...dateTimesArray];
-        const dateTimeValueArray = [...dateTimesValueArray];
-        // eslint-disable-next-line no-shadow
-        if (dateTimeArray.length > 0) {
-            dateTimeArray.forEach((item) => {
-                item.field.forEach((fieldArray) => {
-                    fieldArray.value = dated;
-                    if (dateTimeValueArray.length > 1) {
-                        dateTimeValueArray.forEach((item) => {
-                            if (item.fieldValue === fieldArray.column) {
-                                item.value = dated;
-                            }
-                        });
-                    } else {
-                        dateTimeValueArray.push({
-                            name: item.name,
-                            dataType: item.dataType,
-                            enabled: item.enabled,
-                            fieldValue: fieldArray.column,
-                            value: dated
-                        });
-                    }
-                });
-            });
-            setDateTimesArray(dateTimeArray);
-            setDateTimesValueArray(dateTimeValueArray);
-        }
-    };
-    /**
-     * Method To set both from date and to date as tomorrow's date
-     */
-    /* eslint-disable no-param-reassign */
-    const addTomorrow = () => {
-        let fromDate = new Date();
-        let toDate = new Date();
-        fromDate.setDate(fromDate.getDate() + 1);
-        toDate.setDate(toDate.getDate() + 1);
-        fromDate = getValueOfDate(fromDate);
-        toDate = getValueOfDate(toDate);
-        const dateTimeArray = [...dateTimesArray];
-        const dateTimeValueArray = [...dateTimesValueArray];
-        if (dateTimeArray.length > 0) {
-            dateTimeArray.forEach((item) => {
-                item.field[0].value = fromDate;
-                item.field[1].value = toDate;
-                item.field.forEach((fieldArray) => {
-                    if (dateTimeValueArray.length > 1) {
-                        dateTimeValueArray.forEach((arr) => {
-                            if (arr.fieldValue === fieldArray.column) {
-                                arr.value = fieldArray.value;
-                            }
-                        });
-                    } else {
-                        dateTimeValueArray.push({
-                            name: item.name,
-                            dataType: item.dataType,
-                            enabled: item.enabled,
-                            fieldValue: fieldArray.column,
-                            value: fieldArray.value
-                        });
-                    }
-                });
-            });
-
-            setDateTimesArray(dateTimeArray);
-            setDateTimesValueArray(dateTimeValueArray);
-        }
-    };
-    /**
-     * Method To set the date range as this month
-     */
-    /* eslint-disable no-param-reassign */
-    const addThisMonth = () => {
-        const today = new Date();
-        let fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
-        let toDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        fromDate = getValueOfDate(fromDate);
-        toDate = getValueOfDate(toDate);
-        const dateTimeArray = [...dateTimesArray];
-        const dateTimeValueArray = [...dateTimesValueArray];
-        if (dateTimeArray.length > 0) {
-            dateTimeArray.forEach((item) => {
-                item.field[0].value = fromDate;
-                item.field[1].value = toDate;
-                item.field.forEach((fieldArray) => {
-                    if (dateTimeValueArray.length > 1) {
-                        dateTimeValueArray.forEach((arr) => {
-                            if (arr.fieldValue === fieldArray.column) {
-                                arr.value = fieldArray.value;
-                            }
-                        });
-                    } else {
-                        dateTimeValueArray.push({
-                            name: item.name,
-                            dataType: item.dataType,
-                            enabled: item.enabled,
-                            fieldValue: fieldArray.column,
-                            value: fieldArray.value
-                        });
-                    }
-                });
-            });
-
-            setDateTimesArray(dateTimeArray);
-            setDateTimesValueArray(dateTimeValueArray);
-        }
-    };
-    /**
-     * Method To set the date range as next 14 days
-     */
-    /* eslint-disable no-param-reassign */
-    const addForteenDays = () => {
-        let fromDate = new Date();
-        let toDate = new Date();
-        fromDate.setDate(fromDate.getDate() + 1);
-        toDate.setDate(toDate.getDate() + 14);
-        fromDate = getValueOfDate(fromDate);
-        toDate = getValueOfDate(toDate);
-        const dateTimeArray = [...dateTimesArray];
-        const dateTimeValueArray = [...dateTimesValueArray];
-        if (dateTimeArray.length > 0) {
-            dateTimeArray.forEach((item) => {
-                item.field[0].value = fromDate;
-                item.field[1].value = toDate;
-                item.field.forEach((fieldArray) => {
-                    if (dateTimeValueArray.length > 1) {
-                        dateTimeValueArray.forEach((arr) => {
-                            if (arr.fieldValue === fieldArray.column) {
-                                arr.value = fieldArray.value;
-                            }
-                        });
-                    } else {
-                        dateTimeValueArray.push({
-                            name: item.name,
-                            dataType: item.dataType,
-                            enabled: item.enabled,
-                            fieldValue: fieldArray.column,
-                            value: fieldArray.value
-                        });
-                    }
-                });
-            });
-
-            setDateTimesArray(dateTimeArray);
-            setDateTimesValueArray(dateTimeValueArray);
-        }
-    };
-    /**
-     * Method To set the date range as next 7 days
-     */
-    /* eslint-disable no-param-reassign */
-    const addSevenDays = () => {
-        let fromDate = new Date();
-        let toDate = new Date();
-        fromDate.setDate(fromDate.getDate() + 1);
-        toDate.setDate(toDate.getDate() + 7);
-        fromDate = getValueOfDate(fromDate);
-        toDate = getValueOfDate(toDate);
-        const dateTimeArray = [...dateTimesArray];
-        const dateTimeValueArray = [...dateTimesValueArray];
-        if (dateTimeArray.length > 0) {
-            dateTimeArray.forEach((item) => {
-                item.field[0].value = fromDate;
-                item.field[1].value = toDate;
-                item.field.forEach((fieldArray) => {
-                    if (dateTimeValueArray.length > 1) {
-                        dateTimeValueArray.forEach((arr) => {
-                            if (arr.fieldValue === fieldArray.column) {
-                                arr.value = fieldArray.value;
-                            }
-                        });
-                    } else {
-                        dateTimeValueArray.push({
-                            name: item.name,
-                            dataType: item.dataType,
-                            enabled: item.enabled,
-                            fieldValue: fieldArray.column,
-                            value: fieldArray.value
-                        });
-                    }
-                });
-            });
-
-            setDateTimesArray(dateTimeArray);
-            setDateTimesValueArray(dateTimeValueArray);
-        }
-    };
-    /**
-     * Method To set the date range as current week Sunday to Saturday
-     */
-    /* eslint-disable no-param-reassign */
-    const addThisWeek = () => {
-        const today = new Date();
-        const from = today.getDate() - today.getDay();
-        const to = from + 6;
-        let fromDate = new Date(today.setDate(from)).toUTCString();
-        let toDate = new Date(today.setDate(to)).toUTCString();
-        fromDate = getValueOfDate(fromDate);
-        toDate = getValueOfDate(toDate);
-        const dateTimeArray = [...dateTimesArray];
-        const dateTimeValueArray = [...dateTimesValueArray];
-        if (dateTimeArray.length > 0) {
-            dateTimeArray.forEach((item) => {
-                item.field[0].value = fromDate;
-                item.field[1].value = toDate;
-                item.field.forEach((fieldArray) => {
-                    if (dateTimeValueArray.length > 1) {
-                        dateTimeValueArray.forEach((arr) => {
-                            if (arr.fieldValue === fieldArray.column) {
-                                arr.value = fieldArray.value;
-                            }
-                        });
-                    } else {
-                        dateTimeValueArray.push({
-                            name: item.name,
-                            dataType: item.dataType,
-                            enabled: item.enabled,
-                            fieldValue: fieldArray.column,
-                            value: fieldArray.value
-                        });
-                    }
-                });
-            });
-
-            setDateTimesArray(dateTimeArray);
-            setDateTimesValueArray(dateTimeValueArray);
-        }
-    };
-    /**
-     * Method To set the date range as next 30 days
-     */
-    /* eslint-disable no-param-reassign */
-    const addThirtyDays = () => {
-        const from = new Date();
-        const to = new Date();
-        from.setDate(from.getDate() + 1);
-        to.setDate(to.getDate() + 30);
-        const fromDate = getValueOfDate(from);
-        const toDate = getValueOfDate(to);
-        const dateTimeArray = [...dateTimesArray];
-        const dateTimeValueArray = [...dateTimesValueArray];
-        if (dateTimeArray.length > 0) {
-            dateTimeArray.forEach((item) => {
-                item.field[0].value = fromDate;
-                item.field[1].value = toDate;
-                item.field.forEach((fieldArray) => {
-                    if (dateTimeValueArray.length > 1) {
-                        dateTimeValueArray.forEach((arr) => {
-                            if (arr.fieldValue === fieldArray.column) {
-                                arr.value = fieldArray.value;
-                            }
-                        });
-                    } else {
-                        dateTimeValueArray.push({
-                            name: item.name,
-                            dataType: item.dataType,
-                            enabled: item.enabled,
-                            fieldValue: fieldArray.column,
-                            value: fieldArray.value
-                        });
-                    }
-                });
-            });
-
-            setDateTimesArray(dateTimeArray);
-            setDateTimesValueArray(dateTimeValueArray);
-        }
-    };
-    /**
-     * Method To set the date range as next n days
-     * @param {*} value is the no: of days after today
-     */
-    const nextDayChange = (value) => {
-        if (value === "") {
-            value = 1;
-        }
-        let fromDate = new Date();
-        let toDate = new Date();
-        if (value !== "0") {
-            fromDate.setDate(fromDate.getDate() + 1);
-            toDate.setDate(toDate.getDate() + parseInt(value, 10));
-        }
-        fromDate = getValueOfDate(fromDate);
-        toDate = getValueOfDate(toDate);
-        const dateTimeArray = [...dateTimesArray];
-        const dateTimeValueArray = [...dateTimesValueArray];
-        if (dateTimeArray.length > 0) {
-            dateTimeArray.forEach((item) => {
-                // Added for no-param-reassign lint errors
-                const item_ = item;
-                item_.field[0].value = fromDate;
-                item_.field[1].value = toDate;
-                item_.field.forEach((fieldArray) => {
-                    if (dateTimeValueArray.length > 1) {
-                        dateTimeValueArray.forEach((arr) => {
-                            // Added for no-param-reassign lint errors
-                            const arr_ = arr;
-                            if (arr_.fieldValue === fieldArray.column) {
-                                arr_.value = fieldArray.value;
-                            }
-                        });
-                    } else {
-                        dateTimeValueArray.push({
-                            name: item_.name,
-                            dataType: item_.dataType,
-                            enabled: item_.enabled,
-                            fieldValue: fieldArray.column,
-                            value: fieldArray.value
-                        });
-                    }
-                });
-            });
-
-            setDateTimesArray(dateTimeArray);
-            setDateTimesValueArray(dateTimeValueArray);
-        }
-    };
-    /**
-     * Method To set the date range as last n days
-     * @param {*} value is the no: of days before today
-     */
-    const lastDayChange = (value) => {
-        if (value === "") {
-            value = 1;
-        }
-        let fromDate = new Date();
-        let toDate = new Date();
-        if (value !== "0") {
-            fromDate.setDate(fromDate.getDate() - parseInt(value, 10));
-            toDate.setDate(toDate.getDate() - 1);
-        }
-        fromDate = getValueOfDate(fromDate);
-        toDate = getValueOfDate(toDate);
-        const dateTimeArray = [...dateTimesArray];
-        const dateTimeValueArray = [...dateTimesValueArray];
-        if (dateTimeArray.length > 0) {
-            dateTimeArray.forEach((item) => {
-                // Added for no-param-reassign lint errors
-                const item_ = item;
-                item_.field[0].value = fromDate;
-                item_.field[1].value = toDate;
-                item_.field.forEach((fieldArray) => {
-                    if (dateTimeValueArray.length > 1) {
-                        dateTimeValueArray.forEach((arr) => {
-                            // Added for no-param-reassign lint errors
-                            const arr_ = arr;
-                            if (arr_.fieldValue === fieldArray.column) {
-                                arr_.value = fieldArray.value;
-                            }
-                        });
-                    } else {
-                        dateTimeValueArray.push({
-                            name: item_.name,
-                            dataType: item_.dataType,
-                            enabled: item_.enabled,
-                            fieldValue: fieldArray.column,
-                            value: fieldArray.value
-                        });
-                    }
-                });
-            });
-
-            setDateTimesArray(dateTimeArray);
-            setDateTimesValueArray(dateTimeValueArray);
-        }
-    };
-    /**
-     * Method To create arrays containing values upon change trigger from respective input fields
-     * @param {*} item is the specific filter element object
-     * @param {*} value is value of the input field
-     */
-    const createTextComponentsArray = (item, value) => {
-        setShowSavePopUp("none");
-        setSaveWarningLabel("");
-        setSaveWarningClassName("");
-        const textComponentArray = [...textComponentsArray];
-        const textComponentValueArray = [...textComponentsValueArray];
-        if (textComponentValueArray.length > 0) {
-            const index = textComponentValueArray.findIndex(
-                (x) => x.name === item.name && x.dataType === item.dataType
-            );
-            if (index === -1) {
-                textComponentValueArray.push({
-                    name: item.name,
-                    dataType: item.dataType,
-                    enabled: item.enabled,
-                    value
-                });
-            } else {
-                textComponentValueArray[index].value = value;
-            }
-            textComponentValueArray.forEach((valueItem) => {
-                textComponentArray.forEach((items) => {
-                    // Added for no-param-reassign lint errors
-                    const item_ = items;
-                    if (item_.name === valueItem.name) {
-                        item_.validated = true;
-                        item_.warning = "";
-                    }
-                });
-            });
-        } else {
-            textComponentValueArray.push({
-                name: item.name,
-                dataType: item.dataType,
-                enabled: item.enabled,
-                value
-            });
-            textComponentValueArray.forEach((valueItem) => {
-                textComponentArray.forEach((textItem) => {
-                    // Added for no-param-reassign lint errors
-                    const item_ = textItem;
-                    if (item_.name === valueItem.name) {
-                        item_.validated = true;
-                        item_.warning = "";
-                    }
-                });
-            });
-        }
-        setTextComponentsValueArray(textComponentValueArray);
-    };
-    /**
-     * Method To toggle the switch to enable and disable the input fields
-     * @param {*} item is the specific filter element object
-     */
-    const handleTextComponentEnabled = (item) => {
-        const textComponentArray = [...textComponentsArray];
-        const index = textComponentArray.findIndex(
-            (x) => x.name === item.name && x.dataType === item.dataType
-        );
-        if (index !== -1) {
-            textComponentArray[index].enabled = !textComponentArray[index]
-                .enabled;
-        }
-        setTextComponentsArray(textComponentArray);
-        const textComponentValueArray = [...textComponentsValueArray];
-        if (textComponentValueArray.length > 0) {
-            // Added for no-param-reassign lint errors
-            const index_ = textComponentValueArray.findIndex(
-                (x) => x.name === item.name && x.dataType === item.dataType
-            );
-            if (index_ !== -1) {
-                textComponentValueArray[
-                    index_
-                ].enabled = !textComponentValueArray[index_].enabled;
-            }
-        }
-        setTextComponentsValueArray(textComponentValueArray);
-    };
-    /**
-     * Method To return the specific options array for autoComplete element
-     * @param {*} name is the name of the filter
-     * @param {*} typeName is the type of the filter
-     */
-    const returnOptions = (name, typeName) => {
-        let options = [];
-        filterData.filter.forEach((item) => {
-            if (item.name === name) {
-                item.types.forEach((type) => {
-                    if (type.name === typeName) {
-                        options = [...type.options];
-                    }
-                });
-            }
-        });
-        return options;
     };
 
     /**
@@ -1259,7 +409,7 @@ export default function Filter(props) {
         items.forEach((item) => {
             if (item.dataType === "AutoComplete") {
                 const autoCompleteArray = [...autoComplete];
-                const options = returnOptions(item.name, item.type);
+                const options = [];
                 if (autoCompleteArray.length > 0) {
                     const index = autoCompleteArray.findIndex(
                         (x) => x.name === item.name && item.type === x.type
@@ -1269,8 +419,6 @@ export default function Filter(props) {
                         autoCompleteArray.push({
                             name: item.name,
                             dataType: item.dataType,
-                            type: item.type,
-                            enabled: item.enabled,
                             value: item.value,
                             objectArray: options
                         });
@@ -1279,8 +427,6 @@ export default function Filter(props) {
                     autoCompleteArray.push({
                         name: item.name,
                         dataType: item.dataType,
-                        type: item.type,
-                        enabled: item.enabled,
                         value: item.value,
                         objectArray: options
                     });
@@ -1291,9 +437,7 @@ export default function Filter(props) {
                 if (dateTimeArray.length === 0) {
                     dateTimeArray.push({
                         name: item.name,
-                        dataType: item.dataType,
-                        enabled: item.enabled,
-                        field: []
+                        dataType: item.dataType
                     });
                     dateTimesValueArray.forEach((item_) => {
                         // Added for no-param-reassign lint errors
@@ -1318,7 +462,6 @@ export default function Filter(props) {
                         textComponentArray.push({
                             name: item.name,
                             dataType: item.dataType,
-                            enabled: item.enabled,
                             value: item.value
                         });
                     }
@@ -1326,7 +469,6 @@ export default function Filter(props) {
                     textComponentArray.push({
                         name: item.name,
                         dataType: item.dataType,
-                        enabled: item.enabled,
                         value: item.value
                     });
                 }
@@ -1352,8 +494,8 @@ export default function Filter(props) {
         const savedFilters = [];
         Object.keys(item).forEach((key) => {
             item[key].forEach((arrays) => {
-                Object.keys(arrays).forEach((key) => {
-                    tempArr.push(arrays[key]);
+                Object.keys(arrays).forEach((keys) => {
+                    tempArr.push(arrays[keys]);
                 });
             });
         });
@@ -1384,8 +526,6 @@ export default function Filter(props) {
                         autoCompleteArray.push({
                             name: items.name,
                             dataType: items.dataType,
-                            type: items.type,
-                            enabled: items.enabled,
                             value: items.value,
                             objectArray: arr
                         });
@@ -1394,8 +534,6 @@ export default function Filter(props) {
                     autoCompleteArray.push({
                         name: items.name,
                         dataType: items.dataType,
-                        type: items.type,
-                        enabled: items.enabled,
                         value: items.value,
                         objectArray: arr
                     });
@@ -1410,9 +548,7 @@ export default function Filter(props) {
                 if (saveTempDateTimeArray.length === 0) {
                     saveTempDateTimeArray.push({
                         name: items.name,
-                        dataType: items.dataType,
-                        enabled: items.enabled,
-                        field: []
+                        dataType: items.dataType
                     });
                 }
             }
@@ -1441,7 +577,6 @@ export default function Filter(props) {
                         textComponentArray.push({
                             name: items.name,
                             dataType: items.dataType,
-                            enabled: items.enabled,
                             value: items.value
                         });
                     }
@@ -1449,7 +584,6 @@ export default function Filter(props) {
                     textComponentArray.push({
                         name: items.name,
                         dataType: items.dataType,
-                        enabled: items.enabled,
                         value: items.value
                     });
                 }
@@ -1478,39 +612,6 @@ export default function Filter(props) {
                             <RightDrawer
                                 applyFilter={applyFilter}
                                 saveFilter={saveFilter}
-                                createAutoCompleteArray={
-                                    createAutoCompleteArray
-                                }
-                                handleAutoCompleteEnabled={
-                                    handleAutoCompleteEnabled
-                                }
-                                deleteAutoCompleteElement={
-                                    deleteAutoCompleteElement
-                                }
-                                autoCompleteArray={autoCompletesArray}
-                                dateTimesArray={dateTimesArray}
-                                deleteDateTimeElement={deleteDateTimeElement}
-                                handleDateTimeEnabled={handleDateTimeEnabled}
-                                createDateTimeArray={createDateTimeArray}
-                                addToday={addToday}
-                                addTomorrow={addTomorrow}
-                                addThisMonth={addThisMonth}
-                                addForteenDays={addForteenDays}
-                                addSevenDays={addSevenDays}
-                                addThisWeek={addThisWeek}
-                                addThirtyDays={addThirtyDays}
-                                lastDayChange={lastDayChange}
-                                nextDayChange={nextDayChange}
-                                textComponentsArray={textComponentsArray}
-                                deleteTextComponentElement={
-                                    deleteTextComponentElement
-                                }
-                                createTextComponentsArray={
-                                    createTextComponentsArray
-                                }
-                                handleTextComponentEnabled={
-                                    handleTextComponentEnabled
-                                }
                                 closeDrawer={closeDrawer}
                                 resetDrawer={resetDrawer}
                                 filterCount={filterCount}

@@ -28,7 +28,7 @@ const SavedFilters = (props) => {
                         data-testid="addSavedFilters-check"
                         onClick={() => {
                             // below two methods are required for closing the savedFilter list popUp
-                            //setShowFilter(false);
+                            // setShowFilter(false);
                             props.handleListFilter();
                             props.addSavedFilters(filterArray);
                         }}

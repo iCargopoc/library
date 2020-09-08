@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { IconTimes } from "../Utilities/SvgUtilities";
+import { ReactComponent as IconTimes } from "../images/icon-close.svg";
 
 export default function TextComponents(props) {
     const [textComponentArr, setTextComponentArr] = useState([]);
@@ -17,7 +17,7 @@ export default function TextComponents(props) {
             validationClass = "text-danger";
         }
         return (
-            <div key={item.name}>
+            <div key={item}>
                 <div className="filter__input">
                     <div className="filter__input-title">
                         <div className="filter__label">

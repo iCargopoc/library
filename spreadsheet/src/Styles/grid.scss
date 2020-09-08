@@ -69,9 +69,9 @@
 }
 .filterIcons {
     font-size: 14px;
-    margin: 0px 0px 0px 5px;
+    margin: 0px 0px 0px 10px;
     border: 1px solid #ddd;
-    padding: 2px 10px;
+    padding: 2px 5px;
     color: #566a81;
     cursor: pointer;
     background: #fff;
@@ -278,20 +278,23 @@ input.editor-checkbox {
     .react-grid-Toolbar {
         padding: 0;
         border: none;
-        right: 133px;
-        top: 26px;
+        right: 129px;
+        top: 43px;
         background-color: transparent;
         .btn {
             border: 1px solid #ddd;
             text-indent: -9999px;
             height: 27px;
-            border-radius: 0px;
-            width: 30px;
         }
     }
 }
 .tools {
     &:after {
+        content: "\f0b0";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
         color: #566a81;
         font-size: 18px;
         padding-right: 0.5em;
@@ -301,21 +304,4 @@ input.editor-checkbox {
         font-size: 15px;
         pointer-events: none;
     }
-}
-
-.dropdown-menu {
-    max-height: 146px;
-    overflow: scroll;
-    overflow-x: hidden;
-    margin-top: 0px;
-}
-
-.caret {
-    float: right;
-    margin-top: 5%;
-}
-
-#menu1 {
-    width: 160px;
-    text-align: left;
 }

@@ -28,6 +28,8 @@
     "peerDependencies": {
         "react": "^16.11.0",
         "react-dom": "^16.11.0",
+		"formik": "^2.1.5",
+		"bootstrap": "^4.4.1",
         "multiselect-react-dropdown": "^1.5.7",
         "react-bootstrap": "^1.0.1",
         "sass": "^1.25.0",
@@ -42,7 +44,8 @@
         "@storybook/addons": "^5.3.7",
         "@storybook/addon-essentials": "^6.0.16",
         "@storybook/preset-create-react-app": "^3.1.4",
-        "@storybook/addon-links": "^6.0.21"
+        "@storybook/addon-links": "^6.0.21",
+		"react-accessible-accordion": "^3.3.3"
     },
     "devDependencies": {
         "microbundle-crl": "^0.13.10",
@@ -77,6 +80,7 @@
         "multiselect-react-dropdown": "^1.5.7",
         "sass": "^1.25.0",
         "react": "^16.11.0",
+		"bootstrap": "^4.4.1",
         "react-bootstrap": "^1.0.1",
         "react-dom": "^16.11.0",
         "react-scripts": "3.4.1",
@@ -92,7 +96,8 @@
         "@storybook/addons": "^5.3.7",
         "@storybook/addon-essentials": "^6.0.16",
         "@storybook/preset-create-react-app": "^3.1.4",
-        "@storybook/addon-links": "^6.0.21"
+        "@storybook/addon-links": "^6.0.21",
+		"react-accessible-accordion": "^3.3.3"
     },
     "files": [
         "dist"

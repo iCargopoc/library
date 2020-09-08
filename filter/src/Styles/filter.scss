@@ -2,6 +2,7 @@
     $remSize: $size/$em-base;
     @return #{$remSize}rem;
 }
+
 .neo-filter {
     z-index: 9;
     box-shadow: 0px 0px 30px rgba(32, 77, 111, 0.4);
@@ -272,37 +273,6 @@
         padding: 5px 10px;
         height: 30px;
         color: #1f567e;
-    }
-    .accordion {
-        .card {
-            border: none !important;
-            padding: 0rem !important;
-            .card-header {
-                display: flex;
-            }
-            .accordionLeft {
-                margin-left: auto;
-            }
-            .accordionRight {
-                margin-left: auto;
-                transform: rotate(180deg);
-            }
-        }
-        .card-header {
-            background-color: #fff !important;
-            border-bottom: none !important;
-            padding: 0rem !important;
-            position: relative;
-            cursor: pointer;
-        }
-        .card-body {
-            padding: 0rem !important;
-        }
-        .firstAccordion {
-            cursor: pointer;
-            padding: 0px;
-            list-style: none;
-        }
     }
     label {
         margin-bottom: 0rem !important;
