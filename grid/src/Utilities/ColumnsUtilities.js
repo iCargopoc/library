@@ -85,44 +85,68 @@ export const extractColumns = (
         modifiedColumns.push(column);
     });
 
-    const modifiedCols = Object.values(modifiedColumns).map((subHeader) => {
-        return {
-            Header: subHeader.groupHeader,
-            columns: columns.filter(
-                (inner) => inner.Header === subHeader.Header
-            )
-        };
-    });
+    for (let i = 0; i < modifiedColumns.length; i++) {
+        const element = modifiedColumns[i];
+        if ("groupHeader" in element) {
+            const modifiedCols = Object.values(modifiedColumns).map(
+                (subHeader) => {
+                    return {
+                        Header:
+                            subHeader.groupHeader === "" ||
+                            subHeader.groupHeader === undefined
+                                ? subHeader.Header
+                                : subHeader.groupHeader,
+                        columns: columns.filter(
+                            (inner) => inner.Header === subHeader.Header
+                        )
+                    };
+                }
+            );
 
-    const arraySamp = [];
-    modifiedCols.forEach((item) => {
-        item.columns.forEach((it) => {
-            arraySamp.push(it);
-        });
-    });
-    modifiedCols.forEach((item) => {
-        if (item.columns) {
-            item.columns.forEach((col) => {
-                arraySamp.forEach((it) => {
-                    const index = item.columns.findIndex(
-                        (its) =>
-                            its.Header === it.Header &&
-                            its.groupHeader === it.groupHeader
-                    );
-                    if (index === -1 && it.groupHeader === col.groupHeader) {
-                        item.columns.push(it);
-                    }
+            modifiedCols.forEach((column) => {
+                column.columns.forEach((groupHeader) => {
+                    return groupHeader.groupHeader;
                 });
             });
+
+            const arraySamp = [];
+            modifiedCols.forEach((item) => {
+                item.columns.forEach((it) => {
+                    arraySamp.push(it);
+                });
+            });
+            modifiedCols.forEach((item) => {
+                if (item.columns) {
+                    item.columns.forEach((col) => {
+                        arraySamp.forEach((it) => {
+                            const index = item.columns.findIndex(
+                                (its) =>
+                                    its.Header === it.Header &&
+                                    its.groupHeader === it.groupHeader
+                            );
+                            if (
+                                index === -1 &&
+                                it.groupHeader === col.groupHeader &&
+                                it.groupHeader !== "" &&
+                                it.groupHeader !== undefined
+                            ) {
+                                item.columns.push(it);
+                            }
+                        });
+                    });
+                }
+            });
+
+            const updatedModifiedColumns = Object.values(
+                modifiedCols.reduce(
+                    (acc, cur) => Object.assign(acc, { [cur.Header]: cur }),
+                    {}
+                )
+            );
+            return updatedModifiedColumns;
         }
-    });
-    const updatedModifiedColumns = Object.values(
-        modifiedCols.reduce(
-            (acc, cur) => Object.assign(acc, { [cur.Header]: cur }),
-            {}
-        )
-    );
-    return updatedModifiedColumns;
+    }
+    return modifiedColumns;
 };
 
 export const extractAdditionalColumn = (additionalColumn, isDesktop) => {

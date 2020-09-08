@@ -268,23 +268,6 @@ const Grid = memo((props) => {
     };
 
     useEffect(() => {
-        // Add duplicate copy of inner cells to be used for data chooser
-        processedColumns.forEach((column) => {
-            column.columns.forEach((col) => {
-                const columnTpProcess = col;
-                if (col.innerCells) {
-                    columnTpProcess.originalInnerCells = col.innerCells;
-                }
-                return columnTpProcess;
-            });
-        });
-        if (additionalColumn) {
-            const { innerCells } = additionalColumn;
-            if (innerCells) {
-                additionalColumn.originalInnerCells = innerCells;
-            }
-        }
-
         // Make API call to fetch initial set of data.
         setIsLoading(true);
         loadData().then((data) => {

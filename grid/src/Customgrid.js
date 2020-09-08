@@ -68,9 +68,13 @@ const Customgrid = memo((props) => {
 
     const updatedOriginalColumns = [];
     originalColumns.forEach((item) => {
-        item.columns.forEach((col) => {
-            updatedOriginalColumns.push(col);
-        });
+        if (item.columns !== undefined) {
+            item.columns.forEach((col) => {
+                updatedOriginalColumns.push(col);
+            });
+        } else {
+            updatedOriginalColumns.push(item);
+        }
     });
     // Local state value for holding columns configuration
     const [columns, setColumns] = useState(managableColumns);
