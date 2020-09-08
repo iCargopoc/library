@@ -59,6 +59,12 @@ export default function Filter(props) {
     const openShowSavePopUp = () => {
         setShowSavePopUp("");
     };
+
+    /* Method To close the save popup on clicking cancel button */
+    const cancelSavePopup = () => {
+        setShowSavePopUp("none");
+    };
+
     /**
      * Method which creates the array which contains the elements to be shown in the applied filter chips
      */
@@ -293,10 +299,13 @@ export default function Filter(props) {
      * Method To create the filter arrays for each specific type based on datatype
      * @param {*} name is the name of the filter
      * @param {*} dataType is the dataType of the filter
+     * @param {*} dataSource is the condition array of the filter if present
      * @param {*} condition is the condition array of the filter if present
      */
     /* eslint-disable no-param-reassign */
-    const fromLeftToRight = (name, dataType) => {
+    const fromLeftToRight = (name, dataType, condition, dataSource) => {
+        setRecentFilterShow("none");
+        setFilterShow("");
         setShowSavePopUp("none");
         setSaveWarningLabel("");
         setSaveWarningClassName("");
@@ -306,7 +315,9 @@ export default function Filter(props) {
             const value = {
                 name,
                 dataType,
-                objectArray: []
+                objectArray: [],
+                dataSource,
+                condition
             };
             filterData.filter.forEach((item) => {
                 if (item.name === value.name) {
@@ -326,13 +337,17 @@ export default function Filter(props) {
                 if (index === -1) {
                     autoCompleteArray.push({
                         name,
-                        dataType
+                        dataType,
+                        dataSource,
+                        condition
                     });
                 }
             } else {
                 autoCompleteArray.push({
                     name,
-                    dataType
+                    dataType,
+                    dataSource,
+                    condition
                 });
             }
             setAutoCompletesArray(autoCompleteArray);
@@ -340,7 +355,8 @@ export default function Filter(props) {
         if (dataType === "DateTime") {
             const value = {
                 name,
-                dataType
+                dataType,
+                condition
             };
             filterData.filter.forEach((item) => {
                 if (item.name === value.name) {
@@ -355,13 +371,15 @@ export default function Filter(props) {
                 if (index === -1) {
                     dateTimeArray.push({
                         name,
-                        dataType
+                        dataType,
+                        condition
                     });
                 }
             } else {
                 dateTimeArray.push({
                     name,
-                    dataType
+                    dataType,
+                    condition
                 });
             }
             setDateTimesArray(dateTimeArray);
@@ -369,7 +387,8 @@ export default function Filter(props) {
         if (dataType === "Text") {
             const value = {
                 name,
-                dataType
+                dataType,
+                condition
             };
             filterData.filter.forEach((item) => {
                 if (item.name === value.name) {
@@ -385,13 +404,15 @@ export default function Filter(props) {
                 if (index === -1) {
                     textComponentArray.push({
                         name,
-                        dataType
+                        dataType,
+                        condition
                     });
                 }
             } else {
                 textComponentArray.push({
                     name,
-                    dataType
+                    dataType,
+                    condition
                 });
             }
             setTextComponentsArray(textComponentArray);
@@ -597,6 +618,7 @@ export default function Filter(props) {
     const handleClickAway = () => {
         setApplyFilter(false);
     };
+    console.log(autoCompletesArray, textComponentsArray, dateTimesArray);
     return (
         <ClickAwayListener onClickAway={handleClickAway}>
             {showApplyFilter && (
@@ -618,6 +640,7 @@ export default function Filter(props) {
                                 saveWarningClassName={saveWarningClassName}
                                 saveWarningLabel={saveWarningLabel}
                                 showSavePopUp={showSavePopUp}
+                                cancelSavePopup={cancelSavePopup}
                                 emptyFilterClassName={emptyFilterClassName}
                                 emptyFilterWarning={emptyFilterWarning}
                                 openShowSavePopUp={openShowSavePopUp}

@@ -111,6 +111,7 @@ export default function LeftDrawer(props) {
                                                     props.fromLeftToRight(
                                                         item.name,
                                                         type.dataType,
+                                                        type.condition,
                                                         type.dataSource
                                                     );
                                                 }}
@@ -141,6 +142,7 @@ export default function LeftDrawer(props) {
                             props.fromLeftToRight(
                                 item.name,
                                 item.dataType,
+                                item.condition,
                                 item.dataSource
                             );
                             // props.addedFilterCount();

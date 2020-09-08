@@ -14,9 +14,8 @@ export const extractColumns = (
 
     const modifiedColumns = [];
     // Loop through the columns configuration and create required column structure
-
     filteredColumns.forEach((column, index) => {
-        const { originalInnerCells, innerCells, sortValue, accessor } = column;
+        const { originalInnerCells, innerCells, accessor, sortValue } = column;
         const isInnerCellsPresent = innerCells && innerCells.length > 0;
         const isOriginalInnerCellsPresent =
             originalInnerCells && originalInnerCells.length > 0;

@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
-
 import { useFormik } from "formik";
 import { SaveLogo } from "../Utilities/SvgUtilities";
+// import { IDatePicker } from "@neo-ui/date";
+// import IAirport from "@neo-ui/airport";
 
 const RightDrawer = (props) => {
     const [showSavePopup, setShowSavePopup] = useState("none");
@@ -60,7 +61,7 @@ const RightDrawer = (props) => {
      * Method To close the save popup on clicking cancel button
      */
     const cancelSavePopup = () => {
-        setShowSavePopup("none");
+        // setShowSavePopup("none");
         setSaveFilterWarning("");
         setWarningLabel("");
     };
@@ -91,14 +92,20 @@ const RightDrawer = (props) => {
         <div>
             <form onSubmit={formik.handleSubmit}>
                 <div
-                    style={{ display: recentFilterShow }}
+                    style={{
+                        display: recentFilterShow
+                    }}
                     className="filter__content"
                 >
                     <div>Recent Filters</div>
                     {recent}
                 </div>
 
-                <div style={{ display: filterShow }}>
+                <div
+                    style={{
+                        display: filterShow
+                    }}
+                >
                     <div className="filter__title">
                         Selected Filters
                         <span className="filter-count">
@@ -111,7 +118,9 @@ const RightDrawer = (props) => {
                             <Button
                                 className="button-save"
                                 variant=""
-                                onClick={props.openShowSavePopUp}
+                                onClick={() => {
+                                    props.openShowSavePopUp();
+                                }}
                             >
                                 <SaveLogo />
                                 <span>SAVE</span>
@@ -141,7 +150,9 @@ const RightDrawer = (props) => {
                             </Button>
                         </div>
                         <div
-                            style={{ display: showSavePopup }}
+                            style={{
+                                display: showSavePopup
+                            }}
                             className="popup--save"
                         >
                             <h5>Save the Filter</h5>
@@ -165,6 +176,7 @@ const RightDrawer = (props) => {
                                     data-testid="cancelSavePopup-button"
                                     onClick={() => {
                                         cancelSavePopup();
+                                        props.cancelSavePopup();
                                     }}
                                 >
                                     Cancel
@@ -202,7 +214,8 @@ RightDrawer.propTypes = {
     openShowSavePopUp: PropTypes.any,
     resetDrawer: PropTypes.any,
     applyFilter: PropTypes.any,
-    saveFilter: PropTypes.any
+    saveFilter: PropTypes.any,
+    cancelSavePopup: PropTypes.any
 };
 
 export default RightDrawer;
