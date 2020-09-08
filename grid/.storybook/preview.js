@@ -1,3 +1,3 @@
 export const parameters = {
-    actions: { argTypesRegex: "^on[A-Z].*", passArgsFirst: false }
+    actions: { argTypesRegex: "^on[A-Z].*" }
 };

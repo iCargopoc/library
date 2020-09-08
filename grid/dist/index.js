@@ -16,7 +16,7 @@ var update = _interopDefault(require('immutability-helper'));
 var JsPdf = _interopDefault(require('jspdf'));
 require('jspdf-autotable');
 var XLSX = require('xlsx');
-require('!style-loader!css-loader!sass-loader!./Styles/main.scss');
+require('!style-loader!css-loader!sass-loader!../dist/Styles/main.scss');
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;

@@ -4,7 +4,7 @@ import "./example.css";
 import Grid from "../src/index";
 
 import FlightIcon from "./images/FlightIcon.png";
-import { fetchData } from "../example/src/getData";
+import { fetchData } from "./getData";
 import { getValueOfDate } from "./utils/DateUtility";
 import FlightEdit from "./cells/FlightEdit";
 import SrEdit from "./cells/SrEdit";
@@ -75,8 +75,9 @@ const airportCodeList = [
 ];
 
 const loadData = async () => {
+    const oldIndex = index;
     index = index + pageSize;
-    return await fetchData(index, pageSize);
+    return await fetchData(oldIndex, pageSize);
 };
 
 let columns = [
@@ -635,7 +636,6 @@ export default {
 };
 
 const Template = (args) => {
-    console.log(args.loadData);
     return (
         <Grid
             title="AWBs"
