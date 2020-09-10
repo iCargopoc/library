@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
 import JsPdf from "jspdf";
@@ -11,7 +11,7 @@ import {
     IconPdf
 } from "../../Utilities/SvgUtilities";
 
-const ExportData = memo((props) => {
+const ExportData = (props) => {
     const {
         isExportOverlayOpen,
         toggleExportDataOverlay,
@@ -331,7 +331,8 @@ const ExportData = memo((props) => {
 
     useEffect(() => {
         setManagedColumns(updatedColumnsPerUserSelection);
-    }, [columns, isRowExpandEnabled]);
+        setSearchedColumns(updatedColumns);
+    }, [columns, isRowExpandEnabled, additionalColumn]);
 
     if (isExportOverlayOpen) {
         return (
@@ -511,7 +512,7 @@ const ExportData = memo((props) => {
         );
     }
     return <div />;
-});
+};
 
 ExportData.propTypes = {
     isExportOverlayOpen: PropTypes.any,

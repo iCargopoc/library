@@ -1,14 +1,13 @@
 /* eslint-disable no-undef */
 import React from "react";
-import { render, waitFor, cleanup, fireEvent } from "@testing-library/react";
+import { render, cleanup, fireEvent } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
 /* eslint-disable no-unused-vars */
 import regeneratorRuntime from "regenerator-runtime";
 import Grid from "../src/index";
 
-describe("render Customgrid ", () => {
-    jest.setTimeout(30000);
+describe("render Index file ", () => {
     function mockOffsetSize(width, height) {
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,
@@ -330,23 +329,7 @@ describe("render Customgrid ", () => {
     const mockUpdateRowData = jest.fn();
     const mockDeleteRowData = jest.fn();
     const mockSelectBulkData = jest.fn();
-
-    function getDataToLoad(type) {
-        if (type === "small") {
-            return smallData;
-        }
-        return data;
-    }
-
-    const getData = async () => {
-        const resp = await getDataToLoad();
-        return resp;
-    };
-
-    const getSmallData = async () => {
-        const resp = await getDataToLoad("small");
-        return resp;
-    };
+    const mockLoadMoreData = jest.fn();
 
     let mockContainer;
     beforeEach(() => {
@@ -355,14 +338,16 @@ describe("render Customgrid ", () => {
     });
     afterEach(cleanup);
 
-    it("test row expand, column filter and Ascending group sort without row height calculation", async () => {
+    it("test row expand, column filter and Ascending group sort without row height calculation", () => {
         mockOffsetSize(600, 600);
         const { container } = render(
             <Grid
                 title={mockTitle}
                 gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
-                loadData={getData}
+                gridData={data}
+                isNextPageAvailable={false}
+                loadMoreData={mockLoadMoreData}
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
                 rowActions={mockRowActions}
@@ -373,7 +358,7 @@ describe("render Customgrid ", () => {
                 selectBulkData={mockSelectBulkData}
             />
         );
-        const gricContainer = await waitFor(() => container);
+        const gricContainer = container;
 
         // Row expansion
         expect(gricContainer).toBeInTheDocument();
@@ -446,14 +431,16 @@ describe("render Customgrid ", () => {
         expect(sortOverlay).toBeNull();
     });
 
-    it("test Descending group sort with row height calculation", async () => {
+    it("test Descending group sort with row height calculation", () => {
         mockOffsetSize(600, 600);
         const { container } = render(
             <Grid
                 title={mockTitle}
                 gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
-                loadData={getData}
+                gridData={data}
+                isNextPageAvailable={false}
+                loadMoreData={mockLoadMoreData}
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
                 rowActions={mockRowActions}
@@ -465,7 +452,7 @@ describe("render Customgrid ", () => {
                 selectBulkData={mockSelectBulkData}
             />
         );
-        const gricContainer = await waitFor(() => container);
+        const gricContainer = container;
         expect(gricContainer).toBeInTheDocument();
 
         // Apply Descending Sort
@@ -508,14 +495,16 @@ describe("render Customgrid ", () => {
         expect(sortOverlay).toBeNull();
     });
 
-    it("test row options functionalities and column sort with row height calculation", async () => {
+    it("test row options functionalities and column sort with row height calculation", () => {
         mockOffsetSize(600, 600);
         const { getByText, container } = render(
             <Grid
                 title={mockTitle}
                 gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
-                loadData={getData}
+                gridData={data}
+                isNextPageAvailable={false}
+                loadMoreData={mockLoadMoreData}
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
                 rowActions={mockRowActions}
@@ -527,7 +516,7 @@ describe("render Customgrid ", () => {
                 selectBulkData={mockSelectBulkData}
             />
         );
-        const gricContainer = await waitFor(() => container);
+        const gricContainer = container;
         expect(gricContainer).toBeInTheDocument();
 
         // Row Options
@@ -619,14 +608,16 @@ describe("render Customgrid ", () => {
         });
     });
 
-    it("test grid with 2 rows to trigger the load more page function", async () => {
+    it("test grid with 2 rows to trigger the load more page function", () => {
         mockOffsetSize(600, 600);
         const { container } = render(
             <Grid
                 title={mockTitle}
                 gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
-                loadData={getSmallData}
+                gridData={smallData}
+                isNextPageAvailable
+                loadMoreData={mockLoadMoreData}
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
                 rowActions={mockRowActions}
@@ -638,7 +629,7 @@ describe("render Customgrid ", () => {
                 selectBulkData={mockSelectBulkData}
             />
         );
-        const gricContainer = await waitFor(() => container);
+        const gricContainer = container;
         expect(gricContainer).toBeInTheDocument();
     });
 });

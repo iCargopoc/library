@@ -1,7 +1,7 @@
-import React, { memo } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
-const DefaultColumnFilter = memo(({ column: { filterValue, setFilter } }) => {
+const DefaultColumnFilter = ({ column: { filterValue, setFilter } }) => {
     return (
         <input
             className="txt"
@@ -12,7 +12,7 @@ const DefaultColumnFilter = memo(({ column: { filterValue, setFilter } }) => {
             placeholder="Search"
         />
     );
-});
+};
 
 DefaultColumnFilter.propTypes = {
     column: PropTypes.any

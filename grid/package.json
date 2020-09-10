@@ -69,6 +69,7 @@
         "sass": "^1.25.0",
         "sass-loader": "^9.0.3",
         "style-loader": "^1.2.1",
-        "xlsx": "^0.16.5"
+        "xlsx": "^0.16.5",
+        "prettier": "^2.0.4"
     }
 }

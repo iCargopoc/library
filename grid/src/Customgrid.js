@@ -1,7 +1,6 @@
 import React, {
     useCallback,
     useState,
-    memo,
     useEffect,
     createRef,
     useMemo
@@ -41,7 +40,7 @@ import {
 
 const listRef = createRef(null);
 
-const Customgrid = memo((props) => {
+const Customgrid = (props) => {
     const {
         title,
         gridHeight,
@@ -294,6 +293,10 @@ const Customgrid = memo((props) => {
             listRef.current.resetAfterIndex(0, true);
         }
     });
+    useEffect(() => {
+        setColumns(managableColumns);
+        setIsRowExpandEnabled(isExpandContentAvailable);
+    }, [managableColumns, isExpandContentAvailable]);
 
     // Render each row and cells in each row, using attributes from react window list.
     const RenderRow = useCallback(
@@ -553,7 +556,7 @@ const Customgrid = memo((props) => {
             </div>
         </div>
     );
-});
+};
 
 Customgrid.propTypes = {
     title: PropTypes.any,

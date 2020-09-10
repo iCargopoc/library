@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import SortingList from "./sortingList";
 import { IconClose } from "../../Utilities/SvgUtilities";
 
-const GroupSort = memo((props) => {
+const GroupSort = (props) => {
     const {
         isGroupSortOverLayOpen,
         toggleGroupSortOverLay,
@@ -184,7 +184,7 @@ const GroupSort = memo((props) => {
         );
     }
     return <div />;
-});
+};
 
 GroupSort.propTypes = {
     isGroupSortOverLayOpen: PropTypes.any,

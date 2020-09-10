@@ -1,9 +1,9 @@
-import React, { memo, useState } from "react";
+import React, { useState } from "react";
 import { useAsyncDebounce } from "react-table";
 import PropTypes from "prop-types";
 import { IconSearch } from "../Utilities/SvgUtilities";
 
-const GlobalFilter = memo(({ globalFilter, setGlobalFilter }) => {
+const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
     const [value, setValue] = useState(globalFilter);
 
     const onChange = useAsyncDebounce((changedValue) => {
@@ -27,7 +27,7 @@ const GlobalFilter = memo(({ globalFilter, setGlobalFilter }) => {
             </i>
         </div>
     );
-});
+};
 
 GlobalFilter.propTypes = {
     globalFilter: PropTypes.any,

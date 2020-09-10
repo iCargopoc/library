@@ -1,7 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 
 import React, { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
 import PropTypes from "prop-types";
 import {
     Accordion,
@@ -108,11 +107,11 @@ export default function LeftDrawer(props) {
                                                 }}
                                                 data-testid="firstAccordion"
                                                 onClick={() => {
-                                                    props.fromLeftToRight(
+                                                    props.portValuesFromLeftToRight(
                                                         item.name,
+                                                        type.name,
                                                         type.dataType,
-                                                        type.condition,
-                                                        type.dataSource
+                                                        type.condition
                                                     );
                                                 }}
                                                 key={type.name}
@@ -142,8 +141,7 @@ export default function LeftDrawer(props) {
                             props.fromLeftToRight(
                                 item.name,
                                 item.dataType,
-                                item.condition,
-                                item.dataSource
+                                item.condition
                             );
                             // props.addedFilterCount();
                         }}
@@ -155,37 +153,8 @@ export default function LeftDrawer(props) {
         }
         return <div key={item.name} />;
     });
-    // const conditionHeads = leftDrawData.map((item, index) => {
-    //     if (item.condition.length) {
-    //         return (
-    //             <div className="conditionHeads" key={index}>
-    //                 <li
-    //                     role="presentation"
-    //                     style={{ fontWeight: item.weight }}
-    //                     onClick={() => {
-    //                         props.fromLeftToRight(
-    //                             item.name,
-    //                             item.dataType,
-    //                             item.enabled,
-    //                             item.types,
-    //                             item.field,
-    //                             item.condition,
-    //                             item.dataSource,
-    //                             item.validationMessage,
-    //                             item.options
-    //                         );
-    //                         // props.addedFilterCount();
-    //                     }}
-    //                 >
-    //                     {item.name}
-    //                 </li>
-    //             </div>
-    //         );
-    //     }
-    //     return <div key={index} />;
-    // });
     const normalHeads = leftDrawData.map((item) => {
-        if (item.dataType === "Text") {
+        if (item.dataType === "TextField") {
             return (
                 <div className="normalHeads">
                     <li
@@ -197,8 +166,7 @@ export default function LeftDrawer(props) {
                             props.fromLeftToRight(
                                 item.name,
                                 item.dataType,
-                                item.condition,
-                                item.dataSource
+                                item.condition
                             );
                             // props.addedFilterCount();
                         }}
@@ -212,17 +180,15 @@ export default function LeftDrawer(props) {
     });
     return (
         <div>
-            <Form.Row>
-                <Form.Control
-                    required
-                    type="text"
-                    placeholder="Search a Filter"
-                    defaultValue=""
-                    className="customControl"
-                    data-testid="searchFilterHandler-input"
-                    onChange={searchFilterHandler}
-                />
-            </Form.Row>
+            <input
+                required
+                type="text"
+                placeholder="Search a Filter"
+                defaultValue=""
+                className="customControl"
+                data-testid="searchFilterHandler-input"
+                onChange={searchFilterHandler}
+            />
             <div className="leftDrawer">
                 <div>{accordianHeads}</div>
                 <div>{fieldHeads}</div>
@@ -234,5 +200,6 @@ export default function LeftDrawer(props) {
 
 LeftDrawer.propTypes = {
     filterData: PropTypes.any,
-    fromLeftToRight: PropTypes.any
+    fromLeftToRight: PropTypes.any,
+    portValuesFromLeftToRight: PropTypes.any
 };

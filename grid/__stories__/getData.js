@@ -1,7 +1,7 @@
 export const fetchData = async (index, pageSize) => {
     const pageNumber = Math.floor(index / pageSize) + 1;
 
-    let response = await fetch(
+    const response = await fetch(
         // `https://skyforceapi.azurewebsites.net/api/cargoflightdetails?currentPage=${pageNumber}&pageSize=${pageSize}`
         `https://sxgfhbcma2.execute-api.us-east-2.amazonaws.com/default/cargoFlightList?currentPage=${pageNumber}&pageSize=${pageSize}`
     )
@@ -10,7 +10,7 @@ export const fetchData = async (index, pageSize) => {
             return res;
         })
         .catch((error) => {
-            console.log("Error in fatch data :  " + error);
+            console.log(`Error in fatch data :  ${error}`);
         });
 
     if (response !== undefined && response.data && response.data.result) {

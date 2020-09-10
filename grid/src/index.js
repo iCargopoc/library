@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
     extractColumns,
@@ -10,12 +10,14 @@ import Customgrid from "./Customgrid";
 // eslint-disable-next-line import/no-unresolved
 import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 
-const Grid = memo((props) => {
+const Grid = (props) => {
     const {
         title,
         gridHeight,
         gridWidth,
-        loadData,
+        gridData,
+        isNextPageAvailable,
+        loadMoreData,
         columns,
         columnToExpand,
         rowActions,
@@ -30,14 +32,8 @@ const Grid = memo((props) => {
     // Check if device is desktop
     const isDesktop = window.innerWidth > 1024;
 
-    // Set state value for variable to check if there is anext page available
-    const [hasNextPage, setHasNextPage] = useState(true);
     // Set state value for variable to check if the loading process is going on
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
-    // Local state value for checking if data is being loaded from API
-    const [isLoading, setIsLoading] = useState(false);
-    // Set state value for variable to hold grid data
-    const [items, setItems] = useState([]);
     // Local state for group sort options
     const [groupSortOptions, setGroupSortOptions] = useState([]);
 
@@ -100,30 +96,13 @@ const Grid = memo((props) => {
 
     // Gets triggered when one row item is updated
     const updateRowInGrid = (original, updatedRow) => {
-        setItems((old) =>
-            old.map((row) => {
-                let newRow = row;
-                if (
-                    Object.entries(row).toString() ===
-                    Object.entries(original).toString()
-                ) {
-                    newRow = updatedRow;
-                }
-                return newRow;
-            })
-        );
         if (updateRowData) {
-            updateRowData(updatedRow);
+            updateRowData(original, updatedRow);
         }
     };
 
     // Gets triggered when one row item is deleted
     const deleteRowFromGrid = (original) => {
-        setItems((old) =>
-            old.filter((row) => {
-                return row !== original;
-            })
-        );
         if (deleteRowData) {
             deleteRowData(original);
         }
@@ -142,8 +121,8 @@ const Grid = memo((props) => {
         updateRowInGrid
     );
 
-    // Create memoized column, to be used by grid component
-    const gridColumns = useMemo(() => processedColumns, []);
+    // Create columns variable, to be used by grid component
+    const gridColumns = processedColumns || [];
 
     // Local variable for keeping the expanded row rendering method
     const renderExpandedContent = additionalColumn
@@ -252,47 +231,20 @@ const Grid = memo((props) => {
     };
 
     // Gets called when page scroll reaches the bottom of the grid.
-    // Fetch the next set of data and append it to the variable holding grid data and update the state value.
-    // Also update the hasNextPage state value to False once API response is empty, to avoid unwanted API calls.
+    // Trigger call back and get the grid data updated.
     const loadNextPage = () => {
-        if (hasNextPage) {
-            setIsLoading(true);
+        if (isNextPageAvailable) {
             setIsNextPageLoading(true);
-            loadData().then((data) => {
-                setIsLoading(false);
-                setHasNextPage(data && data.length > 0);
-                setIsNextPageLoading(false);
-                setItems(items.concat(data));
-            });
+            loadMoreData();
         }
     };
 
     useEffect(() => {
-        // Add duplicate copy of inner cells to be used for data chooser
-        // processedColumns.map((column) => {
-        //     const columnTpProcess = column;
-        //     if (column.innerCells) {
-        //         columnTpProcess.originalInnerCells = column.innerCells;
-        //     }
-        //     return columnTpProcess;
-        // });
-        // if (additionalColumn) {
-        //     const { innerCells } = additionalColumn;
-        //     if (innerCells) {
-        //         additionalColumn.originalInnerCells = innerCells;
-        //     }
-        // }
-
-        // Make API call to fetch initial set of data.
-        setIsLoading(true);
-        loadData().then((data) => {
-            setIsLoading(false);
-            setItems(data);
-        });
-    }, []);
+        setIsNextPageLoading(false);
+    }, [gridData]);
 
     // Sort the data based on the user selected group sort optipons
-    const data = getSortedData([...items]);
+    const data = getSortedData([...gridData]);
 
     return (
         <div className="grid-component-container iCargo__custom">
@@ -326,7 +278,7 @@ const Grid = memo((props) => {
                         displayExpandedContent={displayExpandedContent}
                         rowActions={rowActions}
                         rowActionCallback={rowActionCallback}
-                        hasNextPage={hasNextPage}
+                        hasNextPage={isNextPageAvailable}
                         isNextPageLoading={isNextPageLoading}
                         loadNextPage={loadNextPage}
                         doGroupSort={doGroupSort}
@@ -343,18 +295,14 @@ const Grid = memo((props) => {
                 </div>
             ) : (
                 <h2 style={{ textAlign: "center", marginTop: "70px" }}>
-                    {isLoading ? (
-                        "Initializing Grid..."
-                    ) : (
-                        <span className="error">
-                            Invalid Data or Column Configurations
-                        </span>
-                    )}
+                    <span className="error">
+                        Invalid Data or Column Configurations
+                    </span>
                 </h2>
             )}
         </div>
     );
-});
+};
 
 Grid.propTypes = {
     title: PropTypes.any,
@@ -362,7 +310,9 @@ Grid.propTypes = {
     gridWidth: PropTypes.any,
     columns: PropTypes.any,
     columnToExpand: PropTypes.any,
-    loadData: PropTypes.any,
+    gridData: PropTypes.any,
+    isNextPageAvailable: PropTypes.any,
+    loadMoreData: PropTypes.any,
     getRowEditOverlay: PropTypes.any,
     updateRowData: PropTypes.any,
     deleteRowData: PropTypes.any,

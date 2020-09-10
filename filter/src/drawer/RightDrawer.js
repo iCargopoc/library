@@ -3,10 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { useFormik } from "formik";
+import { useFormik, withFormik } from "formik";
+import Port from "../types/Port";
+import DateTimeComponent from "../types/DateTimeComponent";
+import TextField from "../types/TextField";
 import { SaveLogo } from "../Utilities/SvgUtilities";
-// import { IDatePicker } from "@neo-ui/date";
-// import IAirport from "@neo-ui/airport";
+import "react-datepicker/dist/react-datepicker.css";
 
 const RightDrawer = (props) => {
     const [showSavePopup, setShowSavePopup] = useState("none");
@@ -40,7 +42,8 @@ const RightDrawer = (props) => {
 
     const formik = useFormik({
         initialValues: {
-            email: "djnadaca"
+            email: "djnadaca",
+            name: "airport"
         },
         onSubmit: (values) => {
             console.log(formik);
@@ -112,7 +115,15 @@ const RightDrawer = (props) => {
                             {props.filterCount}
                         </span>
                     </div>
-                    <div className="filter__content">***Filters***</div>
+                    <div className="filter__content">
+                        <Port portsArray={props.portsArray} />
+                        <DateTimeComponent
+                            dateTimesArray={props.dateTimesArray}
+                        />
+                        <TextField
+                            textComponentsArray={props.textComponentsArray}
+                        />
+                    </div>
                     <div className="filter__btn">
                         <div className="filter__save">
                             <Button
@@ -215,7 +226,15 @@ RightDrawer.propTypes = {
     resetDrawer: PropTypes.any,
     applyFilter: PropTypes.any,
     saveFilter: PropTypes.any,
-    cancelSavePopup: PropTypes.any
+    cancelSavePopup: PropTypes.any,
+    portsArray: PropTypes.any,
+    dateTimesArray: PropTypes.any,
+    textComponentsArray: PropTypes.any
 };
 
-export default RightDrawer;
+export default withFormik({
+    displayName: "BasicForm",
+    mapPropsToValues: () => ({
+        test: false
+    })
+})(RightDrawer);

@@ -1,11 +1,11 @@
-import React, { memo, useState } from "react";
+import React, { useState } from "react";
 import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
 import CellDisplayAndEditTag from "./CellDisplayAndEditTag";
 import { CellDisplayAndEditContext } from "../Utilities/TagsContext";
 import { IconPencil, IconTick, IconCancel } from "../Utilities/SvgUtilities";
 
-const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
+const CellDisplayAndEdit = ({ row, columns, updateRowInGrid }) => {
     const { column } = row;
     if (column && row.row) {
         const [isEditOpen, setIsEditOpen] = useState(false);
@@ -97,7 +97,7 @@ const CellDisplayAndEdit = memo(({ row, columns, updateRowInGrid }) => {
         );
     }
     return null;
-});
+};
 
 CellDisplayAndEdit.propTypes = {
     row: PropTypes.any,

@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import ColumnsList from "./columnsList";
 import { IconClose } from "../../Utilities/SvgUtilities";
 
-const ColumnReordering = memo((props) => {
+const ColumnReordering = (props) => {
     const {
         isManageColumnOpen,
         toggleManageColumns,
@@ -33,7 +33,7 @@ const ColumnReordering = memo((props) => {
         concatedOriginalColumns
     );
     const [remarksColumnToManage, setRemarksColumnToManage] = useState(
-        getRemarksColumnIfAvailable
+        getRemarksColumnIfAvailable()
     );
     const [isErrorDisplayed, setIsErrorDisplayed] = useState(false);
 
@@ -296,6 +296,12 @@ const ColumnReordering = memo((props) => {
         );
     };
 
+    useEffect(() => {
+        setManagedColumns(originalColumns);
+        setSearchedColumns(concatedOriginalColumns);
+        setRemarksColumnToManage(getRemarksColumnIfAvailable());
+    }, [originalColumns, isExpandContentAvailable, additionalColumn]);
+
     if (isManageColumnOpen) {
         return (
             <ClickAwayListener onClickAway={toggleManageColumns}>
@@ -486,7 +492,7 @@ const ColumnReordering = memo((props) => {
         );
     }
     return <div />;
-});
+};
 
 ColumnReordering.propTypes = {
     isManageColumnOpen: PropTypes.any,

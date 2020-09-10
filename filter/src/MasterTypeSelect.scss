@@ -1,0 +1,11 @@
+.neo-master-type-select {
+    display: flex;
+    &__type {
+        width: 200px;
+        padding-right: 4px;
+    }
+    &__value {
+        width: calc(100% - 200px);
+        padding-left: 4px;
+    }
+}

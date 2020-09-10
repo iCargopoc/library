@@ -45,9 +45,13 @@ const SortItem = ({
     });
 
     const getInncerCellsOfColumn = (columnAccessor) => {
-        return originalColumns.find((column) => {
+        const origCol = originalColumns.find((column) => {
             return column.accessor === columnAccessor;
-        }).innerCells;
+        });
+        if (origCol && origCol.innerCells) {
+            return origCol.innerCells;
+        }
+        return [];
     };
 
     const changeSortByOptions = (event) => {

@@ -20,20 +20,19 @@ export const getValueOfDate = (dateValue, type) => {
                 { value: year }
             ] = dateTimeFormat.formatToParts(date);
             return `${year}-${month}-${day}`;
-        } else {
-            const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "2-digit"
-            });
-            const [
-                { value: month },
-                ,
-                { value: day },
-                ,
-                { value: year }
-            ] = dateTimeFormat.formatToParts(date);
-            return `${day}-${month}-${year}`;
         }
+        const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit"
+        });
+        const [
+            { value: month },
+            ,
+            { value: day },
+            ,
+            { value: year }
+        ] = dateTimeFormat.formatToParts(date);
+        return `${day}-${month}-${year}`;
     }
 };

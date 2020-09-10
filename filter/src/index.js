@@ -12,7 +12,7 @@ import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 export default function Filter(props) {
     const [showApplyFilter, setApplyFilter] = useState(false);
     const [autoCompletesValueArray] = useState([]);
-    const [autoCompletesArray, setAutoCompletesArray] = useState([]);
+    const [portsArray, setPortsArray] = useState([]);
     const [dateTimesArray, setDateTimesArray] = useState([]);
     const [dateTimesValueArray] = useState([]);
     const [textComponentsArray, setTextComponentsArray] = useState([]);
@@ -34,11 +34,11 @@ export default function Filter(props) {
     useEffect(() => {
         let count = 0;
         count =
-            autoCompletesArray.length +
+            portsArray.length +
             dateTimesArray.length +
             textComponentsArray.length;
         setFilterCount(count);
-    }, [autoCompletesArray, dateTimesArray, textComponentsArray]);
+    }, [portsArray, dateTimesArray, textComponentsArray]);
     /**
      * Method set the state which shows the drawer when on true condition
      */
@@ -153,8 +153,8 @@ export default function Filter(props) {
                     filter: []
                 };
                 if (autoCompletesValueArray.length > 0) {
-                    const autoCompleteArray = [...autoCompletesArray];
-                    autoCompleteArray.map((item) => {
+                    const portArray = [...portsArray];
+                    portArray.map((item) => {
                         const newItem = item;
                         autoCompletesValueArray.forEach((valueItem) => {
                             if (
@@ -167,16 +167,16 @@ export default function Filter(props) {
                         });
                         return newItem;
                     });
-                    setAutoCompletesArray(autoCompleteArray);
+                    setPortsArray(portArray);
                     let count = 0;
-                    autoCompletesArray.forEach((item) => {
+                    portsArray.forEach((item) => {
                         if (item.validated === false) {
                             count++;
                         }
                     });
                     if (count === 0) {
                         savedFilter.filter.push({
-                            autoComplete: autoCompletesValueArray
+                            ports: autoCompletesValueArray
                         });
                     } else {
                         setShowSavePopUp("");
@@ -184,11 +184,11 @@ export default function Filter(props) {
                         setSaveWarningLabel("Enter values in every field");
                     }
                 } else {
-                    const autoCompleteArray = [...autoCompletesArray];
-                    autoCompleteArray.forEach((item) => {
+                    const portArray = [...portsArray];
+                    portArray.forEach((item) => {
                         item.validated = false;
                     });
-                    setAutoCompletesArray(autoCompleteArray);
+                    setPortsArray(portArray);
                 }
                 if (dateTimesValueArray.length > 0) {
                     const dateTimeArray = [...dateTimesArray];
@@ -296,14 +296,14 @@ export default function Filter(props) {
     };
 
     /**
-     * Method To create the filter arrays for each specific type based on datatype
+     * Method To create the filter arrays for Port type filter element
      * @param {*} name is the name of the filter
+     * @param {*} type is the name of the filter
      * @param {*} dataType is the dataType of the filter
-     * @param {*} dataSource is the condition array of the filter if present
      * @param {*} condition is the condition array of the filter if present
      */
     /* eslint-disable no-param-reassign */
-    const fromLeftToRight = (name, dataType, condition, dataSource) => {
+    const portValuesFromLeftToRight = (name, type, dataType, condition) => {
         setRecentFilterShow("none");
         setFilterShow("");
         setShowSavePopUp("none");
@@ -311,14 +311,22 @@ export default function Filter(props) {
         setSaveWarningClassName("");
         setEmptyFilterClassName("");
         setEmptyFilterWarning("");
-        if (dataType === "AutoComplete") {
-            const value = {
-                name,
-                dataType,
-                objectArray: [],
-                dataSource,
-                condition
-            };
+        let value = {};
+        if (name === "Departure Port" || name === "Arrival Port") {
+            if (type !== "Airport")
+                value = {
+                    name,
+                    type,
+                    dataType,
+                    condition
+                };
+            else {
+                value = {
+                    name,
+                    type,
+                    dataType
+                };
+            }
             filterData.filter.forEach((item) => {
                 if (item.name === value.name) {
                     item.weight = 700;
@@ -329,29 +337,40 @@ export default function Filter(props) {
                     });
                 }
             });
-            const autoCompleteArray = [...autoCompletesArray];
-            if (autoCompleteArray.length > 0) {
-                const index = autoCompleteArray.findIndex(
+            const portArray = [...portsArray];
+            if (portArray.length > 0) {
+                const index = portArray.findIndex(
                     (x) => x.name === value.name && x.type === value.type
                 );
                 if (index === -1) {
-                    autoCompleteArray.push({
+                    portArray.push({
                         name,
+                        type,
                         dataType,
-                        dataSource,
                         condition
                     });
                 }
             } else {
-                autoCompleteArray.push({
+                portArray.push({
                     name,
+                    type,
                     dataType,
-                    dataSource,
                     condition
                 });
             }
-            setAutoCompletesArray(autoCompleteArray);
+            setPortsArray(portArray);
         }
+    };
+
+    /**
+     * Method To create the filter arrays for each specific type based on datatype
+     * @param {*} name is the name of the filter
+     * @param {*} dataType is the dataType of the filter
+     * @param {*} dataSource is the condition array of the filter if present
+     * @param {*} condition is the condition array of the filter if present
+     */
+    /* eslint-disable no-param-reassign */
+    const fromLeftToRight = (name, dataType, condition) => {
         if (dataType === "DateTime") {
             const value = {
                 name,
@@ -384,7 +403,7 @@ export default function Filter(props) {
             }
             setDateTimesArray(dateTimeArray);
         }
-        if (dataType === "Text") {
+        if (dataType === "TextField") {
             const value = {
                 name,
                 dataType,
@@ -424,20 +443,20 @@ export default function Filter(props) {
      * @param {*} items is the  filter element array
      */
     const addAppliedFilters = (items) => {
-        let autoComplete = [];
+        let port = [];
         let dateTime = [];
         let text = [];
         items.forEach((item) => {
             if (item.dataType === "AutoComplete") {
-                const autoCompleteArray = [...autoComplete];
+                const portArray = [...port];
                 const options = [];
-                if (autoCompleteArray.length > 0) {
-                    const index = autoCompleteArray.findIndex(
+                if (portArray.length > 0) {
+                    const index = portArray.findIndex(
                         (x) => x.name === item.name && item.type === x.type
                     );
 
                     if (index === -1) {
-                        autoCompleteArray.push({
+                        portArray.push({
                             name: item.name,
                             dataType: item.dataType,
                             value: item.value,
@@ -445,14 +464,14 @@ export default function Filter(props) {
                         });
                     }
                 } else {
-                    autoCompleteArray.push({
+                    portArray.push({
                         name: item.name,
                         dataType: item.dataType,
                         value: item.value,
                         objectArray: options
                     });
                 }
-                autoComplete = autoCompleteArray;
+                port = portArray;
             } else if (item.dataType === "DateTime") {
                 const dateTimeArray = [...dateTime];
                 if (dateTimeArray.length === 0) {
@@ -495,7 +514,7 @@ export default function Filter(props) {
                 }
                 text = textComponentArray;
             }
-            setAutoCompletesArray(autoComplete);
+            setPortsArray(port);
             setDateTimesArray(dateTime);
             setTextComponentsArray(text);
         });
@@ -509,7 +528,7 @@ export default function Filter(props) {
     const addSavedFilters = (item) => {
         setFilterShow("");
         setRecentFilterShow("none");
-        let autoComplete = [];
+        let port = [];
         let text = [];
         const tempArr = [];
         const savedFilters = [];
@@ -537,14 +556,17 @@ export default function Filter(props) {
                     }
                 }
             });
-            if (items.dataType === "AutoComplete") {
-                const autoCompleteArray = [...autoComplete];
-                if (autoCompleteArray.length > 0) {
-                    const index = autoCompleteArray.findIndex(
+            if (
+                items.name === "Arrival Port" ||
+                items.name === "Departure Port"
+            ) {
+                const portArray = [...port];
+                if (portArray.length > 0) {
+                    const index = portArray.findIndex(
                         (x) => x.name === items.name && items.type === x.type
                     );
                     if (index === -1) {
-                        autoCompleteArray.push({
+                        portArray.push({
                             name: items.name,
                             dataType: items.dataType,
                             value: items.value,
@@ -552,17 +574,17 @@ export default function Filter(props) {
                         });
                     }
                 } else {
-                    autoCompleteArray.push({
+                    portArray.push({
                         name: items.name,
                         dataType: items.dataType,
                         value: items.value,
                         objectArray: arr
                     });
                 }
-                autoComplete = autoCompleteArray;
+                port = portArray;
             }
         });
-        setAutoCompletesArray(autoComplete);
+        setPortsArray(port);
         const saveTempDateTimeArray = [];
         savedFilters.forEach((items) => {
             if (items.dataType === "DateTime") {
@@ -618,7 +640,6 @@ export default function Filter(props) {
     const handleClickAway = () => {
         setApplyFilter(false);
     };
-    console.log(autoCompletesArray, textComponentsArray, dateTimesArray);
     return (
         <ClickAwayListener onClickAway={handleClickAway}>
             {showApplyFilter && (
@@ -628,6 +649,9 @@ export default function Filter(props) {
                             <LeftDrawer
                                 filterData={filterData}
                                 fromLeftToRight={fromLeftToRight}
+                                portValuesFromLeftToRight={
+                                    portValuesFromLeftToRight
+                                }
                             />
                         </div>
                         <div className="filter__inputwrap">
@@ -647,6 +671,9 @@ export default function Filter(props) {
                                 recentFilterShow={recentFilterShow}
                                 filterShow={filterShow}
                                 addSavedFilters={addSavedFilters}
+                                dateTimesArray={dateTimesArray}
+                                portsArray={portsArray}
+                                textComponentsArray={textComponentsArray}
                             />
                         </div>
                     </div>

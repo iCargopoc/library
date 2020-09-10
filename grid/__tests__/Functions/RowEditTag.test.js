@@ -93,6 +93,12 @@ const columnsdata = [
                 accessor: "value"
             }
         ]
+    },
+    {
+        Header: "SR",
+        accessor: "sr",
+        width: 90,
+        columnId: "column_4"
     }
 ];
 
@@ -131,6 +137,20 @@ test("should render", () => {
             }}
         >
             <RowEditTag columnKey="flight" cellKey="flightno" />
+        </RowEditContext.Provider>
+    );
+    expect(componnet).toBeDefined();
+});
+test("should render for column without innercell", () => {
+    const componnet = render(
+        <RowEditContext.Provider
+            value={{
+                columns: columnsdata,
+                additionalColumn: additionalColumndata,
+                isRowExpandEnabled: true
+            }}
+        >
+            <RowEditTag columnKey="sr" cellKey="sr" />
         </RowEditContext.Provider>
     );
     expect(componnet).toBeDefined();
