@@ -578,6 +578,8 @@ const GridView = () => {
     };
 
     const rowActions = [
+        { label: "edit" },
+        { label: "delete" },
         { label: "Send SCR", value: "SCR" },
         { label: "Segment Summary", value: "SegmentSummary" },
         { label: "Open Summary", value: "OpenSummary" },

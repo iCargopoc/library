@@ -260,6 +260,16 @@ describe("render CustomgridCustomgrid", () => {
         });
     }
 
+    const mockRowActions = [
+        { label: "edit" },
+        { label: "delete" },
+        { label: "Send SCR", value: "SCR" },
+        { label: "Segment Summary", value: "SegmentSummary" },
+        { label: "Open Summary", value: "OpenSummary" },
+        { label: "Close Summary", value: "CloseSummary" }
+    ];
+    const mockRowActionCallback = jest.fn();
+
     const mockGetRowEditOverlay = jest.fn(
         (rowData, DisplayTag, rowUpdateCallBack) => {
             const { flight } = rowData;
@@ -426,6 +436,8 @@ describe("render CustomgridCustomgrid", () => {
                 calculateRowHeight={mockCalculateRowHeight}
                 isExpandContentAvailable={mockIsExpandContentAvailable}
                 displayExpandedContent={mockDisplayExpandedContent}
+                rowActions={mockRowActions}
+                rowActionCallback={mockRowActionCallback}
                 hasNextPage={mockHasNextPage}
                 isNextPageLoading={mockIsNextPageLoading}
                 loadNextPage={mockLoadNextPage}
@@ -623,6 +635,8 @@ describe("render CustomgridCustomgrid", () => {
                 calculateRowHeight={mockCalculateRowHeight}
                 isExpandContentAvailable={mockIsExpandContentAvailable}
                 displayExpandedContent={mockDisplayExpandedContent}
+                rowActions={mockRowActions}
+                rowActionCallback={mockRowActionCallback}
                 hasNextPage={mockHasNextPage}
                 isNextPageLoading={mockIsNextPageLoading}
                 loadNextPage={mockLoadNextPage}

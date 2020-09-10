@@ -11,9 +11,30 @@ const RowOptions = ({
     bindRowDeleteOverlay
 }) => {
     const { original } = row;
+
+    // Check if Edit row option is required or not
+    const editOptionIndex = rowActions.findIndex((action) => {
+        return action.label.toLowerCase() === "edit";
+    });
+    const isRowEditOptionNeeded = editOptionIndex > -1;
+
+    // Check if Delete row option is required or not
+    const deleteOptionIndex = rowActions.findIndex((action) => {
+        return action.label.toLowerCase() === "delete";
+    });
+    const isRowDeleteOptionNeeded = deleteOptionIndex > -1;
+
+    // Find the additional row actions required
+    const additionalRowOptions = rowActions.filter((action) => {
+        return (
+            action.label.toLowerCase() !== "edit" &&
+            action.label.toLowerCase() !== "delete"
+        );
+    });
+
     const isAdditionalRowOptionsPresent =
-        rowActions &&
-        rowActions.length > 0 &&
+        additionalRowOptions &&
+        additionalRowOptions.length > 0 &&
         typeof rowActionCallback === "function";
 
     const [isRowOptionsOpen, setRowOptionsOpen] = useState(false);
@@ -57,30 +78,34 @@ const RowOptions = ({
                     <ClickAwayListener onClickAway={closeRowOptionsOverlay}>
                         <div className="row-options-overlay">
                             <ul>
-                                <li>
-                                    <span
-                                        role="presentation"
-                                        onClick={openRowEditOverlay}
-                                    >
-                                        <i>
-                                            <RowEdit />
-                                        </i>
-                                        <span>Edit</span>
-                                    </span>
-                                </li>
-                                <li>
-                                    <span
-                                        role="presentation"
-                                        onClick={openDeleteOverlay}
-                                    >
-                                        <i>
-                                            <RowDelete />
-                                        </i>
-                                        <span>Delete</span>
-                                    </span>
-                                </li>
+                                {isRowEditOptionNeeded ? (
+                                    <li>
+                                        <span
+                                            role="presentation"
+                                            onClick={openRowEditOverlay}
+                                        >
+                                            <i>
+                                                <RowEdit />
+                                            </i>
+                                            <span>Edit</span>
+                                        </span>
+                                    </li>
+                                ) : null}
+                                {isRowDeleteOptionNeeded ? (
+                                    <li>
+                                        <span
+                                            role="presentation"
+                                            onClick={openDeleteOverlay}
+                                        >
+                                            <i>
+                                                <RowDelete />
+                                            </i>
+                                            <span>Delete</span>
+                                        </span>
+                                    </li>
+                                ) : null}
                                 {isAdditionalRowOptionsPresent
-                                    ? rowActions.map((action) => {
+                                    ? additionalRowOptions.map((action) => {
                                           const { value, label } = action;
                                           return (
                                               <li key={value}>

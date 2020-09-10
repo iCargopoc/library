@@ -149,29 +149,32 @@ export const extractColumns = (
 };
 
 export const extractAdditionalColumn = (additionalColumn, isDesktop) => {
-    const { originalInnerCells, innerCells } = additionalColumn;
-    const isInnerCellsPresent = innerCells && innerCells.length > 0;
-    const isOriginalInnerCellsPresent =
-        originalInnerCells && originalInnerCells.length > 0;
-    const element = additionalColumn;
+    if (additionalColumn) {
+        const { originalInnerCells, innerCells } = additionalColumn;
+        const isInnerCellsPresent = innerCells && innerCells.length > 0;
+        const isOriginalInnerCellsPresent =
+            originalInnerCells && originalInnerCells.length > 0;
+        const element = additionalColumn;
 
-    // Add column Id
-    element.columnId = `ExpandColumn`;
+        // Add column Id
+        element.columnId = `ExpandColumn`;
 
-    // Add an indentifier that this is a column for expanded region
-    element.displayInExpandedRegion = true;
+        // Add an indentifier that this is a column for expanded region
+        element.displayInExpandedRegion = true;
 
-    // Remove iPad only columns from desktop and vice-versa
-    if (isInnerCellsPresent) {
-        const filteredInnerCells = innerCells.filter((cell) => {
-            return isDesktop ? !cell.onlyInTablet : !cell.onlyInDesktop;
-        });
-        element.innerCells = filteredInnerCells;
-        // If there are no copies of original Cells create a new copy from Inner cells
-        if (!isOriginalInnerCellsPresent) {
-            element.originalInnerCells = filteredInnerCells;
+        // Remove iPad only columns from desktop and vice-versa
+        if (isInnerCellsPresent) {
+            const filteredInnerCells = innerCells.filter((cell) => {
+                return isDesktop ? !cell.onlyInTablet : !cell.onlyInDesktop;
+            });
+            element.innerCells = filteredInnerCells;
+            // If there are no copies of original Cells create a new copy from Inner cells
+            if (!isOriginalInnerCellsPresent) {
+                element.originalInnerCells = filteredInnerCells;
+            }
         }
-    }
 
-    return additionalColumn;
+        return additionalColumn;
+    }
+    return null;
 };

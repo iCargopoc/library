@@ -169,3 +169,11 @@ test("Test extractAdditionalColumn", () => {
     mockExtractColumns(additionalColumn, isDesktop);
     expect(mockExtractColumns).toHaveBeenCalled();
 });
+
+test("Test empty extractAdditionalColumn", () => {
+    const mockExtractColumns = jest
+        .fn()
+        .mockImplementation(extractAdditionalColumn);
+    mockExtractColumns(undefined, isDesktop);
+    expect(mockExtractColumns).toHaveBeenCalled();
+});
