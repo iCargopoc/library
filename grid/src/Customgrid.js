@@ -195,7 +195,7 @@ const Customgrid = (props) => {
                     // Return value of the filter method
                     let returnValue = false;
                     // Loop through all column values for each row
-                    originalColumns.forEach((column) => {
+                    updatedOriginalColumns.forEach((column) => {
                         // Do search for each column
                         returnValue =
                             returnValue ||
@@ -354,7 +354,7 @@ const Customgrid = (props) => {
                     <ColumnReordering
                         isManageColumnOpen={isManageColumnOpen}
                         toggleManageColumns={toggleManageColumns}
-                        originalColumns={originalColumns}
+                        originalColumns={updatedOriginalColumns}
                         isExpandContentAvailable={isExpandContentAvailable}
                         additionalColumn={
                             additionalColumn ? [additionalColumn] : []
@@ -368,14 +368,14 @@ const Customgrid = (props) => {
                     <GroupSort
                         isGroupSortOverLayOpen={isGroupSortOverLayOpen}
                         toggleGroupSortOverLay={toggleGroupSortOverLay}
-                        originalColumns={originalColumns}
+                        originalColumns={updatedOriginalColumns}
                         applyGroupSort={applyGroupSort}
                     />
                     <ExportData
                         isExportOverlayOpen={isExportOverlayOpen}
                         toggleExportDataOverlay={toggleExportDataOverlay}
                         rows={rows}
-                        originalColumns={originalColumns}
+                        originalColumns={updatedOriginalColumns}
                         columns={columns} // Updated columns structure from manage columns overlay
                         isRowExpandEnabled={isRowExpandEnabled} // Updated additional column structure from manage columns overlay
                         isExpandContentAvailable={isExpandContentAvailable}
@@ -471,9 +471,13 @@ const Customgrid = (props) => {
             >
                 <AutoSizer disableWidth disableResizing>
                     {({ height }) => (
-                        <div {...getTableProps()} className="table">
+                        <div
+                            {...getTableProps()}
+                            className="table"
+                            style={{ width: "99.5%" }}
+                        >
                             <div className="thead table-row table-row--head">
-                                {headerGroups.map((headerGroup) => (
+                                {headerGroups.map((headerGroup, index) => (
                                     <div
                                         {...headerGroup.getHeaderGroupProps()}
                                         className="tr"
@@ -481,7 +485,13 @@ const Customgrid = (props) => {
                                         {headerGroup.headers.map((column) => (
                                             <div
                                                 {...column.getHeaderProps()}
-                                                className="table-cell column-heading th"
+                                                className={`table-cell column-heading th ${
+                                                    index === 0 ||
+                                                    column.groupHeader !==
+                                                        undefined
+                                                        ? ""
+                                                        : "nodisplay"
+                                                }`}
                                             >
                                                 <div
                                                     {...column.getSortByToggleProps()}
@@ -510,7 +520,7 @@ const Customgrid = (props) => {
                                                             : ""
                                                     }`}
                                                 >
-                                                    {!column.disableFilters
+                                                    {column.canFilter
                                                         ? column.render(
                                                               "Filter"
                                                           )

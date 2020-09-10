@@ -81,12 +81,14 @@ const GridView = () => {
 
     const columns = [
         {
+            // groupHeader: "",
             Header: "Id",
             accessor: "travelId",
             width: 50,
             disableFilters: true
         },
         {
+            groupHeader: "Flight & Segment",
             Header: "Flight",
             accessor: "flight",
             width: 100,
@@ -125,6 +127,7 @@ const GridView = () => {
             }
         },
         {
+            groupHeader: "Flight & Segment",
             Header: "Segment",
             accessor: "segment",
             width: 100,
@@ -593,7 +596,7 @@ const GridView = () => {
 
     const calculateRowHeight = (row, gridColumns) => {
         // Minimum height for each row
-        let rowHeight = 50;
+        let rowHeight = 90;
         if (gridColumns && gridColumns.length > 0 && row) {
             // Get properties of a row
             const { original, isExpanded } = row;

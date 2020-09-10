@@ -13,6 +13,9 @@
         &:last-child {
             margin-bottom: 50px;
         }
+        tr {
+            background: #f4f7f9;
+        }
     }
     .table-row-wrap {
         width: 100%;
@@ -31,6 +34,7 @@
             color: #204d6f;
             vertical-align: top;
             font-weight: bold;
+            text-align: center;
             &:hover {
                 border-left: 1px solid var(--border-table);
                 border-right: 1px solid var(--border-table);
@@ -225,4 +229,8 @@
             }
         }
     }
+}
+
+.nodisplay {
+    font-size: 0;
 }
