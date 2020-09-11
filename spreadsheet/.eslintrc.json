@@ -1,17 +1,60 @@
 {
-  "env": {
-    "browser": true,
-    "es2020": true
-  },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "parser": "babel-eslint",
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
+    "env": {
+        "browser": true,
+        "es6": true
     },
-    "ecmaVersion": 11,
-    "sourceType": "module"
-  },
-  "plugins": ["react"],
-  "rules": {}
+    "extends": [
+        "plugin:react/recommended",
+        "airbnb",
+        "plugin:flowtype/recommended",
+        "plugin:prettier/recommended",
+        "prettier/react"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": ["react", "flowtype", "prettier"],
+    "settings": {
+        "flowtype": {
+            "onlyFilesWithFlowAnnotation": true
+        }
+    },
+    "rules": {
+        "no-plusplus": 0,
+        "no-underscore-dangle": 0,
+        "import/no-extraneous-dependencies": 0,
+        "import/prefer-default-export": 0,
+        "import/no-webpack-loader-syntax": 0,
+        "react/forbid-prop-types": 0,
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "react/no-array-index-key": 1,
+        "react/require-default-props": 0,
+        "react/jsx-props-no-spreading": 1,
+        "jsx-a11y/label-has-associated-control": 1,
+        "jsx-a11y/anchor-is-valid": 1,
+        "jsx-a11y/alt-text": 1,
+        "flowtype/define-flow-type": 1,
+        "flowtype/no-primitive-constructor-types": 0,
+        "flowtype/no-types-missing-file-annotation": 2,
+        "flowtype/no-weak-types": 1,
+        "flowtype/require-parameter-type": 2,
+        "flowtype/require-readonly-react-props": 0,
+        "flowtype/require-return-type": [
+            2,
+            "always",
+            {
+                "annotateUndefined": "never"
+            }
+        ],
+        "flowtype/require-valid-file-annotation": 2,
+        "flowtype/use-flow-type": 1
+    }
 }

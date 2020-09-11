@@ -17,6 +17,7 @@ import {
 } from "./Utilities/SvgUtilities";
 import FormulaProcessor from "./functions/FormulaProcessor";
 
+// eslint-disable-next-line import/no-unresolved
 import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 
 const defaultParsePaste = (str) =>

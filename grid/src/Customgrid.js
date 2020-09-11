@@ -62,7 +62,8 @@ const Customgrid = (props) => {
         hasNextPage,
         isNextPageLoading,
         loadNextPage,
-        doGroupSort
+        doGroupSort,
+        CustomPanel
     } = props;
 
     const updatedOriginalColumns = [];
@@ -350,6 +351,11 @@ const Customgrid = (props) => {
                     <strong>{rows.length}</strong>
                     <span>{title || "Rows"}</span>
                 </div>
+                {CustomPanel ? (
+                    <div className="neo-grid-header_customPanel">
+                        <CustomPanel />
+                    </div>
+                ) : null}
                 <div className="neo-grid-header__utilities">
                     <ColumnReordering
                         isManageColumnOpen={isManageColumnOpen}
@@ -601,7 +607,8 @@ Customgrid.propTypes = {
     row: PropTypes.any,
     additionalColumn: PropTypes.any,
     rowActions: PropTypes.any,
-    rowActionCallback: PropTypes.any
+    rowActionCallback: PropTypes.any,
+    CustomPanel: PropTypes.any
 };
 
 export default Customgrid;
