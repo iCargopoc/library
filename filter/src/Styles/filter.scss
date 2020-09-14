@@ -64,6 +64,7 @@
             font-weight: 700;
             font-style: normal;
             font-size: 14px;
+            margin: 0;
         }
         label {
             font-weight: 400;
@@ -75,6 +76,9 @@
             margin-bottom: 10px;
             border: #ccc solid 1px;
             border-radius: 3px;
+            display: block;
+            width: 100%;
+            height: 32px;
         }
         .button {
             border: #2680e8 solid 1px;
@@ -83,6 +87,7 @@
             color: #2680e8;
             width: 65px;
             margin-left: 3px;
+            height: 30px;
         }
         .btn-wrap {
             display: flex;
@@ -93,6 +98,15 @@
         span {
             display: block;
             font-size: 9px;
+        }
+    }
+    .filter__list {
+        .customControl {
+            border: none;
+            border-bottom: #eff1f6 solid 1px;
+            width: 100%;
+            padding: 10px 0 11px 20px;
+            border-right: #eff1f6 solid 1px;
         }
     }
     .filter__content {
@@ -112,6 +126,13 @@
             .filter__control {
                 display: flex;
                 align-items: center;
+            }
+            .neo-select__control {
+                min-height: 32px;
+                height: 32px;
+                .neo-select__value-container {
+                    height: 32px;
+                }
             }
         }
         .filter__input-title {
@@ -170,6 +191,80 @@
                 margin-top: 0;
             }
         }
+        .title {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 15px;
+            align-items: center;
+            margin-bottom: 7px;
+            h4 {
+                margin: 0;
+                font-size: 14px;
+                font-weight: normal;
+            }
+            h5 {
+                font-weight: bold;
+                margin: 0;
+            }
+            .controls {
+                display: flex;
+            }
+        }
+        .form-inputs {
+            padding: 0 15px;
+        }
+
+        .switch {
+            display: inline-block;
+            height: 16px;
+            position: relative;
+            width: 22px;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: -22px;
+            position: absolute;
+            right: 0;
+            top: 15px;
+            transition: 0.4s;
+        }
+
+        .slider:before {
+            background-color: #fff;
+            bottom: -6px;
+            content: "";
+            height: 16px;
+            left: 0;
+            position: absolute;
+            transition: 0.4s;
+            width: 16px;
+            border: solid 1px var(--border);
+        }
+
+        input:checked + .slider {
+            background-color: #21acff;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(13px);
+        }
+
+        .slider.round {
+            border-radius: 34px;
+            height: 4px;
+            width: 30px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
     }
     .filter__split {
         display: flex;
@@ -187,6 +282,10 @@
             &.selected {
                 font-weight: bold;
             }
+        }
+        .arrows {
+            display: flex;
+            justify-content: space-between;
         }
     }
     .filter__inputwrap {
@@ -215,14 +314,23 @@
             height: 37px;
             padding: 6px 15px 10px;
             font-size: 14px;
+            border-radius: 3px;
+            border: none;
         }
         .reset {
             color: #47c9c9;
             font-size: 14px;
+            border: none;
+            background: none;
         }
     }
     .filter__save {
         display: flex;
+        .button-save {
+            border: none;
+            background: none;
+            color: #1a4869a5;
+        }
     }
     .form-row {
         border-bottom: #eff1f6 solid 1px;
@@ -278,7 +386,10 @@
         margin-bottom: 0rem !important;
     }
     .form-group {
-        width: 100% !important;
+        width: 100%;
+        border-bottom: #d4d9e8 solid 1px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
     }
     .dummy {
         position: absolute;
@@ -311,5 +422,8 @@
         left: 1% !important;
         background: #fff;
         color: #161617;
+    }
+    .text-danger {
+        color: #dc3545;
     }
 }

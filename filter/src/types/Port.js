@@ -4,86 +4,96 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { IAirport } from "@neo-ui/airport";
 import { ITextField } from "@neo-ui/textfield";
+import { ISelect } from "@neo-ui/select";
 import { IconTimes } from "../Utilities/SvgUtilities";
 
 export default function Port(props) {
     const [portArray, setPortArray] = useState([]);
     useEffect(() => {
         if (props.portsArray) setPortArray(props.portsArray);
-        console.log(props.portsArray);
     }, [props.portsArray]);
-    /**
-     * Method To close the filter
-     * @param {*} item is specific filter element
-     */
-    const handleClose = () => {
-        console.log("close");
-    };
+
     const portDiv = portArray.map((item) => {
         if (item.dataType === "Airport") {
             return (
-                <div className="filter__input" key={item}>
-                    <div className="filter__input-title">
-                        <div className="filter__label">
-                            <span>{item.name}</span>
-                            <span>&nbsp;&gt;&nbsp;</span>
-                            <span>{item.type}</span>
-                        </div>
-                        <div className="filter__control">
-                            <input
-                                data-testid="handleAutoCompleteEnabled-check"
-                                type="checkBox"
-                                label=""
-                                className={item.type.concat(item.name)}
-                                id={item.name.concat(item.type)}
-                            />
+                <div className="form-group" key={`${item.name}>${item.type}`}>
+                    <div className="title">
+                        <h4>
+                            {item.name}&nbsp;&gt;&nbsp;{item.type}
+                        </h4>
+                        <div className="controls">
                             <div
                                 role="presentation"
                                 data-testid="deleteAutoCompleteElement-click"
                                 onClick={() => {
-                                    handleClose(item);
+                                    props.closePortElement(item);
                                 }}
                             >
                                 <IconTimes />
                             </div>
                         </div>
                     </div>
-                    <div className="displayFlex multiselect">
-                        <IAirport name="Airport" />
+                    <div className="form-inputs">
+                        <IAirport name={`${item.name}>${item.type}`} />
+                        <span id="fieldWarning" className="text-danger">
+                            This field is required*
+                        </span>
                     </div>
                 </div>
             );
         }
         return (
-            <div className="filter__input" key={item}>
-                <div className="filter__input-title">
-                    <div className="filter__label">
-                        <span>{item.name}</span>
-                        <span>&nbsp;&gt;&nbsp;</span>
-                        <span>{item.type}</span>
-                    </div>
-                    <div className="filter__control">
-                        <input
-                            data-testid="handleAutoCompleteEnabled-check"
-                            type="checkBox"
-                            label=""
-                            className={item.type.concat(item.name)}
-                            id={item.name.concat(item.type)}
-                            checked
-                        />
+            <div className="form-group" key={`${item.name},${item.type}`}>
+                <div className="title">
+                    <h4>
+                        {item.name} &nbsp;&gt;&nbsp;{item.type}
+                    </h4>
+                    <div className="controls">
+                        <label
+                            className="switch"
+                            htmlFor={`${item.name}>${item.type}`}
+                        >
+                            <input
+                                type="checkBox"
+                                label=""
+                                id={`${item.name}>${item.type}`}
+                                data-testid="handleTextComponentEnabled-check"
+                                onClick={() => {
+                                    props.portConditionHandler(item);
+                                }}
+                            />
+                            <div className="slider round" />
+                        </label>
                         <div
                             role="presentation"
                             data-testid="deleteAutoCompleteElement-click"
+                            className="control__close"
                             onClick={() => {
-                                handleClose(item);
+                                props.closePortElement(item);
                             }}
                         >
                             <IconTimes />
                         </div>
                     </div>
                 </div>
-                <div className="displayFlex multiselect">
-                    <ITextField name="portTextField" />
+                <div className="form-inputs">
+                    <div
+                        disabled={item.disabled}
+                        style={{
+                            display: item.display
+                        }}
+                    >
+                        <label>Condition</label>
+                        <ISelect
+                            name={`${item.name}>${item.type}>condition`}
+                            options={item.condition}
+                        />
+                        <label>Value</label>
+                    </div>
+                    <ITextField name={`${item.name}>${item.type}>value`} />
+                    <span id="fieldWarning" className="text-danger">
+                        This field is required*
+                    </span>
                 </div>
             </div>
         );
@@ -92,5 +102,7 @@ export default function Port(props) {
 }
 
 Port.propTypes = {
-    portsArray: PropTypes.any
+    portsArray: PropTypes.any,
+    closePortElement: PropTypes.any,
+    portConditionHandler: PropTypes.any
 };

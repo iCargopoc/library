@@ -6,29 +6,35 @@
                 {
                     "name": "Airport",
                     "dataType": "Airport",
+                    "dataSource": "Airport",
+                    "condition": ["equal to", "greater than", "less than"],
                     "required": true
                 },
                 {
                     "name": "Airport Group",
                     "dataType": "TextField",
+                    "dataSource": "AirportGroup",
                     "condition": ["equal to", "greater than", "less than"],
                     "required": true
                 },
                 {
                     "name": "City",
                     "dataType": "TextField",
+                    "dataSource": "Airport",
                     "condition": ["equal to", "greater than", "less than"],
                     "required": true
                 },
                 {
                     "name": "City Group",
                     "dataType": "TextField",
+                    "dataSource": "Airport",
                     "condition": ["equal to", "greater than", "less than"],
                     "required": true
                 },
                 {
                     "name": "Country",
                     "dataType": "TextField",
+                    "dataSource": "Airport",
                     "condition": ["equal to", "greater than", "less than"],
                     "required": true
                 }
@@ -40,29 +46,35 @@
                 {
                     "name": "Airport",
                     "dataType": "Airport",
+                    "dataSource": "Airport",
+                    "condition": ["equal to", "greater than", "less than"],
                     "required": true
                 },
                 {
                     "name": "Airport Group",
                     "dataType": "TextField",
+                    "dataSource": "Airport",
                     "condition": ["equal to", "greater than", "less than"],
                     "required": true
                 },
                 {
                     "name": "City",
                     "dataType": "TextField",
+                    "dataSource": "Airport",
                     "condition": ["equal to", "greater than", "less than"],
                     "required": true
                 },
                 {
                     "name": "City Group",
                     "dataType": "TextField",
+                    "dataSource": "Airport",
                     "condition": ["equal to", "greater than", "less than"],
                     "required": true
                 },
                 {
                     "name": "Country",
                     "dataType": "TextField",
+                    "dataSource": "Airport",
                     "condition": ["equal to", "greater than", "less than"],
                     "required": true
                 }
@@ -71,13 +83,7 @@
         {
             "name": "Date",
             "dataType": "DateTime",
-            "condition": [],
-            "required": true
-        },
-        {
-            "name": "Date Range",
-            "dataType": "DateTimeRange",
-            "condition": [],
+            "condition": ["equal to", "greater than", "less than"],
             "required": true
         },
         {

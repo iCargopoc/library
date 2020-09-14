@@ -8,43 +8,43 @@ import { IconTimes } from "../Utilities/SvgUtilities";
 
 const DateTime = (props) => {
     const [fieldComponentArr, setFieldComponentArr] = useState([]);
+
     useEffect(() => {
         if (props.dateTimesArray) setFieldComponentArr(props.dateTimesArray);
     }, [props.dateTimesArray]);
-    const fieldComponentDiv = fieldComponentArr.map((item) => {
+
+    const dateTimeDiv = fieldComponentArr.map((item) => {
         return (
-            <div className="filter__input" key={item.name}>
-                <div className="filter__input-title" key={1}>
-                    <div className="filter__label">
-                        <label>
-                            <strong>{item.name}</strong>
-                        </label>
-                    </div>
-                    <div className="filter__control">
-                        <input
-                            type="checkBox"
-                            id={item.name}
-                            label=""
-                            defaultChecked
-                        />
+            <div className="form-group">
+                <div className="title" key={item.name}>
+                    <h5>{item.name}</h5>
+                    <div className="controls">
                         <div
                             role="presentation"
                             data-testid="deleteDateTimeElement-click"
+                            onClick={() => {
+                                props.closeDateTime(item);
+                            }}
                         >
                             <IconTimes />
                         </div>
                     </div>
-                    <IDatePicker name="dateTime" />
-                    {/* <IDatePicker name="toDateTime" /> */}
+                </div>
+                <div className="form-inputs">
+                    <IDatePicker name="date" />
+                    <span id="fieldWarning" className="text-danger">
+                        This field is required*
+                    </span>
                 </div>
             </div>
         );
     });
-    return <div>{fieldComponentDiv}</div>;
+    return <div>{dateTimeDiv}</div>;
 };
 
 export default DateTime;
 
 DateTime.propTypes = {
-    dateTimesArray: PropTypes.any
+    dateTimesArray: PropTypes.any,
+    closeDateTime: PropTypes.any
 };

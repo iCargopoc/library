@@ -2,7 +2,10 @@
     $remSize: $size / $em-base;
     @return #{$remSize}rem;
 }
-
+*:focus {
+    outline: none;
+    border: 0;
+}
 .txt {
     height: 25px;
     border-radius: 3px;

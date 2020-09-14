@@ -1,11 +1,11 @@
 /* eslint-disable react/destructuring-assignment */
 
 import React, { useState, useEffect } from "react";
-import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { useFormik, withFormik } from "formik";
 import Port from "../types/Port";
 import DateTimeComponent from "../types/DateTimeComponent";
+import DateTimeRange from "../types/DateTimeRange";
 import TextField from "../types/TextField";
 import { SaveLogo } from "../Utilities/SvgUtilities";
 import "react-datepicker/dist/react-datepicker.css";
@@ -16,6 +16,7 @@ const RightDrawer = (props) => {
     const [saveFilterWarning, setSaveFilterWarning] = useState("");
     const [warningLabel, setWarningLabel] = useState("");
     const [applyFilterWarning, setApplyFilterWarning] = useState("");
+    const [initialValuesObject, setInitialValuesObject] = useState({});
     const [
         applyfilterWarningClassName,
         setApplyFilterWariningClassname
@@ -39,15 +40,18 @@ const RightDrawer = (props) => {
         setRecentFilterShow(props.recentFilterShow);
         setFilterShow(props.filterShow);
     }, [props.recentFilterShow, props.filterShow]);
+    useEffect(() => {
+        if (props.initialValuesObject) {
+            const init = { ...props.initialValuesObject };
+            init.email = "";
+
+            setInitialValuesObject(init);
+        }
+    }, [props.initialValuesObject]);
 
     const formik = useFormik({
-        initialValues: {
-            email: "djnadaca",
-            name: "airport"
-        },
+        initialValues: initialValuesObject,
         onSubmit: (values) => {
-            console.log(formik);
-            console.log(values);
             alert(JSON.stringify(values, null, 2));
         }
     });
@@ -91,6 +95,7 @@ const RightDrawer = (props) => {
             </div>
         );
     });
+    console.log(initialValuesObject);
     return (
         <div>
             <form onSubmit={formik.handleSubmit}>
@@ -116,17 +121,36 @@ const RightDrawer = (props) => {
                         </span>
                     </div>
                     <div className="filter__content">
-                        <Port portsArray={props.portsArray} />
+                        <Port
+                            portsArray={props.portsArray}
+                            closePortElement={props.closePortElement}
+                            portConditionHandler={props.portConditionHandler}
+                        />
                         <DateTimeComponent
                             dateTimesArray={props.dateTimesArray}
+                            closeDateTime={props.closeDateTime}
+                        />
+                        <DateTimeRange
+                            dateTimeRangesArray={props.dateTimeRangesArray}
+                            closeDateTimeRange={props.closeDateTimeRange}
                         />
                         <TextField
                             textComponentsArray={props.textComponentsArray}
+                            closeTextField={props.closeTextField}
+                            textFieldconditionHandler={
+                                props.textFieldconditionHandler
+                            }
+                        />
+                        <input
+                            name="email"
+                            onChange={formik.handleChange}
+                            // value={formik.values.email}
                         />
                     </div>
                     <div className="filter__btn">
                         <div className="filter__save">
-                            <Button
+                            <button
+                                type="button"
                                 className="button-save"
                                 variant=""
                                 onClick={() => {
@@ -135,20 +159,21 @@ const RightDrawer = (props) => {
                             >
                                 <SaveLogo />
                                 <span>SAVE</span>
-                            </Button>
+                            </button>
                         </div>
                         <div className="btn-wrap">
                             <span className={applyfilterWarningClassName}>
                                 {applyFilterWarning}
                             </span>
-                            <Button
+                            <button
+                                type="button"
                                 variant=""
                                 className="reset"
                                 onClick={props.resetDrawer}
                             >
                                 Reset
-                            </Button>
-                            <Button
+                            </button>
+                            <button
                                 type="submit"
                                 variant=""
                                 className="applyFilter"
@@ -158,7 +183,7 @@ const RightDrawer = (props) => {
                                 }}
                             >
                                 Apply Filter
-                            </Button>
+                            </button>
                         </div>
                         <div
                             style={{
@@ -193,7 +218,7 @@ const RightDrawer = (props) => {
                                     Cancel
                                 </button>
                                 <button
-                                    type="submit"
+                                    type="button"
                                     className="button"
                                     data-testid="saveFilter-button"
                                     onClick={() => {
@@ -229,12 +254,18 @@ RightDrawer.propTypes = {
     cancelSavePopup: PropTypes.any,
     portsArray: PropTypes.any,
     dateTimesArray: PropTypes.any,
-    textComponentsArray: PropTypes.any
+    textComponentsArray: PropTypes.any,
+    closeDateTime: PropTypes.any,
+    dateTimeRangesArray: PropTypes.any,
+    closeDateTimeRange: PropTypes.any,
+    closePortElement: PropTypes.any,
+    closeTextField: PropTypes.any,
+    portConditionHandler: PropTypes.any,
+    textFieldconditionHandler: PropTypes.any,
+    initialValuesObject: PropTypes.any
 };
 
 export default withFormik({
     displayName: "BasicForm",
-    mapPropsToValues: () => ({
-        test: false
-    })
+    mapPropsToValues: (props) => props.initialValuesObject
 })(RightDrawer);

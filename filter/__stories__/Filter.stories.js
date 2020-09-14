@@ -3,6 +3,8 @@ import Filter from "../src/index";
 import FilterData from "./data.json";
 import { mockData } from "../__mocks__/graphqlDataMock";
 import { MockedProvider } from "@apollo/react-testing";
+import CustomPanel from "./panels/CustomPanel";
+import "./example.css";
 
 const airport = [
     { key: "AAA", value: "AAA" },
@@ -54,6 +56,7 @@ const Template = (args) => (
             filterData={FilterData}
             appliedFilters={appliedFilters}
             savedFilters={savedFilters}
+            customPanel={CustomPanel}
         />
     </MockedProvider>
 );

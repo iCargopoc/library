@@ -61,24 +61,33 @@ export default function LeftDrawer(props) {
     const accordianHeads = leftDrawData.map((item, index) => {
         if (item.types && item.types.length > 0) {
             return (
-                <div>
-                    <Accordion allowZeroExpanded className="accordion">
-                        <AccordionItem key={index} className="card">
+                <div key={`${item.name}+${index}`}>
+                    <Accordion
+                        allowZeroExpanded
+                        className="accordion"
+                        key={`${item.name}|${index}`}
+                    >
+                        <AccordionItem
+                            className="card"
+                            key={`${item.name}=${index}`}
+                        >
                             <AccordionItemHeading
                                 onClick={() => {
                                     handleAccordian();
                                 }}
                                 className="card-header"
+                                key={`${item.name}>${index}`}
                             >
-                                <AccordionItemButton className="arrows">
+                                <AccordionItemButton
+                                    className="arrows"
+                                    key={`${item.name},${index}`}
+                                    style={{ cursor: "pointer" }}
+                                >
                                     {item.name}
                                     <div
                                         className="accordionDown"
                                         style={{
-                                            display: showDownArrow,
-                                            position: "relative",
-                                            bottom: "47%",
-                                            left: "150%"
+                                            display: showDownArrow
                                         }}
                                     >
                                         <IconDownArrow />
@@ -86,10 +95,7 @@ export default function LeftDrawer(props) {
                                     <div
                                         className="accordionUp"
                                         style={{
-                                            display: showUpArrow,
-                                            position: "relative",
-                                            bottom: "47%",
-                                            left: "150%"
+                                            display: showUpArrow
                                         }}
                                     >
                                         <IconUpArrow />
@@ -103,7 +109,8 @@ export default function LeftDrawer(props) {
                                             <div
                                                 role="presentation"
                                                 style={{
-                                                    fontWeight: type.weight
+                                                    fontWeight: type.weight,
+                                                    cursor: "pointer"
                                                 }}
                                                 data-testid="firstAccordion"
                                                 onClick={() => {
@@ -113,8 +120,12 @@ export default function LeftDrawer(props) {
                                                         type.dataType,
                                                         type.condition
                                                     );
+                                                    props.setInitialValuePort(
+                                                        item.name,
+                                                        type.name
+                                                    );
                                                 }}
-                                                key={type.name}
+                                                key={`${type.name}:${item.name}`}
                                             >
                                                 {type.name}
                                             </div>
@@ -126,14 +137,14 @@ export default function LeftDrawer(props) {
                 </div>
             );
         }
-        return <div key={item.name} />;
+        return <div key={index} />;
     });
-    const fieldHeads = leftDrawData.map((item) => {
+    const dateTimeHeads = leftDrawData.map((item, index) => {
         if (item.dataType === "DateTime") {
             return (
-                <div className="fieldHeads">
+                <div className="fieldHeads" key={`${item.name},${index}`}>
                     <li
-                        key={item.name}
+                        key={`${item.name}_${index}`}
                         role="presentation"
                         style={{ fontWeight: item.weight }}
                         data-testid="fieldHeads"
@@ -143,7 +154,7 @@ export default function LeftDrawer(props) {
                                 item.dataType,
                                 item.condition
                             );
-                            // props.addedFilterCount();
+                            props.setInitialValueDate("date");
                         }}
                     >
                         {item.name}
@@ -151,14 +162,39 @@ export default function LeftDrawer(props) {
                 </div>
             );
         }
-        return <div key={item.name} />;
+        return <div key={index} />;
     });
-    const normalHeads = leftDrawData.map((item) => {
+    const dateTimeRangeHeads = leftDrawData.map((item, index) => {
+        if (item.dataType === "DateTimeRange") {
+            return (
+                <div className="fieldHeads" key={`${item.name},${index}`}>
+                    <li
+                        key={`${item.name}_${index}`}
+                        role="presentation"
+                        style={{ fontWeight: item.weight }}
+                        data-testid="fieldHeads"
+                        onClick={() => {
+                            props.fromLeftToRight(
+                                item.name,
+                                item.dataType,
+                                item.condition
+                            );
+                            props.setInitialValueDateRange();
+                        }}
+                    >
+                        {item.name}
+                    </li>
+                </div>
+            );
+        }
+        return <div key={index} />;
+    });
+    const normalHeads = leftDrawData.map((item, index) => {
         if (item.dataType === "TextField") {
             return (
-                <div className="normalHeads">
+                <div className="normalHeads" key={`${item.name}>${index}`}>
                     <li
-                        key={item.name}
+                        key={`${item.name}_${index}`}
                         role="presentation"
                         style={{ fontWeight: item.weight }}
                         data-testid="normalHeads"
@@ -176,7 +212,7 @@ export default function LeftDrawer(props) {
                 </div>
             );
         }
-        return <div key={item.dataType} />;
+        return <div key={index} />;
     });
     return (
         <div>
@@ -191,7 +227,8 @@ export default function LeftDrawer(props) {
             />
             <div className="leftDrawer">
                 <div>{accordianHeads}</div>
-                <div>{fieldHeads}</div>
+                <div>{dateTimeHeads}</div>
+                <div>{dateTimeRangeHeads}</div>
                 <div>{normalHeads}</div>
             </div>
         </div>
@@ -201,5 +238,8 @@ export default function LeftDrawer(props) {
 LeftDrawer.propTypes = {
     filterData: PropTypes.any,
     fromLeftToRight: PropTypes.any,
-    portValuesFromLeftToRight: PropTypes.any
+    portValuesFromLeftToRight: PropTypes.any,
+    setInitialValueDate: PropTypes.any,
+    setInitialValueDateRange: PropTypes.any,
+    setInitialValuePort: PropTypes.any
 };

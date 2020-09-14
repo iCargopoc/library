@@ -27,7 +27,6 @@
         "@neo-ui/airport": "^1.1.0",
         "@neo-ui/select": "^1.1.0",
         "formik": "^2.1.5",
-        "react-click-away-listener": "^1.2.0",
         "react-accessible-accordion": "^3.3.3"
     }
 }

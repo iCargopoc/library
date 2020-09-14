@@ -100,46 +100,51 @@ const MainFilterPanel = (props) => {
 
     return (
         <div className="neo-header">
-            <div className="displayFlex">
-                <div className="alignLeft">
-                    <div
-                        style={{ cursor: "pointer" }}
-                        role="presentation"
-                        className="iconLeft"
-                        data-testid="handleListFilterCheck"
-                        onClick={handleListFilter}
-                    >
-                        <IconLeftAlign />
+            <div className="header__filter">
+                <div className="displayFlex">
+                    <div className="alignLeft">
+                        <div
+                            style={{ cursor: "pointer" }}
+                            role="presentation"
+                            className="iconLeft"
+                            data-testid="handleListFilterCheck"
+                            onClick={handleListFilter}
+                        >
+                            <IconLeftAlign />
+                        </div>
+                        <SavedFilters
+                            showFilter={listFilter}
+                            handleListFilter={handleListFilter}
+                            addSavedFilters={props.addSavedFilters}
+                        />
+                        <div className="leftSpace">All flights</div>
                     </div>
-                    <SavedFilters
-                        showFilter={listFilter}
-                        handleListFilter={handleListFilter}
-                        addSavedFilters={props.addSavedFilters}
-                    />
-                    <div className="leftSpace">All flights</div>
+                </div>
+                <div className="secondList">
+                    <div className="displayFlex">
+                        <span
+                            style={{ display: countShow }}
+                            className="listContent"
+                        >
+                            count:{chipCount}
+                        </span>
+                        {chips}
+                        <div
+                            style={{ cursor: "pointer" }}
+                            role="presentation"
+                            data-testid="showDrawer-check"
+                            onClick={() => {
+                                props.showDrawer();
+                            }}
+                            className="addFilter"
+                        >
+                            + Add Filter
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="secondList">
-                <div className="displayFlex">
-                    <span
-                        style={{ display: countShow }}
-                        className="listContent"
-                    >
-                        count:{chipCount}
-                    </span>
-                    {chips}
-                    <div
-                        style={{ cursor: "pointer" }}
-                        role="presentation"
-                        data-testid="showDrawer-check"
-                        onClick={() => {
-                            props.showDrawer();
-                        }}
-                        className="addFilter"
-                    >
-                        + Add Filter
-                    </div>
-                </div>
+            <div className="header__btns">
+                <props.customPanel />
             </div>
         </div>
     );
