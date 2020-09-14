@@ -57,6 +57,7 @@ const Template = (args) => (
             appliedFilters={appliedFilters}
             savedFilters={savedFilters}
             customPanel={CustomPanel}
+            className="iCargo__customStyle"
         />
     </MockedProvider>
 );

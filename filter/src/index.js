@@ -885,7 +885,11 @@ export default function Filter(props) {
     return (
         <ClickAwayListener onClickAway={closeDrawer}>
             {showApplyFilter && (
-                <div className="neo-filter filter--grid iCargo__custom">
+                <div
+                    className={`neo-filter filter--grid ${
+                        props.className || ""
+                    }`}
+                >
                     <div className="filter__wrap">
                         <div className="filter__list">
                             <LeftDrawer

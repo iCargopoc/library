@@ -558,6 +558,7 @@ const SpreadsheetView = () => {
         return (
             <Spreadsheet
                 rows={data.slice(0, pageSize)}
+                className="iCargo__customStyle"
                 dataSet={data}
                 pageSize={pageSize}
                 count={pageSize}

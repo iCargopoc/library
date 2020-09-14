@@ -688,6 +688,7 @@ const GridView = () => {
             <Grid
                 title="AWBs"
                 gridHeight="80vh"
+                classNamName="iCargo__customStyle"
                 gridWidth="100%"
                 gridData={gridData}
                 isNextPageAvailable={isNextPageAvailable}
@@ -701,7 +702,7 @@ const GridView = () => {
                 updateRowData={updateRowData}
                 deleteRowData={deleteRowData}
                 selectBulkData={selectBulkData}
-                CustomPanel= {CustomPanel}
+                CustomPanel={CustomPanel}
             />
         );
     }
