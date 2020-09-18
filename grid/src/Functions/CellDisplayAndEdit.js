@@ -37,7 +37,8 @@ const CellDisplayAndEdit = ({ row, columns, updateRowInGrid }) => {
         const originalRowValue = { ...row.row.original };
         const cellDisplayContent = column.displayCell(
             originalRowValue,
-            CellDisplayAndEditTag
+            CellDisplayAndEditTag,
+            row.row.isExpanded
         );
         const cellEditContent = column.editCell
             ? column.editCell(
