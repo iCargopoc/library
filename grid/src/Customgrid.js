@@ -645,7 +645,9 @@ const Customgrid = (props) => {
                                     toggleExportDataOverlay
                                 }
                                 rows={rows}
-                                columns={gridColumns}
+                                columns={JSON.parse(
+                                    JSON.stringify(gridColumns)
+                                )}
                                 additionalColumn={additionalColumn}
                             />
                         </div>
