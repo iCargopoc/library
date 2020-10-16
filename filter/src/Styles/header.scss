@@ -4,8 +4,8 @@
 }
 .neo-header {
     box-shadow: 0px 0px 4px rgba(18, 43, 60, 0.2);
-    padding: 15px 20px;
-    font-size: 14px;
+    padding: rem(15) rem(20);
+    font-size: rem(14);
     display: flex;
     justify-content: space-between;
     .header__filter {
@@ -14,7 +14,7 @@
     .displayFlex {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 10px;
+        margin-bottom: rem(10);
         .alignLeft {
             display: flex;
             align-items: center;
@@ -22,7 +22,7 @@
                 width: 13px;
             }
             .leftSpace {
-                margin-left: 15px;
+                margin-left: rem(15);
                 color: #20577f;
             }
         }
@@ -38,21 +38,12 @@
         min-width: 150px;
         z-index: 1;
     }
-    a.buttons {
-        border: rgba(0, 180, 180, 1) solid 1px;
-        padding: 8px 25px;
-        border-radius: 3px;
-        margin: 0 3px;
-        color: rgba(0, 180, 180, 1);
-        font-size: 14px;
-        cursor: pointer;
-    }
     .listContent {
         background: #f3fdfa;
         border: 1px solid #97ead5;
         border-radius: 20px;
-        padding: 0px 10px;
-        margin: 0.2rem;
+        padding: 2px rem(10);
+        margin: 5px;
         color: #1b496a;
         display: flex;
         span {
@@ -65,7 +56,7 @@
             display: flex;
             align-items: center;
             justify-content: normal;
-            margin-left: 20px;
+            margin-left: rem(20);
             .filter__tags {
                 display: flex;
                 flex-wrap: wrap;

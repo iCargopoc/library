@@ -3,24 +3,24 @@
     font-family: var(--font) !important;
 }
 :root {
-    --default: #1a4869;
+    --default: #004164;
     --default_hover: #28465b;
-    --primary: #00a4aa;
-    --primary-light: #ddeeec;
-    --tertiary: #49bcc0;
-    --border-green: #94d5d6;
-    --titlecolor: #1a4869;
-    --light-grey: #e0e4e6;
-    --border-light: #d5dcdf;
-    --box-shadow: #d5dcdf;
-    --border: #bfcad1;
-    --border-grey: #b4c1ca;
-    --border-default: #9eb0bc;
-    --reserved: #889fae;
-    --dark-grey: #5c7c92;
-    --text-light: #51748c;
-    --placeholder: #305977;
-    --textcolor: #305977;
+    --primary: #00b4b4;
+    --primary-light: #e5f7f7;
+    --tertiary: #4ccaca;
+    --border-green: #99e1e1;
+    --titlecolor: #004164;
+    --light-grey: #e5ecef;
+    --border-light: #d9e3e8;
+    --box-shadow: #d9e3e8;
+    --border: #bfcfd8;
+    --border-grey: #b2c6d0;
+    --border-default: #99b3c1;
+    --reserved: #7fa0b1;
+    --dark-grey: #4c7a92;
+    --text-light: #40718b;
+    --placeholder: #195473;
+    --textcolor: #195473;
     --icon-primary: #8f9eab;
     --icon-secondary: #9bb1bf;
     --primary_hover: #06808d;
@@ -36,11 +36,15 @@
     --success_border: #1e7e34;
     --grey: #76728c;
     --white: #fff;
-    --orange: #fb6340;
+    --orange: #ff6400;
     --warning: #ffc107;
     --warning_hover: #e0a800;
     --warning_border: #d39e00;
+    --danger_light: #f9eaea;
+    --success_light: #eafaf3;
+    --warning_light: #fef9ea;
     --focus: #199ed8;
+    --form-label: #59839a;
     --font: "Roboto", sans-serif;
     --em-base: 16;
 }

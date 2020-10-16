@@ -120,7 +120,7 @@ export default function LeftDrawer(props) {
         return <div />;
     });
     return (
-        <div>
+        <>
             <input
                 required
                 type="text"
@@ -130,10 +130,8 @@ export default function LeftDrawer(props) {
                 data-testid="searchFilterHandler-input"
                 onChange={searchFilterHandler}
             />
-            <div className="leftDrawer">
-                <div>{filterList}</div>
-            </div>
-        </div>
+            <div className="leftDrawer">{filterList}</div>
+        </>
     );
 }
 

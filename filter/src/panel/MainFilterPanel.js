@@ -6,10 +6,8 @@ import { IconLeftAlign } from "../utilities/svgUtilities";
 import LeftPopUpPanel from "./leftpopUpPanel";
 
 let chips;
-let chipCount;
 const MainFilterPanel = (props) => {
     const [chipArray, setChipArray] = useState({});
-    const [countShow, setCountShow] = useState("none");
     const {
         applyFilterChip,
         showDrawer,
@@ -27,15 +25,9 @@ const MainFilterPanel = (props) => {
 
     useEffect(() => {
         setChipArray(applyFilterChip);
-        if (Object.keys(applyFilterChip).length > 0) {
-            setCountShow("");
-        } else {
-            setCountShow("none");
-        }
     }, [applyFilterChip]);
 
     if (chipArray) {
-        chipCount = 0;
         chips = Object.entries(chipArray).map(([key, values]) => {
             if (
                 !values.condition &&
@@ -46,12 +38,11 @@ const MainFilterPanel = (props) => {
                         Object.keys(values).length > 0) ||
                     (typeof values === "boolean" && !key.includes(",check")))
             ) {
-                chipCount += 1;
                 return (
                     <div
                         role="presentation"
                         className="listContent"
-                        data-testid={key}
+                        data-testId={key}
                         key={key}
                         onClick={() => {
                             props.showDrawer();
@@ -112,56 +103,53 @@ const MainFilterPanel = (props) => {
                             Object.keys(values.value).length > 0) ||
                         (typeof values.value === "boolean" &&
                             !key.includes(",check")))
-                ) {
-                    chipCount += 1;
-                }
-
-                return (
-                    <div
-                        role="presentation"
-                        className="listContent"
-                        data-testid={key}
-                        key={key}
-                        onClick={() => {
-                            props.showDrawer();
-                        }}
-                    >
-                        <span key={key}>{key}</span>
-                        {values.condition && (
-                            <div key={values.condition}>
-                                {values.condition}
-                                &nbsp;&nbsp;
-                            </div>
-                        )}
-                        {(typeof values.value === "string" ||
-                            typeof values.value === "boolean") && (
-                            <div key={values.value}>
-                                {values.value.toString()}
-                            </div>
-                        )}
-                        {Array.isArray(values.value) &&
-                            values.value.map((item) => {
-                                return (
-                                    <div key={item}>
-                                        &nbsp;&nbsp;
-                                        {item}
-                                        &nbsp;&nbsp;
-                                    </div>
-                                );
-                            })}
-                        {typeof values.value === "object" &&
-                            !Array.isArray(values.value) &&
-                            Object.keys(values.value).map((item) => {
-                                return (
-                                    <div key={item}>
-                                        &nbsp;&nbsp;
-                                        {item}:{values.value[item]}
-                                        &nbsp;&nbsp;
-                                    </div>
-                                );
-                            })}
-                    </div>
-                );
+                )
+                    return (
+                        <div
+                            role="presentation"
+                            className="listContent"
+                            data-testId={key}
+                            key={key}
+                            onClick={() => {
+                                props.showDrawer();
+                            }}
+                        >
+                            <span key={key}>{key}</span>
+                            {values.condition && (
+                                <div key={values.condition}>
+                                    {values.condition}
+                                    &nbsp;&nbsp;
+                                </div>
+                            )}
+                            {(typeof values.value === "string" ||
+                                typeof values.value === "boolean") && (
+                                <div key={values.value}>
+                                    {values.value.toString()}
+                                </div>
+                            )}
+                            {Array.isArray(values.value) &&
+                                values.value.map((item) => {
+                                    return (
+                                        <div key={item}>
+                                            &nbsp;&nbsp;
+                                            {item}
+                                            &nbsp;&nbsp;
+                                        </div>
+                                    );
+                                })}
+                            {typeof values.value === "object" &&
+                                !Array.isArray(values.value) &&
+                                Object.keys(values.value).map((item) => {
+                                    return (
+                                        <div key={item}>
+                                            &nbsp;&nbsp;
+                                            {item}:{values.value[item]}
+                                            &nbsp;&nbsp;
+                                        </div>
+                                    );
+                                })}
+                        </div>
+                    );
             }
             return <div />;
         });
@@ -177,7 +165,7 @@ const MainFilterPanel = (props) => {
                             }}
                             role="presentation"
                             className="iconLeft"
-                            data-testid="handleListFilterCheck"
+                            data-testId="handleListFilterCheck"
                             onClick={openLeftPopUp}
                         >
                             <IconLeftAlign />
@@ -211,33 +199,15 @@ const MainFilterPanel = (props) => {
                 </div>
                 <div className="secondList">
                     <div className="displayFlex">
-                        <div className="filter__tags">
-                            {chipCount > 0 && (
-                                <span
-                                    style={{
-                                        display: countShow
-                                    }}
-                                    className="listContent"
-                                >
-                                    count:
-                                    {chipCount}
-                                </span>
-                            )}
+                        <div className="filter__tags pointer">
                             {chips}
-                        </div>
-                        <div>
                             <IButton
-                                color="link"
-                                size="sm"
-                                style={{
-                                    cursor: "pointer"
-                                }}
                                 role="presentation"
-                                data-testid="showDrawer-check"
+                                data-testId="addFilter"
                                 onClick={() => {
                                     showDrawer();
                                 }}
-                                className="addFilter"
+                                className="neo-btn-link pointer"
                             >
                                 + Add Filter
                             </IButton>

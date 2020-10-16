@@ -22,7 +22,7 @@ const LeftPopUpPanel = (props) => {
     if (listView) {
         listViewDiv = listView.predefinedFilters.map((list) => {
             return (
-                <li data-testid="listViewList">
+                <li data-testId="listViewList">
                     <div className="filter--saved__content">
                         {list.name === listViewName && !savedFilterName && (
                             <IconSelected />
@@ -34,7 +34,7 @@ const LeftPopUpPanel = (props) => {
                                     : ""
                             }
                             role="button"
-                            data-testid={list.name}
+                            data-testId={list.name}
                             key={list.name}
                             tabIndex={0}
                             onKeyPress={() => {
@@ -71,7 +71,7 @@ const LeftPopUpPanel = (props) => {
                                     : ""
                             }
                             role="button"
-                            data-testid={list.name}
+                            data-testId={list.name}
                             key={list.name}
                             tabIndex={0}
                             onKeyPress={() => handleSavedFilterClick(list)}

@@ -1,30 +1,31 @@
 {
     "predefinedFilters": [
         {
-            "name": "All Flights",
-            "category": "AF",
+            "name": "Flights",
+            "category": "FL",
             "default": false,
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "Yield": "rerwe",
+                "Flight No": {
                     "carrierCode": "dfd",
                     "flightNumber": "00123",
                     "flightDate": "2020-09-22"
                 },
-                "bookingProfile": {
+                "Booking Profile": {
                     "value": "test",
                     "condition": "greater than"
                 },
-                "masterSelect": ["GEN", "PIG", "VAL"]
+                "Master Select": ["GEN", "PIG", "VAL"],
+                "Toggle Field": true
             }
         },
         {
-            "name": "Recently Viewed",
-            "category": "RW",
+            "name": "Bookings",
+            "category": "BK",
             "default": true,
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "Yield": "rerwe",
+                "Flight No": {
                     "value": {
                         "carrierCode": "dfd",
                         "flightNumber": "00123",
@@ -32,26 +33,31 @@
                     },
                     "condition": "greater than"
                 },
-                "bookingProfile": {
+                "Booking Profile": {
                     "value": "test",
                     "condition": "greater than"
                 },
-                "masterSelect": ["LTF", "LOB"],
-                "airport": "TRV",
-                "fromDatePort": "2020-09-22",
-                "toDatePort": "2020-10-22",
-                "dateofDateTime": "2022-10-22",
-                "timeOfDateTime": "12:00",
-                "iSelect": "2"
+                "Master Select": ["LTF", "LOB"],
+                "Airport": "TRV",
+                "From Date Port": "2020-09-22",
+                "To Date Port": "2020-10-22",
+                "DateofDateTime": "2022-10-22",
+                "TimeOfDateTime": "12:00",
+                "I Select": "2",
+                "I Select Terminal": "2",
+                "Custom One": { "text": "jkl", "date": "2022-10-23" }
             }
         },
         {
-            "name": "To be cancelled Flights",
-            "category": "TCF",
+            "name": "Cancellings",
+            "category": "CG",
             "default": false,
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "AWB Number": {
+                    "shipmentPrefix": "111",
+                    "masterDocumentNumber": "123456789"
+                },
+                "Flight No": {
                     "value": {
                         "carrierCode": "dfd",
                         "flightNumber": "00123",
@@ -59,11 +65,11 @@
                     },
                     "condition": "greater than"
                 },
-                "bookingProfile": {
-                    "value": "test",
-                    "condition": "greater than"
-                },
-                "masterSelect": ["LTF", "LOB"]
+                "Booking Profile": {
+                    "value": "tobeCancelled",
+                    "condition": "greater than",
+                    "aircraft": "737"
+                }
             }
         },
         {
@@ -71,8 +77,8 @@
             "category": "FOA",
             "default": false,
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "Toggle Field": false,
+                "Flight No": {
                     "value": {
                         "carrierCode": "dfd",
                         "flightNumber": "00123",
@@ -80,11 +86,8 @@
                     },
                     "condition": "greater than"
                 },
-                "bookingProfile": {
-                    "value": "test",
-                    "condition": "greater than"
-                },
-                "masterSelect": ["LTF", "LOB"]
+                "Date": "2020-09-29",
+                "Flight Status": "onTime"
             }
         }
     ]

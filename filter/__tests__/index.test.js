@@ -11,9 +11,9 @@ import { mockData } from "../__mocks__/graphqlDataMock";
 import saveFilter from "./saveFilter.json";
 import listView from "./listView.json";
 import oneTimeValues from "./oneTimeValues.json";
+import components from "../__stories__/components";
 
 let container_;
-
 let mockCustomPanel = () => {
     const CS = () => {
         alert("Close Segment");
@@ -147,6 +147,7 @@ const renderMockComponent = (
             listView={listView}
             savedFilters={saveFilter}
             oneTimeValues={oneTimeValues}
+            components={components}
         />
     </MockedProvider>
 );
@@ -160,30 +161,24 @@ it("renders without crashing", () => {
 it("applyFilter - validation", async () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component2 = container.querySelector(
-        "[class='neo-btn reset btn btn-secondary']"
-    );
+    const component2 = container.querySelector("[data-testId='reset']");
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component3 = container.querySelector("[data-testid='Date']");
+    const component3 = container.querySelector("[data-testId='Date']");
     act(() => {
         component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     await waitFor(() => document.getElementsByName("Date"), { document });
-    const component4 = container.querySelector("[data-testid='closeField']");
+    const component4 = container.querySelector("[data-testId='closeField']");
     act(() => {
         component4.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component5 = container.querySelector(
-        "[class='neo-btn applyFilter btn btn-info']"
-    );
+    const component5 = container.querySelector("[data-testId='applyFilter']");
     act(() => {
         component5.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -196,20 +191,16 @@ it("applyFilter - validation", async () => {
 it("handleSavePopup", () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component2 = container.querySelector(
-        "[class='neo-btn button-save btn btn-secondary']"
-    );
+    const component2 = container.querySelector("[data-testId='savePopUp']");
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component3 = container.querySelector(
-        "[data-testid='cancelSavePopup-button']"
+        "[data-testId='cancelSavePopup-button']"
     );
     act(() => {
         component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -251,15 +242,13 @@ it("resetFilter-check", () => {
 
 it("searchFilter", () => {
     const { container, getByTestId } = render(renderMockComponent);
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
     const component2 = container.querySelector(
-        "[data-testid='searchFilterHandler-input']"
+        "[data-testId='searchFilterHandler-input']"
     );
     act(() => {
         fireEvent.change(component2, { target: { value: "air" } });
@@ -270,14 +259,12 @@ it("searchFilter", () => {
 it("applyFilter - dateTime", async () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
-    const component2 = container.querySelector("[data-testid='Date']");
+    const component2 = container.querySelector("[data-testId='Date']");
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -286,16 +273,12 @@ it("applyFilter - dateTime", async () => {
     act(() => {
         fireEvent.focus(component3);
         fireEvent.click(component3);
+        fireEvent.change(component3, {
+            target: { value: "01092019" }
+        });
+        fireEvent.blur(component3);
     });
-    const minComponent = container.querySelectorAll(
-        "[class='react-datepicker__day react-datepicker__day--014']"
-    )[0];
-    act(() => {
-        fireEvent.click(minComponent);
-    });
-    const component4 = container.querySelector(
-        "[class='neo-btn applyFilter btn btn-info']"
-    );
+    const component4 = container.querySelector("[data-testId='applyFilter']");
     act(() => {
         component4.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -307,25 +290,23 @@ it("applyFilter - dateTime", async () => {
     act(() => {
         component5.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    expect(container.querySelector("[data-testid='searchFilterHandler-input']"))
+    expect(container.querySelector("[data-testId='searchFilterHandler-input']"))
         .toBeInTheDocument;
 });
 
 it("applyFilter - dateTime clicked twice", async () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
-    const component2 = container.querySelector("[data-testid='Date']");
+    const component2 = container.querySelector("[data-testId='Date']");
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component3 = container.querySelector("[data-testid='Date']");
+    const component3 = container.querySelector("[data-testId='Date']");
     act(() => {
         component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -334,16 +315,12 @@ it("applyFilter - dateTime clicked twice", async () => {
     act(() => {
         fireEvent.focus(component4);
         fireEvent.click(component4);
+        fireEvent.change(component4, {
+            target: { value: "01092019" }
+        });
+        fireEvent.blur(component4);
     });
-    const minComponent = container.querySelectorAll(
-        "[class='react-datepicker__day react-datepicker__day--014']"
-    )[0];
-    act(() => {
-        fireEvent.click(minComponent);
-    });
-    const component5 = container.querySelector(
-        "[class='neo-btn applyFilter btn btn-info']"
-    );
+    const component5 = container.querySelector("[data-testId='applyFilter']");
     act(() => {
         component5.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -355,26 +332,24 @@ it("applyFilter - dateTime clicked twice", async () => {
     act(() => {
         component6.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    expect(container.querySelector("[data-testid='searchFilterHandler-input']"))
+    expect(container.querySelector("[data-testId='searchFilterHandler-input']"))
         .toBeInTheDocument;
 });
 
 it("close - dateTime", async () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
-    const component2 = container.querySelector("[data-testid='Date']");
+    const component2 = container.querySelector("[data-testId='Date']");
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     await waitFor(() => document.getElementsByName("Date"), { document });
-    const component3 = container.querySelector("[data-testid='closeField']");
+    const component3 = container.querySelector("[data-testId='closeField']");
     act(() => {
         component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -385,9 +360,7 @@ it("close - dateTime", async () => {
 it("change value - Departure Port > Airport Group", async () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -398,7 +371,7 @@ it("change value - Departure Port > Airport Group", async () => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component3 = container.querySelector(
-        "[data-testid='Airport Group:Departure Port']"
+        "[data-testId='Airport Group:Departure Port']"
     );
     act(() => {
         component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -416,7 +389,7 @@ it("change value - Departure Port > Airport Group", async () => {
         expect(component4.value).toBe("5");
     });
 
-    const component5 = container.querySelector("[data-testid='closeField']");
+    const component5 = container.querySelector("[data-testId='closeField']");
     act(() => {
         component5.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -427,9 +400,7 @@ it("change value - Departure Port > Airport Group", async () => {
 
 it("enable condition and selecting two filters", async () => {
     const { container } = render(renderMockComponent);
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -440,13 +411,13 @@ it("enable condition and selecting two filters", async () => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component3 = container.querySelector(
-        "[data-testid='Airport Group:Departure Port']"
+        "[data-testId='Airport Group:Departure Port']"
     );
     act(() => {
         component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component4 = container.querySelector(
-        "[data-testid='City:Departure Port']"
+        "[data-testId='City:Departure Port']"
     );
 
     act(() => {
@@ -527,14 +498,12 @@ it("enable condition and selecting two filters", async () => {
     expect(
         container.querySelector("[name='Departure PortAirport Group,check']")
     ).toBeInTheDocument;
-    const component8 = container.querySelector(
-        "[class='neo-btn applyFilter btn btn-info']"
-    );
+    const component8 = container.querySelector("[data-testId='applyFilter']");
     act(() => {
         component8.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component9 = container.querySelector(
-        "[data-testid='deployed,airportGroup']"
+        "[data-testId='deployed,airportGroup']"
     );
     await waitFor(() => {
         expect(component9).toBeInTheDocument;
@@ -544,15 +513,11 @@ it("enable condition and selecting two filters", async () => {
 it("applyFilter validation", () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component2 = container.querySelector(
-        "[class='neo-btn applyFilter btn btn-info']"
-    );
+    const component2 = container.querySelector("[data-testId='applyFilter']");
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -561,9 +526,7 @@ it("applyFilter validation", () => {
 
 it("close Departure Port > Airport", async () => {
     const { container } = render(renderMockComponent);
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -574,7 +537,7 @@ it("close Departure Port > Airport", async () => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component3 = container.querySelector(
-        "[data-testid='Airport:Departure Port']"
+        "[data-testId='Airport:Departure Port']"
     );
     act(() => {
         component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -585,7 +548,7 @@ it("close Departure Port > Airport", async () => {
     () => document.getElementsByName("departurePortAirport.value"),
         expect(container.querySelector("[name='airport.value']"))
             .toBeInTheDocument;
-    const component4 = container.querySelector("[data-testid='Flight No']");
+    const component4 = container.querySelector("[data-testId='Flight No']");
     act(() => {
         component4.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -594,7 +557,7 @@ it("close Departure Port > Airport", async () => {
     });
     expect(container.querySelector("[name='flightNo.value']"))
         .toBeInTheDocument;
-    const component5 = container.querySelector("[data-testid='AWB Number']");
+    const component5 = container.querySelector("[data-testId='AWB Number']");
     act(() => {
         component5.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -603,7 +566,7 @@ it("close Departure Port > Airport", async () => {
     });
     expect(container.querySelector("[name='awbNumber.value']"))
         .toBeInTheDocument;
-    const component6 = container.querySelector("[data-testid='Products']");
+    const component6 = container.querySelector("[data-testId='Products']");
     act(() => {
         component6.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -612,7 +575,7 @@ it("close Departure Port > Airport", async () => {
     });
     expect(container.querySelector("[name='products.value']"))
         .toBeInTheDocument;
-    const component7 = container.querySelector("[data-testid='Commodities']");
+    const component7 = container.querySelector("[data-testId='Commodities']");
     act(() => {
         component7.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -621,7 +584,7 @@ it("close Departure Port > Airport", async () => {
     });
     expect(container.querySelector("[name='commodities.value']"))
         .toBeInTheDocument;
-    const component8 = container.querySelector("[data-testid='Master Select']");
+    const component8 = container.querySelector("[data-testId='Master Select']");
     act(() => {
         component8.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -635,14 +598,12 @@ it("close Departure Port > Airport", async () => {
 it("applyFilter - textField", async () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component2 = container.querySelector(
-        "[ data-testid='Segment Status']"
+        "[ data-testId='Segment Status']"
     );
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -657,14 +618,12 @@ it("applyFilter - textField", async () => {
     await waitFor(() => {
         expect(component3.value).toBe("deployed");
     });
-    const component4 = container.querySelector(
-        "[class='neo-btn applyFilter btn btn-info']"
-    );
+    const component4 = container.querySelector("[data-testId='applyFilter']");
     act(() => {
         component4.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component5 = container.querySelector(
-        "[data-testid='deployed,segmentStatus']"
+        "[data-testId='deployed,segmentStatus']"
     );
     await waitFor(() => {
         expect(component5).toBeInTheDocument;
@@ -673,15 +632,13 @@ it("applyFilter - textField", async () => {
 
 it("applyFilter - textField selected multiple fields", async () => {
     const { container, getAllByText } = render(renderMockComponent);
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
     const component2 = container.querySelector(
-        "[ data-testid='Booking Profile']"
+        "[ data-testId='Booking Profile']"
     );
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -696,7 +653,7 @@ it("applyFilter - textField selected multiple fields", async () => {
     await waitFor(() => {
         expect(component3.value).toBe("valid");
     });
-    const component4 = container.querySelector("[ data-testid='Flight Group']");
+    const component4 = container.querySelector("[ data-testId='Flight Group']");
     act(() => {
         component4.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -711,7 +668,7 @@ it("applyFilter - textField selected multiple fields", async () => {
         expect(component5.value).toBe("valid");
     });
     const component6 = container.querySelector(
-        "[ data-testid='Master Select']"
+        "[ data-testId='Master Select']"
     );
     act(() => {
         component6.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -737,26 +694,24 @@ it("applyFilter - textField selected multiple fields", async () => {
     await waitFor(() => {
         expect(getAllByText(/LOBSTERS/)[0]).toBeInTheDocument();
     });
-    const component8 = container.querySelector(
-        "[class='neo-btn applyFilter btn btn-info']"
-    );
+    const component8 = container.querySelector("[data-testId='applyFilter']");
     act(() => {
         component8.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component9 = container.querySelector(
-        "[data-testid='valid,bookingProfile']"
+        "[data-testId='valid,bookingProfile']"
     );
     await waitFor(() => {
         expect(component9).toBeInTheDocument;
     });
     const component10 = container.querySelector(
-        "[data-testid='valid,flightGroup']"
+        "[data-testId='valid,flightGroup']"
     );
     await waitFor(() => {
         expect(component10).toBeInTheDocument;
     });
     const component11 = container.querySelector(
-        "[data-testid='FLW,LOB,masterSelect']"
+        "[data-testId='FLW,LOB,masterSelect']"
     );
     await waitFor(() => {
         expect(component11).toBeInTheDocument;
@@ -765,13 +720,15 @@ it("applyFilter - textField selected multiple fields", async () => {
 it("applyFilter - groupFilter", async () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component2 = container.querySelector("[ data-testid='Date Range']");
+    const resetButton = container.querySelector("[data-testId='reset']");
+    act(() => {
+        resetButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    const component2 = container.querySelector("[ data-testId='Date Range']");
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -785,44 +742,46 @@ it("applyFilter - groupFilter", async () => {
     act(() => {
         fireEvent.focus(component3);
         fireEvent.click(component3);
-    });
-    const minComponent = container.querySelectorAll(
-        "[class='react-datepicker__day react-datepicker__day--014']"
-    )[0];
-    act(() => {
-        fireEvent.click(minComponent);
+        fireEvent.change(component3, {
+            target: { value: "01092019" }
+        });
+        fireEvent.blur(component3);
     });
     const component4 = container.querySelector("[name='toDate']");
     act(() => {
         fireEvent.focus(component4);
         fireEvent.click(component4);
+        fireEvent.change(component4, {
+            target: { value: "01092019" }
+        });
+        fireEvent.blur(component4);
     });
-    const popComponent = container.querySelectorAll(
-        "[class='react-datepicker__day react-datepicker__day--015']"
-    )[0];
+    // const popComponent = container.querySelectorAll(
+    //     "[class='react-datepicker__day react-datepicker__day--015']"
+    // )[0];
+    // act(() => {
+    //     fireEvent.click(popComponent);
+    // });
     act(() => {
-        fireEvent.click(popComponent);
-    });
-    act(() => {
-        fireEvent.click(container.querySelector("[ data-testid='closeField']"));
+        fireEvent.click(container.querySelector("[ data-testId='closeField']"));
     });
     const component5 = container.querySelector(
-        "[ data-testid='Booking Profile']"
+        "[ data-testId='Booking Profile']"
     );
     act(() => {
         component5.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    await waitFor(() => document.getElementsByName("bookingProfile.value"), {
+    await waitFor(() => document.getElementsByName("bookingProfile"), {
         document
     });
-    const component6 = container.querySelector("[name='bookingProfile.value']");
+    const component6 = container.querySelector("[name='bookingProfile']");
     act(() => {
         fireEvent.change(component6, { target: { value: "valid" } });
     });
     await waitFor(() => {
         expect(component6.value).toBe("valid");
     });
-    const component7 = container.querySelector("[ data-testid='Date Range']");
+    const component7 = container.querySelector("[ data-testId='Date Range']");
     act(() => {
         component7.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -833,36 +792,36 @@ it("applyFilter - groupFilter", async () => {
         document
     });
     act(() =>
-        fireEvent.click(container.querySelector("[id='Date Range,check']"))
+        fireEvent.click(container.querySelector("[name='From Date,check']"))
     );
     act(() =>
-        fireEvent.click(container.querySelector("[id='Date Range,check']"))
+        fireEvent.click(container.querySelector("[name='To Date,check']"))
+    );
+    act(() =>
+        fireEvent.click(container.querySelector("[name='From Date,check']"))
+    );
+    act(() =>
+        fireEvent.click(container.querySelector("[name='To Date,check']"))
     );
     const component8 = container.querySelector("[name='toDate']");
     act(() => {
         fireEvent.focus(component8);
         fireEvent.click(component8);
-    });
-    const miniComponent = container.querySelectorAll(
-        "[class='react-datepicker__day react-datepicker__day--014']"
-    )[0];
-    act(() => {
-        fireEvent.click(miniComponent);
+        fireEvent.change(component8, {
+            target: { value: "01092019" }
+        });
+        fireEvent.blur(component8);
     });
     const component9 = container.querySelector("[name='fromDate']");
     act(() => {
         fireEvent.focus(component9);
         fireEvent.click(component9);
+        fireEvent.change(component9, {
+            target: { value: "01092019" }
+        });
+        fireEvent.blur(component9);
     });
-    const popupComponent = container.querySelectorAll(
-        "[class='react-datepicker__day react-datepicker__day--015']"
-    )[0];
-    act(() => {
-        fireEvent.click(popupComponent);
-    });
-    const component10 = container.querySelector(
-        "[class='neo-btn applyFilter btn btn-info']"
-    );
+    const component10 = container.querySelector("[data-testId='applyFilter']");
     act(() => {
         component10.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -872,17 +831,17 @@ it("Test for list view", () => {
     const { container } = render(renderMockComponent);
 
     const leftIcon = container.querySelector(
-        "[data-testid='handleListFilterCheck']"
+        "[data-testId='handleListFilterCheck']"
     );
     act(() => {
         fireEvent.click(leftIcon);
     });
-    const item1 = container.querySelector("[data-testid='All Flights']");
+    const item1 = container.querySelector("[data-testId='Flights']");
     act(() => {
         fireEvent.click(item1);
     });
     const chipItem = container.querySelector(
-        "[data-testid='test,bookingProfile']"
+        "[data-testId='test,bookingProfile']"
     );
     expect(chipItem).toBeInTheDocument;
 });
@@ -890,28 +849,26 @@ it("Test for saved Filter", () => {
     const { container } = render(renderMockComponent);
 
     const leftIcon = container.querySelector(
-        "[ data-testid='handleListFilterCheck']"
+        "[ data-testId='handleListFilterCheck']"
     );
     act(() => {
         fireEvent.click(leftIcon);
     });
     const item1 = container.querySelector(
-        "[data-testid='Flights under 2500 kg capacity']"
+        "[data-testId='Flights under 2500 kg capacity']"
     );
     act(() => {
         fireEvent.click(item1);
     });
     const chipItem = container.querySelector(
-        "[data-testid='test,bookingProfile']"
+        "[data-testId='test,bookingProfile']"
     );
     expect(chipItem).toBeInTheDocument;
 });
 it("change value - Departure Port > Date Range port", async () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -922,7 +879,7 @@ it("change value - Departure Port > Date Range port", async () => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component3 = container.querySelector(
-        "[data-testid='Date Range Port:Departure Port']"
+        "[data-testId='Date Range Port:Departure Port']"
     );
     act(() => {
         component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -931,28 +888,24 @@ it("change value - Departure Port > Date Range port", async () => {
 it("createSelect and Iselect binding", async () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component2 = container.querySelector(
-        "[class='neo-btn reset btn btn-secondary']"
-    );
+    const component2 = container.querySelector("[data-testId='reset']");
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component3 = container.querySelector("[data-testid='Date']");
+    const component3 = container.querySelector("[data-testId='Date']");
     act(() => {
         component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     await waitFor(() => document.getElementsByName("Date"), { document });
-    const component4 = container.querySelector("[data-testid='closeField']");
+    const component4 = container.querySelector("[data-testId='closeField']");
     act(() => {
         component4.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component5 = container.querySelector("[data-testid='Create Select']");
+    const component5 = container.querySelector("[data-testId='Create Select']");
     act(() => {
         component5.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -963,18 +916,18 @@ it("createSelect and Iselect binding", async () => {
         component6.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component7 = container.querySelector(
-        "[data-testid='Create Select Terminal:Arrival Terminal']"
+        "[data-testId='Create Select Terminal:Arrival Terminal']"
     );
     act(() => {
         component7.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component8 = container.querySelector(
-        "[data-testid='ISelect Terminal:Arrival Terminal']"
+        "[data-testId='ISelect Terminal:Arrival Terminal']"
     );
     act(() => {
         component8.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component9 = container.querySelector("[data-testid='I Select']");
+    const component9 = container.querySelector("[data-testId='I Select']");
     act(() => {
         component9.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -986,24 +939,20 @@ it("createSelect and Iselect binding", async () => {
 it("createSelect and Iselect binding at starting", async () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component2 = container.querySelector(
-        "[class='neo-btn reset btn btn-secondary']"
-    );
+    const component2 = container.querySelector("[data-testId='reset']");
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component3 = container.querySelector("[data-testid='Date']");
+    const component3 = container.querySelector("[data-testId='Date']");
     act(() => {
         component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     await waitFor(() => document.getElementsByName("Date"), { document });
-    const component4 = container.querySelector("[data-testid='closeField']");
+    const component4 = container.querySelector("[data-testId='closeField']");
     act(() => {
         component4.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
@@ -1014,7 +963,7 @@ it("createSelect and Iselect binding at starting", async () => {
         component5.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     const component6 = container.querySelector(
-        "[data-testid='Create Select Terminal:Arrival Terminal']"
+        "[data-testId='Create Select Terminal:Arrival Terminal']"
     );
     act(() => {
         component6.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -1027,28 +976,93 @@ it("createSelect and Iselect binding at starting", async () => {
 it("close GroupFilter", async () => {
     const { container } = render(renderMockComponent);
 
-    const component1 = container.querySelector(
-        "[class='neo-btn addFilter btn btn-link btn-sm']"
-    );
+    const component1 = container.querySelector("[data-testId='addFilter']");
     act(() => {
         component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component2 = container.querySelector(
-        "[class='neo-btn reset btn btn-secondary']"
-    );
+    const component2 = container.querySelector("[data-testId='reset']");
     act(() => {
         component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    const component3 = container.querySelector("[data-testid='Date Range']");
+    const component3 = container.querySelector("[data-testId='Date Range']");
     act(() => {
         component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     await waitFor(() => document.getElementsByName("fromDate"), { document });
-    const component4 = container.querySelector("[data-testid='closeField']");
+    const component4 = container.querySelector("[data-testId='closeField']");
     act(() => {
         component4.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     expect(
         container.querySelector("[name='fromDate']")
     ).not.toBeInTheDocument();
+});
+it("enable condition and closing filter", async () => {
+    const { container } = render(renderMockComponent);
+    const component1 = container.querySelector("[data-testId='addFilter']");
+    act(() => {
+        component1.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    const reset = container.querySelector("[data-testId='reset']");
+    act(() => {
+        reset.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    const component2 = Array.from(container.querySelectorAll("div")).find(
+        (el) => el.textContent === "Departure Port"
+    );
+    act(() => {
+        component2.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    const component3 = container.querySelector(
+        "[data-testId='Airport Group:Departure Port']"
+    );
+    act(() => {
+        component3.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    await waitFor(() => document.getElementsByName("airportGroup"), {
+        document
+    });
+    const component5 = container.querySelector("[name='airportGroup']");
+    act(() => {
+        fireEvent.change(component5, { target: { value: "deployed" } });
+    });
+    await waitFor(() => {
+        expect(component5.value).toBe("deployed");
+    });
+
+    await waitFor(
+        () => document.getElementsByName("Departure PortAirport Group,check"),
+        {
+            document
+        }
+    );
+    const component6 = container.querySelector(
+        "[name='Departure PortAirport Group,check']"
+    );
+    act(() => {
+        fireEvent.click(component6);
+    });
+    const conditionField = container.querySelector(
+        "[name='airportGroup.condition']"
+    );
+    fireEvent.focus(conditionField);
+    fireEvent.keyDown(conditionField, {
+        key: "ArrowDown",
+        code: 40
+    });
+    fireEvent.keyDown(conditionField, {
+        key: "ArrowDown",
+        code: 40
+    });
+
+    fireEvent.keyDown(conditionField, {
+        key: "Enter",
+        code: 13
+    });
+    await waitFor(() => expect(conditionField.value).toBe("greater than"));
+    const closeField = container.querySelector("[data-testId='closeField']");
+    act(() => {
+        closeField.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    expect(component5).not.toBeInTheDocument();
 });

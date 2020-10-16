@@ -1,30 +1,30 @@
 {
     "predefinedFilters": [
         {
-            "name": "All Flights",
-            "category": "AF",
+            "name": "Flights",
+            "category": "FL",
             "default": false,
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "Yield": "rerwe",
+                "Flight No": {
                     "carrierCode": "dfd",
                     "flightNumber": "00123",
                     "flightDate": "2020-09-22"
                 },
-                "bookingProfile": {
+                "Booking Profile": {
                     "value": "test",
                     "condition": "greater than"
                 },
-                "masterSelect": ["GEN", "PIG", "VAL"]
+                "Master Select": ["GEN", "PIG", "VAL"]
             }
         },
         {
-            "name": "Recently Viewed",
-            "category": "RW",
+            "name": "Bookings",
+            "category": "BK",
             "default": true,
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "Yield": "rerwe",
+                "Flight No": {
                     "value": {
                         "carrierCode": "dfd",
                         "flightNumber": "00123",
@@ -32,27 +32,32 @@
                     },
                     "condition": "greater than"
                 },
-                "bookingProfile": {
+                "Booking Profile": {
                     "value": "test",
                     "condition": "greater than"
                 },
-                "masterSelect": ["LTF", "LOB"],
-                "airport": "TRV",
-                "country": { "value": "KRL", "condition": "greater than" },
-                "fromDatePort": "2020-09-22",
-                "toDatePort": "2020-10-22",
-                "fromDate": "2022-10-22",
-                "toDate": "12:00",
-                "iSelect": "2"
+                "Master Select": ["LTF", "LOB"],
+                "Airport": "TRV",
+                "Country": { "value": "KRL", "condition": "greater than" },
+                "From Date Port": "2020-09-22",
+                "To Date Port": "2020-10-22",
+                "From Date": "2022-10-22",
+                "To Date": "12:00",
+                "I Select": "2",
+                "ISelect Terminal": "1",
+                "Custom One": { "text": "jkl", "date": "2022-10-23" },
+                "Custom Two": { "text": "jkl", "date": "2022-10-24" },
+                "Custom One Port": { "text": "jkl", "date": "2022-10-25" },
+                "Custom Two Port": { "text": "jkl", "date": "2022-10-26" }
             }
         },
         {
-            "name": "To be cancelled Flights",
-            "category": "TCF",
+            "name": "Cancellings",
+            "category": "CG",
             "default": false,
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "Yield": "rerwe",
+                "Flight No": {
                     "value": {
                         "carrierCode": "dfd",
                         "flightNumber": "00123",
@@ -60,11 +65,11 @@
                     },
                     "condition": "greater than"
                 },
-                "bookingProfile": {
+                "Booking Profile": {
                     "value": "test",
                     "condition": "greater than"
                 },
-                "masterSelect": ["LTF", "LOB"]
+                "Master Select": ["LTF", "LOB"]
             }
         },
         {
@@ -72,8 +77,8 @@
             "category": "FOA",
             "default": false,
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "Yield": "rerwe",
+                "Flight No": {
                     "value": {
                         "carrierCode": "dfd",
                         "flightNumber": "00123",
@@ -81,11 +86,11 @@
                     },
                     "condition": "greater than"
                 },
-                "bookingProfile": {
+                "Booking Profile": {
                     "value": "test",
                     "condition": "greater than"
                 },
-                "masterSelect": ["LTF", "LOB"]
+                "Master Select": ["LTF", "LOB"]
             }
         }
     ]

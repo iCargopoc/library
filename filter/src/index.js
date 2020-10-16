@@ -4,18 +4,40 @@ import OutsideClickHandler from "react-outside-click-handler";
 import RightDrawer from "./drawer/rightDrawer";
 import LeftDrawer from "./drawer/leftDrawer";
 import MainFilterPanel from "./panel/mainFilterPanel";
+import { DeepSearchLabel, DeepSearchName } from "./utilities/deepSearch";
 
 // eslint-disable-next-line import/no-unresolved
 import "!style-loader!css-loader!sass-loader!./styles/main.scss";
 
 let filter = [];
 let initialValueObject = {};
+let filterDataTemp = {};
+let defaultFilterCategory = "";
 export default function Filter(props) {
+    const {
+        filterDataProp,
+        appliedFiltersProp,
+        CustomPanel,
+        listView,
+        savedFilters,
+        oneTimeValues,
+        components
+    } = props;
+    listView.predefinedFilters.forEach((item) => {
+        if (item.default) defaultFilterCategory = item.category;
+    });
+    savedFilters.savedFilters.forEach((item) => {
+        if (item.default) defaultFilterCategory = item.category;
+    });
     const [leftPopUpShow, setLeftShowPopup] = useState(false);
     const [showApplyFilter, setApplyFilter] = useState(false);
     const [applyFilterChip, setApplyFilterChip] = useState({});
     const [filterCount, setFilterCount] = useState(0);
-    const [filterData, setFilterData] = useState({});
+    const [filterData, setFilterData] = useState(
+        filterDataProp.filter(
+            (item) => item.category === defaultFilterCategory
+        )[0]
+    );
     const [emptyFilterWarning, setEmptyFilterWarning] = useState("");
     const [emptyFilterClassName, setEmptyFilterClassName] = useState("");
     const [recentFilterShow, setRecentFilterShow] = useState("none");
@@ -25,17 +47,10 @@ export default function Filter(props) {
     const [filters, setFilters] = useState([]);
     const [listViewClick, setListViewClick] = useState(false);
     const [listViewName, setListViewName] = useState("");
+    const [listViewCode, setListViewCode] = useState("");
     const [savedFilterClick, setSavedFilterClick] = useState(false);
     const [savedFilterName, setSavedFilterName] = useState("");
     const [loaded, setLoad] = useState(false);
-    const {
-        filterDataProp,
-        appliedFiltersProp,
-        CustomPanel,
-        listView,
-        savedFilters,
-        oneTimeValues
-    } = props;
 
     useEffect(() => {
         setFilters(filter);
@@ -44,8 +59,12 @@ export default function Filter(props) {
         setInitialValuesObject(initialValueObject);
     }, [initialValueObject]);
     useEffect(() => {
-        setFilterData(filterDataProp);
-    }, [filterDataProp]);
+        filterDataProp.forEach((item) => {
+            if (item.name === listViewName) {
+                setFilterData(item);
+            }
+        });
+    }, [listViewName]);
     useEffect(() => {
         let count = 0;
         count = filters.length;
@@ -70,311 +89,6 @@ export default function Filter(props) {
     const showDrawer = () => {
         setApplyFilter(true);
     };
-
-    const handlelistViewClick = (list) => {
-        setListViewName(list.name);
-        setSavedFilterName("");
-        setListViewClick(true);
-        setInitialValuesObject({});
-        setRecentFilterShow("none");
-        setFilterShow("");
-        setEmptyFilterClassName("");
-        setEmptyFilterWarning("");
-        filter = [...filters];
-        const filterTemp = [];
-        const initialValueTemp = {};
-        setApplyFilterChip(list.filters);
-        Object.entries(list.filters).forEach(([key, values]) => {
-            const filterDataTemp = filterDataProp;
-            filterDataTemp.filter.forEach((jsonFilter) => {
-                if (
-                    key === jsonFilter.name &&
-                    !jsonFilter.isSubFilter &&
-                    !jsonFilter.isGroupFilter
-                ) {
-                    let tempProp;
-                    if (jsonFilter.props !== undefined) {
-                        tempProp = jsonFilter.props;
-                    } else tempProp = {};
-                    if (jsonFilter.oneTimeCode) {
-                        Object.entries(oneTimeValues).forEach(([keys]) => {
-                            if (jsonFilter.oneTimeCode === keys) {
-                                tempProp.options = oneTimeValues[keys];
-                            }
-                        });
-                    }
-                    const jsonFilterTemp = jsonFilter;
-                    jsonFilterTemp.weight = 700;
-
-                    if (values.condition) {
-                        filterTemp.push({
-                            labelName: `${jsonFilter.label}`,
-                            label: jsonFilter.label,
-                            name: `${jsonFilter.name}.value`,
-                            isSubFilter: jsonFilter.isSubFilter,
-                            dataType: jsonFilter.dataType,
-                            condition: jsonFilter.condition,
-                            isRequired: jsonFilter.isRequired,
-                            initialValue: jsonFilter.initialValue,
-                            display: "",
-                            disabled: false,
-                            validationDisplay: "none",
-                            props: tempProp,
-                            conditionFieldName: `${jsonFilter.name}.condition`
-                        });
-                    } else {
-                        filterTemp.push({
-                            labelName: `${jsonFilter.label}`,
-                            label: jsonFilter.label,
-                            name: jsonFilter.name,
-                            isSubFilter: jsonFilter.isSubFilter,
-                            dataType: jsonFilter.dataType,
-                            condition: jsonFilter.condition,
-                            isRequired: jsonFilter.isRequired,
-                            initialValue: jsonFilter.initialValue,
-                            display: "none",
-                            disabled: true,
-                            validationDisplay: "none",
-                            props: tempProp
-                        });
-                    }
-
-                    if (
-                        !Object.prototype.hasOwnProperty.call(
-                            initialValueObject,
-                            jsonFilter.name
-                        )
-                    ) {
-                        if (
-                            jsonFilter.dataType === "IFlightNumber" ||
-                            jsonFilter.dataType === "MasterSelect"
-                        ) {
-                            initialValueTemp[jsonFilter.name] = [];
-                        } else {
-                            initialValueTemp[jsonFilter.name] = "";
-                        }
-                    }
-                }
-
-                if (jsonFilter.isSubFilter) {
-                    jsonFilter.subFilters.forEach((subFilter) => {
-                        if (key === subFilter.name) {
-                            const jsonFilterTemp = jsonFilter;
-                            jsonFilterTemp.weight = 700;
-                            let tempProp;
-                            if (subFilter.props !== undefined) {
-                                tempProp = subFilter.props;
-                            } else tempProp = {};
-                            if (jsonFilter.oneTimeCode) {
-                                Object.entries(oneTimeValues).forEach(
-                                    ([keys]) => {
-                                        if (subFilter.oneTimeCode === keys) {
-                                            tempProp.options =
-                                                oneTimeValues[keys];
-                                        }
-                                    }
-                                );
-                            }
-                            if (list.filters[key].condition) {
-                                filterTemp.push({
-                                    labelName: `${jsonFilter.label}${subFilter.label}`,
-                                    label: jsonFilter.label,
-                                    name: `${subFilter.name}.value`,
-                                    isSubFilter: jsonFilter.isSubFilter,
-                                    type: subFilter.label,
-                                    dataType: subFilter.dataType,
-                                    condition: subFilter.condition,
-                                    isRequired: subFilter.isRequired,
-                                    initialValue: subFilter.initialValue,
-                                    display: "",
-                                    disabled: false,
-                                    validationDisplay: "none",
-                                    props: tempProp,
-                                    conditionFieldName: `${subFilter.name}.condition`
-                                });
-                            } else {
-                                filterTemp.push({
-                                    labelName: `${jsonFilter.label}${subFilter.label}`,
-                                    label: jsonFilter.label,
-                                    name: subFilter.name,
-                                    isSubFilter: jsonFilter.isSubFilter,
-                                    type: subFilter.label,
-                                    dataType: subFilter.dataType,
-                                    condition: subFilter.condition,
-                                    isRequired: subFilter.isRequired,
-                                    initialValue: subFilter.initialValue,
-                                    display: "none",
-                                    disabled: true,
-                                    validationDisplay: "none",
-                                    props: tempProp
-                                });
-                            }
-
-                            if (
-                                !Object.prototype.hasOwnProperty.call(
-                                    initialValueObject,
-                                    subFilter.name
-                                )
-                            ) {
-                                if (
-                                    subFilter.dataType === "IFlightNumber" ||
-                                    subFilter.dataType === "MasterSelect"
-                                ) {
-                                    initialValueTemp[subFilter.name] = [];
-                                } else {
-                                    initialValueTemp[subFilter.name] = "";
-                                }
-                            }
-                        }
-
-                        if (subFilter.isGroupFilter) {
-                            subFilter.groupFilter.forEach((groupFilters) => {
-                                if (key === groupFilters.name) {
-                                    const jsonFilterTemp = jsonFilter;
-                                    jsonFilterTemp.weight = 700;
-                                    const index = filterTemp.findIndex(
-                                        (x) => x.label === subFilter.label
-                                    );
-                                    if (index === -1) {
-                                        if (list.filters[key].condition) {
-                                            filterTemp.push({
-                                                display: "",
-                                                disabled: false,
-                                                validationDisplay: "none",
-                                                label: subFilter.label,
-                                                isSubFilter:
-                                                    subFilter.isSubFilter,
-                                                isGroupFilter:
-                                                    subFilter.isGroupFilter,
-                                                groupFilter:
-                                                    subFilter.groupFilter,
-                                                condition: subFilter.condition
-                                            });
-                                        } else {
-                                            filterTemp.push({
-                                                display: "none",
-                                                disabled: true,
-                                                validationDisplay: "none",
-                                                label: subFilter.label,
-                                                isSubFilter:
-                                                    subFilter.isSubFilter,
-                                                isGroupFilter:
-                                                    subFilter.isGroupFilter,
-                                                groupFilter:
-                                                    subFilter.groupFilter,
-                                                condition: subFilter.condition
-                                            });
-                                        }
-                                    }
-                                    subFilter.groupFilter.forEach(
-                                        (groupedFilter) => {
-                                            if (
-                                                !Object.prototype.hasOwnProperty.call(
-                                                    initialValueObject,
-                                                    groupedFilter.name
-                                                )
-                                            ) {
-                                                if (
-                                                    groupedFilter.dataType ===
-                                                        "IFlightNumber" ||
-                                                    groupedFilter.dataType ===
-                                                        "MasterSelect"
-                                                ) {
-                                                    initialValueObject[
-                                                        groupedFilter.name
-                                                    ] = [];
-                                                } else {
-                                                    initialValueObject[
-                                                        groupedFilter.name
-                                                    ] = "";
-                                                }
-                                            }
-                                        }
-                                    );
-                                }
-                            });
-                        }
-                    });
-                }
-                if (jsonFilter.isGroupFilter) {
-                    jsonFilter.groupFilter.forEach((groupFilters) => {
-                        if (key === groupFilters.name) {
-                            const jsonFilterTemp = jsonFilter;
-                            jsonFilterTemp.weight = 700;
-                            const index = filterTemp.findIndex(
-                                (x) => x.label === jsonFilter.label
-                            );
-                            if (index === -1) {
-                                if (list.filters[key].condition) {
-                                    filterTemp.push({
-                                        display: "",
-                                        disabled: false,
-                                        validationDisplay: "none",
-                                        label: jsonFilter.label,
-                                        isSubFilter: jsonFilter.isSubFilter,
-                                        isGroupFilter: jsonFilter.isGroupFilter,
-                                        groupFilter: jsonFilter.groupFilter,
-                                        condition: jsonFilter.condition
-                                    });
-                                } else {
-                                    filterTemp.push({
-                                        display: "none",
-                                        disabled: true,
-                                        validationDisplay: "none",
-                                        label: jsonFilter.label,
-                                        isSubFilter: jsonFilter.isSubFilter,
-                                        isGroupFilter: jsonFilter.isGroupFilter,
-                                        groupFilter: jsonFilter.groupFilter,
-                                        condition: jsonFilter.condition
-                                    });
-                                }
-                            }
-
-                            jsonFilter.groupFilter.forEach((groupedFilter) => {
-                                if (
-                                    !Object.prototype.hasOwnProperty.call(
-                                        initialValueObject,
-                                        groupedFilter.name
-                                    )
-                                ) {
-                                    if (
-                                        groupedFilter.dataType ===
-                                            "IFlightNumber" ||
-                                        groupedFilter.dataType ===
-                                            "MasterSelect"
-                                    ) {
-                                        initialValueObject[
-                                            groupedFilter.name
-                                        ] = [];
-                                    } else {
-                                        initialValueObject[groupedFilter.name] =
-                                            "";
-                                    }
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        });
-        filter = [...filterTemp];
-        initialValueObject = {
-            ...initialValueTemp
-        };
-        if (filter.length > 0) {
-            closeLeftPopUp();
-        }
-    };
-    useEffect(() => {
-        if (!loaded) {
-            listView.predefinedFilters.forEach((list) => {
-                if (list.default === true) {
-                    handlelistViewClick(list);
-                }
-            });
-            setLoad(true);
-        }
-    }, [loaded]);
 
     /**
      * Method set the state which closes the drawer when the state is in false condition
@@ -402,9 +116,14 @@ export default function Filter(props) {
      */
 
     const applyFilter = (appliedFilters) => {
-        setApplyFilterChip(appliedFilters);
+        const chipObject = {};
+        filterDataTemp = { ...filterData };
+        Object.entries(appliedFilters).forEach(([key, value]) => {
+            const label = DeepSearchLabel(filterDataTemp, key);
+            if (label !== "") chipObject[label] = value;
+        });
+        setApplyFilterChip(chipObject);
         applyFilterValidation();
-
         initialValueObject = {
             ...initialValuesObject
         };
@@ -413,7 +132,7 @@ export default function Filter(props) {
         });
         setInitialValuesObject(initialValueObject);
         const applied = {};
-        Object.entries(appliedFilters).forEach(([key, values]) => {
+        Object.entries(chipObject).forEach(([key, values]) => {
             if (
                 !values.condition &&
                 (((typeof values === "string" || Array.isArray(values)) &&
@@ -438,9 +157,343 @@ export default function Filter(props) {
             }
         });
         if (Object.keys(applied).length > 0) {
-            appliedFiltersProp(applied);
+            appliedFiltersProp(applied, listViewCode, listViewName);
         }
     };
+
+    const handlelistViewClick = (list) => {
+        if (filterData && Array.isArray(filterData.filter)) {
+            setListViewName(list.name);
+            setListViewCode(list.category);
+            setSavedFilterName("");
+            setListViewClick(true);
+            setInitialValuesObject({});
+            setRecentFilterShow("none");
+            setFilterShow("");
+            setEmptyFilterClassName("");
+            setEmptyFilterWarning("");
+            filter = [...filters];
+            const filterTemp = [];
+            const initialValueTemp = {};
+            const filterValueObject = {};
+            Object.entries(list.filters).forEach(([key, value]) => {
+                filterDataTemp = { ...filterData };
+                const name = DeepSearchName(filterDataTemp, key);
+                filterValueObject[name] = value;
+            });
+            Object.entries(filterValueObject).forEach(([key, values]) => {
+                filterDataTemp = filterData;
+                filterDataTemp.filter.forEach((jsonFilter) => {
+                    if (
+                        key === jsonFilter.name &&
+                        !jsonFilter.isSubFilter &&
+                        !jsonFilter.isGroupFilter
+                    ) {
+                        let tempProp;
+                        if (jsonFilter.props !== undefined) {
+                            tempProp = jsonFilter.props;
+                        } else tempProp = {};
+                        if (jsonFilter.oneTimeCode && oneTimeValues) {
+                            Object.entries(oneTimeValues).forEach(([keys]) => {
+                                if (jsonFilter.oneTimeCode === keys) {
+                                    tempProp.options = oneTimeValues[keys];
+                                }
+                            });
+                        }
+                        const jsonFilterTemp = jsonFilter;
+                        jsonFilterTemp.weight = 700;
+
+                        if (values.condition) {
+                            filterTemp.push({
+                                labelName: `${jsonFilter.label}`,
+                                label: jsonFilter.label,
+                                name: `${jsonFilter.name}.value`,
+                                isSubFilter: jsonFilter.isSubFilter,
+                                dataType: jsonFilter.dataType,
+                                condition: jsonFilter.condition,
+                                isRequired: jsonFilter.isRequired,
+                                initialValue: jsonFilter.initialValue,
+                                display: "",
+                                disabled: false,
+                                validationDisplay: "none",
+                                props: tempProp,
+                                conditionFieldName: `${jsonFilter.name}.condition`
+                            });
+                        } else {
+                            filterTemp.push({
+                                labelName: `${jsonFilter.label}`,
+                                label: jsonFilter.label,
+                                name: jsonFilter.name,
+                                isSubFilter: jsonFilter.isSubFilter,
+                                dataType: jsonFilter.dataType,
+                                condition: jsonFilter.condition,
+                                isRequired: jsonFilter.isRequired,
+                                initialValue: jsonFilter.initialValue,
+                                display: "none",
+                                disabled: true,
+                                validationDisplay: "none",
+                                props: tempProp
+                            });
+                        }
+
+                        if (
+                            !Object.prototype.hasOwnProperty.call(
+                                initialValueObject,
+                                jsonFilter.name
+                            )
+                        ) {
+                            if (
+                                jsonFilter.dataType === "IFlightNumber" ||
+                                jsonFilter.dataType === "MasterSelect"
+                            ) {
+                                initialValueTemp[jsonFilter.name] = [];
+                            } else {
+                                initialValueTemp[jsonFilter.name] = "";
+                            }
+                        }
+                    }
+
+                    if (jsonFilter.isSubFilter) {
+                        jsonFilter.subFilters.forEach((subFilter) => {
+                            if (key === subFilter.name) {
+                                const jsonFilterTemp = jsonFilter;
+                                jsonFilterTemp.weight = 700;
+                                let tempProp;
+                                if (subFilter.props !== undefined) {
+                                    tempProp = subFilter.props;
+                                } else tempProp = {};
+                                if (subFilter.oneTimeCode && oneTimeValues) {
+                                    Object.entries(oneTimeValues).forEach(
+                                        ([keys]) => {
+                                            if (
+                                                subFilter.oneTimeCode === keys
+                                            ) {
+                                                tempProp.options =
+                                                    oneTimeValues[keys];
+                                            }
+                                        }
+                                    );
+                                }
+                                if (filterValueObject[key].condition) {
+                                    filterTemp.push({
+                                        labelName: `${jsonFilter.label}${subFilter.label}`,
+                                        label: jsonFilter.label,
+                                        name: `${subFilter.name}.value`,
+                                        isSubFilter: jsonFilter.isSubFilter,
+                                        type: subFilter.label,
+                                        dataType: subFilter.dataType,
+                                        condition: subFilter.condition,
+                                        isRequired: subFilter.isRequired,
+                                        initialValue: subFilter.initialValue,
+                                        display: "",
+                                        disabled: false,
+                                        validationDisplay: "none",
+                                        props: tempProp,
+                                        conditionFieldName: `${subFilter.name}.condition`
+                                    });
+                                } else {
+                                    filterTemp.push({
+                                        labelName: `${jsonFilter.label}${subFilter.label}`,
+                                        label: jsonFilter.label,
+                                        name: subFilter.name,
+                                        isSubFilter: jsonFilter.isSubFilter,
+                                        type: subFilter.label,
+                                        dataType: subFilter.dataType,
+                                        condition: subFilter.condition,
+                                        isRequired: subFilter.isRequired,
+                                        initialValue: subFilter.initialValue,
+                                        display: "none",
+                                        disabled: true,
+                                        validationDisplay: "none",
+                                        props: tempProp
+                                    });
+                                }
+
+                                if (
+                                    !Object.prototype.hasOwnProperty.call(
+                                        initialValueObject,
+                                        subFilter.name
+                                    )
+                                ) {
+                                    if (
+                                        subFilter.dataType ===
+                                            "IFlightNumber" ||
+                                        subFilter.dataType === "MasterSelect"
+                                    ) {
+                                        initialValueTemp[subFilter.name] = [];
+                                    } else {
+                                        initialValueTemp[subFilter.name] = "";
+                                    }
+                                }
+                            }
+
+                            if (subFilter.isGroupFilter) {
+                                subFilter.groupFilter.forEach(
+                                    (groupFilters) => {
+                                        if (key === groupFilters.name) {
+                                            const jsonFilterTemp = jsonFilter;
+                                            jsonFilterTemp.weight = 700;
+                                            const index = filterTemp.findIndex(
+                                                (x) =>
+                                                    x.label === subFilter.label
+                                            );
+                                            if (index === -1) {
+                                                if (
+                                                    filterValueObject[key]
+                                                        .condition
+                                                ) {
+                                                    filterTemp.push({
+                                                        display: "",
+                                                        disabled: false,
+                                                        validationDisplay:
+                                                            "none",
+                                                        label: subFilter.label,
+                                                        isSubFilter:
+                                                            subFilter.isSubFilter,
+                                                        isGroupFilter:
+                                                            subFilter.isGroupFilter,
+                                                        groupFilter:
+                                                            subFilter.groupFilter,
+                                                        condition:
+                                                            subFilter.condition
+                                                    });
+                                                } else {
+                                                    filterTemp.push({
+                                                        display: "none",
+                                                        disabled: true,
+                                                        validationDisplay:
+                                                            "none",
+                                                        label: subFilter.label,
+                                                        isSubFilter:
+                                                            subFilter.isSubFilter,
+                                                        isGroupFilter:
+                                                            subFilter.isGroupFilter,
+                                                        groupFilter:
+                                                            subFilter.groupFilter,
+                                                        condition:
+                                                            subFilter.condition
+                                                    });
+                                                }
+                                            }
+                                            subFilter.groupFilter.forEach(
+                                                (groupedFilter) => {
+                                                    if (
+                                                        !Object.prototype.hasOwnProperty.call(
+                                                            initialValueObject,
+                                                            groupedFilter.name
+                                                        )
+                                                    ) {
+                                                        if (
+                                                            groupedFilter.dataType ===
+                                                                "IFlightNumber" ||
+                                                            groupedFilter.dataType ===
+                                                                "MasterSelect"
+                                                        ) {
+                                                            initialValueObject[
+                                                                groupedFilter.name
+                                                            ] = [];
+                                                        } else {
+                                                            initialValueObject[
+                                                                groupedFilter.name
+                                                            ] = "";
+                                                        }
+                                                    }
+                                                }
+                                            );
+                                        }
+                                    }
+                                );
+                            }
+                        });
+                    }
+                    if (jsonFilter.isGroupFilter) {
+                        jsonFilter.groupFilter.forEach((groupFilters) => {
+                            if (key === groupFilters.name) {
+                                const jsonFilterTemp = jsonFilter;
+                                jsonFilterTemp.weight = 700;
+                                const index = filterTemp.findIndex(
+                                    (x) => x.label === jsonFilter.label
+                                );
+                                if (index === -1) {
+                                    if (filterValueObject[key].condition) {
+                                        filterTemp.push({
+                                            display: "",
+                                            disabled: false,
+                                            validationDisplay: "none",
+                                            label: jsonFilter.label,
+                                            isSubFilter: jsonFilter.isSubFilter,
+                                            isGroupFilter:
+                                                jsonFilter.isGroupFilter,
+                                            groupFilter: jsonFilter.groupFilter,
+                                            condition: groupFilters.condition
+                                        });
+                                    } else {
+                                        filterTemp.push({
+                                            display: "none",
+                                            disabled: true,
+                                            validationDisplay: "none",
+                                            label: jsonFilter.label,
+                                            isSubFilter: jsonFilter.isSubFilter,
+                                            isGroupFilter:
+                                                jsonFilter.isGroupFilter,
+                                            groupFilter: jsonFilter.groupFilter,
+                                            condition: jsonFilter.condition
+                                        });
+                                    }
+                                }
+
+                                jsonFilter.groupFilter.forEach(
+                                    (groupedFilter) => {
+                                        if (
+                                            !Object.prototype.hasOwnProperty.call(
+                                                initialValueObject,
+                                                groupedFilter.name
+                                            )
+                                        ) {
+                                            if (
+                                                groupedFilter.dataType ===
+                                                    "IFlightNumber" ||
+                                                groupedFilter.dataType ===
+                                                    "MasterSelect"
+                                            ) {
+                                                initialValueObject[
+                                                    groupedFilter.name
+                                                ] = [];
+                                            } else {
+                                                initialValueObject[
+                                                    groupedFilter.name
+                                                ] = "";
+                                            }
+                                        }
+                                    }
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+
+            filter = [...filterTemp];
+            initialValueObject = {
+                ...initialValueTemp
+            };
+            if (filter.length > 0) {
+                closeLeftPopUp();
+            }
+            setApplyFilterChip(list.filters);
+            appliedFiltersProp(list.filters, list.category, list.name);
+        }
+    };
+    useEffect(() => {
+        if (!loaded) {
+            listView.predefinedFilters.forEach((list) => {
+                if (list.default === true) {
+                    handlelistViewClick(list);
+                }
+            });
+            setLoad(true);
+        }
+    }, [loaded]);
 
     /**
      * Method To prevent listView rerendering */
@@ -478,15 +531,18 @@ export default function Filter(props) {
         });
         setFilterData(filterDatas);
         setFilters([]);
-        Object.keys(initialValuesObject).forEach((item) => {
-            setFieldValue(item, "");
-        });
+        // Object.keys(initialValuesObject).forEach((item) => {
+        //     setFieldValue(item, "");
+        // });
         Object.keys(values).forEach((item) => {
             setFieldValue(item, "");
         });
         completeListViewClick();
         completeSavedFilterClick();
         setListViewName("");
+        setListViewCode("");
+        setSavedFilterName("");
+        setListViewCode("");
     };
 
     /**
@@ -646,7 +702,7 @@ export default function Filter(props) {
         setEmptyFilterClassName("");
         setEmptyFilterWarning("");
 
-        const filterDataTemp = filterData;
+        filterDataTemp = filterData;
         filterDataTemp.filter.forEach((item) => {
             const itemParam = item;
             if (item.label === label) {
@@ -735,81 +791,115 @@ export default function Filter(props) {
         setFilterShow("");
         setEmptyFilterClassName("");
         setEmptyFilterWarning("");
-
-        filterData.filter.forEach((field) => {
+        filterDataTemp = { ...filterData };
+        filterDataTemp.filter.forEach((field) => {
             const fieldParam = field;
-            if (item.label === fieldParam.label) {
-                fieldParam.weight = 700;
+            if (field.isGroupFilter) {
+                field.groupFilter.forEach((groupFilters) => {
+                    item.groupFilter.forEach((itemGroupFilter) => {
+                        if (itemGroupFilter.name === groupFilters.name) {
+                            fieldParam.weight = 700;
+                        }
+                    });
+                });
             }
         });
-
         filter = [...filters];
-
+        const groupFilterTemp = [];
         if (filter.length > 0) {
             const index = filter.findIndex((x) => x.label === item.label);
             if (index === -1) {
+                item.groupFilter.forEach((groupFilters) => {
+                    groupFilterTemp.push({
+                        display: "none",
+                        disabled: true,
+                        validationDisplay: "none",
+                        ...groupFilters
+                    });
+                });
                 filter.unshift({
-                    display: "none",
-                    disabled: true,
-                    validationDisplay: "none",
                     label: item.label,
                     isSubFilter: item.isSubFilter,
                     isGroupFilter: item.isGroupFilter,
-                    groupFilter: item.groupFilter,
-                    condition: item.condition
+                    groupFilter: groupFilterTemp
                 });
             }
         } else {
+            item.groupFilter.forEach((groupFilters) => {
+                groupFilterTemp.push({
+                    display: "none",
+                    disabled: true,
+                    validationDisplay: "none",
+                    ...groupFilters
+                });
+            });
             filter.unshift({
-                display: "none",
-                disabled: true,
-                validationDisplay: "none",
                 label: item.label,
                 isSubFilter: item.isSubFilter,
                 isGroupFilter: item.isGroupFilter,
-                groupFilter: item.groupFilter,
-                condition: item.condition
+                groupFilter: groupFilterTemp
             });
         }
         initialValueObject = {
             ...initialValuesObject
         };
         filter.forEach((items) => {
-            if (item.label === items.label) {
-                item.groupFilter.forEach((groupedFilter) => {
-                    if (
-                        !Object.prototype.hasOwnProperty.call(
-                            initialValueObject,
-                            groupedFilter.name
-                        )
-                    ) {
+            if (items.isGroupFilter) {
+                items.groupFilter.forEach((groupedFilter) => {
+                    if (groupedFilter.name === item.name) {
                         if (
-                            groupedFilter.dataType === "IFlightNumber" ||
-                            groupedFilter.dataType === "MasterSelect"
+                            !Object.prototype.hasOwnProperty.call(
+                                initialValueObject,
+                                groupedFilter.name
+                            )
                         ) {
-                            initialValueObject[groupedFilter.name] = [];
-                        } else {
-                            initialValueObject[groupedFilter.name] = "";
+                            if (
+                                groupedFilter.dataType === "IFlightNumber" ||
+                                groupedFilter.dataType === "MasterSelect"
+                            ) {
+                                initialValueObject[groupedFilter.name] = [];
+                            } else {
+                                initialValueObject[groupedFilter.name] = "";
+                            }
                         }
                     }
                 });
             }
         });
         setInitialValuesObject(initialValueObject);
+        setFilterData(filterDataTemp);
+        setFilters(filter);
     };
 
     /**
      * Method To close the filter element from rightDrawer
      * @param {*} item is the specific filter element object
-     *  @param {*} setFieldValue is formik call back function to set the field Values
+     * @param {*} setFieldValue is formik call back function to set the field Values,
+     * @param {*} name is name of the field
+     * @param {*} values in formik state
      */
-    const closeField = (item, setFieldValue) => {
+    const closeField = (item, setFieldValue, name, values) => {
         filter = [...filters];
+        const tempValues = values;
         const index = filter.findIndex((it) => it.name === item.name);
         if (index !== -1) {
             filterData.filter.forEach((it) => {
                 const itParam = it;
-                if (it.name === item.name) itParam.weight = 400;
+                if (it.name === item.name || item.name === `${it.name}.value`)
+                    itParam.weight = 400;
+                if (
+                    item.conditionFieldName &&
+                    item.conditionFieldName.length > 0
+                ) {
+                    Object.entries(tempValues).forEach(([keys]) => {
+                        if (`${keys}.value` === item.name) {
+                            delete tempValues[keys];
+                        }
+                    });
+                    setFieldValue(`${item.labelName},check`, false);
+                } else {
+                    setFieldValue(name, "");
+                }
             });
             if (item.isSubFilter) {
                 filterData.filter.forEach((its) => {
@@ -825,7 +915,6 @@ export default function Filter(props) {
             }
             filter.splice(index, 1);
         }
-        setFieldValue(item.name, "");
         setFilters(filter);
     };
     /**
@@ -897,13 +986,19 @@ export default function Filter(props) {
     /**
      * Method To close the groupfilter element from rightDrawer
      * @param {*} quanta is the specific groupfilter element object
+     * @param {*} setFieldValue is formik call back function to set the field Values,
      */
-    const groupFilterCloseField = (quanta) => {
+    const groupFilterCloseField = (quanta, setFieldValue) => {
         const index = filters.findIndex((it) => it.label === quanta.label);
         if (index !== -1) {
             filterData.filter.forEach((it) => {
                 const itParam = it;
-                if (it.label === quanta.label) itParam.weight = 400;
+                if (it.label === quanta.label) {
+                    itParam.weight = 400;
+                    it.groupFilter.forEach((item) => {
+                        setFieldValue(item.name, "");
+                    });
+                }
             });
         }
         filter = [...filters];
@@ -919,70 +1014,75 @@ export default function Filter(props) {
     const groupFilterConditionHandler = (item, values, setFieldValue) => {
         filter = [...filters];
         filter.forEach((it) => {
-            if (it.label === item.label) {
-                const itParam = it;
-                if (it.disabled === false) {
-                    itParam.disabled = true;
-                } else {
-                    itParam.disabled = false;
-                }
-                if (it.display === "none") {
-                    itParam.display = "";
-                } else {
-                    itParam.display = "none";
-                }
+            if (it.isGroupFilter) {
+                it.groupFilter.forEach((groupFilters) => {
+                    const groupFiltersParam = groupFilters;
+                    if (groupFilters.name === item.name) {
+                        if (!groupFilters.conditionFieldName)
+                            groupFiltersParam.conditionFieldName = `${item.name}.condition`;
+                        else delete groupFiltersParam.conditionFieldName;
+                        if (groupFilters.disabled === false) {
+                            groupFiltersParam.disabled = true;
+                        } else {
+                            groupFiltersParam.disabled = false;
+                        }
+                        if (groupFilters.display === "none") {
+                            groupFiltersParam.display = "";
+                        } else {
+                            groupFiltersParam.display = "none";
+                        }
+                    }
+                });
             }
         });
         if (item.disabled === true) {
-            const itemParam = item;
-            delete itemParam.conditionFieldName;
             filter.forEach((filterItem) => {
-                if (filterItem.label === item.label) {
-                    filterItem.groupFilter.forEach((groupFilterItem) => {
-                        Object.assign(groupFilterItem, {
-                            name: groupFilterItem.name.replace(".value", "")
-                        });
+                if (filterItem.isGroupFilter) {
+                    filterItem.groupFilter.forEach((groupFilters) => {
+                        const groupFiltersParam = groupFilters;
+                        if (groupFilters.name === item.name) {
+                            delete groupFiltersParam.conditionFieldName;
+                            groupFiltersParam.name = groupFiltersParam.name.replace(
+                                ".value",
+                                ""
+                            );
+                        }
                     });
                 }
             });
             Object.entries(values).forEach(([key, value]) => {
-                item.groupFilter.forEach((groupFilterItem) => {
-                    if (key === groupFilterItem.name) {
-                        const tempValues = values;
-                        const tempValue = value.value;
-                        delete tempValues[key];
-                        setFieldValue(groupFilterItem.name, tempValue);
-                    }
-                });
+                if (key === item.name) {
+                    const tempValues = values;
+                    const tempValue = value.value;
+                    delete tempValues[key];
+                    setFieldValue(item.name, tempValue);
+                }
             });
         }
 
         if (item.disabled === false) {
             filter.forEach((filterItem) => {
-                if (filterItem.label === item.label) {
-                    Object.assign(item, {
-                        conditionFieldName: `${item.label}.condition`
-                    });
-                    filterItem.groupFilter.forEach((groupFilterItem) => {
-                        Object.assign(groupFilterItem, {
-                            name: `${groupFilterItem.name}.value`
-                        });
+                if (filterItem.isGroupFilter) {
+                    filterItem.groupFilter.forEach((groupFilters) => {
+                        const groupFiltersParam = groupFilters;
+                        if (groupFilters.name === item.name) {
+                            groupFiltersParam.name = `${groupFiltersParam.name}.value`;
+                        }
                     });
                 }
             });
 
             Object.entries(values).forEach(([key, value]) => {
-                item.groupFilter.forEach((groupFilterItem) => {
-                    if (`${key}.value` === groupFilterItem.name) {
-                        const tempObject = {};
-                        Object.assign(tempObject, {
-                            value
-                        });
-                        setFieldValue(key, tempObject);
-                    }
-                });
+                if (`${key}.value` === item.name) {
+                    const tempObject = {};
+                    Object.assign(tempObject, {
+                        value
+                    });
+                    setFieldValue(key, tempObject);
+                }
             });
         }
+        setFilters(filter);
     };
 
     /**
@@ -999,11 +1099,17 @@ export default function Filter(props) {
         setEmptyFilterWarning("");
         setSavedFilterName(list.name);
         setListViewName("");
+        setListViewCode("");
         setSavedFilterClick(true);
         const filterTemp = [];
         const initialValueTemp = {};
-        setApplyFilterChip(list.filters);
-        Object.entries(list.filters).forEach(([key]) => {
+        const filterValueObject = {};
+        Object.entries(list.filters).forEach(([key, value]) => {
+            filterDataTemp = { ...filterData };
+            const name = DeepSearchName(filterDataTemp, key);
+            filterValueObject[name] = value;
+        });
+        Object.entries(filterValueObject).forEach(([key]) => {
             filterData.filter.forEach((jsonFilter) => {
                 if (
                     key === jsonFilter.name &&
@@ -1014,7 +1120,7 @@ export default function Filter(props) {
                     if (jsonFilter.props !== undefined) {
                         tempProp = jsonFilter.props;
                     } else tempProp = {};
-                    if (jsonFilter.oneTimeCode) {
+                    if (jsonFilter.oneTimeCode && oneTimeValues) {
                         Object.entries(oneTimeValues).forEach(([keys]) => {
                             if (jsonFilter.oneTimeCode === keys) {
                                 tempProp.options = oneTimeValues[keys];
@@ -1023,7 +1129,7 @@ export default function Filter(props) {
                     }
                     const jsonFilterTemp = jsonFilter;
                     jsonFilterTemp.weight = 700;
-                    if (list.filters[key].condition) {
+                    if (filterValueObject[key].condition) {
                         filterTemp.push({
                             labelName: `${jsonFilter.label}`,
                             label: jsonFilter.label,
@@ -1082,7 +1188,7 @@ export default function Filter(props) {
                             if (subFilter.props !== undefined) {
                                 tempProp = subFilter.props;
                             } else tempProp = {};
-                            if (subFilter.oneTimeCode) {
+                            if (subFilter.oneTimeCode && oneTimeValues) {
                                 Object.entries(oneTimeValues).forEach(
                                     ([keys]) => {
                                         if (subFilter.oneTimeCode === keys) {
@@ -1092,7 +1198,7 @@ export default function Filter(props) {
                                     }
                                 );
                             }
-                            if (list.filters[key].condition) {
+                            if (filterValueObject[key].condition) {
                                 filterTemp.push({
                                     labelName: `${jsonFilter.label}${subFilter.label}`,
                                     label: jsonFilter.label,
@@ -1153,7 +1259,7 @@ export default function Filter(props) {
                                         (x) => x.label === subFilter.label
                                     );
                                     if (index === -1) {
-                                        if (list.filters[key].condition) {
+                                        if (filterValueObject[key].condition) {
                                             filterTemp.push({
                                                 display: "",
                                                 disabled: false,
@@ -1223,7 +1329,7 @@ export default function Filter(props) {
                                 (x) => x.label === jsonFilter.label
                             );
                             if (index === -1) {
-                                if (list.filters[key].condition) {
+                                if (filterValueObject[key].condition) {
                                     filterTemp.push({
                                         display: "",
                                         disabled: false,
@@ -1283,10 +1389,10 @@ export default function Filter(props) {
             showDrawer();
             closeLeftPopUp();
         }
+        setApplyFilterChip(list.filters);
     };
-
     return (
-        <div>
+        <>
             <OutsideClickHandler onOutsideClick={closeDrawer}>
                 {showApplyFilter && (
                     <div className="neo-filter filter--grid iCargo__custom">
@@ -1307,6 +1413,7 @@ export default function Filter(props) {
                             </div>
                             <div className="filter__inputwrap">
                                 <RightDrawer
+                                    components={components}
                                     filters={filters}
                                     applyFilter={applyFilter}
                                     closeDrawer={closeDrawer}
@@ -1341,6 +1448,7 @@ export default function Filter(props) {
                                     completeSavedFilterClick={
                                         completeSavedFilterClick
                                     }
+                                    filterData={filterData}
                                 />
                             </div>
                         </div>
@@ -1361,7 +1469,7 @@ export default function Filter(props) {
                 closeLeftPopUp={closeLeftPopUp}
                 handleSavedFilterClick={handleSavedFilterClick}
             />
-        </div>
+        </>
     );
 }
 
@@ -1371,5 +1479,6 @@ Filter.propTypes = {
     CustomPanel: PropTypes.any,
     listView: PropTypes.any,
     savedFilters: PropTypes.any,
-    oneTimeValues: PropTypes.any
+    oneTimeValues: PropTypes.any,
+    components: PropTypes.any
 };

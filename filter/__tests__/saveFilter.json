@@ -5,8 +5,8 @@
             "default": false,
             "category": "FlightCapacity",
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "Yield": "rerwe",
+                "Flight No": {
                     "value": {
                         "carrierCode": "dff",
                         "flightNumber": "00123",
@@ -14,32 +14,32 @@
                     },
                     "condition": "greater than"
                 },
-                "bookingProfile": {
+                "Booking Profile": {
                     "value": "test",
                     "condition": "greater than"
                 },
-                "masterSelect": ["LTF", "LOB"],
-                "airport": "TRV",
-                "country": { "value": "KRL", "condition": "greater than" },
-                "fromDatePort": "2020-09-22",
-                "toDatePort": "2020-10-22",
-                "fromDate": "2022-10-22",
-                "toDate": "12:00",
-                "iSelect": "2"
+                "Master Select": ["LTF", "LOB"],
+                "Airport": "TRV",
+                "Country": { "value": "KRL", "condition": "greater than" },
+                "From Date Port": "2020-09-22",
+                "To Date Port": "2020-10-22",
+                "From Date": "2022-10-22",
+                "To Date": "12:00",
+                "I Select": "2"
             }
         },
         {
             "name": "Flight under 10000kg booking",
-            "default": true,
+            "default": false,
             "category": "FlightBooking",
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "Yield": "rerwe",
+                "Flight No": {
                     "carrierCode": "dfd",
                     "flightNumber": "00123",
                     "flightDate": "2020-09-22"
                 },
-                "bookingProfile": {
+                "Booking Profile": {
                     "value": "test",
                     "condition": "greater than"
                 }
@@ -50,13 +50,13 @@
             "default": false,
             "category": "FlightRevenue",
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "Yield": "rerwe",
+                "Flight No": {
                     "carrierCode": "dfd",
                     "flightNumber": "00123",
                     "flightDate": "2020-09-22"
                 },
-                "bookingProfile": {
+                "Booking Profil": {
                     "value": "test",
                     "condition": "greater than"
                 }
@@ -67,13 +67,13 @@
             "default": false,
             "category": "FlightCapacity",
             "filters": {
-                "yield": "rerwe",
-                "flightNo": {
+                "Yield": "rerwe",
+                "Flight No": {
                     "carrierCode": "dfd",
                     "flightNumber": "00123",
                     "flightDate": "2020-09-22"
                 },
-                "bookingProfile": {
+                "Booking Profile": {
                     "value": "test",
                     "condition": "greater than"
                 }

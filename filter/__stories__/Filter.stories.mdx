@@ -6,16 +6,20 @@ import FilterData from "./data.json";
 import Form from "./Form";
 import { mockData } from "../__mocks__/graphqlDataMock";
 import "react-datepicker/dist/react-datepicker.css";
-import "bootstrap/dist/css/bootstrap.css";
 import "./variables.css";
 import "./example.css";
 import customPanel from "./panels/customPanel";
 import listView from "./listView.json";
 import savedFilters from "./saveFilter.json";
 import oneTimeValues from "./oneTimeValues.json";
+import components from "./components";
 
-export const appliedFilters = (appliedFilter) => {
-    alert(`AppliedFilters:${JSON.stringify(appliedFilter)}`);
+export const appliedFilters = (appliedFilter, categoryCode, categoryName) => {
+    console.log(
+        `AppliedFilters:${JSON.stringify(
+            appliedFilter
+        )},categoryCode:${categoryCode},categoryName:${categoryName}`
+    );
 };
 
 <Meta title="Filter Component" component={Filter} />
@@ -36,6 +40,8 @@ Values of fields are connected to `formik state`.
                 appliedFiltersProp={appliedFilters}
                 listView={listView}
                 savedFilters={savedFilters}
+                components={components}
+                oneTimeValues={oneTimeValues}
             />
         </Form>
     </MockedProvider>
@@ -54,6 +60,8 @@ import Filter from "@neo-ui/filter";
 />;
 ```
 
+### Variants
+
 #### With CustomPanel
 
 <Story name="withCustomPanel">
@@ -65,6 +73,8 @@ import Filter from "@neo-ui/filter";
                 listView={listView}
                 savedFilters={savedFilters}
                 CustomPanel={customPanel}
+                components={components}
+                oneTimeValues={oneTimeValues}
             />
         </Form>
     </MockedProvider>
@@ -95,6 +105,7 @@ import Filter from "@neo-ui/filter";
                 listView={listView}
                 savedFilters={savedFilters}
                 oneTimeValues={oneTimeValues}
+                components={components}
             />
         </Form>
     </MockedProvider>
@@ -111,6 +122,37 @@ import Filter from "@neo-ui/filter";
     listView={listView}
     savedFilters={savedFilters}
     oneTimeValues={oneTimeValues}
+/>;
+```
+
+#### With customComponents
+
+<Story name="withCustomComponents">
+    <MockedProvider addTypename={false} mocks={mockData}>
+        <Form>
+            <Filter
+                filterDataProp={FilterData}
+                appliedFiltersProp={appliedFilters}
+                listView={listView}
+                savedFilters={savedFilters}
+                oneTimeValues={oneTimeValues}
+                components={components}
+            />
+        </Form>
+    </MockedProvider>
+</Story>
+
+### Code
+
+```jsx
+import Filter from "@neo-ui/filter";
+
+<Filter
+    filterDataProp={FilterData}
+    appliedFiltersProp={appliedFilters}
+    listView={listView}
+    savedFilters={savedFilters}
+    components={components}
 />;
 ```
 
@@ -131,6 +173,8 @@ import Filter from "@neo-ui/filter";
 "savedFilters" - this prop accepts the saved filter JSON data.
 
 "oneTimeValues"-collection of master data used to bind options for CreateSelect and Iselect components
+
+"components" - this props accepts the Custom Components.
 
 ### List of iCargo business components imported in filter component
 
@@ -188,64 +232,351 @@ ITimePicker
 Below mentioned is the json structure which is used to bind filter options with accordion.
 
 ```jsx
-{
-    "filter": [
-        {
-            "label": "Departure Port",
-            "isSubFilter": true,
-            "isGroupFilter": false,
-            "subFilters": [
-                {
-                    "label": "Airport",
-                    "dataType": "IAirport",
-                    "isRequired": true,
-                    "name": "dptAirport",
-                },
-                {
-                    "label": "Airport Group",
-                    "dataType": "ITextField",
-                    "condition": [
-                        { "label": "equal to", " value": "equal to" },
+[
+    {
+        name: "Flights",
+        category: "FL",
+        filter: [
+            {
+                label: "Date Time",
+                isSubFilter: false,
+                isGroupFilter: true,
+                groupFilter: [
+                    {
+                        label: "DateofDateTime",
+                        dataType: "IDatePicker",
+                        isRequired: true,
+                        name: "dateofDateTime"
+                    },
+                    {
+                        label: "TimeOfDateTime",
+                        dataType: "ITimePicker",
+                        isRequired: true,
+                        name: "timeOfDateTime"
+                    },
+
+                ]
+            },
+             {
+                "label": "Custom One",
+                "name": "custom1",
+                "dataType": "Custom"
+            },
+            {
+                "label": "Custom Two",
+                "name": "custom2",
+                "dataType": "Custom"
+            },
+            {
+                label: "Date",
+                isSubFilter: false,
+                isGroupFilter: false,
+                dataType: "IDatePicker",
+                isRequired: true,
+                name: "Date",
+                initialValue: ""
+            }
+        ]
+    },
+    {
+        name: "Bookings",
+        category: "BK",
+        filter: [
+            {
+            {
+                label: "Custom Fields",
+                isSubFilter: false,
+                isGroupFilter: true,
+                groupFilter: [
+                    {
+                        label: "Date Picker",
+                        dataType: "IDatePicker",
+                        isRequired: true,
+                        name: "datePicker"
+                    },
+                    {
+                        label: "Airport Field",
+                        dataType: "IAirport",
+                        isRequired: true,
+                        name: "airportField"
+                    },
+                    {
+                        label: "Text Field",
+                        dataType: "ITextField",
+                        isRequired: true,
+                        name: "textField"
+                    },
+                    {
+                        label: "AWB Field",
+                        dataType: "IAwbNumber",
+                        isRequired: true,
+                        name: "awbField"
+                    }
+                ]
+            },
+            {
+                label: "Arrival Terminal",
+                isSubFilter: true,
+                subFilters: [
+                    {
+                        label: "Terminal",
+                        dataType: "IAirport",
+                        isRequired: true,
+                        name: "terminal",
+                        initialValue: ""
+                    },
+                    {
+                        label: "Terminal Group",
+                        dataType: "ITextField",
+                        condition: [
+                            { label: "equal to", value: "equal to" },
+                            {
+                                label: "greater than",
+                                value: "greater than"
+                            },
+                            {
+                                label: "less than",
+                                value: "less than"
+                            }
+                        ],
+                        isRequired: true,
+                        name: "terminalGroup",
+                        initialValue: ""
+                    },
+                    {
+                        label: "Cluster",
+                        dataType: "ITextField",
+                        condition: [
+                            { label: "equal to", value: "equal to" },
+                            {
+                                label: "greater than",
+                                value: "greater than"
+                            },
+                            {
+                                label: "less than",
+                                value: "less than"
+                            }
+                        ],
+                        isRequired: true,
+                        name: "cluster",
+                        initialValue: ""
+                    },
+                    {
+                        label: "Cluster Group",
+                        dataType: "ITextField",
+                        condition: [
+                            { label: "equal to", value: "equal to" },
+                            {
+                                label: "greater than",
+                                value: "greater than"
+                            },
+                            {
+                                label: "less than",
+                                value: "less than"
+                            }
+                        ],
+                        isRequired: true,
+                        name: "clusterGroup",
+                        initialValue: ""
+                    },
+                    {
+                        label: "state",
+                        dataType: "ITextField",
+                        condition: [
+                            { label: "equal to", value: "equal to" },
+                            {
+                                label: "greater than",
+                                value: "greater than"
+                            },
+                            {
+                                label: "less than",
+                                value: "less than"
+                            }
+                        ],
+                        isRequired: true,
+                        name: "state",
+                        initialValue: ""
+                    },
+                    {
+                        label: "I Select Terminal",
+                        isSubFilter: false,
+                        isGroupFilter: false,
+                        dataType: "ISelect",
+                        condition: [
+                            { label: "equal to", value: "equal to" },
+                            {
+                                label: "greater than",
+                                value: "greater than"
+                            },
+                            {
+                                label: "less than",
+                                value: "less than"
+                            }
+                        ],
+                        isRequired: true,
+                        name: "iSelectTerminal",
+                        initialValue: "",
+                        oneTimeCode: "options2"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        name: "Cancellings",
+        category: "CG",
+        filter: [
+            {
+                label: "Toggle Field",
+                isSubFilter: false,
+                isGroupFilter: false,
+                dataType: "IToggle",
+                isRequired: true,
+                name: "itoggle"
+            },
+            {
+                label: "Aircraft",
+                isSubFilter: false,
+                isGroupFilter: false,
+                dataType: "ITextField",
+                condition: [
+                    { label: "equal to", value: "equal to" },
+                    {
+                        label: "greater than",
+                        value: "greater than"
+                    },
+                    {
+                        label: "less than",
+                        value: "less than"
+                    }
+                ],
+                isRequired: true,
+                name: "aircraft",
+                initialValue: ""
+            },
+            {
+                label: "AWB Number",
+                isSubFilter: false,
+                isGroupFilter: false,
+                dataType: "IAwbNumber",
+                condition: [
+                    { label: "equal to", value: "equal to" },
+                    {
+                        label: "greater than",
+                        value: "greater than"
+                    },
+                    {
+                        label: "less than",
+                        value: "less than"
+                    }
+                ],
+                isRequired: true,
+                name: "awbNumber",
+                initialValue: ""
+            }
+        ]
+    },
+    {
+        name: "Delayed Flights",
+        category: "FOA",
+        filter: [
+            {
+                label: "Date",
+                isSubFilter: false,
+                isGroupFilter: false,
+                dataType: "IDatePicker",
+                isRequired: true,
+                name: "Date",
+                initialValue: ""
+            },
+            {
+                "label": "Master Select",
+                "isSubFilter": false,
+                "isGroupFilter": false,
+                "dataType": "MasterSelect",
+                "condition": [
+                    { "label": "equal to", "value": "equal to" },
+                    {
+                        "label": "greater than",
+                        "value": "greater than"
+                    },
+                    {
+                        "label": "less than",
+                        "value": "less than"
+                    }
+                ],
+                "isRequired": true,
+                "name": "masterSelect",
+                "initialValue": "",
+                "props": {
+                    "query": "commodities",
+                    "value": "commodityCode",
+                    "label": "commodityDescription",
+                    "multi": true
+                }
+            },
+            {
+                "label": "Master Type Select",
+                "isSubFilter": false,
+                "isGroupFilter": false,
+                "dataType": "MasterTypeSelect",
+                "condition": [
+                    { "label": "equal to", " value": "equal to" },
+                    {
+                        "label": "greater than",
+                        "value": "greater than"
+                    },
+                    {
+                        "label": "less than",
+                        "value": "less than"
+                    }
+                ],
+                "initialValue": "",
+                "props": {
+                    "selectOptions": [
                         {
-                            "label": "greater than",
-                            "value": "greater than"
+                            "label": "Airport",
+                            "value": "airports",
+                            "schema": {
+                                "query": "airports",
+                                "label": "airport_name",
+                                "value": "airport_code"
+                            }
                         },
                         {
-                            "label": "less than",
-                            "value": "less than"
+                            "label": "Commodities",
+                            "value": "commodities",
+                            "schema": {
+                                "query": "commodities",
+                                "label": "commodityDescription",
+                                "value": "commodityCode"
+                            }
+                        },
+                        {
+                            "label": "Products",
+                            "value": "products",
+                            "schema": {
+                                "query": "products",
+                                "label": "productName",
+                                "value": "productCode"
+                            }
                         }
                     ],
-                    "isRequired": true,
-                    "name": "dptAirportGroup",
-                }
-            ]
-        },
-        {
-            "name": "Date",
-            "isSubFilter": false,
-            "isGroupFilter": false,
-            "dataType": "IDatePicker",
-            "isRequired": true,
-            "label": "Date"
-        },
-        {
-            "label": "Create Select",
-            "isSubFilter": false,
-            "isGroupFilter": false,
-            "dataType": "CreateSelect",
-            "isRequired": true,
-            "name": "createSelect",
-            "initialValue": "",
-            "oneTimeCode": "options1"
-        }
-    ]
-}
-
+                    "initialType": "airports"
+                },
+                "isRequired": true,
+                "name": "masterTypeSelect"
+            }
+        ]
+    }
+];
 ```
 
 ### Json Attibute Overview
 
-"name" - this property is used to identify a control
+"name" - this property is used to identify category name
+
+"category" - this property is used to identify category code
 
 "isSubFilter" - this property is used to identify whether a filter is having sub filters.
 
@@ -259,6 +590,8 @@ Below mentioned is the json structure which is used to bind filter options with 
 
 "label" - this property accepts label name which is displayed in form.
 
+"name" - this property is used to identify a control
+
 "props" - this property accepts prop values for the field.
 
 "initialValue" - this property accepts initial value for controls(For eg: Current value sets current date),
@@ -270,52 +603,6 @@ Below mentioned is the json structure which is used to bind filter options with 
 ##### Sample data
 
 Below mentioned is the json structure which is used to bind group filter options with accordion.
-
-###### groupfilter without accordion
-
-```jsx
-{
-    "label": "Custom Fields",
-    "isSubFilter": false,
-    "isGroupFilter": true,
-    "groupFilter": [
-        {
-            "label": "Date Picker",
-            "dataType": "IDatePicker",
-            "isRequired": true,
-            "name": "datePicker"
-        },
-        {
-            "label": "Airport Field",
-            "dataType": "IAirport",
-            "isRequired": true,
-            "name": "airportField"
-        },
-        {
-            "label": "Text Field",
-            "dataType": "ITextField",
-            "isRequired": true,
-            "name": "textField"
-        },
-        {
-            "label": "AWB Field",
-            "dataType": "IAwbNumber",
-            "isRequired": true,
-            "name": "awbField"
-        }
-    ]
-},
-{
-    "label": "Date",
-    "isSubFilter": false,
-    "isGroupFilter": false,
-    "dataType": "IDatePicker",
-    "isRequired": true,
-    "name": "Date",
-    "initialValue": ""
-}
-
-```
 
 ###### groupfilter with accordion
 
@@ -419,12 +706,69 @@ Below mentioned is the json structure which is used to bind Saved Filter.
 }
 ```
 
+### components
+
+##### Sample JS structure
+
+Below mentioned is the js structure which is used to bind Custom Components
+
+```jsx
+import React from "react";
+import { ITextField } from "@neo-ui/textfield";
+import { IDatePicker } from "@neo-ui/date";
+
+const components = {
+    custom1: (object) => {
+        const { name } = object;
+        return (
+            <div>
+                <ITextField name={`${name}.text`} label="Text" />
+                <br />
+                <IDatePicker name={`${name}.date`} label="Date" />
+            </div>
+        );
+    },
+    custom2: (object) => {
+        const { name } = object;
+        return (
+            <div>
+                <ITextField name={`${name}.text`} label="Text" />
+                <br />
+                <IDatePicker name={`${name}.date`} label="Date" />
+            </div>
+        );
+    },
+    custom1Port: (object) => {
+        const { name } = object;
+        return (
+            <div>
+                <ITextField name={`${name}.text`} label="Text" />
+                <br />
+                <IDatePicker name={`${name}.date`} label="Date" />
+            </div>
+        );
+    },
+    custom2Port: (object) => {
+        const { name } = object;
+        return (
+            <div>
+                <ITextField name={`${name}.text`} label="Text" />
+                <br />
+                <IDatePicker name={`${name}.date`} label="Date" />
+            </div>
+        );
+    }
+};
+
+export default components;
+```
+
 ### Apply Filter callback method
 
-Apply filter feature will return a call back method which includes the control name & value. Below will be `formik` structure.
+Apply filter feature will return a call back method which includes the control name, value, categoryCode and categoryName. Below will be `formik` structure.
 
 ##### Example
 
 ```jsx
-AppliedFilters:{"bookingProfile":{"condition":"equal to","value":"Booked"}}
+AppliedFilters:{"bookingProfile":{"condition":"equal to","value":"Booked"}},categoryCode:BK,categoryName:Bookings
 ```

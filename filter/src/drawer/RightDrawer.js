@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { withFormik, useFormikContext } from "formik";
 import { IButton } from "@neo/button";
-import { SaveLogo } from "../utilities/svgUtilities";
 import "react-datepicker/dist/react-datepicker.css";
 import FilterForm from "../component/filterForm";
+import { DeepSearchName } from "../utilities/deepSearch";
 
 const RightDrawer = (props) => {
-    const { handleSubmit } = props;
+    const { handleSubmit, components, filterData } = props;
     const { values, setFieldValue } = useFormikContext();
     const [applyFilterWarning, setApplyFilterWarning] = useState("");
     const [
@@ -46,13 +46,19 @@ const RightDrawer = (props) => {
         if (listViewClick) {
             listView.predefinedFilters.forEach((list) => {
                 if (list.name === listViewName) {
-                    Object.entries(list.filters).forEach(
+                    const filterValueObject = {};
+                    Object.entries(list.filters).forEach(([key, value]) => {
+                        const filterDataTemp = { ...filterData };
+                        const name = DeepSearchName(filterDataTemp, key);
+                        filterValueObject[name] = value;
+                    });
+                    Object.entries(filterValueObject).forEach(
                         ([filterKeys, filterValues]) => {
                             setFieldValue(filterKeys, filterValues);
                             if (
-                                list.filters[filterKeys].constructor ===
+                                filterValueObject[filterKeys].constructor ===
                                     Object &&
-                                list.filters[filterKeys].condition
+                                filterValueObject[filterKeys].condition
                             ) {
                                 filters.forEach((filterItem) => {
                                     if (
@@ -77,13 +83,19 @@ const RightDrawer = (props) => {
         if (savedFilterClick) {
             savedFilters.savedFilters.forEach((list) => {
                 if (list.name === savedFilterName) {
-                    Object.entries(list.filters).forEach(
+                    const filterValueObject = {};
+                    Object.entries(list.filters).forEach(([key, value]) => {
+                        const filterDataTemp = { ...filterData };
+                        const name = DeepSearchName(filterDataTemp, key);
+                        filterValueObject[name] = value;
+                    });
+                    Object.entries(filterValueObject).forEach(
                         ([filterKeys, filterValues]) => {
                             setFieldValue(filterKeys, filterValues);
                             if (
-                                list.filters[filterKeys].constructor ===
+                                filterValueObject[filterKeys].constructor ===
                                     Object &&
-                                list.filters[filterKeys].condition
+                                filterValueObject[filterKeys].condition
                             ) {
                                 filters.forEach((filterItem) => {
                                     if (
@@ -154,6 +166,7 @@ const RightDrawer = (props) => {
                             groupFilterConditionHandler={
                                 groupFilterConditionHandler
                             }
+                            customComponents={components}
                         />
                         <div className="filter__warning">
                             <span
@@ -171,11 +184,11 @@ const RightDrawer = (props) => {
                         <div className="filter__save">
                             <IButton
                                 type="button"
-                                className="button-save"
+                                className="neo-btn-link pointer"
                                 onClick={openSavePopup}
+                                data-testId="savePopUp"
                             >
-                                <SaveLogo />
-                                <span>SAVE</span>
+                                Save
                             </IButton>
                         </div>
                         <div className="btn-wrap">
@@ -184,8 +197,8 @@ const RightDrawer = (props) => {
                             </span>
                             <IButton
                                 type="button"
-                                data-testid="resetClick"
-                                className="reset"
+                                data-testId="reset"
+                                className="neo-btn-link pointer"
                                 onClick={() => {
                                     resetDrawer(values, setFieldValue);
                                 }}
@@ -193,10 +206,9 @@ const RightDrawer = (props) => {
                                 Reset
                             </IButton>
                             <IButton
-                                color="info"
                                 type="submit"
-                                className="applyFilter"
-                                data-testid="applyFilter-button"
+                                className="neo-btn-primary pointer"
+                                data-testId="applyFilter"
                             >
                                 Apply Filter
                             </IButton>
@@ -208,36 +220,39 @@ const RightDrawer = (props) => {
                             className="popup--save"
                         >
                             <h5>Save the Filter</h5>
-                            <label htmlFor="saveFilterName">
+                            <label
+                                className="neo-form-control-label"
+                                htmlFor="saveFilterName"
+                            >
                                 Save Filter Name
                                 <input
                                     id="saveFilterName"
                                     className="txt"
-                                    data-testid="registersaveFilterName-input"
+                                    data-testId="registersaveFilterName-input"
                                     onChange={() => {}}
                                 />
                             </label>
                             <div className="btn-wrap">
-                                <button
+                                <IButton
                                     type="button"
-                                    className="button"
-                                    data-testid="cancelSavePopup-button"
+                                    className="neo-btn-primary pointer"
+                                    data-testId="cancelSavePopup-button"
                                     onClick={() => {
                                         closeSavePopUp();
                                     }}
                                 >
                                     Cancel
-                                </button>
-                                <button
+                                </IButton>
+                                <IButton
                                     type="button"
-                                    className="button"
-                                    data-testid="saveFilter-button"
+                                    className="neo-btn-primary pointer"
+                                    data-testId="saveFilter-button"
                                     onClick={() => {
                                         closeSavePopUp();
                                     }}
                                 >
                                     Save
-                                </button>
+                                </IButton>
                             </div>
                         </div>
                     </div>
@@ -266,7 +281,9 @@ RightDrawer.propTypes = {
     listViewName: PropTypes.any,
     savedFilters: PropTypes.any,
     savedFilterName: PropTypes.any,
-    savedFilterClick: PropTypes.any
+    savedFilterClick: PropTypes.any,
+    components: PropTypes.any,
+    filterData: PropTypes.any
 };
 
 export default withFormik({
