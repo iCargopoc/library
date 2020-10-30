@@ -16,20 +16,28 @@ const GridComponent = (props) => {
         title,
         gridHeight,
         gridWidth,
+        rowsToOverscan,
         passColumnToExpand,
         passRowActions,
         passRowActionCallback,
+        passGetRowInfo,
         passOnGridRefresh,
         hasPagination,
         CustomPanel,
         enableGroupHeaders,
+        gridHeader,
+        rowSelector,
         globalSearch,
         columnFilter,
         groupSort,
         columnChooser,
         exportData,
-        enableRowDeselection,
-        expandableColumn
+        rowsForSelection,
+        passIdAttribute,
+        expandableColumn,
+        multiRowSelection,
+        theme,
+        enableServersideSorting
     } = props;
     const idAttribute = "travelId";
     const gridPageSize = 300;
@@ -50,10 +58,57 @@ const GridComponent = (props) => {
     });
     // State for holding grid data
     const [gridData, setGridData] = useState([]);
+    // State for holding Original grid data, to be used while clearing group sort
+    const [originalGridData, setOriginalGridData] = useState([]);
+    // State for holding group sort options
+    const [sortOptions, setSortOptions] = useState([]);
     // State for holding selected rows
     const [userSelectedRows, setUserSelectedRows] = useState([]);
     // State for holding rows to deselect
     const [rowsToDeselect, setRowsToDeselect] = useState([]);
+    // State for holding rows to select
+    const [rowsToSelect, setRowsToSelect] = useState([]);
+
+    // Loginc for sorting data
+    const compareValues = (compareOrder, v1, v2) => {
+        let returnValue = 0;
+        if (compareOrder === "Ascending") {
+            if (v1 > v2) {
+                returnValue = 1;
+            } else if (v1 < v2) {
+                returnValue = -1;
+            }
+            return returnValue;
+        }
+        if (v1 < v2) {
+            returnValue = 1;
+        } else if (v1 > v2) {
+            returnValue = -1;
+        }
+        return returnValue;
+    };
+    // Return sorted data based on the parameters
+    const getSortedData = (data, sortValues) => {
+        if (data && data.length > 0 && sortValues && sortValues.length > 0) {
+            return data.sort((x, y) => {
+                let compareResult = 0;
+                sortValues.forEach((option) => {
+                    const { sortBy, sortOn, order } = option;
+                    const newResult =
+                        sortOn === "value"
+                            ? compareValues(order, x[sortBy], y[sortBy])
+                            : compareValues(
+                                  order,
+                                  x[sortBy][sortOn],
+                                  y[sortBy][sortOn]
+                              );
+                    compareResult = compareResult || newResult;
+                });
+                return compareResult;
+            });
+        }
+        return data;
+    };
 
     const airportCodeList = [
         "AAA",
@@ -119,6 +174,7 @@ const GridComponent = (props) => {
             width: 50,
             disableFilters: true,
             isSearchable: true,
+            isSortable: true,
             displayCell: (
                 rowData,
                 DisplayTag,
@@ -138,10 +194,12 @@ const GridComponent = (props) => {
             Header: "Flight",
             accessor: "flight",
             width: 100,
+            isSortable: true,
             innerCells: [
                 {
                     Header: "Flight No",
                     accessor: "flightno",
+                    isSortable: true,
                     isSearchable: true
                 },
                 {
@@ -191,15 +249,18 @@ const GridComponent = (props) => {
             Header: "Segment",
             accessor: "segment",
             width: 100,
+            isSortable: true,
             innerCells: [
                 {
                     Header: "From",
                     accessor: "from",
+                    isSortable: true,
                     isSearchable: true
                 },
                 {
                     Header: "To",
                     accessor: "to",
+                    isSortable: true,
                     isSearchable: true
                 }
             ],
@@ -469,15 +530,18 @@ const GridComponent = (props) => {
             Header: "Weight",
             accessor: "weight",
             width: 130,
+            isSortable: true,
             innerCells: [
                 {
                     Header: "Percentage",
                     accessor: "percentage",
+                    isSortable: true,
                     isSearchable: true
                 },
                 {
                     Header: "Value",
                     accessor: "value",
+                    isSortable: true,
                     isSearchable: true
                 }
             ],
@@ -516,6 +580,7 @@ const GridComponent = (props) => {
             Header: "Volume",
             accessor: "volume",
             width: 100,
+            isSortable: true,
             innerCells: [
                 {
                     Header: "Percentage",
@@ -652,6 +717,7 @@ const GridComponent = (props) => {
             Header: "SR",
             accessor: "sr",
             width: 90,
+            isSortable: true,
             isSearchable: true,
             displayCell: (
                 rowData,
@@ -724,13 +790,15 @@ const GridComponent = (props) => {
         }
     ];
 
-    const columns = originalColumns.map((column) => {
+    const mappedOriginalColumns = originalColumns.map((column) => {
         const updatedColumn = column;
         if (!enableGroupHeaders && column.groupHeader) {
             delete updatedColumn.groupHeader;
         }
         return updatedColumn;
     });
+
+    const [columns, setColumns] = useState(mappedOriginalColumns);
 
     const columnToExpand = {
         Header: "Remarks",
@@ -867,10 +935,27 @@ const GridComponent = (props) => {
                 return newRow;
             })
         );
+        setOriginalGridData((old) =>
+            old.map((row) => {
+                let newRow = row;
+                if (
+                    Object.entries(row).toString() ===
+                    Object.entries(originalRow).toString()
+                ) {
+                    newRow = updatedRow;
+                }
+                return newRow;
+            })
+        );
     };
 
     const onRowDelete = (originalRow) => {
         setGridData((old) =>
+            old.filter((row) => {
+                return row !== originalRow;
+            })
+        );
+        setOriginalGridData((old) =>
             old.filter((row) => {
                 return row !== originalRow;
             })
@@ -891,7 +976,7 @@ const GridComponent = (props) => {
     const onRowSelect = (selectedRows) => {
         console.log("Rows selected: ");
         console.log(selectedRows);
-        if (enableRowDeselection) {
+        if (passIdAttribute) {
             setUserSelectedRows(selectedRows);
         }
     };
@@ -907,7 +992,8 @@ const GridComponent = (props) => {
         }
         fetchData(info).then((data) => {
             if (data && data.length > 0) {
-                setGridData(gridData.concat(data));
+                setGridData(getSortedData(gridData.concat(data), sortOptions));
+                setOriginalGridData(originalGridData.concat(data));
                 if (paginationType === "index") {
                     setIndexPageInfo({
                         ...indexPageInfo,
@@ -935,12 +1021,24 @@ const GridComponent = (props) => {
         });
     };
 
+    const serverSideSorting = (groupSortOptions) => {
+        console.log("Server side sort", groupSortOptions);
+        if (groupSortOptions && groupSortOptions.length > 0) {
+            setSortOptions(groupSortOptions);
+            setGridData(getSortedData([...gridData], groupSortOptions));
+        } else {
+            setSortOptions([]);
+            setGridData(originalGridData);
+        }
+    };
+
     useEffect(() => {
         const pageInfo =
             paginationType === "index" ? indexPageInfo : cursorPageInfo;
         fetchData(pageInfo).then((data) => {
             if (data && data.length > 0) {
                 setGridData(data);
+                setOriginalGridData(data);
             } else if (paginationType === "index") {
                 setIndexPageInfo({
                     ...indexPageInfo,
@@ -953,18 +1051,30 @@ const GridComponent = (props) => {
                 });
             }
         });
+        if (rowsForSelection && rowsForSelection.length > 0) {
+            setRowsToSelect(rowsForSelection);
+        }
     }, []);
 
     const removeRowSelection = (event) => {
         const rowId = event.currentTarget.dataset.id;
         setRowsToDeselect([Number(rowId)]);
     };
+
     const gridPageInfo =
         paginationType === "index" ? indexPageInfo : cursorPageInfo;
 
+    const getRowInfo = (rowData) => {
+        const { travelId } = rowData;
+        return {
+            isRowExpandable: travelId % 2 === 0,
+            className: travelId % 10 === 0 ? "disabled" : ""
+        };
+    };
+
     if (gridData && gridData.length > 0 && columns && columns.length > 0) {
         return (
-            <div>
+            <div className={theme === "portal" ? "sample-bg" : ""}>
                 <div className="selectedRows">
                     {userSelectedRows.map((row) => {
                         return (
@@ -983,14 +1093,19 @@ const GridComponent = (props) => {
                 </div>
                 <Grid
                     className={className}
+                    theme={theme}
                     title={title}
                     gridHeight={gridHeight}
                     gridWidth={gridWidth}
                     gridData={gridData}
-                    idAttribute={enableRowDeselection ? idAttribute : ""}
+                    rowsToOverscan={rowsToOverscan}
+                    idAttribute={passIdAttribute ? idAttribute : ""}
                     paginationType={hasPagination ? paginationType : null}
                     pageInfo={hasPagination ? gridPageInfo : null}
                     loadMoreData={loadMoreData}
+                    serverSideSorting={
+                        enableServersideSorting ? serverSideSorting : null
+                    }
                     columns={columns}
                     columnToExpand={passColumnToExpand ? columnToExpand : null}
                     rowActions={passRowActions ? rowActions : null}
@@ -1003,9 +1118,14 @@ const GridComponent = (props) => {
                     onRowUpdate={onRowUpdate}
                     onRowDelete={onRowDelete}
                     onRowSelect={onRowSelect}
+                    getRowInfo={passGetRowInfo ? getRowInfo : null}
                     onGridRefresh={passOnGridRefresh ? onGridRefresh : null}
                     CustomPanel={CustomPanel}
+                    rowsToSelect={rowsToSelect}
                     rowsToDeselect={rowsToDeselect}
+                    multiRowSelection={multiRowSelection}
+                    gridHeader={gridHeader}
+                    rowSelector={rowSelector}
                     globalSearch={globalSearch}
                     columnFilter={columnFilter}
                     groupSort={groupSort}
