@@ -276,7 +276,10 @@ const Customgrid = (props) => {
                         minWidth: 35,
                         width: 35,
                         maxWidth: 35,
-                        Header: ({ getToggleAllRowsSelectedProps }) => {
+                        Header: (headerSelectProps) => {
+                            const {
+                                getToggleAllRowsSelectedProps
+                            } = headerSelectProps;
                             if (multiRowSelection === false) {
                                 return null;
                             }
@@ -302,7 +305,8 @@ const Customgrid = (props) => {
                                 />
                             );
                         },
-                        Cell: ({ row }) => {
+                        Cell: (cellSelectProps) => {
+                            const { row } = cellSelectProps;
                             // Check if row selector is required for this row using the getRowInfo prop passed
                             let isRowSelectable = true;
                             if (
@@ -364,7 +368,8 @@ const Customgrid = (props) => {
                         minWidth: 35,
                         width: 35,
                         maxWidth: 35,
-                        Cell: ({ row }) => {
+                        Cell: (cellCustomProps) => {
+                            const { row } = cellCustomProps;
                             // Check if expand icon is required for this row using the getRowInfo prop passed
                             let isRowExpandable = true;
                             if (
