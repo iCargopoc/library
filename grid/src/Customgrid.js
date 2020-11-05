@@ -285,6 +285,7 @@ const Customgrid = (props) => {
                                     data-testid="rowSelector-allRows"
                                     {...getToggleAllRowsSelectedProps({
                                         onClick: (event) => {
+                                            // Set state value to identify if checkbox has been selected or deselected
                                             const selectedType =
                                                 event &&
                                                 event.currentTarget &&
@@ -322,6 +323,7 @@ const Customgrid = (props) => {
                                         data-testid="rowSelector-singleRow"
                                         {...row.getToggleRowSelectedProps({
                                             onClick: (event) => {
+                                                // Set state value to identify if checkbox has been selected or deselected
                                                 const selectedType =
                                                     event &&
                                                     event.currentTarget &&
@@ -421,6 +423,7 @@ const Customgrid = (props) => {
     );
 
     // Finds the rows selected by users from selectedRowIds and updates the state value and triggers the callback function.
+    // Also identify if checkbox is checked or unchecked and if unchecked, return runchecked row details too to the callback function.
     // This is used in useeffects for row selection and row deselection
     const updateSelectedRows = (rowsInGrid, selectedRowIdsInGrid) => {
         if (idAttribute) {

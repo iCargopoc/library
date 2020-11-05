@@ -274,7 +274,7 @@ describe("render Index file ", () => {
 
         // Select second row
         rowSelectors = getAllByTestId("rowSelector-singleRow");
-        const secondRowSelector = rowSelectors[1];
+        let secondRowSelector = rowSelectors[1];
         act(() => {
             secondRowSelector.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
@@ -285,6 +285,20 @@ describe("render Index file ", () => {
             'input[type="checkbox"]:checked'
         );
         expect(selectedCheckboxes.length).toBe(2);
+
+        // Unselect second row
+        rowSelectors = getAllByTestId("rowSelector-singleRow");
+        secondRowSelector = rowSelectors[1];
+        act(() => {
+            secondRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Selected checkbox count should be back 1 now
+        selectedCheckboxes = gridContainer.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+        expect(selectedCheckboxes.length).toBe(1);
     });
 
     it("test single row selections", () => {
