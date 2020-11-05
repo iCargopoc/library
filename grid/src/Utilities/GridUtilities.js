@@ -75,6 +75,34 @@ export const findSelectedRowIdFromIdAttribute = (
     return null;
 };
 
+export const findDeSelectedRows = (
+    selectedRows,
+    oldUserSelectedRowIdentifiers,
+    currentUserSelectedRowIdentifiers,
+    idAttribute
+) => {
+    const deSelectedRows = [];
+    if (
+        selectedRows &&
+        selectedRows.length > 0 &&
+        oldUserSelectedRowIdentifiers &&
+        oldUserSelectedRowIdentifiers.length > 0 &&
+        idAttribute
+    ) {
+        oldUserSelectedRowIdentifiers.forEach((oldAttr) => {
+            if (!currentUserSelectedRowIdentifiers.includes(oldAttr)) {
+                const deSelectedRow = selectedRows.find((row) => {
+                    return row.original[idAttribute] === oldAttr;
+                });
+                if (deSelectedRow && deSelectedRow.original) {
+                    deSelectedRows.push(deSelectedRow.original);
+                }
+            }
+        });
+    }
+    return deSelectedRows;
+};
+
 export const convertToIndividualColumns = (managableColumns) => {
     let modifiedColumns = [];
     managableColumns.forEach((item) => {

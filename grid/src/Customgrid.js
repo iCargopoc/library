@@ -39,6 +39,7 @@ import {
     findSelectedRows,
     findSelectedRowIdAttributes,
     findSelectedRowIdFromIdAttribute,
+    findDeSelectedRows,
     updatedActionsHeaderClass,
     convertToIndividualColumns,
     checkdisplayOfGroupedColumns,
@@ -163,6 +164,11 @@ const Customgrid = (props) => {
         userSelectedRowIdentifiers,
         setUserSelectedRowIdentifiers
     ] = useState([]);
+    // Local state to identify if row selection call back has to be given or not
+    const [
+        isRowSelectionCallbackNeeded,
+        setIsRowSelectionCallbackNeeded
+    ] = useState(null);
 
     // Column filter added for all columns by default
     const defaultColumn = useMemo(
@@ -210,22 +216,6 @@ const Customgrid = (props) => {
         },
         [managableColumns]
     );
-
-    // Finds the rows selected by users from selectedRowIds and updates the state value and triggers the callback function.
-    // This is used in useeffects for row selection and row deselection
-    const updateSelectedRows = (rows, selectedRowIds) => {
-        if (idAttribute) {
-            const rowsSelectedByUser = findSelectedRows(rows, selectedRowIds);
-            const rowIdentifiers = findSelectedRowIdAttributes(
-                rowsSelectedByUser,
-                idAttribute
-            );
-            setUserSelectedRowIdentifiers(rowIdentifiers);
-            if (onRowSelect) {
-                onRowSelect(rowsSelectedByUser);
-            }
-        }
-    };
 
     const isRowExpandEnabled =
         additionalColumn &&
@@ -293,7 +283,21 @@ const Customgrid = (props) => {
                             return (
                                 <RowSelector
                                     data-testid="rowSelector-allRows"
-                                    {...getToggleAllRowsSelectedProps()}
+                                    {...getToggleAllRowsSelectedProps({
+                                        onClick: (event) => {
+                                            const selectedType =
+                                                event &&
+                                                event.currentTarget &&
+                                                event.currentTarget.checked ===
+                                                    false
+                                                    ? "deselect"
+                                                    : "select";
+                                            setIsRowSelectionCallbackNeeded(
+                                                selectedType
+                                            );
+                                            toggleAllRowsSelected();
+                                        }
+                                    })}
                                 />
                             );
                         },
@@ -316,7 +320,21 @@ const Customgrid = (props) => {
                                 return (
                                     <RowSelector
                                         data-testid="rowSelector-singleRow"
-                                        {...row.getToggleRowSelectedProps()}
+                                        {...row.getToggleRowSelectedProps({
+                                            onClick: (event) => {
+                                                const selectedType =
+                                                    event &&
+                                                    event.currentTarget &&
+                                                    event.currentTarget
+                                                        .checked === false
+                                                        ? "deselect"
+                                                        : "select";
+                                                setIsRowSelectionCallbackNeeded(
+                                                    selectedType
+                                                );
+                                                row.toggleRowSelected();
+                                            }
+                                        })}
                                     />
                                 );
                             }
@@ -401,6 +419,36 @@ const Customgrid = (props) => {
             }
         }
     );
+
+    // Finds the rows selected by users from selectedRowIds and updates the state value and triggers the callback function.
+    // This is used in useeffects for row selection and row deselection
+    const updateSelectedRows = (rowsInGrid, selectedRowIdsInGrid) => {
+        if (idAttribute) {
+            const rowsSelectedByUser = findSelectedRows(
+                rowsInGrid,
+                selectedRowIdsInGrid
+            );
+            const rowIdentifiers = findSelectedRowIdAttributes(
+                rowsSelectedByUser,
+                idAttribute
+            );
+            setUserSelectedRowIdentifiers(rowIdentifiers);
+            if (onRowSelect && isRowSelectionCallbackNeeded !== null) {
+                setIsRowSelectionCallbackNeeded(null);
+                onRowSelect(
+                    rowsSelectedByUser,
+                    isRowSelectionCallbackNeeded === "deselect"
+                        ? findDeSelectedRows(
+                              preFilteredRows,
+                              userSelectedRowIdentifiers,
+                              rowIdentifiers,
+                              idAttribute
+                          )
+                        : null
+                );
+            }
+        }
+    };
 
     // Make checkbox in header title selected if no: selected rows and total rows are same
     const isAllRowsSelected = () => {
@@ -487,6 +535,7 @@ const Customgrid = (props) => {
                     toggleRowSelected(id, true);
                 }
             });
+            setIsRowSelectionCallbackNeeded("select");
         }
     }, [rowsToSelect]);
 
@@ -504,6 +553,7 @@ const Customgrid = (props) => {
                     toggleRowSelected(id, false);
                 }
             });
+            setIsRowSelectionCallbackNeeded("deselect");
         }
     }, [rowsToDeselect]);
 

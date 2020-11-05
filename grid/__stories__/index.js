@@ -958,9 +958,11 @@ const GridComponent = (props) => {
         }
     };
 
-    const onRowSelect = (selectedRows) => {
+    const onRowSelect = (selectedRows, deSelectedRows) => {
         console.log("Rows selected: ");
         console.log(selectedRows);
+        console.log("Rows deselected: ");
+        console.log(deSelectedRows);
         if (passIdAttribute) {
             setUserSelectedRows(selectedRows);
         }
