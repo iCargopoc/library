@@ -810,7 +810,7 @@ const GridComponent = (props) => {
 
     const [columns, setColumns] = useState([]);
 
-    const columnToExpand = {
+    const originalColumnToExpand = {
         Header: "Remarks",
         innerCells: [
             { Header: "Remarks", accessor: "remarks" },
@@ -868,6 +868,8 @@ const GridComponent = (props) => {
             );
         }
     };
+
+    const [columnToExpand, setColumnToExpand] = useState(null);
 
     const calculateRowHeight = (row, gridColumns) => {
         // Minimum height for each row
@@ -1081,6 +1083,7 @@ const GridComponent = (props) => {
             return updatedColumn;
         });
         setColumns(mappedOriginalColumns);
+        setColumnToExpand(originalColumnToExpand);
         if (rowsForSelection && rowsForSelection.length > 0) {
             setRowsToSelect(rowsForSelection);
         }

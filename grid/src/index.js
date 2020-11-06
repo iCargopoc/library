@@ -254,10 +254,13 @@ const Grid = (props) => {
                 expandableColumn
             )
         );
+    }, [columns]);
+
+    useEffect(() => {
         setAdditionalColumn(
             extractAdditionalColumn(columnToExpand, isDesktop, updateRowInGrid)
         );
-    }, [columns, columnToExpand]);
+    }, [columnToExpand]);
 
     useEffect(() => {
         setIsLoaded(true);
