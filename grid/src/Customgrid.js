@@ -217,13 +217,13 @@ const Customgrid = (props) => {
         [managableColumns]
     );
 
-    const isRowExpandEnabled =
-        additionalColumn &&
-        Object.keys(additionalColumn).length > 0 &&
-        additionalColumn.display === true &&
-        additionalColumn.Cell &&
-        typeof additionalColumn.Cell === "function";
-
+    const isRowExpandEnabled = !!(
+        expandedRowData &&
+        Object.keys(expandedRowData).length > 0 &&
+        expandedRowData.display === true &&
+        expandedRowData.Cell &&
+        typeof expandedRowData.Cell === "function"
+    );
     const columns = useMemo(() => gridColumns);
     const data =
         serverSideSorting && typeof serverSideSorting === "function"
@@ -351,8 +351,9 @@ const Customgrid = (props) => {
                 ]);
             }
             // Add last column only if required
-            const isRowActionsAvailable =
-                rowActions && typeof rowActions === "function"; // If row actions are available
+            const isRowActionsAvailable = !!(
+                rowActions && typeof rowActions === "function"
+            ); // If row actions are available
             const isRowExpandAvailable = isRowExpandEnabled || expandableColumn; // If row expand option is available
             if (isRowActionsAvailable || isRowExpandAvailable) {
                 hooks.allColumns.push((hookColumns) => [
