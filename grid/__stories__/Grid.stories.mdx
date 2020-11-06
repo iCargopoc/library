@@ -239,9 +239,10 @@ const GridComponent = () => {
         // Using these data, update the data source and rerender the Grid.
     };
 
-    const onRowSelect = (selectedRows) => {
+    const onRowSelect = (selectedRows, deSelectedRows) => {
         // Grid will call this function when user selects or deselects a row.
-        // An array of all selected row data will be passed in as parameter.
+        // An array of all selected row data will be passed in as the first parameter.
+        // An array of deSelectedRow(s) will be passed in as the second parameter.
     };
 
     // This should be an array of idAttribute values, of rows that has to be deselected from the Grid
@@ -652,7 +653,7 @@ const rowsToSelect = [1, 7, 17];
 
 ```jsx
 // This should be an array of idAttribute values of rows that has to be deselected from the Grid.
-const rowsToDeselect = [];
+const rowsToDeselect = []; // [1] or [1, 7]
 
 <Grid
     gridData={gridData}
@@ -848,7 +849,6 @@ const rowSelector = false;
     columns={columns}
     calculateRowHeight={calculateRowHeight}
     onRowUpdate={onRowUpdate}
-    onRowSelect={onRowSelect}
     rowSelector={rowSelector}
 />;
 ```
