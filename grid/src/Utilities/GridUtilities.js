@@ -48,7 +48,7 @@ export const findSelectedRowIdAttributes = (selectedRows, idAttribute) => {
         selectedRows.forEach((row) => {
             const rowIdValue = row[idAttribute];
             if (rowIdValue !== null && rowIdValue !== undefined) {
-                rowIdentifiers.push(row[idAttribute]);
+                rowIdentifiers.push(rowIdValue);
             }
         });
     }
