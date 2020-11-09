@@ -46,7 +46,10 @@ export const findSelectedRowIdAttributes = (selectedRows, idAttribute) => {
     const rowIdentifiers = [];
     if (selectedRows && selectedRows.length > 0 && idAttribute) {
         selectedRows.forEach((row) => {
-            rowIdentifiers.push(row[idAttribute]);
+            const rowIdValue = row[idAttribute];
+            if (rowIdValue !== null && rowIdValue !== undefined) {
+                rowIdentifiers.push(row[idAttribute]);
+            }
         });
     }
     return rowIdentifiers;
