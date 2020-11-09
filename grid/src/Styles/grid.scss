@@ -4,6 +4,9 @@
 }
 
 .neo-grid-portal {
+    .neo-table__noBorder {
+        border: 0 !important;
+    }
     .neo-grid-header {
         background: transparent;
     }
@@ -24,6 +27,9 @@
     }
     .neo-grid .tbody {
         margin-top: 10px;
+        &.tbody-withoutHeading {
+            margin-top: 0;
+        }
     }
     .neo-grid .tbody .row-selector-cell-container {
         justify-content: center;
@@ -50,6 +56,9 @@
         }
     }
     .tbody {
+        .tableContainer__List {
+            will-change: auto !important;
+        }
         .row-selector-cell-container {
             padding: 8px 4px;
             height: 100%;
@@ -217,6 +226,7 @@
         }
     }
     .table-cell--content {
+        height: 100%;
         a {
             font-size: 2em;
             color: #333;

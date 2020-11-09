@@ -433,29 +433,29 @@ const Customgrid = (props) => {
     // This is used in useeffects for row selection and row deselection
     const updateSelectedRows = (rowsInGrid, selectedRowIdsInGrid) => {
         if (idAttribute) {
-            const rowsSelectedByUser = findSelectedRows(
-                rowsInGrid,
-                selectedRowIdsInGrid
-            );
-            const rowIdentifiers = findSelectedRowIdAttributes(
+        const rowsSelectedByUser = findSelectedRows(
+            rowsInGrid,
+            selectedRowIdsInGrid
+        );
+        const rowIdentifiers = findSelectedRowIdAttributes(
+            rowsSelectedByUser,
+            idAttribute
+        );
+        setUserSelectedRowIdentifiers(rowIdentifiers);
+        if (onRowSelect && isRowSelectionCallbackNeeded !== null) {
+            setIsRowSelectionCallbackNeeded(null);
+            onRowSelect(
                 rowsSelectedByUser,
-                idAttribute
+                isRowSelectionCallbackNeeded === "deselect"
+                    ? findDeSelectedRows(
+                          preFilteredRows,
+                          userSelectedRowIdentifiers,
+                          rowIdentifiers,
+                          idAttribute
+                      )
+                    : null
             );
-            setUserSelectedRowIdentifiers(rowIdentifiers);
-            if (onRowSelect && isRowSelectionCallbackNeeded !== null) {
-                setIsRowSelectionCallbackNeeded(null);
-                onRowSelect(
-                    rowsSelectedByUser,
-                    isRowSelectionCallbackNeeded === "deselect"
-                        ? findDeSelectedRows(
-                              preFilteredRows,
-                              userSelectedRowIdentifiers,
-                              rowIdentifiers,
-                              idAttribute
-                          )
-                        : null
-                );
-            }
+        }
         }
     };
 
@@ -876,7 +876,14 @@ const Customgrid = (props) => {
                         className="tableContainer__AutoSizer"
                     >
                         {({ height }) => (
-                            <div {...getTableProps()} className="table">
+                            <div
+                                {...getTableProps()}
+                                className={`table ${
+                                    gridHeader === false
+                                        ? "neo-table__noBorder"
+                                        : ""
+                                }`}
+                            >
                                 {gridHeader === false ? null : (
                                     <div className="thead table-row table-row--head">
                                         {headerGroups.map(
@@ -994,7 +1001,11 @@ const Customgrid = (props) => {
                                 {rows && rows.length > 0 ? (
                                     <div
                                         {...getTableBodyProps()}
-                                        className="tbody"
+                                        className={`tbody ${
+                                            gridHeader === false
+                                                ? "tbody-withoutHeading"
+                                                : ""
+                                        }`}
                                     >
                                         {isPaginationNeeded ? (
                                             <InfiniteLoader
