@@ -433,29 +433,29 @@ const Customgrid = (props) => {
     // This is used in useeffects for row selection and row deselection
     const updateSelectedRows = (rowsInGrid, selectedRowIdsInGrid) => {
         if (idAttribute) {
-        const rowsSelectedByUser = findSelectedRows(
-            rowsInGrid,
-            selectedRowIdsInGrid
-        );
-        const rowIdentifiers = findSelectedRowIdAttributes(
-            rowsSelectedByUser,
-            idAttribute
-        );
-        setUserSelectedRowIdentifiers(rowIdentifiers);
-        if (onRowSelect && isRowSelectionCallbackNeeded !== null) {
-            setIsRowSelectionCallbackNeeded(null);
-            onRowSelect(
-                rowsSelectedByUser,
-                isRowSelectionCallbackNeeded === "deselect"
-                    ? findDeSelectedRows(
-                          preFilteredRows,
-                          userSelectedRowIdentifiers,
-                          rowIdentifiers,
-                          idAttribute
-                      )
-                    : null
+            const rowsSelectedByUser = findSelectedRows(
+                rowsInGrid,
+                selectedRowIdsInGrid
             );
-        }
+            const rowIdentifiers = findSelectedRowIdAttributes(
+                rowsSelectedByUser,
+                idAttribute
+            );
+            setUserSelectedRowIdentifiers(rowIdentifiers);
+            if (onRowSelect && isRowSelectionCallbackNeeded !== null) {
+                setIsRowSelectionCallbackNeeded(null);
+                onRowSelect(
+                    rowsSelectedByUser,
+                    isRowSelectionCallbackNeeded === "deselect"
+                        ? findDeSelectedRows(
+                              preFilteredRows,
+                              userSelectedRowIdentifiers,
+                              rowIdentifiers,
+                              idAttribute
+                          )
+                        : null
+                );
+            }
         }
     };
 
