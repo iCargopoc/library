@@ -534,7 +534,10 @@ const Customgrid = (props) => {
     // Find the row Id using the key - value passed from props and use toggleRowSelected method to select the checkboxes
     useEffect(() => {
         if (rowsToSelect && rowsToSelect.length && idAttribute) {
-            rowsToSelect.forEach((rowId) => {
+            const selectableRows = rowsToSelect.filter((row, index) => {
+                return multiRowSelection !== false || index === 0;
+            });
+            selectableRows.forEach((rowId) => {
                 const rowToSelect = preFilteredRows.find((row) => {
                     const { original } = row;
                     return original[idAttribute] === rowId;
@@ -552,7 +555,10 @@ const Customgrid = (props) => {
     // Find the row Id using the key - value passed from props and use toggleRowSelected method to deselect the checkboxes
     useEffect(() => {
         if (rowsToDeselect && rowsToDeselect.length && idAttribute) {
-            rowsToDeselect.forEach((rowId) => {
+            const deselectableRows = rowsToDeselect.filter((row, index) => {
+                return multiRowSelection !== false || index === 0;
+            });
+            deselectableRows.forEach((rowId) => {
                 const rowToDeselect = preFilteredRows.find((row) => {
                     const { original } = row;
                     return original[idAttribute] === rowId;
