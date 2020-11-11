@@ -37,6 +37,10 @@
     }
 }
 .neo-grid {
+    .table {
+        display: table;
+        width: 100%;
+    }
     .table-row--head {
         background: var(--secondary);
         .table-cell {
