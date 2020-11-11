@@ -50,10 +50,10 @@ const listRef = createRef(null);
 
 const Customgrid = (props) => {
     const {
+        isDesktop,
         theme,
         title,
         gridHeight,
-        gridWidth,
         managableColumns,
         expandedRowData,
         gridData,
@@ -503,7 +503,7 @@ const Customgrid = (props) => {
 
     // Add class to last table column header (for actions) if table body is having scroll
     useEffect(() => {
-        updatedActionsHeaderClass();
+        updatedActionsHeaderClass(isDesktop);
     });
 
     // Rerender list to calculate row height after doing column sort/filter and global search
@@ -727,11 +727,12 @@ const Customgrid = (props) => {
         // Infinite loader used for lazy loading, with the properties passed here and other values calculated at the top
         // React window list is used for implementing virtualization, specifying the item count in a frame and height of each rows in it.
         return (
-            <div
-                className="table-wrapper"
-                style={{ width: gridWidth || "100%" }}
-            >
-                <div className="neo-grid-header">
+            <div className="table-wrapper">
+                <div
+                    className={`neo-grid-header ${
+                        gridHeader === false ? "neo-table__noBorder" : ""
+                    }`}
+                >
                     <div className="neo-grid-header__results">
                         {gridHeader === false && multiRowSelection !== false ? (
                             <div className="form-check">
@@ -882,14 +883,7 @@ const Customgrid = (props) => {
                         className="tableContainer__AutoSizer"
                     >
                         {({ height }) => (
-                            <div
-                                {...getTableProps()}
-                                className={`table ${
-                                    gridHeader === false
-                                        ? "neo-table__noBorder"
-                                        : ""
-                                }`}
-                            >
+                            <div {...getTableProps()} className="table">
                                 {gridHeader === false ? null : (
                                     <div className="thead table-row table-row--head">
                                         {headerGroups.map(
@@ -1071,10 +1065,10 @@ const Customgrid = (props) => {
 };
 
 Customgrid.propTypes = {
+    isDesktop: PropTypes.bool,
     theme: PropTypes.string,
     title: PropTypes.string,
     gridHeight: PropTypes.string,
-    gridWidth: PropTypes.string,
     managableColumns: PropTypes.arrayOf(PropTypes.object),
     gridData: PropTypes.arrayOf(PropTypes.object),
     rowsToOverscan: PropTypes.number,

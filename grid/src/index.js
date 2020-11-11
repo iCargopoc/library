@@ -280,12 +280,13 @@ const Grid = (props) => {
                 className={`grid-component-container ${className || ""} ${
                     theme === "portal" ? "neo-grid-portal" : ""
                 }`}
+                style={{ width: gridWidth || "100%" }}
             >
                 <Customgrid
+                    isDesktop={isDesktop}
                     theme={theme}
                     title={title}
                     gridHeight={gridHeight}
-                    gridWidth={gridWidth}
                     managableColumns={gridColumns}
                     expandedRowData={additionalColumn}
                     gridData={gridData && gridData.length > 0 ? gridData : []}

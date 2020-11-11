@@ -7,6 +7,7 @@
     display: flex;
     padding: rem(12) rem(4);
     justify-content: space-between;
+    border-bottom: 1px solid var(--border-grey);
     &__results {
         display: flex;
         font-size: rem(14);

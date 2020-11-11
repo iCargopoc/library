@@ -1,18 +1,22 @@
-export const updatedActionsHeaderClass = () => {
-    const tableContainerList = document.getElementsByClassName(
-        "tableContainer__List"
-    );
-    if (tableContainerList && tableContainerList.length > 0) {
-        const tableContainer = tableContainerList[0];
-        const tableHeaders = document.getElementsByClassName("table-row--head");
-        if (tableHeaders && tableHeaders.length > 0) {
-            const tableHeader = tableHeaders[0];
-            if (tableContainer.offsetHeight < tableContainer.scrollHeight) {
-                if (!tableHeader.classList.contains("withScroll")) {
-                    tableHeader.classList.add("withScroll");
+export const updatedActionsHeaderClass = (isDesktop) => {
+    if (isDesktop) {
+        const tableContainerList = document.getElementsByClassName(
+            "tableContainer__List"
+        );
+        if (tableContainerList && tableContainerList.length > 0) {
+            const tableContainer = tableContainerList[0];
+            const tableHeaders = document.getElementsByClassName(
+                "table-row--head"
+            );
+            if (tableHeaders && tableHeaders.length > 0) {
+                const tableHeader = tableHeaders[0];
+                if (tableContainer.offsetHeight < tableContainer.scrollHeight) {
+                    if (!tableHeader.classList.contains("withScroll")) {
+                        tableHeader.classList.add("withScroll");
+                    }
+                } else {
+                    tableHeader.classList.remove("withScroll");
                 }
-            } else {
-                tableHeader.classList.remove("withScroll");
             }
         }
     }

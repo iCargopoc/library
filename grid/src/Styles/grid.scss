@@ -4,11 +4,11 @@
 }
 
 .neo-grid-portal {
-    .neo-table__noBorder {
-        border: 0 !important;
-    }
     .neo-grid-header {
         background: transparent;
+        &.neo-table__noBorder {
+            border: 0 !important;
+        }
     }
     .neo-grid .table-row-wrap {
         background: var(--white);
@@ -37,9 +37,6 @@
     }
 }
 .neo-grid {
-    .table {
-        border-top: 1px solid var(--border-grey);
-    }
     .table-row--head {
         background: var(--secondary);
         .table-cell {
