@@ -311,6 +311,7 @@ describe("Export Data unit test", () => {
                 rows={mockRows}
                 columns={mockColumns}
                 additionalColumn={mockAdditionalColumn}
+                fileName="Custom filename"
             />,
             container
         );

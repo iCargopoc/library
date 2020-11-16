@@ -34,6 +34,7 @@ const GridComponent = (props) => {
         groupSort,
         columnChooser,
         exportData,
+        fileName,
         rowsForSelection,
         passIdAttribute,
         expandableColumn,
@@ -1246,7 +1247,7 @@ const GridComponent = (props) => {
                     groupSort={groupSort}
                     columnChooser={columnChooser}
                     exportData={exportData}
-                    fileName="Custom filename"
+                    fileName={fileName || null}
                 />
             </div>
         );

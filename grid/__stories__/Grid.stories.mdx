@@ -314,6 +314,11 @@ const GridComponent = () => {
     // By default Grid considers exportData as true
     const exportData = true;
 
+    // If the file name of exported files from Grid has to be customized, use this prop.
+    // Pass a string value and in that case this will be the file name of exported files (with different extensions).
+    // If prop is not specified Grid uses 'iCargo Neo Report' as the file name.
+    const fileName = "Custom filename";
+
     // If theme is portal Grid will assign different style for Grid header portion and Grid rows.
     // All other themes will have default stylings.
     const theme = "portal"
@@ -376,6 +381,7 @@ const GridComponent = () => {
             groupSort={groupSort}
             columnChooser={columnChooser}
             exportData={exportData}
+            fileName={fileName}
         />
     );
 };
@@ -980,6 +986,26 @@ const exportData = false;
 />;
 ```
 
+#### With custom file name for exported files
+
+<Story name="With custom file name for exported files">
+    <GridComponent fileName="Custom filename" />;
+</Story>
+
+```jsx
+// This should be a string value. If prop is specified this will be the name of the exported files (with different extensions).
+const fileName="Custom filename"
+
+<Grid
+    gridData={gridData}
+    columns={columns}
+    calculateRowHeight={calculateRowHeight}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    fileName={fileName}
+/>;
+```
+
 #### With all props
 
 <Story name="With all props">
@@ -1007,6 +1033,7 @@ const exportData = false;
         groupSort
         columnChooser
         exportData
+        fileName="Custom filename"
     />
     ;
 </Story>
@@ -1042,5 +1069,6 @@ const exportData = false;
     groupSort
     columnChooser
     exportData
+    fileName={fileName}
 />
 ```
