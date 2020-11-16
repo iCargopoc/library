@@ -967,6 +967,54 @@ const GridComponent = (props) => {
         console.log(deSelectedRows);
         if (passIdAttribute) {
             setUserSelectedRows(selectedRows);
+            if (deSelectedRows && deSelectedRows.length > 0) {
+                const rowExistingSelection = rowsToSelect.find((rowId) => {
+                    const deselectedRow = deSelectedRows.find(
+                        (row) => row.travelId === rowId
+                    );
+                    if (deselectedRow) {
+                        return true;
+                    }
+                    return false;
+                });
+                if (rowExistingSelection) {
+                    setRowsToSelect(
+                        rowsToSelect.filter((rowId) => {
+                            const deselectedRow = deSelectedRows.find(
+                                (row) => row.travelId === rowId
+                            );
+                            if (deselectedRow) {
+                                return false;
+                            }
+                            return true;
+                        })
+                    );
+                }
+            }
+            if (selectedRows && selectedRows.length > 0) {
+                const rowExistingDeselection = rowsToDeselect.find((rowId) => {
+                    const selectedRow = selectedRows.find(
+                        (row) => row.travelId === rowId
+                    );
+                    if (selectedRow) {
+                        return true;
+                    }
+                    return false;
+                });
+                if (rowExistingDeselection) {
+                    setRowsToDeselect(
+                        rowsToDeselect.filter((rowId) => {
+                            const selectedRow = selectedRows.find(
+                                (row) => row.travelId === rowId
+                            );
+                            if (selectedRow) {
+                                return false;
+                            }
+                            return true;
+                        })
+                    );
+                }
+            }
         }
     };
 
@@ -1057,6 +1105,15 @@ const GridComponent = (props) => {
             if (data && data.length > 0) {
                 setGridData(data);
                 setOriginalGridData(data);
+                if (rowsForSelection && rowsForSelection.length > 0) {
+                    setRowsToSelect(rowsForSelection);
+                    setUserSelectedRows(
+                        data.filter((initialData) => {
+                            const { travelId } = initialData;
+                            return rowsForSelection.includes(travelId);
+                        })
+                    );
+                }
             } else if (paginationType === "index") {
                 setIndexPageInfo({
                     ...indexPageInfo,
@@ -1084,14 +1141,22 @@ const GridComponent = (props) => {
         });
         setColumns(mappedOriginalColumns);
         setColumnToExpand(originalColumnToExpand);
-        if (rowsForSelection && rowsForSelection.length > 0) {
-            setRowsToSelect(rowsForSelection);
-        }
     }, []);
 
     const removeRowSelection = (event) => {
         const rowId = event.currentTarget.dataset.id;
         setRowsToDeselect([Number(rowId)]);
+        setRowsToSelect(
+            rowsToSelect.filter((selectedRowId) => {
+                return selectedRowId !== Number(rowId);
+            })
+        );
+        setUserSelectedRows(
+            userSelectedRows.filter((row) => {
+                const { travelId } = row;
+                return travelId !== Number(rowId);
+            })
+        );
     };
 
     const theme = "portal";

@@ -533,44 +533,69 @@ const Customgrid = (props) => {
     // Update the select state of row in Grid using the hook provided by useTable method
     // Find the row Id using the key - value passed from props and use toggleRowSelected method to select the checkboxes
     useEffect(() => {
-        if (rowsToSelect && rowsToSelect.length && idAttribute) {
-            const selectableRows = rowsToSelect.filter((row, index) => {
-                return multiRowSelection !== false || index === 0;
-            });
-            selectableRows.forEach((rowId) => {
-                const rowToSelect = preFilteredRows.find((row) => {
-                    const { original } = row;
-                    return original[idAttribute] === rowId;
+        if (idAttribute) {
+            let rowsToBeSelected =
+                rowsToSelect && rowsToSelect.length > 0 ? rowsToSelect : [];
+            rowsToBeSelected =
+                !isFirstRendering &&
+                userSelectedRowIdentifiers &&
+                userSelectedRowIdentifiers.length > 0
+                    ? [...userSelectedRowIdentifiers, ...rowsToBeSelected]
+                    : rowsToBeSelected;
+            let rowsToBeDeselected =
+                rowsToDeselect && rowsToDeselect.length > 0
+                    ? rowsToDeselect
+                    : [];
+            // Romove rows from selection if the same row is present in the rowsToDeselect array
+            rowsToBeSelected = rowsToBeSelected.filter(
+                (row) => !rowsToBeDeselected.includes(row)
+            );
+            // If Grid selection is single selection consider only the first item in array
+            if (multiRowSelection === false) {
+                rowsToBeSelected =
+                    rowsToBeSelected.length > 0 ? [rowsToBeSelected[0]] : [];
+                rowsToBeDeselected =
+                    rowsToBeDeselected.length > 0
+                        ? [rowsToBeDeselected[0]]
+                        : [];
+            }
+            const updatedSelectedRowIds = [];
+            if (rowsToBeSelected && rowsToBeSelected.length > 0) {
+                rowsToBeSelected.forEach((rowId) => {
+                    const rowToSelect = preFilteredRows.find((row) => {
+                        const { original } = row;
+                        return original[idAttribute] === rowId;
+                    });
+                    if (rowToSelect) {
+                        const { id } = rowToSelect;
+                        toggleRowSelected(id, true);
+                        updatedSelectedRowIds.push(id);
+                    }
                 });
-                if (rowToSelect) {
-                    const { id } = rowToSelect;
-                    toggleRowSelected(id, true);
+            }
+            if (rowsToBeDeselected && rowsToBeDeselected.length > 0) {
+                rowsToBeDeselected.forEach((rowId) => {
+                    const rowToDeselect = preFilteredRows.find((row) => {
+                        const { original } = row;
+                        return original[idAttribute] === rowId;
+                    });
+                    if (rowToDeselect) {
+                        const { id } = rowToDeselect;
+                        toggleRowSelected(id, false);
+                    }
+                });
+            }
+            // Loop through already selected rows and find row id that are not selected yet and update it to false
+            Object.entries(selectedRowIds).forEach((objEntry) => {
+                if (objEntry && objEntry.length > 0) {
+                    const rowId = objEntry[0];
+                    if (!updatedSelectedRowIds.includes(rowId)) {
+                        toggleRowSelected(rowId, false);
+                    }
                 }
             });
-            setIsRowSelectionCallbackNeeded("select");
         }
-    }, [rowsToSelect]);
-
-    // Update the select state of row in Grid using the hook provided by useTable method
-    // Find the row Id using the key - value passed from props and use toggleRowSelected method to deselect the checkboxes
-    useEffect(() => {
-        if (rowsToDeselect && rowsToDeselect.length && idAttribute) {
-            const deselectableRows = rowsToDeselect.filter((row, index) => {
-                return multiRowSelection !== false || index === 0;
-            });
-            deselectableRows.forEach((rowId) => {
-                const rowToDeselect = preFilteredRows.find((row) => {
-                    const { original } = row;
-                    return original[idAttribute] === rowId;
-                });
-                if (rowToDeselect) {
-                    const { id } = rowToDeselect;
-                    toggleRowSelected(id, false);
-                }
-            });
-            setIsRowSelectionCallbackNeeded("deselect");
-        }
-    }, [rowsToDeselect]);
+    }, [rowsToSelect, rowsToDeselect, gridData, groupSortOptions]);
 
     // Trigger call back when user makes a row selection using checkbox
     // And store the rows that are selected by user for making them selected when data changes after groupsort
@@ -625,39 +650,6 @@ const Customgrid = (props) => {
     // Set all row selections to false and find new Ids of already selected rows and make them selected
     // Recalculate the row height from index 0 as data has been changed
     useEffect(() => {
-        if (!isFirstRendering) {
-            // Make rows selected if user has already made any selections
-            if (
-                userSelectedRowIdentifiers &&
-                userSelectedRowIdentifiers.length > 0 &&
-                idAttribute
-            ) {
-                const updatedSelectedRowIds = [];
-                // Loop through already selected rows and find row id and make it selected
-                userSelectedRowIdentifiers.forEach((selectedRowId) => {
-                    const updatedRow = preFilteredRows.find((row) => {
-                        const { original } = row;
-                        return original[idAttribute] === selectedRowId;
-                    });
-                    if (updatedRow) {
-                        const { id } = updatedRow;
-                        if (updatedRow) {
-                            toggleRowSelected(id, true);
-                            updatedSelectedRowIds.push(id);
-                        }
-                    }
-                });
-                // Loop through already selected rows and find row id that are not selected yet and update it to false
-                Object.entries(selectedRowIds).forEach((objEntry) => {
-                    if (objEntry && objEntry.length > 0) {
-                        const rowId = objEntry[0];
-                        if (!updatedSelectedRowIds.includes(rowId)) {
-                            toggleRowSelected(rowId, false);
-                        }
-                    }
-                });
-            }
-        }
         reRenderListData();
     }, [gridData, groupSortOptions]);
 
