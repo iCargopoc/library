@@ -1022,7 +1022,7 @@ const GridComponent = (props) => {
     };
 
     const onGridRefresh = () => {
-        console.log("Grid Refrehsed ");
+        console.log("Grid Refreshed");
     };
 
     const bindRowEditOverlay = (rowData) => {
