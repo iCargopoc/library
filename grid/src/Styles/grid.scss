@@ -97,11 +97,6 @@
     }
     .table-cell {
         position: relative;
-        &:hover {
-            .cell-edit {
-                display: block;
-            }
-        }
         &.group-column-heading.column-heading {
             .column-heading-title {
                 justify-content: center;
@@ -220,9 +215,8 @@
         right: 8px;
         cursor: pointer;
         color: #dadfe9;
-        display: none;
+        display: block;
         @media screen and (max-width: 1024px) {
-            display: block;
             right: 0;
         }
     }
