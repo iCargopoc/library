@@ -41,7 +41,8 @@ const Grid = (props) => {
         exportData,
         onGridRefresh,
         rowsToSelect,
-        rowsToDeselect
+        rowsToDeselect,
+        fileName
     } = props;
 
     // Check if device is desktop
@@ -322,6 +323,7 @@ const Grid = (props) => {
                     groupSort={groupSort}
                     columnChooser={columnChooser}
                     exportData={exportData}
+                    fileName={fileName}
                     onGridRefresh={onGridRefresh}
                     rowsToSelect={rowsToSelect}
                     rowsToDeselect={rowsToDeselect}
@@ -373,7 +375,8 @@ Grid.propTypes = {
     exportData: PropTypes.bool,
     onGridRefresh: PropTypes.func,
     rowsToSelect: PropTypes.array,
-    rowsToDeselect: PropTypes.array
+    rowsToDeselect: PropTypes.array,
+    fileName: PropTypes.string
 };
 
 export default Grid;

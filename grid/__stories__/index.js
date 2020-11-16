@@ -1246,6 +1246,7 @@ const GridComponent = (props) => {
                     groupSort={groupSort}
                     columnChooser={columnChooser}
                     exportData={exportData}
+                    fileName="Custom filename"
                 />
             </div>
         );

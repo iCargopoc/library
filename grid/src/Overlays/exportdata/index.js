@@ -15,7 +15,15 @@ import {
 import { convertToIndividualColumns } from "../../Utilities/GridUtilities";
 
 const ExportData = (props) => {
-    const { toggleExportDataOverlay, rows, columns, additionalColumn } = props;
+    const {
+        toggleExportDataOverlay,
+        rows,
+        columns,
+        additionalColumn,
+        fileName
+    } = props;
+
+    const exportedFileName = fileName || "iCargo Neo Report";
 
     // Check if additional Column is present or not
     const isAdditionalColumnPresent =
@@ -124,14 +132,13 @@ const ExportData = (props) => {
 
         doc.text(title, 30, 40);
         doc.autoTable(content);
-        doc.save("iCargo Neo Report.pdf");
+        doc.save(`${exportedFileName}.pdf`);
     };
 
     const downloadCSVFile = async (filteredRowValue) => {
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".csv";
-        const fileName = "iCargo Neo Report";
         const ws = XLSX.utils.json_to_sheet(filteredRowValue);
         const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
         const excelBuffer = XLSX.write(wb, { bookType: "csv", type: "array" });
@@ -139,7 +146,7 @@ const ExportData = (props) => {
         const href = await URL.createObjectURL(data);
         const link = document.createElement("a");
         link.href = href;
-        link.download = fileName + fileExtension;
+        link.download = exportedFileName + fileExtension;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -149,7 +156,6 @@ const ExportData = (props) => {
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".xlsx";
-        const fileName = "iCargo Neo Report";
         const ws = XLSX.utils.json_to_sheet(filteredRowValue);
         const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
         const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
@@ -157,7 +163,7 @@ const ExportData = (props) => {
         const href = await URL.createObjectURL(data);
         const link = document.createElement("a");
         link.href = href;
-        link.download = fileName + fileExtension;
+        link.download = exportedFileName + fileExtension;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -454,7 +460,8 @@ ExportData.propTypes = {
     toggleExportDataOverlay: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
     columns: PropTypes.arrayOf(PropTypes.object),
-    additionalColumn: PropTypes.object
+    additionalColumn: PropTypes.object,
+    fileName: PropTypes.string
 };
 
 export default ExportData;

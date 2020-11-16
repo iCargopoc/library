@@ -81,6 +81,7 @@ const Customgrid = (props) => {
         groupSort,
         columnChooser,
         exportData,
+        fileName,
         onGridRefresh,
         rowsToSelect,
         rowsToDeselect
@@ -841,6 +842,7 @@ const Customgrid = (props) => {
                                         rows={rows}
                                         columns={gridColumns}
                                         additionalColumn={additionalColumn}
+                                        fileName={fileName}
                                     />
                                 ) : null}
                             </div>
@@ -1091,6 +1093,7 @@ Customgrid.propTypes = {
     groupSort: PropTypes.bool,
     columnChooser: PropTypes.bool,
     exportData: PropTypes.bool,
+    fileName: PropTypes.string,
     onGridRefresh: PropTypes.func,
     rowsToSelect: PropTypes.array,
     rowsToDeselect: PropTypes.array
