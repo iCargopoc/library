@@ -533,6 +533,8 @@ const Customgrid = (props) => {
 
     // Update the select state of row in Grid using the hook provided by useTable method
     // Find the row Id using the key - value passed from props and use toggleRowSelected method to select the checkboxes
+    // Consider rowsToSelect, rowsToDeselect and already made selections and then select wanted rows and deselect unwanted rows.
+    // This should hapen whenever data changes or group sort is applied
     useEffect(() => {
         if (idAttribute) {
             let rowsToBeSelected =
@@ -647,9 +649,7 @@ const Customgrid = (props) => {
         }
     }, [userExpandedRowDetails]);
 
-    // Update the row selection and clear row expands when data changes
-    // Set all row selections to false and find new Ids of already selected rows and make them selected
-    // Recalculate the row height from index 0 as data has been changed
+    // Recalculate the row height from index 0 as data has been changed or group sort is applied
     useEffect(() => {
         reRenderListData();
     }, [gridData, groupSortOptions]);

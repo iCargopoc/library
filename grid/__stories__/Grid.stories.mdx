@@ -244,9 +244,9 @@ const GridComponent = () => {
         // An array of all selected row data will be passed in as the first parameter.
         // An array of deSelectedRow(s) will be passed in as the second parameter.
         /************
-          Make sure to:
-          * Remove deselected rows details from 'rowsToDeselect'
-          * Remove selected rows details from 'rowsToSelect'
+            Make sure:
+            * If a row is selected, remove that row details from 'rowsToDeselect' prop value (if present).
+            * If a row is deselected, remove that row details from 'rowsToSelect' prop value (if present).
         ************/
     };
 
@@ -650,9 +650,9 @@ const onRowSelect = (selectedRows, deSelectedRows) => {
     // An array of all selected row data will be passed in as the first parameter.
     // An array of deSelectedRow(s) will be passed in as the second parameter.
     /************
-        Make sure to:
-        * Remove deselected rows details from 'rowsToDeselect'
-        * Remove selected rows details from 'rowsToSelect'
+        Make sure:
+        * If a row is selected, remove that row details from 'rowsToDeselect' prop value (if present).
+        * If a row is deselected, remove that row details from 'rowsToSelect' prop value (if present).
     ************/
 };
 
@@ -682,9 +682,9 @@ const onRowSelect = (selectedRows, deSelectedRows) => {
     // An array of all selected row data will be passed in as the first parameter.
     // An array of deSelectedRow(s) will be passed in as the second parameter.
     /************
-        Make sure to:
-        * Remove deselected rows details from 'rowsToDeselect'
-        * Remove selected rows details from 'rowsToSelect'
+        Make sure:
+        * If a row is selected, remove that row details from 'rowsToDeselect' prop value (if present).
+        * If a row is deselected, remove that row details from 'rowsToSelect' prop value (if present).
     ************/
 };
 

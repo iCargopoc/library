@@ -968,6 +968,7 @@ const GridComponent = (props) => {
         console.log(deSelectedRows);
         if (passIdAttribute) {
             setUserSelectedRows(selectedRows);
+            // If a row is deselected, remove that row details from 'rowsToSelect' prop value (if present).
             if (deSelectedRows && deSelectedRows.length > 0) {
                 const rowExistingSelection = rowsToSelect.find((rowId) => {
                     const deselectedRow = deSelectedRows.find(
@@ -992,6 +993,7 @@ const GridComponent = (props) => {
                     );
                 }
             }
+            // If a row is selected, remove that row details from 'rowsToDeselect' prop value (if present).
             if (selectedRows && selectedRows.length > 0) {
                 const rowExistingDeselection = rowsToDeselect.find((rowId) => {
                     const selectedRow = selectedRows.find(
@@ -1106,6 +1108,7 @@ const GridComponent = (props) => {
             if (data && data.length > 0) {
                 setGridData(data);
                 setOriginalGridData(data);
+                // Update local state based on rowsToSelect
                 if (rowsForSelection && rowsForSelection.length > 0) {
                     setRowsToSelect(rowsForSelection);
                     setUserSelectedRows(
@@ -1147,11 +1150,13 @@ const GridComponent = (props) => {
     const removeRowSelection = (event) => {
         const rowId = event.currentTarget.dataset.id;
         setRowsToDeselect([Number(rowId)]);
+        // If a row is deselected, remove that row details from 'rowsToSelect' prop value (if present).
         setRowsToSelect(
             rowsToSelect.filter((selectedRowId) => {
                 return selectedRowId !== Number(rowId);
             })
         );
+        // Update local state based on updated rowsToSelect
         setUserSelectedRows(
             userSelectedRows.filter((row) => {
                 const { travelId } = row;
