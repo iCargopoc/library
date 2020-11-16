@@ -243,6 +243,11 @@ const GridComponent = () => {
         // Grid will call this function when user selects or deselects a row.
         // An array of all selected row data will be passed in as the first parameter.
         // An array of deSelectedRow(s) will be passed in as the second parameter.
+        /************
+          Make sure to:
+          * Remove deselected rows details from 'rowsToDeselect'
+          * Remove selected rows details from 'rowsToSelect'
+        ************/
     };
 
     // This should be an array of idAttribute values, of rows that has to be deselected from the Grid
@@ -634,6 +639,17 @@ const multiRowSelection = false;
 // This should be an array of idAttribute values of rows that has to be selected by default from the Grid.
 const rowsToSelect = [1, 7, 17];
 
+const onRowSelect = (selectedRows, deSelectedRows) => {
+    // Grid will call this function when user selects or deselects a row.
+    // An array of all selected row data will be passed in as the first parameter.
+    // An array of deSelectedRow(s) will be passed in as the second parameter.
+    /************
+        Make sure to:
+        * Remove deselected rows details from 'rowsToDeselect'
+        * Remove selected rows details from 'rowsToSelect'
+    ************/
+};
+
 <Grid
     gridData={gridData}
     idAttribute={idAttribute}
@@ -654,6 +670,17 @@ const rowsToSelect = [1, 7, 17];
 ```jsx
 // This should be an array of idAttribute values of rows that has to be deselected from the Grid.
 const rowsToDeselect = []; // [1] or [1, 7]
+
+const onRowSelect = (selectedRows, deSelectedRows) => {
+    // Grid will call this function when user selects or deselects a row.
+    // An array of all selected row data will be passed in as the first parameter.
+    // An array of deSelectedRow(s) will be passed in as the second parameter.
+    /************
+        Make sure to:
+        * Remove deselected rows details from 'rowsToDeselect'
+        * Remove selected rows details from 'rowsToSelect'
+    ************/
+};
 
 <Grid
     gridData={gridData}
