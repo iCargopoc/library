@@ -8,14 +8,14 @@ import regeneratorRuntime from "regenerator-runtime";
 import Customgrid from "../src/Customgrid";
 
 describe("render Customgrid", () => {
-    function mockOffsetSize(width, height) {
+    function mockOffsetSize(width, height, scrollHeight) {
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,
             value: height
         });
         Object.defineProperty(HTMLElement.prototype, "scrollHeight", {
             configurable: true,
-            value: height + 200
+            value: scrollHeight
         });
         Object.defineProperty(HTMLElement.prototype, "offsetWidth", {
             configurable: true,
@@ -409,9 +409,10 @@ describe("render Customgrid", () => {
     afterEach(cleanup);
 
     it("should render Customgrid", () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(600, 600, 400);
         const { getAllByTestId, container, getByTestId } = render(
             <Customgrid
+                isDesktop
                 title={mockTitle}
                 gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
@@ -545,9 +546,10 @@ describe("render Customgrid", () => {
     });
 
     it("test global search for grid", async () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(600, 600, 800);
         const { container } = render(
             <Customgrid
+                isDesktop
                 title={mockTitle}
                 gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
