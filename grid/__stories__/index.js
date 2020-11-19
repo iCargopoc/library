@@ -191,11 +191,14 @@ const GridComponent = (props) => {
                 isExpandableColumn
             ) => {
                 const { travelId } = rowData;
-                return (
-                    <div className="travelId-details">
-                        <span>{travelId}</span>
-                    </div>
-                );
+                if (travelId !== null && travelId !== undefined) {
+                    return (
+                        <div className="travelId-details">
+                            <span>{travelId}</span>
+                        </div>
+                    );
+                }
+                return null;
             }
         },
         {
@@ -235,17 +238,20 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                const { flightno, date } = rowData.flight;
-                return (
-                    <div className="flight-details">
-                        <DisplayTag columnKey="flight" cellKey="flightno">
-                            <strong>{flightno}</strong>
-                        </DisplayTag>
-                        <DisplayTag columnKey="flight" cellKey="date">
-                            <span>{getValueOfDate(date, "cell")}</span>
-                        </DisplayTag>
-                    </div>
-                );
+                if (rowData.flight) {
+                    const { flightno, date } = rowData.flight;
+                    return (
+                        <div className="flight-details">
+                            <DisplayTag columnKey="flight" cellKey="flightno">
+                                <strong>{flightno}</strong>
+                            </DisplayTag>
+                            <DisplayTag columnKey="flight" cellKey="date">
+                                <span>{getValueOfDate(date, "cell")}</span>
+                            </DisplayTag>
+                        </div>
+                    );
+                }
+                return null;
             },
             editCell: (
                 rowData,
@@ -291,20 +297,23 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                const { from, to } = rowData.segment;
-                return (
-                    <div className="segment-details">
-                        <DisplayTag columnKey="segment" cellKey="from">
-                            <span>{from}</span>
-                        </DisplayTag>
-                        <i>
-                            <img src={FlightIcon} alt="segment" />
-                        </i>
-                        <DisplayTag columnKey="segment" cellKey="to">
-                            <span>{to}</span>
-                        </DisplayTag>
-                    </div>
-                );
+                if (rowData.segment) {
+                    const { from, to } = rowData.segment;
+                    return (
+                        <div className="segment-details">
+                            <DisplayTag columnKey="segment" cellKey="from">
+                                <span>{from}</span>
+                            </DisplayTag>
+                            <i>
+                                <img src={FlightIcon} alt="segment" />
+                            </i>
+                            <DisplayTag columnKey="segment" cellKey="to">
+                                <span>{to}</span>
+                            </DisplayTag>
+                        </div>
+                    );
+                }
+                return null;
             },
             editCell: (
                 rowData,
@@ -378,23 +387,105 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                const {
-                    startTime,
-                    endTime,
-                    status,
-                    additionalStatus,
-                    flightModel,
-                    bodyType,
-                    type,
-                    timeStatus
-                } = rowData.details;
-                const timeStatusArray = timeStatus ? timeStatus.split(" ") : [];
-                const timeValue = timeStatusArray.shift();
-                const timeText = timeStatusArray.join(" ");
-                if (
-                    isExpandableColumn === null ||
-                    isExpandableColumn === true
-                ) {
+                if (rowData.details) {
+                    const {
+                        startTime,
+                        endTime,
+                        status,
+                        additionalStatus,
+                        flightModel,
+                        bodyType,
+                        type,
+                        timeStatus
+                    } = rowData.details;
+                    const timeStatusArray = timeStatus
+                        ? timeStatus.split(" ")
+                        : [];
+                    const timeValue = timeStatusArray.shift();
+                    const timeText = timeStatusArray.join(" ");
+                    if (
+                        isExpandableColumn === null ||
+                        isExpandableColumn === true
+                    ) {
+                        return (
+                            <div className="details-wrap">
+                                <ul>
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="details"
+                                            cellKey="startTime"
+                                        >
+                                            {startTime}
+                                        </DisplayTag>
+                                        -
+                                        <DisplayTag
+                                            columnKey="details"
+                                            cellKey="endTime"
+                                        >
+                                            {endTime}
+                                        </DisplayTag>
+                                    </li>
+                                    <li className="divider">|</li>
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="details"
+                                            cellKey="status"
+                                        >
+                                            <span>{status}</span>
+                                        </DisplayTag>
+                                    </li>
+                                    <li className="divider">|</li>
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="details"
+                                            cellKey="additionalStatus"
+                                        >
+                                            {additionalStatus}
+                                        </DisplayTag>
+                                    </li>
+                                    <li className="divider">|</li>
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="details"
+                                            cellKey="flightModel"
+                                        >
+                                            {flightModel}
+                                        </DisplayTag>
+                                    </li>
+                                    <li className="divider">|</li>
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="details"
+                                            cellKey="bodyType"
+                                        >
+                                            {bodyType}
+                                        </DisplayTag>
+                                    </li>
+                                    <li className="divider">|</li>
+                                    <li>
+                                        <span>
+                                            <DisplayTag
+                                                columnKey="details"
+                                                cellKey="type"
+                                            >
+                                                {type}
+                                            </DisplayTag>
+                                        </span>
+                                    </li>
+                                    <li className="divider">|</li>
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="details"
+                                            cellKey="timeStatus"
+                                        >
+                                            <strong>{timeValue} </strong>
+                                            <span>{timeText}</span>
+                                        </DisplayTag>
+                                    </li>
+                                </ul>
+                            </div>
+                        );
+                    }
                     return (
                         <div className="details-wrap">
                             <ul>
@@ -420,15 +511,6 @@ const GridComponent = (props) => {
                                         cellKey="status"
                                     >
                                         <span>{status}</span>
-                                    </DisplayTag>
-                                </li>
-                                <li className="divider">|</li>
-                                <li>
-                                    <DisplayTag
-                                        columnKey="details"
-                                        cellKey="additionalStatus"
-                                    >
-                                        {additionalStatus}
                                     </DisplayTag>
                                 </li>
                                 <li className="divider">|</li>
@@ -474,75 +556,7 @@ const GridComponent = (props) => {
                         </div>
                     );
                 }
-                return (
-                    <div className="details-wrap">
-                        <ul>
-                            <li>
-                                <DisplayTag
-                                    columnKey="details"
-                                    cellKey="startTime"
-                                >
-                                    {startTime}
-                                </DisplayTag>
-                                -
-                                <DisplayTag
-                                    columnKey="details"
-                                    cellKey="endTime"
-                                >
-                                    {endTime}
-                                </DisplayTag>
-                            </li>
-                            <li className="divider">|</li>
-                            <li>
-                                <DisplayTag
-                                    columnKey="details"
-                                    cellKey="status"
-                                >
-                                    <span>{status}</span>
-                                </DisplayTag>
-                            </li>
-                            <li className="divider">|</li>
-                            <li>
-                                <DisplayTag
-                                    columnKey="details"
-                                    cellKey="flightModel"
-                                >
-                                    {flightModel}
-                                </DisplayTag>
-                            </li>
-                            <li className="divider">|</li>
-                            <li>
-                                <DisplayTag
-                                    columnKey="details"
-                                    cellKey="bodyType"
-                                >
-                                    {bodyType}
-                                </DisplayTag>
-                            </li>
-                            <li className="divider">|</li>
-                            <li>
-                                <span>
-                                    <DisplayTag
-                                        columnKey="details"
-                                        cellKey="type"
-                                    >
-                                        {type}
-                                    </DisplayTag>
-                                </span>
-                            </li>
-                            <li className="divider">|</li>
-                            <li>
-                                <DisplayTag
-                                    columnKey="details"
-                                    cellKey="timeStatus"
-                                >
-                                    <strong>{timeValue} </strong>
-                                    <span>{timeText}</span>
-                                </DisplayTag>
-                            </li>
-                        </ul>
-                    </div>
-                );
+                return null;
             }
         },
         {
@@ -572,27 +586,30 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                const { percentage, value } = rowData.weight;
-                const splitValue = value ? value.split("/") : [];
-                let valuePrefix;
-                let valueSuffix = "";
-                if (splitValue.length === 2) {
-                    valuePrefix = splitValue[0];
-                    valueSuffix = splitValue[1];
+                if (rowData.weight) {
+                    const { percentage, value } = rowData.weight;
+                    const splitValue = value ? value.split("/") : [];
+                    let valuePrefix;
+                    let valueSuffix = "";
+                    if (splitValue.length === 2) {
+                        valuePrefix = splitValue[0];
+                        valueSuffix = splitValue[1];
+                    }
+                    return (
+                        <div className="weight-details">
+                            <DisplayTag columnKey="weight" cellKey="percentage">
+                                <strong className="per">{percentage}</strong>
+                            </DisplayTag>
+                            <DisplayTag columnKey="weight" cellKey="value">
+                                <span>
+                                    <strong>{valuePrefix}/</strong>
+                                    {valueSuffix}
+                                </span>
+                            </DisplayTag>
+                        </div>
+                    );
                 }
-                return (
-                    <div className="weight-details">
-                        <DisplayTag columnKey="weight" cellKey="percentage">
-                            <strong className="per">{percentage}</strong>
-                        </DisplayTag>
-                        <DisplayTag columnKey="weight" cellKey="value">
-                            <span>
-                                <strong>{valuePrefix}/</strong>
-                                {valueSuffix}
-                            </span>
-                        </DisplayTag>
-                    </div>
-                );
+                return null;
             }
         },
         {
@@ -620,27 +637,30 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                const { percentage, value } = rowData.volume;
-                const splitValue = value ? value.split("/") : [];
-                let valuePrefix;
-                let valueSuffix = "";
-                if (splitValue.length === 2) {
-                    valuePrefix = splitValue[0];
-                    valueSuffix = splitValue[1];
+                if (rowData.volume) {
+                    const { percentage, value } = rowData.volume;
+                    const splitValue = value ? value.split("/") : [];
+                    let valuePrefix;
+                    let valueSuffix = "";
+                    if (splitValue.length === 2) {
+                        valuePrefix = splitValue[0];
+                        valueSuffix = splitValue[1];
+                    }
+                    return (
+                        <div className="weight-details">
+                            <DisplayTag columnKey="volume" cellKey="percentage">
+                                <strong className="per">{percentage}</strong>
+                            </DisplayTag>
+                            <DisplayTag columnKey="volume" cellKey="value">
+                                <span>
+                                    <strong>{valuePrefix}/</strong>
+                                    {valueSuffix}
+                                </span>
+                            </DisplayTag>
+                        </div>
+                    );
                 }
-                return (
-                    <div className="weight-details">
-                        <DisplayTag columnKey="volume" cellKey="percentage">
-                            <strong className="per">{percentage}</strong>
-                        </DisplayTag>
-                        <DisplayTag columnKey="volume" cellKey="value">
-                            <span>
-                                <strong>{valuePrefix}/</strong>
-                                {valueSuffix}
-                            </span>
-                        </DisplayTag>
-                    </div>
-                );
+                return null;
             }
         },
         {
@@ -668,31 +688,38 @@ const GridComponent = (props) => {
                 isExpandableColumn
             ) => {
                 const { uldPositions } = rowData;
-                return (
-                    <div className="uld-details">
-                        <ul>
-                            {uldPositions.map((positions) => {
-                                const { position, value } = positions;
-                                return (
-                                    <li key={`${position}_${value}`}>
-                                        <DisplayTag
-                                            columnKey="uldPositions"
-                                            cellKey="position"
-                                        >
-                                            <span>{positions.position}</span>
-                                        </DisplayTag>
-                                        <DisplayTag
-                                            columnKey="uldPositions"
-                                            cellKey="value"
-                                        >
-                                            <strong>{positions.value}</strong>
-                                        </DisplayTag>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>
-                );
+                if (uldPositions) {
+                    return (
+                        <div className="uld-details">
+                            <ul>
+                                {uldPositions.map((positions) => {
+                                    const { position, value } = positions;
+                                    return (
+                                        <li key={`${position}_${value}`}>
+                                            <DisplayTag
+                                                columnKey="uldPositions"
+                                                cellKey="position"
+                                            >
+                                                <span>
+                                                    {positions.position}
+                                                </span>
+                                            </DisplayTag>
+                                            <DisplayTag
+                                                columnKey="uldPositions"
+                                                cellKey="value"
+                                            >
+                                                <strong>
+                                                    {positions.value}
+                                                </strong>
+                                            </DisplayTag>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    );
+                }
+                return null;
             }
         },
         {
@@ -717,17 +744,20 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                const { revenue, yeild } = rowData.revenue;
-                return (
-                    <div className="revenue-details">
-                        <DisplayTag columnKey="revenue" cellKey="revenue">
-                            <span className="large">{revenue}</span>
-                        </DisplayTag>
-                        <DisplayTag columnKey="revenue" cellKey="yeild">
-                            <span>{yeild}</span>
-                        </DisplayTag>
-                    </div>
-                );
+                if (rowData.revenue) {
+                    const { revenue, yeild } = rowData.revenue;
+                    return (
+                        <div className="revenue-details">
+                            <DisplayTag columnKey="revenue" cellKey="revenue">
+                                <span className="large">{revenue}</span>
+                            </DisplayTag>
+                            <DisplayTag columnKey="revenue" cellKey="yeild">
+                                <span>{yeild}</span>
+                            </DisplayTag>
+                        </div>
+                    );
+                }
+                return null;
             },
             sortValue: "revenue",
             isSearchable: true
@@ -745,11 +775,14 @@ const GridComponent = (props) => {
                 isExpandableColumn
             ) => {
                 const { sr } = rowData;
-                return (
-                    <div className="sr-details">
-                        <span>{sr}</span>
-                    </div>
-                );
+                if (sr) {
+                    return (
+                        <div className="sr-details">
+                            <span>{sr}</span>
+                        </div>
+                    );
+                }
+                return null;
             },
             editCell: (
                 rowData,
@@ -790,21 +823,27 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                const { sr, volume } = rowData.queuedBooking;
-                return (
-                    <div className="queued-details">
-                        <DisplayTag columnKey="queuedBooking" cellKey="sr">
-                            <span>
-                                <strong>{sr}</strong>
-                            </span>
-                        </DisplayTag>
-                        <DisplayTag columnKey="queuedBooking" cellKey="volume">
-                            <span>
-                                <strong>{volume}</strong>
-                            </span>
-                        </DisplayTag>
-                    </div>
-                );
+                if (rowData.queuedBooking) {
+                    const { sr, volume } = rowData.queuedBooking;
+                    return (
+                        <div className="queued-details">
+                            <DisplayTag columnKey="queuedBooking" cellKey="sr">
+                                <span>
+                                    <strong>{sr}</strong>
+                                </span>
+                            </DisplayTag>
+                            <DisplayTag
+                                columnKey="queuedBooking"
+                                cellKey="volume"
+                            >
+                                <span>
+                                    <strong>{volume}</strong>
+                                </span>
+                            </DisplayTag>
+                        </div>
+                    );
+                }
+                return null;
             }
         }
     ];
@@ -1104,7 +1143,7 @@ const GridComponent = (props) => {
     useEffect(() => {
         const pageInfo =
             paginationType === "index" ? indexPageInfo : cursorPageInfo;
-        fetchData(pageInfo).then((data) => {
+            fetchData(pageInfo).then((data) => {
             if (data && data.length > 0) {
                 setGridData(data);
                 setOriginalGridData(data);
