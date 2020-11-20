@@ -847,7 +847,6 @@ const GridComponent = (props) => {
             }
         }
     ];
-
     const [columns, setColumns] = useState([]);
 
     const originalColumnToExpand = {
@@ -908,8 +907,25 @@ const GridComponent = (props) => {
             );
         }
     };
-
     const [columnToExpand, setColumnToExpand] = useState(null);
+
+    const originalParentColumn = {
+        Header: "ParentColumn",
+        displayCell: (rowData) => {
+            const { titleId, title, count, lastModified, date, time } = rowData;
+            return (
+                <div>
+                    <p className="parentRow">{titleId}</p>
+                    <p className="parentRow">{title}</p>
+                    <p className="parentRow">{count}</p>
+                    <p className="parentRow">{lastModified}</p>
+                    <p className="parentRow">{date}</p>
+                    <p className="parentRow">{time}</p>
+                </div>
+            );
+        }
+    };
+    const [parentColumn, setParentColumn] = useState(null);
 
     const calculateRowHeight = (row, gridColumns) => {
         // Minimum height for each row
@@ -1140,8 +1156,66 @@ const GridComponent = (props) => {
         }
     };
 
+    const loadChildData = (rowData) => {
+        const { titleId } = rowData;
+        const currentPageNum = titleId === 0 ? 1 : titleId * 10;
+        fetchData({
+            pageNum: currentPageNum,
+            pageSize: 300
+        }).then((data) => {
+            if (data && data.length > 0) {
+                const insertIndex = gridData.findIndex((thisData) => {
+                    return thisData && thisData.titleId === titleId;
+                });
+                let newData = [];
+                for (let i = 0; i <= insertIndex; i++) {
+                    newData.push(gridData[i]);
+                }
+                newData = [...newData, ...data];
+                for (let j = insertIndex + 1; j < gridData.length; j++) {
+                    newData.push(gridData[j]);
+                }
+                setGridData(newData);
+                setOriginalGridData(newData);
+            }
+        });
+    };
+
     useEffect(() => {
-        const pageInfo =
+        const sampleData = [
+            {
+                titleId: 0,
+                title: "EXCVGRATES",
+                count: 3,
+                lastModified: "User name",
+                date: "21 Jul 2020",
+                time: "18:39",
+                isParent: true
+            },
+            {
+                titleId: 1,
+                title: "EXCVGRATES",
+                count: 3,
+                lastModified: "User name",
+                date: "21 Jul 2020",
+                time: "18:39",
+                isParent: true
+            },
+            {
+                titleId: 2,
+                title: "EXCVGRATES",
+                count: 1,
+                lastModified: "User name",
+                date: "21 Jul 2020",
+                time: "18:39",
+                isParent: true
+            }
+        ];
+        setGridData(sampleData);
+        setOriginalGridData(sampleData);
+        setIndexPageInfo(null);
+        setCursorPageInfo(null);
+        /* const pageInfo =
             paginationType === "index" ? indexPageInfo : cursorPageInfo;
             fetchData(pageInfo).then((data) => {
             if (data && data.length > 0) {
@@ -1168,7 +1242,7 @@ const GridComponent = (props) => {
                     lastPage: true
                 });
             }
-        });
+        }); */
         const mappedOriginalColumns = originalColumns.map((column) => {
             const updatedColumn = column;
             if (!enableGroupHeaders && column.groupHeader) {
@@ -1184,6 +1258,7 @@ const GridComponent = (props) => {
         });
         setColumns(mappedOriginalColumns);
         setColumnToExpand(originalColumnToExpand);
+        setParentColumn(originalParentColumn);
     }, []);
 
     const removeRowSelection = (event) => {
@@ -1273,6 +1348,8 @@ const GridComponent = (props) => {
                     }
                     columns={columns}
                     columnToExpand={passColumnToExpand ? columnToExpand : null}
+                    parentColumn={parentColumn}
+                    loadChildData={loadChildData}
                     rowActions={passRowActions ? rowActions : null}
                     calculateRowHeight={calculateRowHeight}
                     expandableColumn={expandableColumn}

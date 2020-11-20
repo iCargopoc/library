@@ -581,7 +581,6 @@ li {
 .remarks-edit {
     margin: 0 10px;
 }
-
 .table-cell--content-edit input,
 .table-cell--content-edit select {
     display: inline-block;
@@ -592,6 +591,10 @@ li {
     padding: 2px;
     font-size: 12px;
     margin-right: 5px;
+}
+.parentRow {
+    display: inline-block;
+    margin-right: 30px;
 }
 /* Edit Overlay */
 .overlay {

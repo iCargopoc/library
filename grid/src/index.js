@@ -24,6 +24,8 @@ const Grid = (props) => {
         serverSideSorting,
         columns,
         columnToExpand,
+        parentColumn,
+        loadChildData,
         rowActions,
         onRowUpdate,
         onRowSelect,
@@ -290,6 +292,8 @@ const Grid = (props) => {
                     gridHeight={gridHeight}
                     managableColumns={gridColumns}
                     expandedRowData={additionalColumn}
+                    parentColumn={parentColumn}
+                    loadChildData={loadChildData}
                     gridData={gridData && gridData.length > 0 ? gridData : []}
                     rowsToOverscan={rowsToOverscan}
                     idAttribute={idAttribute}
@@ -351,6 +355,8 @@ Grid.propTypes = {
     gridWidth: PropTypes.string,
     columns: PropTypes.arrayOf(PropTypes.object),
     columnToExpand: PropTypes.object,
+    parentColumn: PropTypes.object,
+    loadChildData: PropTypes.func,
     gridData: PropTypes.arrayOf(PropTypes.object),
     rowsToOverscan: PropTypes.number,
     idAttribute: PropTypes.string,

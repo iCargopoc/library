@@ -56,6 +56,8 @@ const Customgrid = (props) => {
         gridHeight,
         managableColumns,
         expandedRowData,
+        parentColumn,
+        loadChildData,
         gridData,
         rowsToOverscan,
         idAttribute,
@@ -460,6 +462,10 @@ const Customgrid = (props) => {
         }
     };
 
+    const callChildData = (row) => {
+        loadChildData(row.original);
+    };
+
     // Make checkbox in header title selected if no: selected rows and total rows are same
     const isAllRowsSelected = () => {
         return (
@@ -661,6 +667,22 @@ const Customgrid = (props) => {
             const row = rows[index];
             prepareRow(row);
 
+            if (row.original.isParent) {
+                return (
+                    <div {...row.getRowProps({ style })}>
+                        <div style={{ width: "100%" }}>
+                            {parentColumn.displayCell(row.original)}
+                        </div>
+                        <p
+                            role="presentation"
+                            style={{ color: "red", cursor: "pointer" }}
+                            onClick={() => callChildData(row)}
+                        >
+                            Expand
+                        </p>
+                    </div>
+                );
+            }
             // Add classname passed by developer from getRowInfo prop to required rows
             let rowClassName = "";
             if (getRowInfo && typeof getRowInfo === "function") {
@@ -1064,6 +1086,8 @@ Customgrid.propTypes = {
     title: PropTypes.string,
     gridHeight: PropTypes.string,
     managableColumns: PropTypes.arrayOf(PropTypes.object),
+    parentColumn: PropTypes.object,
+    loadChildData: PropTypes.func,
     gridData: PropTypes.arrayOf(PropTypes.object),
     rowsToOverscan: PropTypes.number,
     idAttribute: PropTypes.string,
