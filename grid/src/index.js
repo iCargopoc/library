@@ -25,6 +25,7 @@ const Grid = (props) => {
         columns,
         columnToExpand,
         parentColumn,
+        parentIdAttribute,
         loadChildData,
         rowActions,
         onRowUpdate,
@@ -293,6 +294,7 @@ const Grid = (props) => {
                     managableColumns={gridColumns}
                     expandedRowData={additionalColumn}
                     parentColumn={parentColumn}
+                    parentIdAttribute={parentIdAttribute}
                     loadChildData={loadChildData}
                     gridData={gridData && gridData.length > 0 ? gridData : []}
                     rowsToOverscan={rowsToOverscan}
@@ -356,6 +358,7 @@ Grid.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.object),
     columnToExpand: PropTypes.object,
     parentColumn: PropTypes.object,
+    parentIdAttribute: PropTypes.string,
     loadChildData: PropTypes.func,
     gridData: PropTypes.arrayOf(PropTypes.object),
     rowsToOverscan: PropTypes.number,

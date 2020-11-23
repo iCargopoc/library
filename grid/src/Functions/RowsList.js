@@ -8,6 +8,7 @@ const RowsList = ({
     infiniteLoaderRef,
     listRef,
     height,
+    isParentRowExpanded,
     calculateRowHeight,
     rows,
     headerGroups,
@@ -29,14 +30,21 @@ const RowsList = ({
             height={height - 60}
             itemCount={rows.length}
             itemSize={(index) => {
-                return (
-                    calculateRowHeight(
-                        rows[index],
-                        headerGroups && headerGroups.length
-                            ? headerGroups[headerGroups.length - 1].headers
-                            : []
-                    ) + (theme === "portal" ? 10 : 0)
-                );
+                const currentRow = rows[index];
+                if (currentRow) {
+                    if (!isParentRowExpanded(currentRow)) {
+                        return 0;
+                    }
+                    return (
+                        calculateRowHeight(
+                            rows[index],
+                            headerGroups && headerGroups.length
+                                ? headerGroups[headerGroups.length - 1].headers
+                                : []
+                        ) + (theme === "portal" ? 10 : 0)
+                    );
+                }
+                return 0;
             }}
             onItemsRendered={onItemsRendered}
             overscanCount={overScanCount}
@@ -52,6 +60,7 @@ RowsList.propTypes = {
     infiniteLoaderRef: PropTypes.any,
     listRef: PropTypes.any,
     height: PropTypes.number,
+    isParentRowExpanded: PropTypes.func,
     calculateRowHeight: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
     headerGroups: PropTypes.arrayOf(PropTypes.object),

@@ -40,7 +40,8 @@ const GridComponent = (props) => {
         expandableColumn,
         multiRowSelection,
         passTheme,
-        enableServersideSorting
+        enableServersideSorting,
+        treeStructure
     } = props;
     const idAttribute = "travelId";
     const gridPageSize = 300;
@@ -118,6 +119,36 @@ const GridComponent = (props) => {
         }
         return data;
     };
+
+    const sampleParentData = [
+        {
+            titleId: 0,
+            title: "EXCVGRATES",
+            count: 3,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39",
+            isParent: true
+        },
+        {
+            titleId: 1,
+            title: "EXCVGRATES",
+            count: 3,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39",
+            isParent: true
+        },
+        {
+            titleId: 2,
+            title: "EXCVGRATES",
+            count: 1,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39",
+            isParent: true
+        }
+    ];
 
     const airportCodeList = [
         "AAA",
@@ -1156,14 +1187,18 @@ const GridComponent = (props) => {
         }
     };
 
-    const loadChildData = (rowData) => {
-        const { titleId } = rowData;
-        const currentPageNum = titleId === 0 ? 1 : titleId * 10;
+    const loadChildData = (titleId) => {
+        const currentPageNum = titleId * 10 + 1;
         fetchData({
             pageNum: currentPageNum,
             pageSize: 300
         }).then((data) => {
             if (data && data.length > 0) {
+                const updatedData = data.map((elem) => {
+                    const newElem = elem;
+                    newElem.titleId = titleId;
+                    return newElem;
+                });
                 const insertIndex = gridData.findIndex((thisData) => {
                     return thisData && thisData.titleId === titleId;
                 });
@@ -1171,7 +1206,7 @@ const GridComponent = (props) => {
                 for (let i = 0; i <= insertIndex; i++) {
                     newData.push(gridData[i]);
                 }
-                newData = [...newData, ...data];
+                newData = [...newData, ...updatedData];
                 for (let j = insertIndex + 1; j < gridData.length; j++) {
                     newData.push(gridData[j]);
                 }
@@ -1182,67 +1217,42 @@ const GridComponent = (props) => {
     };
 
     useEffect(() => {
-        const sampleData = [
-            {
-                titleId: 0,
-                title: "EXCVGRATES",
-                count: 3,
-                lastModified: "User name",
-                date: "21 Jul 2020",
-                time: "18:39",
-                isParent: true
-            },
-            {
-                titleId: 1,
-                title: "EXCVGRATES",
-                count: 3,
-                lastModified: "User name",
-                date: "21 Jul 2020",
-                time: "18:39",
-                isParent: true
-            },
-            {
-                titleId: 2,
-                title: "EXCVGRATES",
-                count: 1,
-                lastModified: "User name",
-                date: "21 Jul 2020",
-                time: "18:39",
-                isParent: true
-            }
-        ];
-        setGridData(sampleData);
-        setOriginalGridData(sampleData);
-        setIndexPageInfo(null);
-        setCursorPageInfo(null);
-        /* const pageInfo =
-            paginationType === "index" ? indexPageInfo : cursorPageInfo;
+        if (treeStructure) {
+            setGridData(sampleParentData);
+            setOriginalGridData(sampleParentData);
+            setIndexPageInfo(null);
+            setCursorPageInfo(null);
+            setParentColumn(originalParentColumn);
+        } else {
+            const pageInfo =
+                paginationType === "index" ? indexPageInfo : cursorPageInfo;
             fetchData(pageInfo).then((data) => {
-            if (data && data.length > 0) {
-                setGridData(data);
-                setOriginalGridData(data);
-                // Update local state based on rowsToSelect
-                if (rowsForSelection && rowsForSelection.length > 0) {
-                    setRowsToSelect(rowsForSelection);
-                    setUserSelectedRows(
-                        data.filter((initialData) => {
-                            const { travelId } = initialData;
-                            return rowsForSelection.includes(travelId);
-                        })
-                    );
+                if (data && data.length > 0) {
+                    setGridData(data);
+                    setOriginalGridData(data);
+                    // Update local state based on rowsToSelect
+                    if (rowsForSelection && rowsForSelection.length > 0) {
+                        setRowsToSelect(rowsForSelection);
+                        setUserSelectedRows(
+                            data.filter((initialData) => {
+                                const { travelId } = initialData;
+                                return rowsForSelection.includes(travelId);
+                            })
+                        );
+                    }
+                } else if (paginationType === "index") {
+                    setIndexPageInfo({
+                        ...indexPageInfo,
+                        lastPage: true
+                    });
+                } else {
+                    setCursorPageInfo({
+                        ...cursorPageInfo,
+                        lastPage: true
+                    });
                 }
-            } else if (paginationType === "index") {
-                setIndexPageInfo({
-                    ...indexPageInfo,
-                    lastPage: true
-                });
-            } else {
-                setCursorPageInfo({
-                    ...cursorPageInfo,
-                    lastPage: true
-                });
-            }
-        }); */
+            });
+        }
         const mappedOriginalColumns = originalColumns.map((column) => {
             const updatedColumn = column;
             if (!enableGroupHeaders && column.groupHeader) {
@@ -1258,7 +1268,6 @@ const GridComponent = (props) => {
         });
         setColumns(mappedOriginalColumns);
         setColumnToExpand(originalColumnToExpand);
-        setParentColumn(originalParentColumn);
     }, []);
 
     const removeRowSelection = (event) => {
@@ -1349,6 +1358,7 @@ const GridComponent = (props) => {
                     columns={columns}
                     columnToExpand={passColumnToExpand ? columnToExpand : null}
                     parentColumn={parentColumn}
+                    parentIdAttribute="titleId"
                     loadChildData={loadChildData}
                     rowActions={passRowActions ? rowActions : null}
                     calculateRowHeight={calculateRowHeight}

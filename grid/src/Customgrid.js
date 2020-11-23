@@ -57,6 +57,7 @@ const Customgrid = (props) => {
         managableColumns,
         expandedRowData,
         parentColumn,
+        parentIdAttribute,
         loadChildData,
         gridData,
         rowsToOverscan,
@@ -193,6 +194,8 @@ const Customgrid = (props) => {
             });
         }
     };
+
+    const [expandedParentRows, setExpandedParentRows] = useState([]);
 
     // Global Search Filter Logic - React table wants all parameters passed into useTable function to be memoized
     const globalFilterLogic = useCallback(
@@ -462,8 +465,88 @@ const Customgrid = (props) => {
         }
     };
 
-    const callChildData = (row) => {
-        loadChildData(row.original);
+    const loadMoreChildData = (row) => {
+        if (parentIdAttribute && typeof loadChildData === "function") {
+            const { original } = row;
+            if (original) {
+                const rowParentIdAttribute = original[parentIdAttribute];
+                if (
+                    rowParentIdAttribute !== null &&
+                    rowParentIdAttribute !== undefined
+                ) {
+                    loadChildData(rowParentIdAttribute);
+                }
+            }
+        }
+    };
+
+    // Recalculate row height from index 50 less than the last rendered item index in the list
+    const reRenderListData = (index, isForced) => {
+        const numIndex = Number(index);
+        let indexToReset = numIndex && numIndex >= 0 ? numIndex : 0;
+        if (listRef && listRef.current) {
+            const { current } = listRef;
+            if (current) {
+                if (isForced) {
+                    current.resetAfterIndex(indexToReset, true);
+                } else {
+                    const { _instanceProps } = current;
+                    if (_instanceProps && indexToReset === 0) {
+                        const expectedItemsCount = overScanCount + 30;
+                        const { lastMeasuredIndex } = _instanceProps;
+                        if (lastMeasuredIndex > expectedItemsCount) {
+                            indexToReset =
+                                lastMeasuredIndex - expectedItemsCount;
+                        }
+                    }
+                    current.resetAfterIndex(indexToReset, true);
+                }
+            }
+        }
+    };
+
+    const toggleParentRow = (row) => {
+        if (parentIdAttribute) {
+            const { original, index } = row;
+            if (original) {
+                const rowParentIdAttribute = original[parentIdAttribute];
+                if (
+                    rowParentIdAttribute !== null &&
+                    rowParentIdAttribute !== undefined
+                ) {
+                    // Check if parent row is present in state.
+                    // If present, remove it and if not present add it.
+                    if (expandedParentRows.includes(rowParentIdAttribute)) {
+                        setExpandedParentRows(
+                            expandedParentRows.filter(
+                                (item) => item !== rowParentIdAttribute
+                            )
+                        );
+                    } else {
+                        setExpandedParentRows([
+                            ...expandedParentRows,
+                            rowParentIdAttribute
+                        ]);
+                    }
+
+                    // Check if child rows are present for parent row
+                    const childRow = rows.find((currentRow) => {
+                        return (
+                            currentRow &&
+                            currentRow.original &&
+                            currentRow.original.isParent !== true &&
+                            currentRow.original[parentIdAttribute] ===
+                                rowParentIdAttribute
+                        );
+                    });
+                    if (!childRow) {
+                        loadMoreChildData(row);
+                    } else {
+                        reRenderListData(index, true);
+                    }
+                }
+            }
+        }
     };
 
     // Make checkbox in header title selected if no: selected rows and total rows are same
@@ -484,26 +567,6 @@ const Customgrid = (props) => {
             if (currentTarget) {
                 const { checked } = currentTarget;
                 toggleAllRowsSelected(checked);
-            }
-        }
-    };
-
-    // Recalculate row height from index 50 less than the last rendered item index in the list
-    const reRenderListData = (index) => {
-        const numIndex = Number(index);
-        let indexToReset = numIndex && numIndex >= 0 ? numIndex : 0;
-        if (listRef && listRef.current) {
-            const { current } = listRef;
-            if (current) {
-                const { _instanceProps } = current;
-                if (_instanceProps && indexToReset === 0) {
-                    const expectedItemsCount = overScanCount + 30;
-                    const { lastMeasuredIndex } = _instanceProps;
-                    if (lastMeasuredIndex > expectedItemsCount) {
-                        indexToReset = lastMeasuredIndex - expectedItemsCount;
-                    }
-                }
-                listRef.current.resetAfterIndex(indexToReset, true);
             }
         }
     };
@@ -660,86 +723,141 @@ const Customgrid = (props) => {
         reRenderListData();
     }, [gridData, groupSortOptions]);
 
+    // Check if parent id attribute is present in the list of opened parent attributes.
+    const isParentRowExpanded = (childRow) => {
+        let isParentExpanded = true;
+        if (childRow && parentIdAttribute) {
+            const { original } = childRow;
+            if (original) {
+                const { isParent } = original;
+                const rowParentIdAttribute = original[parentIdAttribute];
+                if (
+                    isParent !== true &&
+                    rowParentIdAttribute !== null &&
+                    rowParentIdAttribute !== undefined &&
+                    !expandedParentRows.includes(rowParentIdAttribute)
+                ) {
+                    isParentExpanded = false;
+                }
+            }
+        }
+        return isParentExpanded;
+    };
+
     // Render each row and cells in each row, using attributes from react window list.
     const RenderRow = useCallback(
         ({ index, style }) => {
-            // if (isItemLoaded(index)) - This check never became false during testing. Hence avoiding it to reach 100% code coverage in JEST test.
-            const row = rows[index];
-            prepareRow(row);
+            if (rows && rows.length > 0 && index >= 0) {
+                // if (isItemLoaded(index)) - This check never became false during testing. Hence avoiding it to reach 100% code coverage in JEST test.
+                const row = rows[index];
+                prepareRow(row);
 
-            if (row.original.isParent) {
-                return (
-                    <div {...row.getRowProps({ style })}>
-                        <div style={{ width: "100%" }}>
-                            {parentColumn.displayCell(row.original)}
-                        </div>
-                        <p
-                            role="presentation"
-                            style={{ color: "red", cursor: "pointer" }}
-                            onClick={() => callChildData(row)}
-                        >
-                            Expand
-                        </p>
-                    </div>
-                );
-            }
-            // Add classname passed by developer from getRowInfo prop to required rows
-            let rowClassName = "";
-            if (getRowInfo && typeof getRowInfo === "function") {
-                const rowInfo = getRowInfo(row.original);
-                if (rowInfo && rowInfo.className) {
-                    rowClassName = rowInfo.className;
+                if (row) {
+                    const { original } = row;
+                    if (original) {
+                        const { isParent } = original;
+                        if (isParent === true) {
+                            return (
+                                <div {...row.getRowProps({ style })}>
+                                    <div style={{ width: "100%" }}>
+                                        {parentColumn.displayCell(original)}
+                                    </div>
+                                    <p
+                                        role="presentation"
+                                        style={{
+                                            color: "red",
+                                            cursor: "pointer"
+                                        }}
+                                        onClick={() => toggleParentRow(row)}
+                                    >
+                                        Expand
+                                    </p>
+                                </div>
+                            );
+                        }
+
+                        // Add classname passed by developer from getRowInfo prop to required rows
+                        let rowClassName = "";
+                        if (getRowInfo && typeof getRowInfo === "function") {
+                            const rowInfo = getRowInfo(original);
+                            if (rowInfo && rowInfo.className) {
+                                rowClassName = rowInfo.className;
+                            }
+                        }
+
+                        // Check if this row is the last child element of parent, to display the 'Load More' button
+                        let isLastChild = index === rows.length - 1;
+                        const nextRow = rows[index + 1];
+                        if (nextRow) {
+                            isLastChild =
+                                nextRow &&
+                                nextRow.original &&
+                                nextRow.original.isParent === true;
+                        }
+
+                        // Check if parent row is expanded or not. If not expanded, do not render its child rows
+                        if (!isParentRowExpanded(row)) {
+                            return null;
+                        }
+
+                        return (
+                            <div
+                                {...row.getRowProps({ style })}
+                                className={`table-row tr ${rowClassName}`}
+                            >
+                                <div
+                                    className={`table-row-wrap ${
+                                        isRowExpandEnabled && row.isExpanded
+                                            ? "table-row-wrap-expand"
+                                            : ""
+                                    }`}
+                                >
+                                    {row.cells.map((cell) => {
+                                        if (cell.column.display === true) {
+                                            return (
+                                                <div
+                                                    {...cell.getCellProps()}
+                                                    className="table-cell td"
+                                                >
+                                                    {cell.render("Cell")}
+                                                </div>
+                                            );
+                                        }
+                                        return null;
+                                    })}
+                                </div>
+                                {/* Check if row eapand icon is clicked, and if yes, call function to bind content to the expanded region */}
+                                {isRowExpandEnabled && row.isExpanded ? (
+                                    <div
+                                        className="expand"
+                                        data-testid="rowExpandedRegion"
+                                    >
+                                        {additionalColumn.Cell(
+                                            row,
+                                            additionalColumn
+                                        )}
+                                    </div>
+                                ) : null}
+                                {isLastChild ? (
+                                    <div className="expand">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                loadMoreChildData(row)
+                                            }
+                                        >
+                                            Load more
+                                        </button>
+                                    </div>
+                                ) : null}
+                            </div>
+                        );
+                    }
                 }
             }
-
-            const isLastChild =
-                rows &&
-                rows.length > 0 &&
-                rows[index + 1] &&
-                rows[index + 1].original &&
-                rows[index + 1].original.isParent === true;
-
-            return (
-                <div
-                    {...row.getRowProps({ style })}
-                    className={`table-row tr ${rowClassName}`}
-                >
-                    <div
-                        className={`table-row-wrap ${
-                            isRowExpandEnabled && row.isExpanded
-                                ? "table-row-wrap-expand"
-                                : ""
-                        }`}
-                    >
-                        {row.cells.map((cell) => {
-                            if (cell.column.display === true) {
-                                return (
-                                    <div
-                                        {...cell.getCellProps()}
-                                        className="table-cell td"
-                                    >
-                                        {cell.render("Cell")}
-                                    </div>
-                                );
-                            }
-                            return null;
-                        })}
-                    </div>
-                    {/* Check if row eapand icon is clicked, and if yes, call function to bind content to the expanded region */}
-                    {isRowExpandEnabled && row.isExpanded ? (
-                        <div className="expand" data-testid="rowExpandedRegion">
-                            {additionalColumn.Cell(row, additionalColumn)}
-                        </div>
-                    ) : null}
-                    {isLastChild ? (
-                        <div className="expand">
-                            <button type="button">Load more</button>
-                        </div>
-                    ) : null}
-                </div>
-            );
+            return null;
         },
-        [rows, additionalColumn]
+        [rows, additionalColumn, expandedParentRows]
     );
 
     if (!isFirstRendering && gridColumns && gridColumns.length > 0) {
@@ -1049,6 +1167,9 @@ const Customgrid = (props) => {
                                                         infiniteLoaderRef={ref}
                                                         listRef={listRef}
                                                         height={height}
+                                                        isParentRowExpanded={
+                                                            isParentRowExpanded
+                                                        }
                                                         calculateRowHeight={
                                                             calculateRowHeight
                                                         }
@@ -1068,6 +1189,9 @@ const Customgrid = (props) => {
                                             <RowsList
                                                 listRef={listRef}
                                                 height={height}
+                                                isParentRowExpanded={
+                                                    isParentRowExpanded
+                                                }
                                                 calculateRowHeight={
                                                     calculateRowHeight
                                                 }
@@ -1099,6 +1223,7 @@ Customgrid.propTypes = {
     gridHeight: PropTypes.string,
     managableColumns: PropTypes.arrayOf(PropTypes.object),
     parentColumn: PropTypes.object,
+    parentIdAttribute: PropTypes.string,
     loadChildData: PropTypes.func,
     gridData: PropTypes.arrayOf(PropTypes.object),
     rowsToOverscan: PropTypes.number,
