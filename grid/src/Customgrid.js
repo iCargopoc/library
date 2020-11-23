@@ -692,6 +692,13 @@ const Customgrid = (props) => {
                 }
             }
 
+            const isLastChild =
+                rows &&
+                rows.length > 0 &&
+                rows[index + 1] &&
+                rows[index + 1].original &&
+                rows[index + 1].original.isParent === true;
+
             return (
                 <div
                     {...row.getRowProps({ style })}
@@ -722,6 +729,11 @@ const Customgrid = (props) => {
                     {isRowExpandEnabled && row.isExpanded ? (
                         <div className="expand" data-testid="rowExpandedRegion">
                             {additionalColumn.Cell(row, additionalColumn)}
+                        </div>
+                    ) : null}
+                    {isLastChild ? (
+                        <div className="expand">
+                            <button type="button">Load more</button>
                         </div>
                     ) : null}
                 </div>
