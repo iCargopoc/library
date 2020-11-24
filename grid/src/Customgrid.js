@@ -465,21 +465,6 @@ const Customgrid = (props) => {
         }
     };
 
-    const loadMoreChildData = (row) => {
-        if (parentIdAttribute && typeof loadChildData === "function") {
-            const { original } = row;
-            if (original) {
-                const rowParentIdAttribute = original[parentIdAttribute];
-                if (
-                    rowParentIdAttribute !== null &&
-                    rowParentIdAttribute !== undefined
-                ) {
-                    loadChildData(rowParentIdAttribute);
-                }
-            }
-        }
-    };
-
     // Recalculate row height from index 50 less than the last rendered item index in the list
     const reRenderListData = (index, isForced) => {
         const numIndex = Number(index);
@@ -500,6 +485,21 @@ const Customgrid = (props) => {
                         }
                     }
                     current.resetAfterIndex(indexToReset, true);
+                }
+            }
+        }
+    };
+
+    const loadMoreChildData = (row) => {
+        if (parentIdAttribute && typeof loadChildData === "function") {
+            const { original } = row;
+            if (original) {
+                const rowParentIdAttribute = original[parentIdAttribute];
+                if (
+                    rowParentIdAttribute !== null &&
+                    rowParentIdAttribute !== undefined
+                ) {
+                    loadChildData(rowParentIdAttribute);
                 }
             }
         }
