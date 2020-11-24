@@ -36,7 +36,10 @@ export const findSelectedRows = (rows, selectedRowIds) => {
                     if (selectedRow) {
                         const { original } = selectedRow;
                         if (original) {
-                            rowsSelectedByUser.push(original);
+                            const { isParent } = original;
+                            if (isParent !== true) {
+                                rowsSelectedByUser.push(original);
+                            }
                         }
                     }
                 }

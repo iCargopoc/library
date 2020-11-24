@@ -744,6 +744,104 @@ const Customgrid = (props) => {
         return isParentExpanded;
     };
 
+    const isParentRowsSelected = (row) => {
+        if (row && parentIdAttribute && idAttribute) {
+            const { original } = row;
+            if (original) {
+                const { isParent } = original;
+                if (isParent === true) {
+                    const rowParentIdAttribute = original[parentIdAttribute];
+                    if (
+                        rowParentIdAttribute !== null &&
+                        rowParentIdAttribute !== undefined
+                    ) {
+                        const childRowsOfParent = preFilteredRows.filter(
+                            (gridRow) => {
+                                if (gridRow && gridRow.original) {
+                                    const gridRowOriginal = gridRow.original;
+                                    if (gridRowOriginal.isParent !== true) {
+                                        return (
+                                            gridRowOriginal[
+                                                parentIdAttribute
+                                            ] === rowParentIdAttribute
+                                        );
+                                    }
+                                }
+                                return false;
+                            }
+                        );
+                        if (childRowsOfParent && childRowsOfParent.length > 0) {
+                            let isAllChildrenSelected = true;
+                            childRowsOfParent.forEach((childRow) => {
+                                if (childRow && childRow.original) {
+                                    const childRowIdAttr =
+                                        childRow.original[idAttribute];
+                                    if (
+                                        childRowIdAttr !== null &&
+                                        childRowIdAttr !== undefined &&
+                                        !userSelectedRowIdentifiers.includes(
+                                            childRowIdAttr
+                                        )
+                                    ) {
+                                        isAllChildrenSelected = false;
+                                    }
+                                }
+                            });
+                            return isAllChildrenSelected;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    };
+
+    const toggleParentRowSelection = (event, row) => {
+        let selectionType = true;
+        if (event) {
+            const { currentTarget } = event;
+            if (currentTarget) {
+                const { checked } = currentTarget;
+                if (checked === false) {
+                    selectionType = false;
+                }
+            }
+        }
+        if (row && parentIdAttribute && idAttribute) {
+            const { original } = row;
+            if (original) {
+                const { isParent } = original;
+                if (isParent === true) {
+                    const rowParentIdAttribute = original[parentIdAttribute];
+                    if (
+                        rowParentIdAttribute !== null &&
+                        rowParentIdAttribute !== undefined
+                    ) {
+                        preFilteredRows.forEach((gridRow) => {
+                            if (gridRow && gridRow.original) {
+                                const gridRowOriginal = gridRow.original;
+                                if (gridRowOriginal.isParent !== true) {
+                                    if (
+                                        gridRowOriginal[parentIdAttribute] ===
+                                        rowParentIdAttribute
+                                    ) {
+                                        const { id } = gridRow;
+                                        toggleRowSelected(id, selectionType);
+                                        setIsRowSelectionCallbackNeeded(
+                                            selectionType
+                                                ? "select"
+                                                : "deselect"
+                                        );
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    };
+
     // Render each row and cells in each row, using attributes from react window list.
     const RenderRow = useCallback(
         ({ index, style }) => {
@@ -759,6 +857,20 @@ const Customgrid = (props) => {
                         if (isParent === true) {
                             return (
                                 <div {...row.getRowProps({ style })}>
+                                    <div className="form-check">
+                                        <input
+                                            type="checkbox"
+                                            data-testid="rowSelector-parentRow"
+                                            className="form-check-input custom-checkbox form-check-input"
+                                            checked={isParentRowsSelected(row)}
+                                            onChange={(event) =>
+                                                toggleParentRowSelection(
+                                                    event,
+                                                    row
+                                                )
+                                            }
+                                        />
+                                    </div>
                                     <div style={{ width: "100%" }}>
                                         {parentColumn.displayCell(original)}
                                     </div>
