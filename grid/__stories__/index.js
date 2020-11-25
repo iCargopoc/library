@@ -44,6 +44,7 @@ const GridComponent = (props) => {
         treeStructure
     } = props;
     const idAttribute = "travelId";
+    const parentIdAttribute = "titleId";
     const gridPageSize = 300;
     const paginationType = "index"; // or - "cursor"
     // State for holding index page info
@@ -127,8 +128,7 @@ const GridComponent = (props) => {
             count: 3,
             lastModified: "User name",
             date: "21 Jul 2020",
-            time: "18:39",
-            isParent: true
+            time: "18:39"
         },
         {
             titleId: 1,
@@ -136,8 +136,7 @@ const GridComponent = (props) => {
             count: 3,
             lastModified: "User name",
             date: "21 Jul 2020",
-            time: "18:39",
-            isParent: true
+            time: "18:39"
         },
         {
             titleId: 2,
@@ -145,8 +144,7 @@ const GridComponent = (props) => {
             count: 1,
             lastModified: "User name",
             date: "21 Jul 2020",
-            time: "18:39",
-            isParent: true
+            time: "18:39"
         }
     ];
 
@@ -1140,40 +1138,135 @@ const GridComponent = (props) => {
         );
     };
 
-    const loadMoreData = (updatedPageInfo) => {
-        const info = { ...updatedPageInfo };
-        if (info.endCursor) {
-            info.endCursor += info.pageSize;
-        }
-        fetchData(info).then((data) => {
-            if (data && data.length > 0) {
-                setGridData(getSortedData(gridData.concat(data), sortOptions));
-                setOriginalGridData(originalGridData.concat(data));
-                if (paginationType === "index") {
+    const loadMoreData = (updatedPageInfo, parentId) => {
+        if (parentId !== null && parentId !== undefined) {
+            // Tree structure
+            if (updatedPageInfo !== null && updatedPageInfo !== undefined) {
+                // Next page loading
+                const pageInfoForApi = { ...updatedPageInfo };
+                if (pageInfoForApi.endCursor) {
+                    pageInfoForApi.endCursor += pageInfoForApi.pageSize;
+                }
+                fetchData(pageInfoForApi).then((apiData) => {
+                    if (apiData && apiData.length > 0) {
+                        const updatedGridData = gridData.map((dataItem) => {
+                            const updatedData = dataItem;
+                            if (
+                                updatedData[parentIdAttribute] === parentId &&
+                                updatedData.childData &&
+                                updatedData.childData.data &&
+                                updatedData.childData.data.length > 0
+                            ) {
+                                updatedData.childData.data = [
+                                    ...updatedData.childData.data,
+                                    ...apiData
+                                ];
+                                if (paginationType === "index") {
+                                    updatedData.childData.pageNum =
+                                        pageInfoForApi.pageNum;
+                                    if (
+                                        pageInfoForApi.pageNum ===
+                                        (parentId + 1) * 10 - 8
+                                    ) {
+                                        updatedData.childData.lastPage = true;
+                                    }
+                                } else {
+                                    updatedData.childData.endCursor =
+                                        pageInfoForApi.endCursor;
+                                    if (
+                                        pageInfoForApi.endCursor ===
+                                        (parentId + 1) *
+                                            10 *
+                                            pageInfoForApi.pageSize -
+                                            1
+                                    ) {
+                                        updatedData.childData.lastPage = true;
+                                    }
+                                }
+                            }
+                            return updatedData;
+                        });
+                        setGridData(updatedGridData);
+                        setOriginalGridData(updatedGridData);
+                    }
+                });
+            } else {
+                // First load
+                const currentPageNum = parentId * 10 + 1;
+                const pageInfoForApi =
+                    paginationType === "index"
+                        ? {
+                              pageNum: currentPageNum,
+                              pageSize: gridPageSize
+                          }
+                        : {
+                              endCursor: currentPageNum * gridPageSize - 1,
+                              pageSize: gridPageSize
+                          };
+
+                fetchData(pageInfoForApi).then((apiData) => {
+                    if (apiData && apiData.length > 0) {
+                        const updatedGridData = gridData.map((dataItem) => {
+                            const updatedData = dataItem;
+                            if (updatedData[parentIdAttribute] === parentId) {
+                                updatedData.childData = {
+                                    pageNum: currentPageNum,
+                                    pageSize: gridPageSize,
+                                    lastPage: false,
+                                    data: apiData
+                                };
+                                if (paginationType === "index") {
+                                    updatedData.childData.pageNum =
+                                        pageInfoForApi.pageNum;
+                                } else {
+                                    updatedData.childData.endCursor =
+                                        pageInfoForApi.endCursor;
+                                }
+                            }
+                            return updatedData;
+                        });
+                        setGridData(updatedGridData);
+                        setOriginalGridData(updatedGridData);
+                    }
+                });
+            }
+        } else {
+            const info = { ...updatedPageInfo };
+            if (info.endCursor) {
+                info.endCursor += info.pageSize;
+            }
+            fetchData(info).then((data) => {
+                if (data && data.length > 0) {
+                    setGridData(
+                        getSortedData(gridData.concat(data), sortOptions)
+                    );
+                    setOriginalGridData(originalGridData.concat(data));
+                    if (paginationType === "index") {
+                        setIndexPageInfo({
+                            ...indexPageInfo,
+                            pageNum: updatedPageInfo.pageNum
+                        });
+                    } else {
+                        setCursorPageInfo({
+                            ...cursorPageInfo,
+                            endCursor: info.endCursor
+                        });
+                    }
+                } else if (paginationType === "index") {
                     setIndexPageInfo({
                         ...indexPageInfo,
-                        pageNum: updatedPageInfo.pageNum
+                        pageNum: updatedPageInfo.pageNum,
+                        lastPage: true
                     });
                 } else {
                     setCursorPageInfo({
                         ...cursorPageInfo,
-                        endCursor: info.endCursor
+                        endCursor: info.endCursor,
+                        lastPage: true
                     });
                 }
-            } else if (paginationType === "index") {
-                setIndexPageInfo({
-                    ...indexPageInfo,
-                    pageNum: updatedPageInfo.pageNum,
-                    lastPage: true
-                });
-            } else {
-                setCursorPageInfo({
-                    ...cursorPageInfo,
-                    endCursor: info.endCursor,
-                    lastPage: true
-                });
-            }
-        });
+            });
+        }
     };
 
     const serverSideSorting = (groupSortOptions) => {
@@ -1185,35 +1278,6 @@ const GridComponent = (props) => {
             setSortOptions([]);
             setGridData(originalGridData);
         }
-    };
-
-    const loadChildData = (titleId) => {
-        const currentPageNum = titleId * 10 + 1;
-        fetchData({
-            pageNum: currentPageNum,
-            pageSize: 300
-        }).then((data) => {
-            if (data && data.length > 0) {
-                const updatedData = data.map((elem) => {
-                    const newElem = elem;
-                    newElem.titleId = titleId;
-                    return newElem;
-                });
-                const insertIndex = gridData.findIndex((thisData) => {
-                    return thisData && thisData.titleId === titleId;
-                });
-                let newData = [];
-                for (let i = 0; i <= insertIndex; i++) {
-                    newData.push(gridData[i]);
-                }
-                newData = [...newData, ...updatedData];
-                for (let j = insertIndex + 1; j < gridData.length; j++) {
-                    newData.push(gridData[j]);
-                }
-                setGridData(newData);
-                setOriginalGridData(newData);
-            }
-        });
     };
 
     useEffect(() => {
@@ -1358,8 +1422,7 @@ const GridComponent = (props) => {
                     columns={columns}
                     columnToExpand={passColumnToExpand ? columnToExpand : null}
                     parentColumn={parentColumn}
-                    parentIdAttribute="titleId"
-                    loadChildData={loadChildData}
+                    parentIdAttribute={parentIdAttribute}
                     rowActions={passRowActions ? rowActions : null}
                     calculateRowHeight={calculateRowHeight}
                     expandableColumn={expandableColumn}

@@ -491,16 +491,10 @@ const Customgrid = (props) => {
     };
 
     const loadMoreChildData = (row) => {
-        if (parentIdAttribute && typeof loadChildData === "function") {
+        if (parentIdAttribute) {
             const { original } = row;
             if (original) {
-                const rowParentIdAttribute = original[parentIdAttribute];
-                if (
-                    rowParentIdAttribute !== null &&
-                    rowParentIdAttribute !== undefined
-                ) {
-                    loadChildData(rowParentIdAttribute);
-                }
+                loadChildData(original);
             }
         }
     };
@@ -950,7 +944,8 @@ const Customgrid = (props) => {
                                         )}
                                     </div>
                                 ) : null}
-                                {isLastChild ? (
+                                {isLastChild &&
+                                row.original.lastPage !== true ? (
                                     <div className="expand">
                                         <button
                                             type="button"
