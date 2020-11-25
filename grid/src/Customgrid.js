@@ -59,6 +59,7 @@ const Customgrid = (props) => {
         parentColumn,
         parentIdAttribute,
         loadChildData,
+        isParentGrid,
         gridData,
         rowsToOverscan,
         idAttribute,
@@ -478,8 +479,21 @@ const Customgrid = (props) => {
                     const { _instanceProps } = current;
                     if (_instanceProps && indexToReset === 0) {
                         const expectedItemsCount = overScanCount + 30;
-                        const { lastMeasuredIndex } = _instanceProps;
-                        if (lastMeasuredIndex > expectedItemsCount) {
+                        let { lastMeasuredIndex } = _instanceProps;
+                        if (isParentGrid) {
+                            let lastRenderedParent = null;
+                            rows.forEach((row, rowIndex) => {
+                                if (
+                                    rowIndex <= lastMeasuredIndex &&
+                                    row.original.isParent === true
+                                ) {
+                                    lastRenderedParent = row;
+                                }
+                            });
+                            if (lastRenderedParent) {
+                                lastMeasuredIndex = lastRenderedParent.id;
+                            }
+                        } else if (lastMeasuredIndex > expectedItemsCount) {
                             indexToReset =
                                 lastMeasuredIndex - expectedItemsCount;
                         }
@@ -1332,6 +1346,7 @@ Customgrid.propTypes = {
     parentColumn: PropTypes.object,
     parentIdAttribute: PropTypes.string,
     loadChildData: PropTypes.func,
+    isParentGrid: PropTypes.bool,
     gridData: PropTypes.arrayOf(PropTypes.object),
     rowsToOverscan: PropTypes.number,
     idAttribute: PropTypes.string,

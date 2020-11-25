@@ -341,7 +341,8 @@ const Grid = (props) => {
     }, []);
 
     let processedGridData = gridData && gridData.length > 0 ? gridData : [];
-    if (parentColumn !== null && parentColumn !== undefined) {
+    const isParentGrid = parentColumn !== null && parentColumn !== undefined;
+    if (isParentGrid) {
         processedGridData = getProcessedData(gridData);
     }
 
@@ -374,13 +375,14 @@ const Grid = (props) => {
                     parentColumn={parentColumn}
                     parentIdAttribute={parentIdAttribute}
                     loadChildData={loadChildData}
+                    isParentGrid={isParentGrid}
                     gridData={processedGridData}
                     rowsToOverscan={rowsToOverscan}
                     idAttribute={idAttribute}
                     isPaginationNeeded={
                         pageInfo !== undefined &&
                         pageInfo !== null &&
-                        !(parentColumn !== null && parentColumn !== undefined)
+                        !isParentGrid
                     }
                     totalRecordsCount={pageInfo ? pageInfo.total : 0}
                     updateRowInGrid={updateRowInGrid}
