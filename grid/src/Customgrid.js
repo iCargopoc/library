@@ -207,8 +207,10 @@ const Customgrid = (props) => {
             return rowsToFilter.filter((row) => {
                 // Find original data value of each row
                 const { original } = row;
+                // Check if row is parent row
+                const { isParent } = original;
                 // Return value of the filter method
-                let returnValue = false;
+                let returnValue = isParent === true;
                 // Loop through all column values for each row
                 convertToIndividualColumns([...managableColumns]).forEach(
                     (column) => {
