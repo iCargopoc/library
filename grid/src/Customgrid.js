@@ -516,9 +516,9 @@ const Customgrid = (props) => {
         }
     };
 
-    const toggleParentRow = (row) => {
+    const toggleParentRow = (row, index) => {
         if (parentIdAttribute) {
-            const { original, index } = row;
+            const { original } = row;
             if (original) {
                 const rowParentIdAttribute = original[parentIdAttribute];
                 if (
@@ -904,7 +904,9 @@ const Customgrid = (props) => {
                                             color: "red",
                                             cursor: "pointer"
                                         }}
-                                        onClick={() => toggleParentRow(row)}
+                                        onClick={() =>
+                                            toggleParentRow(row, index)
+                                        }
                                     >
                                         Expand
                                     </p>
