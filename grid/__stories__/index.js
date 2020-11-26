@@ -994,48 +994,143 @@ const GridComponent = (props) => {
         return rowHeight;
     };
 
+    const updateData = (data, originalRow, updatedRow) => {
+        return data.map((row) => {
+            let newRow = row;
+            if (newRow[idAttribute] === originalRow[idAttribute]) {
+                newRow = updatedRow;
+            }
+            return newRow;
+        });
+    };
+
     const onRowUpdate = (originalRow, updatedRow) => {
         setGridData((old) =>
             old.map((row) => {
-                let newRow = row;
-                if (newRow[idAttribute] === originalRow[idAttribute]) {
-                    newRow = updatedRow;
+                if (row) {
+                    let rowToUpdate = row;
+                    if (treeStructure) {
+                        const { childData } = row;
+                        if (childData) {
+                            const { data } = childData;
+                            if (data && data.length > 0) {
+                                const newData = updateData(
+                                    data,
+                                    originalRow,
+                                    updatedRow
+                                );
+                                rowToUpdate.childData.data = newData;
+                            }
+                        }
+                    } else if (
+                        rowToUpdate[idAttribute] === originalRow[idAttribute]
+                    ) {
+                        rowToUpdate = updatedRow;
+                    }
+                    return rowToUpdate;
                 }
-                return newRow;
+                return row;
             })
         );
         setOriginalGridData((old) =>
             old.map((row) => {
-                let newRow = row;
-                if (newRow[idAttribute] === originalRow[idAttribute]) {
-                    newRow = updatedRow;
+                if (row) {
+                    let rowToUpdate = row;
+                    if (treeStructure) {
+                        const { childData } = row;
+                        if (childData) {
+                            const { data } = childData;
+                            if (data && data.length > 0) {
+                                const newData = updateData(
+                                    data,
+                                    originalRow,
+                                    updatedRow
+                                );
+                                rowToUpdate.childData.data = newData;
+                            }
+                        }
+                    } else if (
+                        rowToUpdate[idAttribute] === originalRow[idAttribute]
+                    ) {
+                        rowToUpdate = updatedRow;
+                    }
+                    return rowToUpdate;
                 }
-                return newRow;
+                return row;
             })
         );
     };
 
     const onRowDelete = (originalRow) => {
-        setGridData((old) =>
-            old.filter((row) => {
-                return row[idAttribute] !== originalRow[idAttribute];
-            })
-        );
-        setOriginalGridData((old) =>
-            old.filter((row) => {
-                return row[idAttribute] !== originalRow[idAttribute];
-            })
-        );
-        if (paginationType === "index") {
-            setIndexPageInfo({
-                ...indexPageInfo,
-                total: indexPageInfo.total - 1
-            });
+        if (treeStructure) {
+            setGridData((old) =>
+                old.map((row) => {
+                    if (row) {
+                        const rowToUpdate = row;
+                        const { childData } = row;
+                        if (childData) {
+                            const { data } = childData;
+                            if (data && data.length > 0) {
+                                rowToUpdate.childData.data = data.filter(
+                                    (dataItem) => {
+                                        return (
+                                            dataItem[idAttribute] !==
+                                            originalRow[idAttribute]
+                                        );
+                                    }
+                                );
+                            }
+                        }
+                        return rowToUpdate;
+                    }
+                    return row;
+                })
+            );
+            setOriginalGridData((old) =>
+                old.map((row) => {
+                    if (row) {
+                        const rowToUpdate = row;
+                        const { childData } = row;
+                        if (childData) {
+                            const { data } = childData;
+                            if (data && data.length > 0) {
+                                rowToUpdate.childData.data = data.filter(
+                                    (dataItem) => {
+                                        return (
+                                            dataItem[idAttribute] !==
+                                            originalRow[idAttribute]
+                                        );
+                                    }
+                                );
+                            }
+                        }
+                        return rowToUpdate;
+                    }
+                    return row;
+                })
+            );
         } else {
-            setCursorPageInfo({
-                ...cursorPageInfo,
-                total: indexPageInfo.total - 1
-            });
+            setGridData((old) =>
+                old.filter((row) => {
+                    return row[idAttribute] !== originalRow[idAttribute];
+                })
+            );
+            setOriginalGridData((old) =>
+                old.filter((row) => {
+                    return row[idAttribute] !== originalRow[idAttribute];
+                })
+            );
+            if (paginationType === "index") {
+                setIndexPageInfo({
+                    ...indexPageInfo,
+                    total: indexPageInfo.total - 1
+                });
+            } else {
+                setCursorPageInfo({
+                    ...cursorPageInfo,
+                    total: indexPageInfo.total - 1
+                });
+            }
         }
     };
 
