@@ -95,8 +95,10 @@ const Grid = (props) => {
 
     // Logic for searching in each column
     const searchColumn = (column, original, searchText) => {
+        // Check if row is parent row
+        const { isParent } = original;
         // Return value
-        let isValuePresent = false;
+        let isValuePresent = isParent === true;
         // Find the accessor node and inner cells array of each column
         const { accessor, innerCells } = column;
         // Find accessor value of a column

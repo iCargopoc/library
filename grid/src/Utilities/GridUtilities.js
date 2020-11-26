@@ -151,3 +151,18 @@ export const checkIfGroupsortIsApplicable = (columns) => {
     }
     return false;
 };
+
+export const getChildRows = (allRows) => {
+    if (allRows && allRows.length > 0) {
+        return allRows.filter((row) => {
+            if (row) {
+                const { original } = row;
+                if (original) {
+                    const { isParent } = original;
+                    return isParent !== true;
+                }
+            }
+        });
+    }
+    return [];
+};

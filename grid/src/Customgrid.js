@@ -43,7 +43,8 @@ import {
     updatedActionsHeaderClass,
     convertToIndividualColumns,
     checkdisplayOfGroupedColumns,
-    checkIfGroupsortIsApplicable
+    checkIfGroupsortIsApplicable,
+    getChildRows
 } from "./Utilities/GridUtilities";
 
 const listRef = createRef(null);
@@ -207,10 +208,8 @@ const Customgrid = (props) => {
             return rowsToFilter.filter((row) => {
                 // Find original data value of each row
                 const { original } = row;
-                // Check if row is parent row
-                const { isParent } = original;
                 // Return value of the filter method
-                let returnValue = isParent === true;
+                let returnValue = false;
                 // Loop through all column values for each row
                 convertToIndividualColumns([...managableColumns]).forEach(
                     (column) => {
@@ -1017,7 +1016,7 @@ const Customgrid = (props) => {
                             {totalRecordsCount > 0 &&
                             rows.length === gridData.length
                                 ? totalRecordsCount
-                                : rows.length}
+                                : getChildRows(rows).length}
                         </strong>
                         <span>{title || "Rows"}</span>
                     </div>
