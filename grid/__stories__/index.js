@@ -1376,7 +1376,7 @@ const GridComponent = (props) => {
             setIndexPageInfo(null);
             setCursorPageInfo(null);
             setParentColumn(originalParentColumn);
-        } else {
+                                    } else {
             const pageInfo =
                 paginationType === "index" ? indexPageInfo : cursorPageInfo;
             fetchData(pageInfo).then((data) => {
@@ -1512,6 +1512,7 @@ const GridComponent = (props) => {
                     columnToExpand={passColumnToExpand ? columnToExpand : null}
                     parentColumn={parentColumn}
                     parentIdAttribute={parentIdAttribute}
+                    parentRowExpandable={false}
                     rowActions={passRowActions ? rowActions : null}
                     calculateRowHeight={calculateRowHeight}
                     expandableColumn={expandableColumn}
