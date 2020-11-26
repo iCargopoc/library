@@ -60,6 +60,7 @@ const Customgrid = (props) => {
         parentColumn,
         parentIdAttribute,
         parentRowExpandable,
+        parentRowsToExpand,
         loadChildData,
         isParentGrid,
         gridData,
@@ -681,6 +682,10 @@ const Customgrid = (props) => {
             });
         }
     }, [rowsToSelect, rowsToDeselect, gridData, groupSortOptions]);
+
+    useEffect(() => {
+        setExpandedParentRows(parentRowsToExpand);
+    }, [parentRowsToExpand]);
 
     // Trigger call back when user makes a row selection using checkbox
     // And store the rows that are selected by user for making them selected when data changes after groupsort
@@ -1355,6 +1360,7 @@ Customgrid.propTypes = {
     parentColumn: PropTypes.object,
     parentIdAttribute: PropTypes.string,
     parentRowExpandable: PropTypes.bool,
+    parentRowsToExpand: PropTypes.array,
     loadChildData: PropTypes.func,
     isParentGrid: PropTypes.bool,
     gridData: PropTypes.arrayOf(PropTypes.object),

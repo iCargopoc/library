@@ -1513,6 +1513,7 @@ const GridComponent = (props) => {
                     parentColumn={parentColumn}
                     parentIdAttribute={parentIdAttribute}
                     parentRowExpandable={false}
+                    parentRowsToExpand={[0]}
                     rowActions={passRowActions ? rowActions : null}
                     calculateRowHeight={calculateRowHeight}
                     expandableColumn={expandableColumn}

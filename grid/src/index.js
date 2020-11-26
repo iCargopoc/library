@@ -64,6 +64,7 @@ const Grid = (props) => {
         parentColumn,
         parentIdAttribute,
         parentRowExpandable,
+        parentRowsToExpand,
         rowActions,
         onRowUpdate,
         onRowSelect,
@@ -379,6 +380,7 @@ const Grid = (props) => {
                     parentColumn={parentColumn}
                     parentIdAttribute={parentIdAttribute}
                     parentRowExpandable={parentRowExpandable}
+                    parentRowsToExpand={parentRowsToExpand}
                     loadChildData={loadChildData}
                     isParentGrid={isParentGrid}
                     gridData={processedGridData}
@@ -447,6 +449,7 @@ Grid.propTypes = {
     parentColumn: PropTypes.object,
     parentIdAttribute: PropTypes.string,
     parentRowExpandable: PropTypes.bool,
+    parentRowsToExpand: PropTypes.array,
     gridData: PropTypes.arrayOf(PropTypes.object),
     rowsToOverscan: PropTypes.number,
     idAttribute: PropTypes.string,
