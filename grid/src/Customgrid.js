@@ -684,7 +684,9 @@ const Customgrid = (props) => {
     }, [rowsToSelect, rowsToDeselect, gridData, groupSortOptions]);
 
     useEffect(() => {
-        setExpandedParentRows(parentRowsToExpand);
+        if (parentRowsToExpand && parentRowsToExpand.length > 0) {
+            setExpandedParentRows(parentRowsToExpand);
+        }
     }, [parentRowsToExpand]);
 
     // Trigger call back when user makes a row selection using checkbox
