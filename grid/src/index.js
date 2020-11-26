@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import memoize from "lodash.memoize";
 import {
     extractColumns,
     extractAdditionalColumn
@@ -7,6 +8,42 @@ import {
 import Customgrid from "./Customgrid";
 // eslint-disable-next-line import/no-unresolved
 import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
+
+const processedData = (gridData) => {
+    if (gridData && gridData.length > 0) {
+        const processedGridData = [];
+        gridData.forEach((gridDataItem) => {
+            const updatedData = { ...gridDataItem };
+            updatedData.isParent = true;
+            delete updatedData.childData;
+            processedGridData.push(updatedData);
+            const { childData, titleId } = gridDataItem;
+            if (childData) {
+                const { data } = childData;
+                if (data && data.length > 0) {
+                    const {
+                        pageNum,
+                        endCursor,
+                        pageSize,
+                        lastPage
+                    } = childData;
+                    data.forEach((dataItem) => {
+                        const updatedDataItem = dataItem;
+                        updatedDataItem.titleId = titleId;
+                        updatedDataItem.pageNum = pageNum;
+                        updatedDataItem.endCursor = endCursor;
+                        updatedDataItem.pageSize = pageSize;
+                        updatedDataItem.lastPage = lastPage;
+                        processedGridData.push(updatedDataItem);
+                    });
+                }
+            }
+        });
+        return processedGridData;
+    }
+    return [];
+};
+const getProcessedData = memoize(processedData);
 
 const Grid = (props) => {
     const {
@@ -308,7 +345,11 @@ const Grid = (props) => {
         setIsLoaded(true);
     }, []);
 
+    let processedGridData = gridData && gridData.length > 0 ? gridData : [];
     const isParentGrid = parentColumn !== null && parentColumn !== undefined;
+    if (isParentGrid) {
+        processedGridData = getProcessedData(gridData);
+    }
 
     if (isLoaded) {
         if (!(gridColumns && gridColumns.length > 0)) {
@@ -342,9 +383,7 @@ const Grid = (props) => {
                     parentRowsToExpand={parentRowsToExpand}
                     loadChildData={loadChildData}
                     isParentGrid={isParentGrid}
-                    originalGridData={
-                        gridData && gridData.length > 0 ? gridData : []
-                    }
+                    gridData={processedGridData}
                     rowsToOverscan={rowsToOverscan}
                     idAttribute={idAttribute}
                     isPaginationNeeded={

@@ -18,7 +18,6 @@ import {
 import AutoSizer from "react-virtualized-auto-sizer";
 import InfiniteLoader from "react-window-infinite-loader";
 import PropTypes from "prop-types";
-import memoize from "lodash.memoize";
 import RowSelector from "./Functions/RowSelector";
 import DefaultColumnFilter from "./Functions/DefaultColumnFilter";
 import GlobalFilter from "./Functions/GlobalFilter";
@@ -50,42 +49,6 @@ import {
 
 const listRef = createRef(null);
 
-const processedData = (gridData) => {
-    if (gridData && gridData.length > 0) {
-        const processedGridData = [];
-        gridData.forEach((gridDataItem) => {
-            const updatedData = { ...gridDataItem };
-            updatedData.isParent = true;
-            delete updatedData.childData;
-            processedGridData.push(updatedData);
-            const { childData, titleId } = gridDataItem;
-            if (childData) {
-                const { data } = childData;
-                if (data && data.length > 0) {
-                    const {
-                        pageNum,
-                        endCursor,
-                        pageSize,
-                        lastPage
-                    } = childData;
-                    data.forEach((dataItem) => {
-                        const updatedDataItem = dataItem;
-                        updatedDataItem.titleId = titleId;
-                        updatedDataItem.pageNum = pageNum;
-                        updatedDataItem.endCursor = endCursor;
-                        updatedDataItem.pageSize = pageSize;
-                        updatedDataItem.lastPage = lastPage;
-                        processedGridData.push(updatedDataItem);
-                    });
-                }
-            }
-        });
-        return processedGridData;
-    }
-    return [];
-};
-const getProcessedData = memoize(processedData);
-
 const Customgrid = (props) => {
     const {
         isDesktop,
@@ -100,7 +63,7 @@ const Customgrid = (props) => {
         parentRowsToExpand,
         loadChildData,
         isParentGrid,
-        originalGridData,
+        gridData,
         rowsToOverscan,
         idAttribute,
         isPaginationNeeded,
@@ -130,10 +93,6 @@ const Customgrid = (props) => {
         rowsToSelect,
         rowsToDeselect
     } = props;
-
-    const gridData = isParentGrid
-        ? getProcessedData(originalGridData)
-        : originalGridData;
 
     // Over scan count for react-window list
     const overScanCount =
@@ -722,7 +681,7 @@ const Customgrid = (props) => {
                 }
             });
         }
-    }, [rowsToSelect, rowsToDeselect, originalGridData, groupSortOptions]);
+    }, [rowsToSelect, rowsToDeselect, gridData, groupSortOptions]);
 
     useEffect(() => {
         if (parentRowsToExpand && parentRowsToExpand.length > 0) {
@@ -782,7 +741,7 @@ const Customgrid = (props) => {
     // Recalculate the row height from index 0 as data has been changed or group sort is applied
     useEffect(() => {
         reRenderListData();
-    }, [originalGridData, groupSortOptions]);
+    }, [gridData, groupSortOptions]);
 
     // Check if parent id attribute is present in the list of opened parent attributes.
     const isParentRowExpanded = (childRow) => {
@@ -1408,7 +1367,7 @@ Customgrid.propTypes = {
     parentRowsToExpand: PropTypes.array,
     loadChildData: PropTypes.func,
     isParentGrid: PropTypes.bool,
-    originalGridData: PropTypes.arrayOf(PropTypes.object),
+    gridData: PropTypes.arrayOf(PropTypes.object),
     rowsToOverscan: PropTypes.number,
     idAttribute: PropTypes.string,
     isPaginationNeeded: PropTypes.bool,
