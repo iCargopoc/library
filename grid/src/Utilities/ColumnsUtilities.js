@@ -8,7 +8,8 @@ export const extractColumns = (
     searchColumn,
     isDesktop,
     updateRowInGrid,
-    expandableColumn
+    expandableColumn,
+    parentColumn
 ) => {
     if (columns && columns.length > 0) {
         // Remove iPad only columns from desktop and vice-versa
@@ -80,7 +81,10 @@ export const extractColumns = (
             }
 
             // Add logic to sort column if sort is not disabled
-            if (!elem.disableSortBy) {
+            if (
+                !elem.disableSortBy &&
+                !(parentColumn !== null && parentColumn !== undefined)
+            ) {
                 if (isInnerCellsPresent) {
                     // If there are inner cells and a sort value specified, do sort on that value
                     if (sortValue) {
@@ -101,6 +105,8 @@ export const extractColumns = (
                             : 1;
                     };
                 }
+            } else {
+                elem.disableSortBy = true;
             }
 
             // Add logic to filter column if column filter is not disabled
