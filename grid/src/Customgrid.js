@@ -869,20 +869,24 @@ const Customgrid = (props) => {
                         if (isParent === true) {
                             return (
                                 <div {...row.getRowProps({ style })}>
-                                    <div className="form-check">
-                                        <input
-                                            type="checkbox"
-                                            data-testid="rowSelector-parentRow"
-                                            className="form-check-input custom-checkbox form-check-input"
-                                            checked={isParentRowsSelected(row)}
-                                            onChange={(event) =>
-                                                toggleParentRowSelection(
-                                                    event,
+                                    {multiRowSelection !== false ? (
+                                        <div className="form-check">
+                                            <input
+                                                type="checkbox"
+                                                data-testid="rowSelector-parentRow"
+                                                className="form-check-input custom-checkbox form-check-input"
+                                                checked={isParentRowsSelected(
                                                     row
-                                                )
-                                            }
-                                        />
-                                    </div>
+                                                )}
+                                                onChange={(event) =>
+                                                    toggleParentRowSelection(
+                                                        event,
+                                                        row
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                    ) : null}
                                     <div style={{ width: "100%" }}>
                                         {parentColumn.displayCell(original)}
                                     </div>
