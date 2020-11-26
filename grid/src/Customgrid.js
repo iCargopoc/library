@@ -575,6 +575,9 @@ const Customgrid = (props) => {
             const { currentTarget } = event;
             if (currentTarget) {
                 const { checked } = currentTarget;
+                setIsRowSelectionCallbackNeeded(
+                    checked === true ? "select" : "deselect"
+                );
                 toggleAllRowsSelected(checked);
             }
         }
@@ -835,12 +838,12 @@ const Customgrid = (props) => {
                                         rowParentIdAttribute
                                     ) {
                                         const { id } = gridRow;
-                                        toggleRowSelected(id, selectionType);
                                         setIsRowSelectionCallbackNeeded(
                                             selectionType
                                                 ? "select"
                                                 : "deselect"
                                         );
+                                        toggleRowSelected(id, selectionType);
                                     }
                                 }
                             }
