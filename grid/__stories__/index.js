@@ -998,10 +998,7 @@ const GridComponent = (props) => {
         setGridData((old) =>
             old.map((row) => {
                 let newRow = row;
-                if (
-                    Object.entries(row).toString() ===
-                    Object.entries(originalRow).toString()
-                ) {
+                if (newRow[idAttribute] === originalRow[idAttribute]) {
                     newRow = updatedRow;
                 }
                 return newRow;
@@ -1010,10 +1007,7 @@ const GridComponent = (props) => {
         setOriginalGridData((old) =>
             old.map((row) => {
                 let newRow = row;
-                if (
-                    Object.entries(row).toString() ===
-                    Object.entries(originalRow).toString()
-                ) {
+                if (newRow[idAttribute] === originalRow[idAttribute]) {
                     newRow = updatedRow;
                 }
                 return newRow;
@@ -1024,12 +1018,12 @@ const GridComponent = (props) => {
     const onRowDelete = (originalRow) => {
         setGridData((old) =>
             old.filter((row) => {
-                return row !== originalRow;
+                return row[idAttribute] !== originalRow[idAttribute];
             })
         );
         setOriginalGridData((old) =>
             old.filter((row) => {
-                return row !== originalRow;
+                return row[idAttribute] !== originalRow[idAttribute];
             })
         );
         if (paginationType === "index") {
