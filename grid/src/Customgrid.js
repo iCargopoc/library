@@ -59,6 +59,7 @@ const Customgrid = (props) => {
         expandedRowData,
         parentColumn,
         parentIdAttribute,
+        parentRowExpandable,
         loadChildData,
         isParentGrid,
         gridData,
@@ -738,7 +739,7 @@ const Customgrid = (props) => {
     // Check if parent id attribute is present in the list of opened parent attributes.
     const isParentRowExpanded = (childRow) => {
         let isParentExpanded = true;
-        if (childRow && parentIdAttribute) {
+        if (childRow && parentIdAttribute && parentRowExpandable !== false) {
             const { original } = childRow;
             if (original) {
                 const { isParent } = original;
@@ -1353,6 +1354,7 @@ Customgrid.propTypes = {
     managableColumns: PropTypes.arrayOf(PropTypes.object),
     parentColumn: PropTypes.object,
     parentIdAttribute: PropTypes.string,
+    parentRowExpandable: PropTypes.bool,
     loadChildData: PropTypes.func,
     isParentGrid: PropTypes.bool,
     gridData: PropTypes.arrayOf(PropTypes.object),
