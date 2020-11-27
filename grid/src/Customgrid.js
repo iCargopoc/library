@@ -44,7 +44,7 @@ import {
     convertToIndividualColumns,
     checkdisplayOfGroupedColumns,
     checkIfGroupsortIsApplicable,
-    getChildRows
+    findAllChildRows
 } from "./Utilities/GridUtilities";
 
 const listRef = createRef(null);
@@ -1040,7 +1040,7 @@ const Customgrid = (props) => {
                             {totalRecordsCount > 0 &&
                             rows.length === gridData.length
                                 ? totalRecordsCount
-                                : getChildRows(rows).length}
+                                : findAllChildRows(rows).length}
                         </strong>
                         <span>{title || "Rows"}</span>
                     </div>

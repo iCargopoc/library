@@ -152,7 +152,7 @@ export const checkIfGroupsortIsApplicable = (columns) => {
     return false;
 };
 
-export const getChildRows = (allRows) => {
+export const findAllChildRows = (allRows) => {
     if (allRows && allRows.length > 0) {
         return allRows.filter((row) => {
             if (row) {
