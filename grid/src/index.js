@@ -214,6 +214,8 @@ const Grid = (props) => {
         return rowHeight;
     };
 
+    const isParentGrid = parentColumn !== null && parentColumn !== undefined;
+
     // #region - Group sorting logic
     // Function to return sorting logic based on the user selected order of sort
     const compareValues = (compareOrder, v1, v2) => {
@@ -241,6 +243,81 @@ const Grid = (props) => {
             groupSortOptions &&
             groupSortOptions.length > 0
         ) {
+            if (
+                isParentGrid &&
+                parentIdAttribute !== null &&
+                parentIdAttribute !== undefined
+            ) {
+                let sortedTreeData = [];
+                const parentDataFromOriginalData = originalData.filter(
+                    (dataToFilter) => {
+                        if (dataToFilter) {
+                            const { isParent } = dataToFilter;
+                            return isParent === true;
+                        }
+                        return false;
+                    }
+                );
+                parentDataFromOriginalData.forEach((dataFromGrid) => {
+                    if (dataFromGrid) {
+                        sortedTreeData.push(dataFromGrid);
+                        const parentIdentifier =
+                            dataFromGrid[parentIdAttribute];
+                        if (
+                            parentIdentifier !== null &&
+                            parentIdentifier !== undefined
+                        ) {
+                            const childRowsOfParent = originalData.filter(
+                                (origData) => {
+                                    return (
+                                        origData &&
+                                        origData.isParent !== true &&
+                                        origData[parentIdAttribute] ===
+                                            parentIdentifier
+                                    );
+                                }
+                            );
+                            if (
+                                childRowsOfParent &&
+                                childRowsOfParent.length > 0
+                            ) {
+                                const sortedChildData = childRowsOfParent.sort(
+                                    (x, y) => {
+                                        let compareResult = 0;
+                                        groupSortOptions.forEach((option) => {
+                                            const {
+                                                sortBy,
+                                                sortOn,
+                                                order
+                                            } = option;
+                                            const newResult =
+                                                sortOn === "value"
+                                                    ? compareValues(
+                                                          order,
+                                                          x[sortBy],
+                                                          y[sortBy]
+                                                      )
+                                                    : compareValues(
+                                                          order,
+                                                          x[sortBy][sortOn],
+                                                          y[sortBy][sortOn]
+                                                      );
+                                            compareResult =
+                                                compareResult || newResult;
+                                        });
+                                        return compareResult;
+                                    }
+                                );
+                                sortedTreeData = [
+                                    ...sortedTreeData,
+                                    ...sortedChildData
+                                ];
+                            }
+                        }
+                    }
+                });
+                return sortedTreeData;
+            }
             return originalData.sort((x, y) => {
                 let compareResult = 0;
                 groupSortOptions.forEach((option) => {
@@ -346,7 +423,6 @@ const Grid = (props) => {
     }, []);
 
     let processedGridData = gridData && gridData.length > 0 ? gridData : [];
-    const isParentGrid = parentColumn !== null && parentColumn !== undefined;
     if (isParentGrid) {
         processedGridData = getProcessedData(gridData);
     }

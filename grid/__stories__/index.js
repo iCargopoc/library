@@ -101,6 +101,44 @@ const GridComponent = (props) => {
     // Return sorted data based on the parameters
     const getSortedData = (data, sortValues) => {
         if (data && data.length > 0 && sortValues && sortValues.length > 0) {
+            if (
+                treeStructure &&
+                parentIdAttribute !== null &&
+                parentIdAttribute !== undefined
+            ) {
+                const sortedTreeData = data.map((dataItem) => {
+                    const sortedDataItem = dataItem;
+                    const { childData } = dataItem;
+                    if (childData) {
+                        const childRows = childData.data;
+                        if (childRows && childRows.length > 0) {
+                            const sortedData = childRows.sort((x, y) => {
+                                let compareResult = 0;
+                                sortValues.forEach((option) => {
+                                    const { sortBy, sortOn, order } = option;
+                                    const newResult =
+                                        sortOn === "value"
+                                            ? compareValues(
+                                                  order,
+                                                  x[sortBy],
+                                                  y[sortBy]
+                                              )
+                                            : compareValues(
+                                                  order,
+                                                  x[sortBy][sortOn],
+                                                  y[sortBy][sortOn]
+                                              );
+                                    compareResult = compareResult || newResult;
+                                });
+                                return compareResult;
+                            });
+                            sortedDataItem.childData.data = sortedData;
+                        }
+                    }
+                    return sortedDataItem;
+                });
+                return sortedTreeData;
+            }
             return data.sort((x, y) => {
                 let compareResult = 0;
                 sortValues.forEach((option) => {
@@ -1376,7 +1414,7 @@ const GridComponent = (props) => {
             setIndexPageInfo(null);
             setCursorPageInfo(null);
             setParentColumn(originalParentColumn);
-                                    } else {
+        } else {
             const pageInfo =
                 paginationType === "index" ? indexPageInfo : cursorPageInfo;
             fetchData(pageInfo).then((data) => {
