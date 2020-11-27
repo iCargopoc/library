@@ -898,18 +898,20 @@ const Customgrid = (props) => {
                                     <div style={{ width: "100%" }}>
                                         {parentColumn.displayCell(original)}
                                     </div>
-                                    <p
-                                        role="presentation"
-                                        style={{
-                                            color: "red",
-                                            cursor: "pointer"
-                                        }}
-                                        onClick={() =>
-                                            toggleParentRow(row, index)
-                                        }
-                                    >
-                                        Expand
-                                    </p>
+                                    {parentRowExpandable !== false ? (
+                                        <p
+                                            role="presentation"
+                                            style={{
+                                                color: "red",
+                                                cursor: "pointer"
+                                            }}
+                                            onClick={() =>
+                                                toggleParentRow(row, index)
+                                            }
+                                        >
+                                            Expand
+                                        </p>
+                                    ) : null}
                                 </div>
                             );
                         }
