@@ -476,33 +476,48 @@ const Customgrid = (props) => {
         if (listRef && listRef.current) {
             const { current } = listRef;
             if (current) {
-                if (isForced) {
-                    current.resetAfterIndex(indexToReset, true);
-                } else {
-                    const { _instanceProps } = current;
-                    if (_instanceProps && indexToReset === 0) {
-                        const expectedItemsCount = overScanCount + 30;
-                        let { lastMeasuredIndex } = _instanceProps;
-                        if (isParentGrid) {
-                            let lastRenderedParent = null;
-                            rows.forEach((row, rowIndex) => {
-                                if (
-                                    rowIndex <= lastMeasuredIndex &&
-                                    row.original.isParent === true
-                                ) {
-                                    lastRenderedParent = row;
+                const { _instanceProps } = current;
+                if (_instanceProps && indexToReset === 0 && isForced !== true) {
+                    const expectedItemsCount = overScanCount + 30;
+                    const { lastMeasuredIndex } = _instanceProps;
+                    if (isParentGrid) {
+                        indexToReset = 0;
+                        if (
+                            parentIdAttribute !== null &&
+                            parentIdAttribute !== undefined
+                        ) {
+                            const indexOfFirstParentInExpandedState = rows.findIndex(
+                                (row) => {
+                                    if (row) {
+                                        const { original } = row;
+                                        if (original) {
+                                            const { isParent } = original;
+                                            if (isParent === true) {
+                                                const parentId =
+                                                    original[parentIdAttribute];
+                                                if (
+                                                    parentId !== null &&
+                                                    parentId !== undefined
+                                                ) {
+                                                    return expandedParentRows.includes(
+                                                        parentId
+                                                    );
+                                                }
+                                            }
+                                        }
+                                    }
+                                    return false;
                                 }
-                            });
-                            if (lastRenderedParent) {
-                                lastMeasuredIndex = lastRenderedParent.id;
+                            );
+                            if (indexOfFirstParentInExpandedState >= 0) {
+                                indexToReset = indexOfFirstParentInExpandedState;
                             }
-                        } else if (lastMeasuredIndex > expectedItemsCount) {
-                            indexToReset =
-                                lastMeasuredIndex - expectedItemsCount;
                         }
+                    } else if (lastMeasuredIndex > expectedItemsCount) {
+                        indexToReset = lastMeasuredIndex - expectedItemsCount;
                     }
-                    current.resetAfterIndex(indexToReset, true);
                 }
+                current.resetAfterIndex(indexToReset, true);
             }
         }
     };
@@ -592,21 +607,27 @@ const Customgrid = (props) => {
 
     // Rerender list to calculate row height after doing column sort/filter and global search
     useEffect(() => {
-        reRenderListData();
+        if (!isFirstRendering) {
+            reRenderListData();
+        }
     }, [globalFilter, filters, sortBy]);
 
     // Update state, when user is updating columns configuration from outside Grid
     // Recalculate the row height from index 0 as columns config has been changed
     useEffect(() => {
         setGridColumns(managableColumns);
-        reRenderListData();
+        if (!isFirstRendering) {
+            reRenderListData();
+        }
     }, [managableColumns]);
 
     // Update state, when user is updating additional column configuration from outside Grid
     // Recalculate the row height from index 0 as additional columns config has been changed
     useEffect(() => {
         setAdditionalColumn(expandedRowData);
-        reRenderListData();
+        if (!isFirstRendering) {
+            reRenderListData();
+        }
     }, [expandedRowData]);
 
     // Update the boolean value used to identify if this is the first time render of Grid
@@ -730,7 +751,7 @@ const Customgrid = (props) => {
 
     // Recalculate the row height from expanded/collapsed row index
     useEffect(() => {
-        if (userExpandedRowDetails) {
+        if (userExpandedRowDetails && !isFirstRendering) {
             const { id } = userExpandedRowDetails;
             if (id) {
                 reRenderListData(id);
@@ -740,7 +761,9 @@ const Customgrid = (props) => {
 
     // Recalculate the row height from index 0 as data has been changed or group sort is applied
     useEffect(() => {
-        reRenderListData();
+        if (!isFirstRendering) {
+            reRenderListData();
+        }
     }, [gridData, groupSortOptions]);
 
     // Check if parent id attribute is present in the list of opened parent attributes.
