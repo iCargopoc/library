@@ -9,7 +9,7 @@ export const extractColumns = (
     isDesktop,
     updateRowInGrid,
     expandableColumn,
-    parentColumn
+    isParentGrid
 ) => {
     if (columns && columns.length > 0) {
         // Remove iPad only columns from desktop and vice-versa
@@ -81,10 +81,7 @@ export const extractColumns = (
             }
 
             // Add logic to sort column if sort is not disabled
-            if (
-                !elem.disableSortBy &&
-                !(parentColumn !== null && parentColumn !== undefined)
-            ) {
+            if (!elem.disableSortBy && !isParentGrid) {
                 if (isInnerCellsPresent) {
                     // If there are inner cells and a sort value specified, do sort on that value
                     if (sortValue) {

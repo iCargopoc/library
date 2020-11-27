@@ -410,7 +410,7 @@ const Grid = (props) => {
                 isDesktop,
                 updateRowInGrid,
                 expandableColumn,
-                parentColumn
+                isParentGrid
             )
         );
         setAdditionalColumn(
