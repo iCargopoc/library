@@ -8,7 +8,7 @@ const RowsList = ({
     infiniteLoaderRef,
     listRef,
     height,
-    isParentRowExpanded,
+    isParentRowCollapsed,
     calculateRowHeight,
     rows,
     headerGroups,
@@ -32,12 +32,13 @@ const RowsList = ({
             itemSize={(index) => {
                 const currentRow = rows[index];
                 if (currentRow) {
-                    if (!isParentRowExpanded(currentRow)) {
+                    // If this is a child row in tree grid and its parent is in collapsed state, this row height should be 0.
+                    if (isParentRowCollapsed(currentRow)) {
                         return 0;
                     }
                     return (
                         calculateRowHeight(
-                            rows[index],
+                            currentRow,
                             headerGroups && headerGroups.length
                                 ? headerGroups[headerGroups.length - 1].headers
                                 : []
@@ -60,7 +61,7 @@ RowsList.propTypes = {
     infiniteLoaderRef: PropTypes.any,
     listRef: PropTypes.any,
     height: PropTypes.number,
-    isParentRowExpanded: PropTypes.func,
+    isParentRowCollapsed: PropTypes.func,
     calculateRowHeight: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
     headerGroups: PropTypes.arrayOf(PropTypes.object),

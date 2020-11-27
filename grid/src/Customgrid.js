@@ -744,9 +744,14 @@ const Customgrid = (props) => {
     }, [gridData, groupSortOptions]);
 
     // Check if parent id attribute is present in the list of opened parent attributes.
-    const isParentRowExpanded = (childRow) => {
-        let isParentExpanded = true;
-        if (childRow && parentIdAttribute && parentRowExpandable !== false) {
+    const isParentRowCollapsed = (childRow) => {
+        let isParentCollpased = false;
+        if (
+            childRow &&
+            parentIdAttribute &&
+            parentRowExpandable !== false &&
+            isParentGrid
+        ) {
             const { original } = childRow;
             if (original) {
                 const { isParent } = original;
@@ -757,11 +762,11 @@ const Customgrid = (props) => {
                     rowParentIdAttribute !== undefined &&
                     !expandedParentRows.includes(rowParentIdAttribute)
                 ) {
-                    isParentExpanded = false;
+                    isParentCollpased = true;
                 }
             }
         }
-        return isParentExpanded;
+        return isParentCollpased;
     };
 
     const isParentRowsSelected = (row) => {
@@ -935,8 +940,8 @@ const Customgrid = (props) => {
                                 nextRow.original.isParent === true;
                         }
 
-                        // Check if parent row is expanded or not. If not expanded, do not render its child rows
-                        if (!isParentRowExpanded(row)) {
+                        // Check if this is a tree grid, and if parent row is in collapsed state. If yes, do not render its child rows
+                        if (isParentRowCollapsed(row)) {
                             return null;
                         }
 
@@ -1308,8 +1313,8 @@ const Customgrid = (props) => {
                                                         infiniteLoaderRef={ref}
                                                         listRef={listRef}
                                                         height={height}
-                                                        isParentRowExpanded={
-                                                            isParentRowExpanded
+                                                        isParentRowCollapsed={
+                                                            isParentRowCollapsed
                                                         }
                                                         calculateRowHeight={
                                                             calculateRowHeight
@@ -1330,8 +1335,8 @@ const Customgrid = (props) => {
                                             <RowsList
                                                 listRef={listRef}
                                                 height={height}
-                                                isParentRowExpanded={
-                                                    isParentRowExpanded
+                                                isParentRowCollapsed={
+                                                    isParentRowCollapsed
                                                 }
                                                 calculateRowHeight={
                                                     calculateRowHeight
