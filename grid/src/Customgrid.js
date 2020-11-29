@@ -523,7 +523,7 @@ const Customgrid = (props) => {
     };
 
     const loadMoreChildData = (row) => {
-        if (parentIdAttribute) {
+        if (row) {
             const { original } = row;
             if (original) {
                 loadChildData(original);
@@ -532,7 +532,7 @@ const Customgrid = (props) => {
     };
 
     const toggleParentRow = (row, index) => {
-        if (parentIdAttribute) {
+        if (parentIdAttribute && row) {
             const { original } = row;
             if (original) {
                 const rowParentIdAttribute = original[parentIdAttribute];
@@ -778,21 +778,22 @@ const Customgrid = (props) => {
             const { original } = childRow;
             if (original) {
                 const { isParent } = original;
-                const rowParentIdAttribute = original[parentIdAttribute];
-                if (
-                    isParent !== true &&
-                    rowParentIdAttribute !== null &&
-                    rowParentIdAttribute !== undefined &&
-                    !expandedParentRows.includes(rowParentIdAttribute)
-                ) {
-                    isParentCollpased = true;
+                if (isParent !== true) {
+                    const rowParentIdAttribute = original[parentIdAttribute];
+                    if (
+                        rowParentIdAttribute !== null &&
+                        rowParentIdAttribute !== undefined &&
+                        !expandedParentRows.includes(rowParentIdAttribute)
+                    ) {
+                        isParentCollpased = true;
+                    }
                 }
             }
         }
         return isParentCollpased;
     };
 
-    const isParentRowsSelected = (row) => {
+    const isParentRowSelected = (row) => {
         if (row && parentIdAttribute && idAttribute) {
             const { original } = row;
             if (original) {
@@ -803,40 +804,29 @@ const Customgrid = (props) => {
                         rowParentIdAttribute !== null &&
                         rowParentIdAttribute !== undefined
                     ) {
-                        const childRowsOfParent = preFilteredRows.filter(
-                            (gridRow) => {
-                                if (gridRow && gridRow.original) {
-                                    const gridRowOriginal = gridRow.original;
-                                    if (gridRowOriginal.isParent !== true) {
-                                        return (
-                                            gridRowOriginal[
-                                                parentIdAttribute
-                                            ] === rowParentIdAttribute
-                                        );
-                                    }
-                                }
-                                return false;
-                            }
-                        );
-                        if (childRowsOfParent && childRowsOfParent.length > 0) {
-                            let isAllChildrenSelected = true;
-                            childRowsOfParent.forEach((childRow) => {
-                                if (childRow && childRow.original) {
-                                    const childRowIdAttr =
-                                        childRow.original[idAttribute];
+                        let isAllChildrenSelected = true;
+                        preFilteredRows.forEach((gridRow) => {
+                            if (gridRow) {
+                                const gridRowOriginal = gridRow.original;
+                                if (
+                                    gridRowOriginal &&
+                                    gridRowOriginal.isParent !== true
+                                ) {
+                                    const parentIdOfChildRow =
+                                        gridRowOriginal[idAttribute];
                                     if (
-                                        childRowIdAttr !== null &&
-                                        childRowIdAttr !== undefined &&
+                                        parentIdOfChildRow !== null &&
+                                        parentIdOfChildRow !== undefined &&
                                         !userSelectedRowIdentifiers.includes(
-                                            childRowIdAttr
+                                            parentIdOfChildRow
                                         )
                                     ) {
                                         isAllChildrenSelected = false;
                                     }
                                 }
-                            });
-                            return isAllChildrenSelected;
-                        }
+                            }
+                        });
+                        return isAllChildrenSelected;
                     }
                 }
             }
@@ -866,9 +856,12 @@ const Customgrid = (props) => {
                         rowParentIdAttribute !== undefined
                     ) {
                         preFilteredRows.forEach((gridRow) => {
-                            if (gridRow && gridRow.original) {
+                            if (gridRow) {
                                 const gridRowOriginal = gridRow.original;
-                                if (gridRowOriginal.isParent !== true) {
+                                if (
+                                    gridRowOriginal &&
+                                    gridRowOriginal.isParent !== true
+                                ) {
                                     if (
                                         gridRowOriginal[parentIdAttribute] ===
                                         rowParentIdAttribute
@@ -899,10 +892,10 @@ const Customgrid = (props) => {
                 prepareRow(row);
 
                 if (row) {
-                    const { original } = row;
+                    const { original, lastPage } = row;
                     if (original) {
                         const { isParent } = original;
-                        if (isParent === true) {
+                        if (isParent === true && isParentGrid) {
                             return (
                                 <div {...row.getRowProps({ style })}>
                                     {multiRowSelection !== false ? (
@@ -911,7 +904,7 @@ const Customgrid = (props) => {
                                                 type="checkbox"
                                                 data-testid="rowSelector-parentRow"
                                                 className="form-check-input custom-checkbox form-check-input"
-                                                checked={isParentRowsSelected(
+                                                checked={isParentRowSelected(
                                                     row
                                                 )}
                                                 onChange={(event) =>
@@ -954,13 +947,19 @@ const Customgrid = (props) => {
                         }
 
                         // Check if this row is the last child element of parent, to display the 'Load More' button
-                        let isLastChild = index === rows.length - 1;
-                        const nextRow = rows[index + 1];
-                        if (nextRow) {
-                            isLastChild =
-                                nextRow &&
-                                nextRow.original &&
-                                nextRow.original.isParent === true;
+                        let isLoadMoreChildNeeded = false;
+                        if (isParentGrid && lastPage === false) {
+                            if (index === rows.length - 1) {
+                                isLoadMoreChildNeeded = true;
+                            } else {
+                                const nextRow = rows[index + 1];
+                                if (nextRow) {
+                                    isLoadMoreChildNeeded =
+                                        nextRow &&
+                                        nextRow.original &&
+                                        nextRow.original.isParent === true;
+                                }
+                            }
                         }
 
                         // Check if this is a tree grid, and if parent row is in collapsed state. If yes, do not render its child rows
@@ -1006,9 +1005,8 @@ const Customgrid = (props) => {
                                         )}
                                     </div>
                                 ) : null}
-                                {isLastChild &&
-                                row.original.lastPage !== true ? (
-                                    <div className="expand">
+                                {isLoadMoreChildNeeded ? (
+                                    <div className="loadChildData">
                                         <button
                                             type="button"
                                             onClick={() =>
