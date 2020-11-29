@@ -342,9 +342,14 @@ const Grid = (props) => {
     const loadChildData = (row) => {
         if (row && parentIdAttribute) {
             const { lastPage, pageNum, pageSize, endCursor } = row;
+            const isIntialLoad =
+                lastPage === undefined &&
+                pageNum === undefined &&
+                pageSize === undefined &&
+                endCursor === undefined;
             const parentId = row[parentIdAttribute];
             if (
-                lastPage === false &&
+                (lastPage === false || isIntialLoad) &&
                 parentId !== null &&
                 parentId !== undefined
             ) {
