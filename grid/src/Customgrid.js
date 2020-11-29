@@ -804,7 +804,8 @@ const Customgrid = (props) => {
                         rowParentIdAttribute !== null &&
                         rowParentIdAttribute !== undefined
                     ) {
-                        let isAllChildrenSelected = true;
+                        let isAtleastOneChildUnselected = false;
+                        let isChildRowsAvailable = false;
                         preFilteredRows.forEach((gridRow) => {
                             if (gridRow) {
                                 const gridRowOriginal = gridRow.original;
@@ -813,20 +814,30 @@ const Customgrid = (props) => {
                                     gridRowOriginal.isParent !== true
                                 ) {
                                     const parentIdOfChildRow =
+                                        gridRowOriginal[parentIdAttribute];
+                                    const rowIdAttribute =
                                         gridRowOriginal[idAttribute];
                                     if (
                                         parentIdOfChildRow !== null &&
                                         parentIdOfChildRow !== undefined &&
-                                        !userSelectedRowIdentifiers.includes(
+                                        rowParentIdAttribute ===
                                             parentIdOfChildRow
-                                        )
                                     ) {
-                                        isAllChildrenSelected = false;
+                                        isChildRowsAvailable = true;
+                                        if (
+                                            !userSelectedRowIdentifiers.includes(
+                                                rowIdAttribute
+                                            )
+                                        ) {
+                                            isAtleastOneChildUnselected = true;
+                                        }
                                     }
                                 }
                             }
                         });
-                        return isAllChildrenSelected;
+                        return (
+                            isChildRowsAvailable && !isAtleastOneChildUnselected
+                        );
                     }
                 }
             }
@@ -892,9 +903,9 @@ const Customgrid = (props) => {
                 prepareRow(row);
 
                 if (row) {
-                    const { original, lastPage } = row;
+                    const { original } = row;
                     if (original) {
-                        const { isParent } = original;
+                        const { isParent, lastPage } = original;
                         if (isParent === true && isParentGrid) {
                             return (
                                 <div {...row.getRowProps({ style })}>
