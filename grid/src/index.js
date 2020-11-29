@@ -340,38 +340,36 @@ const Grid = (props) => {
     // #endregion
 
     const loadChildData = (row) => {
-        const { lastPage, pageNum, pageSize, endCursor } = row;
-        const parentId = row[parentIdAttribute];
-        if (!lastPage && parentId !== null && parentId !== undefined) {
-            const newPageSize =
-                pageSize !== null && pageSize !== undefined ? pageSize : null;
-            if (paginationType === "cursor") {
+        if (row && parentIdAttribute) {
+            const { lastPage, pageNum, pageSize, endCursor } = row;
+            const parentId = row[parentIdAttribute];
+            if (
+                lastPage === false &&
+                parentId !== null &&
+                parentId !== undefined
+            ) {
                 let pageInfoObj = null;
-                if (
-                    endCursor !== null &&
-                    endCursor !== undefined &&
-                    newPageSize !== null
-                ) {
-                    pageInfoObj = {
-                        endCursor,
-                        pageSize
-                    };
+                if (paginationType === "cursor") {
+                    if (endCursor !== null && endCursor !== undefined) {
+                        pageInfoObj = {
+                            endCursor,
+                            pageSize
+                        };
+                    }
+                    loadMoreData(pageInfoObj, parentId);
+                } else {
+                    if (
+                        pageNum !== null &&
+                        pageNum !== undefined &&
+                        typeof pageNum === "number"
+                    ) {
+                        pageInfoObj = {
+                            pageNum: pageNum + 1,
+                            pageSize
+                        };
+                    }
+                    loadMoreData(pageInfoObj, parentId);
                 }
-                loadMoreData(pageInfoObj, parentId);
-            } else {
-                let pageInfoObj = null;
-                if (
-                    pageNum !== null &&
-                    pageNum !== undefined &&
-                    typeof pageNum === "number" &&
-                    newPageSize !== null
-                ) {
-                    pageInfoObj = {
-                        pageNum: pageNum + 1,
-                        pageSize
-                    };
-                }
-                loadMoreData(pageInfoObj, parentId);
             }
         }
     };
@@ -381,7 +379,7 @@ const Grid = (props) => {
     const loadNextPage = () => {
         if (pageInfo) {
             const { lastPage, pageNum, pageSize, endCursor } = pageInfo;
-            if (!lastPage) {
+            if (lastPage === false) {
                 setIsNextPageLoading(true);
                 if (paginationType === "cursor") {
                     loadMoreData({
