@@ -1293,7 +1293,7 @@ const GridComponent = (props) => {
                                         pageInfoForApi.pageNum;
                                     if (
                                         pageInfoForApi.pageNum ===
-                                        (parentId + 1) * 10 - 8
+                                        (parentId + 1) * 10
                                     ) {
                                         updatedData.childData.lastPage = true;
                                     }
@@ -1339,7 +1339,7 @@ const GridComponent = (props) => {
                                 updatedData.childData = {
                                     pageNum: currentPageNum,
                                     pageSize: gridPageSize,
-                                    lastPage: false,
+                                    lastPage: parentId === 2,
                                     data: apiData
                                 };
                                 if (paginationType === "index") {
