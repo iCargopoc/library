@@ -396,7 +396,7 @@ const Customgrid = (props) => {
                                 }
                             }
                             return (
-                                <div className="action">
+                                <div className="ng-action">
                                     {isRowActionsAvailable ? (
                                         <RowOptions
                                             row={row}
@@ -405,7 +405,7 @@ const Customgrid = (props) => {
                                     ) : null}
                                     {isRowExpandAvailable && isRowExpandable ? (
                                         <span
-                                            className="expander"
+                                            className="ng-action__expander"
                                             data-testid="rowExpanderIcon"
                                             {...row.getToggleRowExpandedProps({
                                                 onClick: () => {
@@ -422,8 +422,8 @@ const Customgrid = (props) => {
                                                 <IconAngle
                                                     className={
                                                         row.isExpanded
-                                                            ? "icon-arrow-up"
-                                                            : "icon-arrow-down"
+                                                            ? "ng-action__arrow-up"
+                                                            : "ng-action__arrow-down"
                                                     }
                                                 />
                                             </i>
@@ -986,7 +986,7 @@ const Customgrid = (props) => {
                                 <div
                                     className={`neo-grid__row-wrap ${
                                         isRowExpandEnabled && row.isExpanded
-                                            ? "table-row-wrap-expand"
+                                            ? "neo-grid__row-wrap--expand"
                                             : ""
                                     }`}
                                 >
@@ -1007,7 +1007,7 @@ const Customgrid = (props) => {
                                 {/* Check if row eapand icon is clicked, and if yes, call function to bind content to the expanded region */}
                                 {isRowExpandEnabled && row.isExpanded ? (
                                     <div
-                                        className="expand"
+                                        className="neo-grid__row-expand"
                                         data-testid="rowExpandedRegion"
                                     >
                                         {additionalColumn.Cell(
@@ -1053,10 +1053,12 @@ const Customgrid = (props) => {
             <div className="neo-grid__wrapper">
                 <div
                     className={`neo-grid__header ${
-                        gridHeader === false ? "neo-table__noBorder" : ""
+                        gridHeader === false
+                            ? "neo-grid__header--borderless"
+                            : ""
                     }`}
                 >
-                    <div className="header-results">
+                    <div className="ng-header-results">
                         {gridHeader === false && multiRowSelection !== false ? (
                             <div className="form-check">
                                 <input
@@ -1068,13 +1070,13 @@ const Customgrid = (props) => {
                                 />
                             </div>
                         ) : null}
-                        <strong className="header-results__count">
+                        <strong className="ng-header-results__count">
                             {totalRecordsCount > 0 &&
                             rows.length === gridData.length
                                 ? totalRecordsCount
                                 : findAllChildRows(rows).length}
                         </strong>
-                        <span className="header-results__type">
+                        <span className="ng-header-results__title">
                             {title || "Rows"}
                         </span>
                     </div>
@@ -1083,7 +1085,7 @@ const Customgrid = (props) => {
                             <CustomPanel />
                         </div>
                     ) : null}
-                    <div className="header-utils">
+                    <div className="ng-header-utils">
                         {globalSearch !== false ? (
                             <GlobalFilter
                                 globalFilter={globalFilter}
@@ -1091,9 +1093,9 @@ const Customgrid = (props) => {
                             />
                         ) : null}
                         {gridHeader !== false && columnFilter !== false ? (
-                            <div className="header-utils__items keyword-search-container">
+                            <div className="ng-header-utils__items keyword-search-container">
                                 <div
-                                    className="header-utils__icons keyword-search"
+                                    className="ng-header-utils__icons keyword-search"
                                     role="presentation"
                                     data-testid="toggleColumnFilter"
                                     onClick={toggleColumnFilter}
@@ -1105,9 +1107,9 @@ const Customgrid = (props) => {
                             </div>
                         ) : null}
                         {isGroupSortNeeded !== false && groupSort !== false ? (
-                            <div className="header-utils__items group-sort-container">
+                            <div className="ng-header-utils__items group-sort-container">
                                 <div
-                                    className="header-utils__icons group-sort"
+                                    className="ng-header-utils__icons group-sort"
                                     role="presentation"
                                     data-testid="toggleGroupSortOverLay"
                                     onClick={toggleGroupSortOverLay}
@@ -1129,9 +1131,9 @@ const Customgrid = (props) => {
                             </div>
                         ) : null}
                         {columnChooser !== false ? (
-                            <div className="header-utils__items manage-columns-container">
+                            <div className="ng-header-utils__items">
                                 <div
-                                    className="header-utils__icons manage-columns"
+                                    className="ng-header-utils__icons"
                                     role="presentation"
                                     data-testid="toggleManageColumnsOverlay"
                                     onClick={toggleManageColumnsOverlay}
@@ -1155,9 +1157,9 @@ const Customgrid = (props) => {
                             </div>
                         ) : null}
                         {exportData !== false ? (
-                            <div className="header-utils__items manage-columns-container">
+                            <div className="ng-header-utils__items">
                                 <div
-                                    className="header-utils__icons export-data"
+                                    className="ng-header-utils__icons export-data"
                                     role="presentation"
                                     data-testid="toggleExportDataOverlay"
                                     onClick={toggleExportDataOverlay}
@@ -1180,9 +1182,9 @@ const Customgrid = (props) => {
                             </div>
                         ) : null}
                         {typeof onGridRefresh === "function" ? (
-                            <div className="header-utils__items refresh-data-container">
+                            <div className="ng-header-utils__items">
                                 <div
-                                    className="header-utils__icons refresh-data"
+                                    className="ng-header-utils__icons"
                                     role="presentation"
                                     data-testid="refreshGrid"
                                     onClick={onGridRefresh}
@@ -1247,7 +1249,7 @@ const Customgrid = (props) => {
                                                                             className={`neo-grid__th ${
                                                                                 isGroupHeader ===
                                                                                 true
-                                                                                    ? "group-column-heading"
+                                                                                    ? "neo-grid__th-group"
                                                                                     : ""
                                                                             }`}
                                                                             data-testid={
@@ -1258,7 +1260,7 @@ const Customgrid = (props) => {
                                                                             }
                                                                         >
                                                                             <div
-                                                                                className="neo-grid__th__title"
+                                                                                className="neo-grid__th-title"
                                                                                 data-testid="column-header-sort"
                                                                                 {...column.getSortByToggleProps()}
                                                                             >
@@ -1269,12 +1271,12 @@ const Customgrid = (props) => {
                                                                                 false ? (
                                                                                     <span>
                                                                                         {isSorted ? (
-                                                                                            <i>
+                                                                                            <i className="neo-grid__th-icon">
                                                                                                 <IconSort
                                                                                                     className={
                                                                                                         isSortedDesc
-                                                                                                            ? "sort-asc"
-                                                                                                            : "sort-desc"
+                                                                                                            ? "neo-grid__sort-asc"
+                                                                                                            : "neo-grid__sort-desc"
                                                                                                     }
                                                                                                 />
                                                                                             </i>
@@ -1287,9 +1289,9 @@ const Customgrid = (props) => {
                                                                             {isGroupHeader ===
                                                                             false ? (
                                                                                 <div
-                                                                                    className={`txt-wrap column-filter ${
+                                                                                    className={`ng-txt-wrap ${
                                                                                         isFilterOpen
-                                                                                            ? "open"
+                                                                                            ? "ng-txt-wrap__open"
                                                                                             : ""
                                                                                     }`}
                                                                                 >
@@ -1308,7 +1310,7 @@ const Customgrid = (props) => {
                                                                                 false &&
                                                                                 canResize && (
                                                                                     <div
-                                                                                        className="resizer"
+                                                                                        className="neo-grid__th-resizer"
                                                                                         {...column.getResizerProps()}
                                                                                     />
                                                                                 )}
@@ -1329,7 +1331,7 @@ const Customgrid = (props) => {
                                         {...getTableBodyProps()}
                                         className={`neo-grid__tbody ${
                                             gridHeader === false
-                                                ? "tbody-withoutHeading"
+                                                ? "neo-grid__tbody--nohead"
                                                 : ""
                                         }`}
                                     >
@@ -1384,7 +1386,9 @@ const Customgrid = (props) => {
                                         )}
                                     </div>
                                 ) : (
-                                    <h2 className="error">No Records Found</h2>
+                                    <h2 className="ng-error">
+                                        No Records Found
+                                    </h2>
                                 )}
                             </div>
                         )}

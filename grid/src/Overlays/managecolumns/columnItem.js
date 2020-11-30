@@ -55,15 +55,13 @@ const ColumnItem = ({
                     data-testid="columnItem"
                     ref={(node) => drag(drop(node))}
                     style={{ cursor: "move" }}
-                    className="column_drag"
+                    className="ng-popover--column__drag"
                 >
                     <i>
                         <IconJustify />
                     </i>
                 </div>
-                <div className="columnItem__Header">
-                    {columnTitle || columnHeader}
-                </div>
+                <span>{columnTitle || columnHeader}</span>
                 {isGroupHeader === true && columns && columns.length > 0 ? (
                     columns.map((col) => {
                         const {
@@ -96,7 +94,7 @@ const ColumnItem = ({
                                           className="ng-popover--column__wrap"
                                           key={cellId}
                                       >
-                                          <div className="column__checkbox">
+                                          <div className="ng-popover--column__check">
                                               <div className="form-check">
                                                   <input
                                                       type="checkbox"

@@ -6,7 +6,7 @@ export const updatedActionsHeaderClass = (isDesktop) => {
         if (tableContainerList && tableContainerList.length > 0) {
             const tableContainer = tableContainerList[0];
             const tableHeaders = document.getElementsByClassName(
-                "table-row--head"
+                "neo-grid__thead"
             );
             if (tableHeaders && tableHeaders.length > 0) {
                 const tableHeader = tableHeaders[0];

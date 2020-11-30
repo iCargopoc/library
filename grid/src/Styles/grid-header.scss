@@ -9,27 +9,27 @@
         padding: rem(8) rem(4);
         justify-content: space-between;
         border-bottom: 1px solid var(--border-grey);
-        .header-results {
+        .ng-header-results {
             display: flex;
             font-size: rem(14);
             color: var(--titlecolor);
             font-weight: $font-weight-bold;
             align-items: center;
             min-width: rem(90);
+            &__title {
+                margin-left: rem(5);
+                display: inline-block;
+            }
         }
-        &__type {
-            margin-left: rem(5);
-            display: inline-block;
-        }
-        .header-utils {
+        .ng-header-utils {
             display: flex;
             align-items: center;
-            .txt-wrap {
+            .ng-txt-wrap {
                 position: relative;
-                .txt {
+                .ng-txt {
                     padding: 1px 0 0 rem(24);
                 }
-                i {
+                &__icon {
                     position: absolute;
                     left: 7px;
                     top: 0;

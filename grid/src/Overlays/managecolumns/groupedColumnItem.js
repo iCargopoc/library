@@ -14,7 +14,7 @@ const groupedColumnItem = ({
         innerCells && innerCells.length > 0 && display === true;
 
     return (
-        <div className="ng-popover--column__list grouped__columns__wrap">
+        <div className="ng-popover--column__list ng-popover--column__list--group">
             {isItemToBeDisplayed ? <strong>{title || Header}</strong> : null}
             {isItemToBeDisplayed
                 ? innerCells.map((cell) => {
@@ -24,7 +24,7 @@ const groupedColumnItem = ({
                               className="ng-popover--column__wrap"
                               key={cellId}
                           >
-                              <div className="column__checkbox">
+                              <div className="ng-popover--column__check">
                                   <div className="form-check">
                                       <input
                                           type="checkbox"

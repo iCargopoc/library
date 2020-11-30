@@ -69,7 +69,7 @@ const CellDisplayAndEdit = ({
                 >
                     {cellEditContent ? (
                         <div
-                            className="cell-edit"
+                            className="neo-grid__cell-edit"
                             data-testid="cell-edit-icon"
                             role="presentation"
                             onClick={openEdit}
@@ -81,7 +81,7 @@ const CellDisplayAndEdit = ({
                     ) : null}
                     {cellDisplayContent}
                     {isEditOpen ? (
-                        <div className="table-cell--content-edit">
+                        <div className="neo-grid__content-edit">
                             {cellEditContent}
                             <button
                                 type="button"

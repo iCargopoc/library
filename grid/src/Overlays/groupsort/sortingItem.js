@@ -113,10 +113,10 @@ const SortItem = ({
             </div>
 
             <div className="ng-popover--sort__reorder">
-                <div className="sort__file">
+                <div>
                     <select
                         data-testid="groupSort-sortBy"
-                        className="custom__ctrl"
+                        className="ng-popover--sort__select"
                         onChange={changeSortByOptions}
                         value={sortOption.sortBy}
                     >
@@ -138,10 +138,10 @@ const SortItem = ({
                 </div>
             </div>
             <div className="ng-popover--sort__reorder">
-                <div className="sort__file">
+                <div>
                     <select
                         data-testid="groupSort-sortOn"
-                        className="custom__ctrl"
+                        className="ng-popover--sort__select"
                         onChange={changeSortOnOptions}
                         value={sortOption.sortOn}
                     >
@@ -171,10 +171,10 @@ const SortItem = ({
                 </div>
             </div>
             <div className="ng-popover--sort__reorder">
-                <div className="sort__file">
+                <div>
                     <select
                         data-testid="groupSort-order"
-                        className="custom__ctrl"
+                        className="ng-popover--sort__select"
                         value={sortOption.order}
                         onChange={changeSortOrderOptions}
                     >
@@ -191,7 +191,7 @@ const SortItem = ({
             </div>
             <div className="ng-popover--sort__reorder">
                 <div
-                    className="sort__icon"
+                    className="ng-popover--sort__icon"
                     role="presentation"
                     onClick={copySort}
                 >
@@ -202,7 +202,7 @@ const SortItem = ({
             </div>
             <div className="ng-popover--sort__reorder">
                 <div
-                    className="sort__icon"
+                    className="ng-popover--sort__icon"
                     role="presentation"
                     onClick={deleteSort}
                 >

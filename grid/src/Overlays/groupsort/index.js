@@ -181,7 +181,9 @@ const GroupSort = (props) => {
                             role="presentation"
                             onClick={addSortingOptions}
                         >
-                            <span className="icon-plus">+</span>
+                            <span className="ng-popover--sort__icon-plus">
+                                +
+                            </span>
                             <div
                                 className="ng-popover__txt"
                                 data-testid="addSort"

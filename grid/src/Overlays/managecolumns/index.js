@@ -355,7 +355,7 @@ const ColumnReordering = (props) => {
                 </div>
                 <div className="ng-popover__settings">
                     <div className="ng-popover__header">
-                        <div className="column__headerTxt">
+                        <div>
                             <strong>Column Settings</strong>
                             {isErrorDisplayed ? (
                                 <strong className="ng-popover--column__warning">
@@ -408,7 +408,7 @@ const ColumnReordering = (props) => {
                                                           className="ng-popover--column__wrap"
                                                           key={`${cellId}`}
                                                       >
-                                                          <div className="column__checkbox">
+                                                          <div className="ng-popover--column__check">
                                                               <div className="form-check">
                                                                   <input
                                                                       type="checkbox"

@@ -90,16 +90,16 @@ const ColumnSearch = ({
 
     if (searchableColumns && searchableColumns.length > 0) {
         return (
-            <div className="chooser-body">
+            <div className="ng-chooser-body">
                 <input
                     type="text"
                     placeholder="Search column"
-                    className="custom__ctrl"
+                    className="ng-chooser-body__txt"
                     data-testid="filterColumnsList"
                     onChange={onColumnSearch}
                 />
-                <div className="chooser-body__selectall">
-                    <div className="chooser-body__checkbox">
+                <div className="ng-chooser-body__selectall">
+                    <div className="ng-chooser-body__checkbox">
                         <div className="form-check">
                             <input
                                 type="checkbox"
@@ -112,7 +112,7 @@ const ColumnSearch = ({
                             />
                             <label
                                 htmlFor="chk_selectAllSearchableColumns"
-                                className="form-check-label column__selectTxt"
+                                className="form-check-label"
                             >
                                 Select All
                             </label>
@@ -127,8 +127,8 @@ const ColumnSearch = ({
                         isDisplayInExpandedRegion
                     } = column;
                     return (
-                        <div className="chooser-body__wrap" key={columnId}>
-                            <div className="chooser-body__checkbox">
+                        <div className="ng-chooser-body__wrap" key={columnId}>
+                            <div className="ng-chooser-body__checkwrap">
                                 <div className="form-check">
                                     <input
                                         type="checkbox"
@@ -146,7 +146,7 @@ const ColumnSearch = ({
                                     />
                                     <label
                                         htmlFor={`chk_selectSearchableColumn_${columnId}`}
-                                        className="form-check-label column__txt"
+                                        className="form-check-label ng-chooser-body__label"
                                     >
                                         {title || Header}
                                     </label>

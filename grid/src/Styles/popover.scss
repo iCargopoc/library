@@ -56,7 +56,7 @@
         }
         &__chooser {
             border-right: 1px solid var(--light-grey);
-            .chooser-body {
+            .ng-chooser-body {
                 padding: 10px;
                 margin-bottom: 10px;
                 height: 440px;
@@ -68,7 +68,7 @@
                     display: flex;
                     padding: 0px 10px;
                 }
-                .custom__ctrl {
+                &__txt {
                     border: 1px solid var(--light-grey);
                     border-radius: 5px;
                     padding: 0px 5px;
@@ -81,13 +81,13 @@
                     border: 1px solid var(--light-grey);
                     border-radius: 5px;
                     padding: 0px 10px;
-                    .column__txt {
-                        font-size: rem(12);
-                        color: var(--titlecolor);
-                    }
                 }
-                &__checkbox {
+                &__checkwrap {
                     margin-right: 10px;
+                }
+                &__label {
+                    font-size: rem(12);
+                    color: var(--titlecolor);
                 }
             }
         }
@@ -105,11 +105,6 @@
                 color: var(--dark-grey);
                 width: 14%;
                 cursor: pointer;
-                .icon-plus {
-                    font-size: rem(22);
-                    line-height: 13px;
-                    color: #3c476f;
-                }
                 .ng-popover__txt {
                     margin-left: 5px;
                     color: #3c476f;
@@ -118,39 +113,41 @@
                     font-weight: normal;
                 }
             }
-            ul {
+            &__icon-plus {
+                font-size: rem(22);
+                line-height: 13px;
+                color: #3c476f;
+            }
+            &__items-title {
                 display: flex;
                 width: 100%;
                 justify-content: space-around;
-                li {
-                    font-size: rem(12);
-                    position: relative;
-                    left: -28px;
-                    &:nth-child(2) {
-                        left: -58px;
-                    }
-                    &:nth-child(3) {
-                        left: -88px;
-                    }
+            }
+            &__item-text {
+                font-size: rem(12);
+                position: relative;
+                left: -28px;
+                &:nth-child(2) {
+                    left: -58px;
+                }
+                &:nth-child(3) {
+                    left: -88px;
                 }
             }
             &__reorder {
                 padding: 0px 6px;
                 font-size: rem(12);
-                .sort__icon {
-                    margin: 2px 0 0;
-                    cursor: pointer;
-                }
-                .custom__ctrl {
-                    width: 120px;
-                    height: 28px;
-                    border-radius: 3px;
-                    border-color: #d7d7d7;
-                    color: rgba(26, 72, 105, 0.6);
-                }
-                .temp {
-                    font-size: rem(50);
-                }
+            }
+            &__icon {
+                margin: 2px 0 0;
+                cursor: pointer;
+            }
+            &__select {
+                width: 120px;
+                height: 28px;
+                border-radius: 3px;
+                border-color: #d7d7d7;
+                color: rgba(26, 72, 105, 0.6);
             }
             &__footer {
                 padding: 10px;
@@ -159,9 +156,6 @@
                 .ng-popover__btns {
                     margin-left: auto;
                 }
-            }
-            .icon-close {
-                font-size: rem(15);
             }
             &__warning {
                 margin-bottom: 10px;
@@ -217,13 +211,9 @@
                     text-align: left;
                     padding-left: 10px;
                 }
-                .column_drag {
-                    margin-bottom: 10px;
-                }
             }
-            .column__reorder__name {
-                word-break: break-all;
-                line-height: 15px;
+            &__drag {
+                margin-bottom: 10px;
             }
             &__wrap {
                 display: flex;
@@ -231,7 +221,7 @@
             }
             &__list {
                 margin-top: 15px;
-                &.grouped__columns__wrap {
+                &--group {
                     text-align: left;
                     strong {
                         margin-bottom: 6px;
@@ -239,7 +229,7 @@
                     }
                 }
             }
-            .column__checkbox {
+            &__check {
                 margin-right: 10px;
             }
             &__footer {
@@ -255,9 +245,6 @@
             &__btns {
                 margin-left: auto;
             }
-            .icon-close {
-                font-size: rem(15);
-            }
         }
         &--exports {
             width: 550px;
@@ -268,11 +255,6 @@
                 color: #3c425e;
                 font-size: rem(13);
                 display: flex;
-            }
-            .ng-popover__chooser {
-                .export__headertxt {
-                    border: none;
-                }
             }
             &__close {
                 margin-left: auto;

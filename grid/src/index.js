@@ -443,7 +443,7 @@ const Grid = (props) => {
                     data-testid="gridComponent"
                     className={`neo-grid ${className || ""}`}
                 >
-                    <h2 className="error">Invalid Column Configuration</h2>
+                    <h2 className="ng-error">Invalid Column Configuration</h2>
                 </div>
             );
         }
@@ -509,11 +509,11 @@ const Grid = (props) => {
                     rowsToDeselect={rowsToDeselect}
                 />
                 {isNextPageLoading ? (
-                    <div id="loader" className="background">
-                        <div className="dots container">
-                            <span />
-                            <span />
-                            <span />
+                    <div className="ng-loader">
+                        <div className="ng-loader__dots-block">
+                            <span className="ng-loader__dots" />
+                            <span className="ng-loader__dots" />
+                            <span className="ng-loader__dots" />
                         </div>
                     </div>
                 ) : null}

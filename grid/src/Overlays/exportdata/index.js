@@ -365,7 +365,6 @@ const ExportData = (props) => {
                 </div>
                 <div className="ng-popover__settings">
                     <div className="ng-popover--exports__header">
-                        <div className="export__headerTxt" />
                         <div className="ng-popover--exports__close">
                             <i
                                 aria-hidden="true"
@@ -456,7 +455,7 @@ const ExportData = (props) => {
                             </label>
                         </div>
                         <div className="ng-popover--exports__warning">
-                            <span className="alert export-warning">
+                            <span>
                                 <strong>{warning}</strong>
                             </span>
                         </div>

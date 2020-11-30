@@ -16,13 +16,13 @@
     ::-ms-input-placeholder {
         color: var(--placeholder);
     }
-    .error {
+    .ng-error {
         margin-top: 20px;
         color: var(--danger);
         width: 100%;
         text-align: center;
     }
-    .txt {
+    .ng-txt {
         height: rem(32);
         border-radius: 3px;
         padding: 1px 0 0 3px;

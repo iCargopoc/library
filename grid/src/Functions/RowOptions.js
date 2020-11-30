@@ -22,27 +22,27 @@ const RowOptions = ({ row, rowActions }) => {
     );
 
     return (
-        <div className="row-options-wrap">
+        <div className="ng-action__utils">
             <span
-                className="icon-row-options"
+                className="ng-action__utils-block"
                 data-testid="rowActions-open-link"
                 role="presentation"
                 onClick={openRowOptionsOverlay}
             >
-                <i />
-                <i />
-                <i />
+                <i className="ng-action__kebab" />
+                <i className="ng-action__kebab" />
+                <i className="ng-action__kebab" />
             </span>
             {isRowOptionsOpen ? (
                 <ClickAwayListener
                     onClickAway={closeRowOptionsOverlay}
-                    className="row-options-overlay"
+                    className="ng-action__popover"
                     data-testid="rowActions-kebab-overlay"
                 >
                     {rowActionsOverlayContent}
                     <span
                         role="presentation"
-                        className="close"
+                        className="ng-action__close"
                         data-testid="close-rowActions-kebab-overlay"
                         onClick={closeRowOptionsOverlay}
                     >
