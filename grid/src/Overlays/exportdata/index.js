@@ -389,14 +389,19 @@ const ExportData = (props) => {
                                     onChange={changeDownloadType}
                                 />
                             </div>
-                            <div className="ng-popover--exports__file">
-                                <i>
-                                    <IconPdf />
-                                </i>
-                                <strong className="ng-popover--exports__file-type">
-                                    PDF
-                                </strong>
-                            </div>
+                            <label
+                                htmlFor="chk_pdf"
+                                className="form-check-label"
+                            >
+                                <div className="ng-popover--exports__file">
+                                    <i>
+                                        <IconPdf />
+                                    </i>
+                                    <strong className="ng-popover--exports__file-type">
+                                        PDF
+                                    </strong>
+                                </div>
+                            </label>
                         </div>
                         <div className="ng-popover--exports__reorder">
                             <div className="form-check">
@@ -410,14 +415,19 @@ const ExportData = (props) => {
                                     onChange={changeDownloadType}
                                 />
                             </div>
-                            <div className="ng-popover--exports__file">
-                                <i>
-                                    <IconExcel />
-                                </i>
-                                <strong className="ng-popover--exports__file-type">
-                                    Excel
-                                </strong>
-                            </div>
+                            <label
+                                htmlFor="chk_excel"
+                                className="form-check-label"
+                            >
+                                <div className="ng-popover--exports__file">
+                                    <i>
+                                        <IconExcel />
+                                    </i>
+                                    <strong className="ng-popover--exports__file-type">
+                                        Excel
+                                    </strong>
+                                </div>
+                            </label>
                         </div>
                         <div className="ng-popover--exports__reorder">
                             <div className="form-check">
@@ -431,14 +441,19 @@ const ExportData = (props) => {
                                     onChange={changeDownloadType}
                                 />
                             </div>
-                            <div className="ng-popover--exports__file">
-                                <i>
-                                    <IconCsv />
-                                </i>
-                                <strong className="ng-popover--exports__file-type">
-                                    CSV
-                                </strong>
-                            </div>
+                            <label
+                                htmlFor="chk_csv"
+                                className="form-check-label"
+                            >
+                                <div className="ng-popover--exports__file">
+                                    <i>
+                                        <IconCsv />
+                                    </i>
+                                    <strong className="ng-popover--exports__file-type">
+                                        CSV
+                                    </strong>
+                                </div>
+                            </label>
                         </div>
                         <div className="ng-popover--exports__warning">
                             <span className="alert export-warning">
