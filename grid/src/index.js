@@ -441,7 +441,7 @@ const Grid = (props) => {
             return (
                 <div
                     data-testid="gridComponent"
-                    className={`grid-component-container ${className || ""}`}
+                    className={`neo-grid ${className || ""}`}
                 >
                     <h2 className="error">Invalid Column Configuration</h2>
                 </div>
@@ -450,8 +450,8 @@ const Grid = (props) => {
         return (
             <div
                 data-testid="gridComponent"
-                className={`grid-component-container ${className || ""} ${
-                    theme === "portal" ? "neo-grid-portal" : ""
+                className={`neo-grid ${className || ""} ${
+                    theme === "portal" ? "neo-grid--portal" : ""
                 }`}
                 style={{ width: gridWidth || "100%" }}
             >

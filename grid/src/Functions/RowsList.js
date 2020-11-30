@@ -49,7 +49,7 @@ const RowsList = ({
             }}
             onItemsRendered={onItemsRendered}
             overscanCount={overScanCount}
-            className="tableContainer__List"
+            className="neo-grid__tbody-list"
         >
             {RenderRow}
         </List>

@@ -90,7 +90,7 @@ const ColumnSearch = ({
 
     if (searchableColumns && searchableColumns.length > 0) {
         return (
-            <div className="columnSearch column__body">
+            <div className="chooser-body">
                 <input
                     type="text"
                     placeholder="Search column"
@@ -98,8 +98,8 @@ const ColumnSearch = ({
                     data-testid="filterColumnsList"
                     onChange={onColumnSearch}
                 />
-                <div className="column__selectAll">
-                    <div className="column__checkbox">
+                <div className="chooser-body__selectall">
+                    <div className="chooser-body__checkbox">
                         <div className="form-check">
                             <input
                                 type="checkbox"
@@ -127,8 +127,8 @@ const ColumnSearch = ({
                         isDisplayInExpandedRegion
                     } = column;
                     return (
-                        <div className="column__wrap" key={columnId}>
-                            <div className="column__checkbox">
+                        <div className="chooser-body__wrap" key={columnId}>
+                            <div className="chooser-body__checkbox">
                                 <div className="form-check">
                                     <input
                                         type="checkbox"

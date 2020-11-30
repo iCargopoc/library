@@ -14,13 +14,16 @@ const groupedColumnItem = ({
         innerCells && innerCells.length > 0 && display === true;
 
     return (
-        <div className="column__innerCells__wrap grouped__columns__wrap">
+        <div className="ng-popover--column__list grouped__columns__wrap">
             {isItemToBeDisplayed ? <strong>{title || Header}</strong> : null}
             {isItemToBeDisplayed
                 ? innerCells.map((cell) => {
                       const { cellId } = cell;
                       return (
-                          <div className="column__wrap" key={cellId}>
+                          <div
+                              className="ng-popover--column__wrap"
+                              key={cellId}
+                          >
                               <div className="column__checkbox">
                                   <div className="form-check">
                                       <input

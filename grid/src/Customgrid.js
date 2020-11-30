@@ -981,10 +981,10 @@ const Customgrid = (props) => {
                         return (
                             <div
                                 {...row.getRowProps({ style })}
-                                className={`table-row tr ${rowClassName}`}
+                                className={`neo-grid__tr ${rowClassName}`}
                             >
                                 <div
-                                    className={`table-row-wrap ${
+                                    className={`neo-grid__row-wrap ${
                                         isRowExpandEnabled && row.isExpanded
                                             ? "table-row-wrap-expand"
                                             : ""
@@ -995,7 +995,7 @@ const Customgrid = (props) => {
                                             return (
                                                 <div
                                                     {...cell.getCellProps()}
-                                                    className="table-cell td"
+                                                    className="neo-grid__td"
                                                 >
                                                     {cell.render("Cell")}
                                                 </div>
@@ -1050,13 +1050,13 @@ const Customgrid = (props) => {
         // Infinite loader used for lazy loading, with the properties passed here and other values calculated at the top
         // React window list is used for implementing virtualization, specifying the item count in a frame and height of each rows in it.
         return (
-            <div className="table-wrapper">
+            <div className="neo-grid__wrapper">
                 <div
-                    className={`neo-grid-header ${
+                    className={`neo-grid__header ${
                         gridHeader === false ? "neo-table__noBorder" : ""
                     }`}
                 >
-                    <div className="neo-grid-header__results">
+                    <div className="header-results">
                         {gridHeader === false && multiRowSelection !== false ? (
                             <div className="form-check">
                                 <input
@@ -1068,20 +1068,22 @@ const Customgrid = (props) => {
                                 />
                             </div>
                         ) : null}
-                        <strong>
+                        <strong className="header-results__count">
                             {totalRecordsCount > 0 &&
                             rows.length === gridData.length
                                 ? totalRecordsCount
                                 : findAllChildRows(rows).length}
                         </strong>
-                        <span>{title || "Rows"}</span>
+                        <span className="header-results__type">
+                            {title || "Rows"}
+                        </span>
                     </div>
                     {CustomPanel ? (
-                        <div className="neo-grid-header__customPanel">
+                        <div className="neo-grid__customPanel">
                             <CustomPanel />
                         </div>
                     ) : null}
-                    <div className="neo-grid-header__utilities">
+                    <div className="header-utils">
                         {globalSearch !== false ? (
                             <GlobalFilter
                                 globalFilter={globalFilter}
@@ -1089,9 +1091,9 @@ const Customgrid = (props) => {
                             />
                         ) : null}
                         {gridHeader !== false && columnFilter !== false ? (
-                            <div className="utilities-icon-container keyword-search-container">
+                            <div className="header-utils__items keyword-search-container">
                                 <div
-                                    className="utilities-icon keyword-search"
+                                    className="header-utils__icons keyword-search"
                                     role="presentation"
                                     data-testid="toggleColumnFilter"
                                     onClick={toggleColumnFilter}
@@ -1103,9 +1105,9 @@ const Customgrid = (props) => {
                             </div>
                         ) : null}
                         {isGroupSortNeeded !== false && groupSort !== false ? (
-                            <div className="utilities-icon-container group-sort-container">
+                            <div className="header-utils__items group-sort-container">
                                 <div
-                                    className="utilities-icon group-sort"
+                                    className="header-utils__icons group-sort"
                                     role="presentation"
                                     data-testid="toggleGroupSortOverLay"
                                     onClick={toggleGroupSortOverLay}
@@ -1127,9 +1129,9 @@ const Customgrid = (props) => {
                             </div>
                         ) : null}
                         {columnChooser !== false ? (
-                            <div className="utilities-icon-container manage-columns-container">
+                            <div className="header-utils__items manage-columns-container">
                                 <div
-                                    className="utilities-icon manage-columns"
+                                    className="header-utils__icons manage-columns"
                                     role="presentation"
                                     data-testid="toggleManageColumnsOverlay"
                                     onClick={toggleManageColumnsOverlay}
@@ -1153,9 +1155,9 @@ const Customgrid = (props) => {
                             </div>
                         ) : null}
                         {exportData !== false ? (
-                            <div className="utilities-icon-container manage-columns-container">
+                            <div className="header-utils__items manage-columns-container">
                                 <div
-                                    className="utilities-icon export-data"
+                                    className="header-utils__icons export-data"
                                     role="presentation"
                                     data-testid="toggleExportDataOverlay"
                                     onClick={toggleExportDataOverlay}
@@ -1178,9 +1180,9 @@ const Customgrid = (props) => {
                             </div>
                         ) : null}
                         {typeof onGridRefresh === "function" ? (
-                            <div className="utilities-icon-container refresh-data-container">
+                            <div className="header-utils__items refresh-data-container">
                                 <div
-                                    className="utilities-icon refresh-data"
+                                    className="header-utils__icons refresh-data"
                                     role="presentation"
                                     data-testid="refreshGrid"
                                     onClick={onGridRefresh}
@@ -1195,21 +1197,21 @@ const Customgrid = (props) => {
                 </div>
 
                 <div
-                    className="tableContainer table-outer neo-grid"
+                    className="neo-grid__table"
                     style={{
                         height: gridHeight || "50vh",
                         overflowX: "auto",
                         overflowY: "hidden"
                     }}
                 >
-                    <AutoSizer
-                        disableWidth
-                        className="tableContainer__AutoSizer"
-                    >
+                    <AutoSizer disableWidth className="neo-grid__autosizer">
                         {({ height }) => (
-                            <div {...getTableProps()} className="table">
+                            <div
+                                {...getTableProps()}
+                                className="neo-grid__content"
+                            >
                                 {gridHeader === false ? null : (
-                                    <div className="thead table-row table-row--head">
+                                    <div className="neo-grid__thead">
                                         {headerGroups.map(
                                             (headerGroup, index) => {
                                                 // If there are morthan 1 headerGroups, we consider 1st one as group header row
@@ -1220,7 +1222,7 @@ const Customgrid = (props) => {
                                                 return (
                                                     <div
                                                         {...headerGroup.getHeaderGroupProps()}
-                                                        className="tr"
+                                                        className="neo-grid__tr"
                                                     >
                                                         {headerGroup.headers.map(
                                                             (column) => {
@@ -1242,7 +1244,7 @@ const Customgrid = (props) => {
                                                                     return (
                                                                         <div
                                                                             {...column.getHeaderProps()}
-                                                                            className={`table-cell column-heading th ${
+                                                                            className={`neo-grid__th ${
                                                                                 isGroupHeader ===
                                                                                 true
                                                                                     ? "group-column-heading"
@@ -1256,7 +1258,7 @@ const Customgrid = (props) => {
                                                                             }
                                                                         >
                                                                             <div
-                                                                                className="column-heading-title"
+                                                                                className="neo-grid__th__title"
                                                                                 data-testid="column-header-sort"
                                                                                 {...column.getSortByToggleProps()}
                                                                             >
@@ -1325,7 +1327,7 @@ const Customgrid = (props) => {
                                 {rows && rows.length > 0 ? (
                                     <div
                                         {...getTableBodyProps()}
-                                        className={`tbody ${
+                                        className={`neo-grid__tbody ${
                                             gridHeader === false
                                                 ? "tbody-withoutHeading"
                                                 : ""

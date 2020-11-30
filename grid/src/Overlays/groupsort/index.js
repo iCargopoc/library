@@ -139,77 +139,75 @@ const GroupSort = (props) => {
             return (
                 <ClickAwayListener
                     onClickAway={toggleGroupSortOverLay}
-                    className="neo-grid-popover"
+                    className="ng-popover ng-popover--sort"
                 >
-                    <div className="neo-grid-popover__sort">
-                        <div className="neo-grid-popover__title">
-                            <h2>Sort</h2>
-                            <div className="neo-grid-popover__close">
-                                <i
-                                    aria-hidden="true"
-                                    onClick={toggleGroupSortOverLay}
-                                >
-                                    <IconClose />
-                                </i>
-                            </div>
-                        </div>
-                        <div className="neo-grid-popover__content">
-                            <DndProvider
-                                backend={MultiBackend}
-                                options={HTML5toTouch}
+                    <div className="ng-popover__header">
+                        <strong>Sort</strong>
+                        <div className="ng-popover__close">
+                            <i
+                                aria-hidden="true"
+                                onClick={toggleGroupSortOverLay}
                             >
-                                <SortingList
-                                    sortOptions={sortOptions}
-                                    sortingOrders={sortingOrders}
-                                    columns={columns}
-                                    updateSortingOptions={updateSortingOptions}
-                                    updateSingleSortingOption={
-                                        updateSingleSortingOption
-                                    }
-                                    copySortOption={copySortOption}
-                                    deleteSortOption={deleteSortOption}
-                                />
-                            </DndProvider>
+                                <IconClose />
+                            </i>
                         </div>
-                        <div className="sort-warning">
-                            {isErrorDisplayed ? (
-                                <span>Duplicate sort options found.</span>
-                            ) : null}
-                        </div>
-                        <div className="sort__new">
+                    </div>
+                    <div className="ng-popover__content">
+                        <DndProvider
+                            backend={MultiBackend}
+                            options={HTML5toTouch}
+                        >
+                            <SortingList
+                                sortOptions={sortOptions}
+                                sortingOrders={sortingOrders}
+                                columns={columns}
+                                updateSortingOptions={updateSortingOptions}
+                                updateSingleSortingOption={
+                                    updateSingleSortingOption
+                                }
+                                copySortOption={copySortOption}
+                                deleteSortOption={deleteSortOption}
+                            />
+                        </DndProvider>
+                    </div>
+                    <div className="ng-popover--sort__warning">
+                        {isErrorDisplayed ? (
+                            <span>Duplicate sort options found.</span>
+                        ) : null}
+                    </div>
+                    <div className="ng-popover--sort__new">
+                        <div
+                            className="ng-popover--sort__section"
+                            role="presentation"
+                            onClick={addSortingOptions}
+                        >
+                            <span className="icon-plus">+</span>
                             <div
-                                className="sort__section"
-                                role="presentation"
-                                onClick={addSortingOptions}
+                                className="ng-popover__txt"
+                                data-testid="addSort"
                             >
-                                <span>+</span>
-                                <div
-                                    className="sort__txt"
-                                    data-testid="addSort"
-                                >
-                                    New Sort
-                                </div>
+                                New Sort
                             </div>
                         </div>
-                        <div className="sort__footer">
-                            <div className="sort__btns">
-                                <button
-                                    type="button"
-                                    data-testid="clearSort"
-                                    className="neo-btn neo-btn-link btn btn-secondary"
-                                    onClick={clearSortingOptions}
-                                >
-                                    Clear All
-                                </button>
-                                <button
-                                    type="button"
-                                    data-testid="saveSort"
-                                    className="neo-btn neo-btn-primary btn btn-secondary"
-                                    onClick={applySort}
-                                >
-                                    Ok
-                                </button>
-                            </div>
+                    </div>
+                    <div className="ng-popover--sort__footer">
+                        <div className="ng-popover__btns">
+                            <button
+                                type="button"
+                                data-testid="clearSort"
+                                className="neo-btn neo-btn-link btn btn-secondary"
+                                onClick={clearSortingOptions}
+                            >
+                                Clear All
+                            </button>
+                            <button
+                                type="button"
+                                data-testid="saveSort"
+                                className="neo-btn neo-btn-primary btn btn-secondary"
+                                onClick={applySort}
+                            >
+                                Ok
+                            </button>
                         </div>
                     </div>
                 </ClickAwayListener>

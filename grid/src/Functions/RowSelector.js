@@ -10,7 +10,7 @@ const RowSelector = forwardRef(({ indeterminate, ...rest }, ref) => {
     }, [resolvedRef, indeterminate]);
 
     return (
-        <div className="row-selector-cell-container">
+        <div className="neo-grid__row-selector">
             <div className="form-check">
                 <input
                     type="checkbox"

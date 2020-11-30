@@ -11,7 +11,7 @@ const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
     }, 200);
 
     return (
-        <div className="txt-wrap neo-grid-header_globalFilter">
+        <div className="txt-wrap ng-header__globalFilter">
             <input
                 type="text"
                 data-testid="globalFilter-textbox"

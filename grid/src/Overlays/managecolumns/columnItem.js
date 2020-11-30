@@ -50,7 +50,7 @@ const ColumnItem = ({
 
     return (
         <div style={{ opacity }}>
-            <div className="column__reorder">
+            <div className="ng-popover--column__reorder">
                 <div
                     data-testid="columnItem"
                     ref={(node) => drag(drop(node))}
@@ -87,13 +87,13 @@ const ColumnItem = ({
                         );
                     })
                 ) : (
-                    <div className="column__innerCells__wrap">
+                    <div className="ng-popover--column__list">
                         {innerCells && innerCells.length > 0
                             ? innerCells.map((cell) => {
                                   const { cellId, Header, display } = cell;
                                   return (
                                       <div
-                                          className="column__wrap"
+                                          className="ng-popover--column__wrap"
                                           key={cellId}
                                       >
                                           <div className="column__checkbox">

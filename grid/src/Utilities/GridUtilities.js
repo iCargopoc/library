@@ -1,7 +1,7 @@
 export const updatedActionsHeaderClass = (isDesktop) => {
     if (isDesktop) {
         const tableContainerList = document.getElementsByClassName(
-            "tableContainer__List"
+            "neo-grid__tbody-list"
         );
         if (tableContainerList && tableContainerList.length > 0) {
             const tableContainer = tableContainerList[0];

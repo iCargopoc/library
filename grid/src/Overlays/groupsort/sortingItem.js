@@ -99,8 +99,8 @@ const SortItem = ({
     const opacity = isDragging ? 0.5 : 1;
 
     return (
-        <div className="sort__bodyContent" style={{ opacity }}>
-            <div className="sort__reorder">
+        <div className="ng-popover--sort__items" style={{ opacity }}>
+            <div className="ng-popover__reorder">
                 <div
                     data-testid="sortItem"
                     ref={(node) => drag(drop(node))}
@@ -112,7 +112,7 @@ const SortItem = ({
                 </div>
             </div>
 
-            <div className="sort__reorder">
+            <div className="ng-popover--sort__reorder">
                 <div className="sort__file">
                     <select
                         data-testid="groupSort-sortBy"
@@ -137,7 +137,7 @@ const SortItem = ({
                     </select>
                 </div>
             </div>
-            <div className="sort__reorder">
+            <div className="ng-popover--sort__reorder">
                 <div className="sort__file">
                     <select
                         data-testid="groupSort-sortOn"
@@ -170,7 +170,7 @@ const SortItem = ({
                     </select>
                 </div>
             </div>
-            <div className="sort__reorder">
+            <div className="ng-popover--sort__reorder">
                 <div className="sort__file">
                     <select
                         data-testid="groupSort-order"
@@ -189,7 +189,7 @@ const SortItem = ({
                     </select>
                 </div>
             </div>
-            <div className="sort__reorder">
+            <div className="ng-popover--sort__reorder">
                 <div
                     className="sort__icon"
                     role="presentation"
@@ -200,7 +200,7 @@ const SortItem = ({
                     </i>
                 </div>
             </div>
-            <div className="sort__reorder">
+            <div className="ng-popover--sort__reorder">
                 <div
                     className="sort__icon"
                     role="presentation"

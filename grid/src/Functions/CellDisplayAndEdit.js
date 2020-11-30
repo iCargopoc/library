@@ -65,7 +65,7 @@ const CellDisplayAndEdit = ({
             >
                 <ClickAwayListener
                     onClickAway={closeEdit}
-                    className={`table-cell--content table-cell--content__${id}`}
+                    className={`neo-grid__cell-content neo-grid__cell-content--${id}`}
                 >
                     {cellEditContent ? (
                         <div

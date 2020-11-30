@@ -349,119 +349,121 @@ const ExportData = (props) => {
         return (
             <ClickAwayListener
                 onClickAway={toggleExportDataOverlay}
-                className="neo-grid-popover neo-grid-popover--exports exports--grid"
+                className="ng-popover ng-popover--exports"
             >
-                <div className="neo-grid-popover__export export__grid">
-                    <div className="export__chooser">
-                        <div className="export__header">
-                            <strong>Export Data</strong>
-                        </div>
-                        <ColumnSearch
-                            columns={columns}
-                            additionalColumn={additionalColumn}
-                            managedColumns={managedColumns}
-                            managedAdditionalColumn={managedAdditionalColumn}
-                            updateColumns={updateColumns}
-                        />
+                <div className="ng-popover__chooser">
+                    <div className="ng-popover--exports__header">
+                        <strong>Export Data</strong>
                     </div>
-                    <div className="export__settings">
-                        <div className="export__header">
-                            <div className="export__headerTxt" />
-                            <div className="export__close">
-                                <i
-                                    aria-hidden="true"
-                                    onClick={toggleExportDataOverlay}
-                                >
-                                    <IconClose />
+                    <ColumnSearch
+                        columns={columns}
+                        additionalColumn={additionalColumn}
+                        managedColumns={managedColumns}
+                        managedAdditionalColumn={managedAdditionalColumn}
+                        updateColumns={updateColumns}
+                    />
+                </div>
+                <div className="ng-popover__settings">
+                    <div className="ng-popover--exports__header">
+                        <div className="export__headerTxt" />
+                        <div className="ng-popover--exports__close">
+                            <i
+                                aria-hidden="true"
+                                onClick={toggleExportDataOverlay}
+                            >
+                                <IconClose />
+                            </i>
+                        </div>
+                    </div>
+                    <div className="ng-popover--exports__title">Export As</div>
+                    <div className="ng-popover--exports__body">
+                        <div className="ng-popover--exports__reorder">
+                            <div className="form-check">
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input custom-checkbox form-check-input"
+                                    id="chk_pdf"
+                                    data-testid="chk_pdf_test"
+                                    value="pdf"
+                                    checked={downloadTypes.includes("pdf")}
+                                    onChange={changeDownloadType}
+                                />
+                            </div>
+                            <div className="ng-popover--exports__file">
+                                <i>
+                                    <IconPdf />
                                 </i>
+                                <strong className="ng-popover--exports__file-type">
+                                    PDF
+                                </strong>
                             </div>
                         </div>
-                        <div className="export__as">Export As</div>
-                        <div className="export__body">
-                            <div className="export__reorder">
-                                <div className="form-check">
-                                    <input
-                                        type="checkbox"
-                                        className="form-check-input custom-checkbox form-check-input"
-                                        id="chk_pdf"
-                                        data-testid="chk_pdf_test"
-                                        value="pdf"
-                                        checked={downloadTypes.includes("pdf")}
-                                        onChange={changeDownloadType}
-                                    />
-                                </div>
-                                <div className="export__file">
-                                    <i>
-                                        <IconPdf />
-                                    </i>
-                                    <strong>PDF</strong>
-                                </div>
+                        <div className="ng-popover--exports__reorder">
+                            <div className="form-check">
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input custom-checkbox form-check-input"
+                                    id="chk_excel"
+                                    data-testid="chk_excel_test"
+                                    value="excel"
+                                    checked={downloadTypes.includes("excel")}
+                                    onChange={changeDownloadType}
+                                />
                             </div>
-                            <div className="export__reorder">
-                                <div className="form-check">
-                                    <input
-                                        type="checkbox"
-                                        className="form-check-input custom-checkbox form-check-input"
-                                        id="chk_excel"
-                                        data-testid="chk_excel_test"
-                                        value="excel"
-                                        checked={downloadTypes.includes(
-                                            "excel"
-                                        )}
-                                        onChange={changeDownloadType}
-                                    />
-                                </div>
-                                <div className="export__file">
-                                    <i>
-                                        <IconExcel />
-                                    </i>
-                                    <strong>Excel</strong>
-                                </div>
-                            </div>
-                            <div className="export__reorder">
-                                <div className="form-check">
-                                    <input
-                                        type="checkbox"
-                                        className="form-check-input custom-checkbox form-check-input"
-                                        id="chk_csv"
-                                        data-testid="chk_csv_test"
-                                        value="csv"
-                                        checked={downloadTypes.includes("csv")}
-                                        onChange={changeDownloadType}
-                                    />
-                                </div>
-                                <div className="export__file">
-                                    <i>
-                                        <IconCsv />
-                                    </i>
-                                    <strong>CSV</strong>
-                                </div>
-                            </div>
-                            <div className="exportWarning">
-                                <span className="alert export-warning">
-                                    <strong>{warning}</strong>
-                                </span>
+                            <div className="ng-popover--exports__file">
+                                <i>
+                                    <IconExcel />
+                                </i>
+                                <strong className="ng-popover--exports__file-type">
+                                    Excel
+                                </strong>
                             </div>
                         </div>
-                        <div className="export__footer">
-                            <div className="export__btns">
-                                <button
-                                    type="button"
-                                    data-testid="cancel_button"
-                                    className="neo-btn neo-btn-primary btn btn-secondary"
-                                    onClick={toggleExportDataOverlay}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="button"
-                                    data-testid="export_button"
-                                    className="neo-btn neo-btn-default btn btn-secondary"
-                                    onClick={exportRowData}
-                                >
-                                    Export
-                                </button>
+                        <div className="ng-popover--exports__reorder">
+                            <div className="form-check">
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input custom-checkbox form-check-input"
+                                    id="chk_csv"
+                                    data-testid="chk_csv_test"
+                                    value="csv"
+                                    checked={downloadTypes.includes("csv")}
+                                    onChange={changeDownloadType}
+                                />
                             </div>
+                            <div className="ng-popover--exports__file">
+                                <i>
+                                    <IconCsv />
+                                </i>
+                                <strong className="ng-popover--exports__file-type">
+                                    CSV
+                                </strong>
+                            </div>
+                        </div>
+                        <div className="ng-popover--exports__warning">
+                            <span className="alert export-warning">
+                                <strong>{warning}</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="ng-popover--exports__footer">
+                        <div className="ng-popover--exports__btns">
+                            <button
+                                type="button"
+                                data-testid="cancel_button"
+                                className="neo-btn neo-btn-primary btn btn-secondary"
+                                onClick={toggleExportDataOverlay}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                data-testid="export_button"
+                                className="neo-btn neo-btn-default btn btn-secondary"
+                                onClick={exportRowData}
+                            >
+                                Export
+                            </button>
                         </div>
                     </div>
                 </div>
