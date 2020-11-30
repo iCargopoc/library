@@ -223,11 +223,11 @@
                 margin-top: 15px;
                 &--group {
                     text-align: left;
-                    strong {
-                        margin-bottom: 6px;
-                        display: block;
-                    }
                 }
+            }
+            &__title {
+                margin-bottom: 6px;
+                display: block;
             }
             &__check {
                 margin-right: 10px;

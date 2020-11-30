@@ -15,7 +15,11 @@ const groupedColumnItem = ({
 
     return (
         <div className="ng-popover--column__list ng-popover--column__list--group">
-            {isItemToBeDisplayed ? <strong>{title || Header}</strong> : null}
+            {isItemToBeDisplayed ? (
+                <strong className="ng-popover--column__title">
+                    {title || Header}
+                </strong>
+            ) : null}
             {isItemToBeDisplayed
                 ? innerCells.map((cell) => {
                       const { cellId } = cell;
