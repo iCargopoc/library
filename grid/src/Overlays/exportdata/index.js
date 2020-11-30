@@ -350,6 +350,7 @@ const ExportData = (props) => {
             <ClickAwayListener
                 onClickAway={toggleExportDataOverlay}
                 className="ng-popover ng-popover--exports"
+                data-testid="exportoverlay"
             >
                 <div className="ng-popover__chooser">
                     <div className="ng-popover--exports__header">

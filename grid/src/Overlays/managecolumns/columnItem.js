@@ -50,7 +50,10 @@ const ColumnItem = ({
 
     return (
         <div style={{ opacity }}>
-            <div className="ng-popover--column__reorder">
+            <div
+                className="ng-popover--column__reorder"
+                data-testid="column-box"
+            >
                 <div
                     data-testid="columnItem"
                     ref={(node) => drag(drop(node))}

@@ -140,6 +140,7 @@ const GroupSort = (props) => {
                 <ClickAwayListener
                     onClickAway={toggleGroupSortOverLay}
                     className="ng-popover ng-popover--sort"
+                    data-testid="groupsortoverlay"
                 >
                     <div className="ng-popover__header">
                         <strong>Sort</strong>
@@ -172,24 +173,22 @@ const GroupSort = (props) => {
                     </div>
                     <div className="ng-popover--sort__warning">
                         {isErrorDisplayed ? (
-                            <span>Duplicate sort options found.</span>
+                            <span data-testid="duplicate-sort-error">
+                                Duplicate sort options found.
+                            </span>
                         ) : null}
                     </div>
                     <div className="ng-popover--sort__new">
                         <div
                             className="ng-popover--sort__section"
                             role="presentation"
+                            data-testid="addSort"
                             onClick={addSortingOptions}
                         >
                             <span className="ng-popover--sort__icon-plus">
                                 +
                             </span>
-                            <div
-                                className="ng-popover__txt"
-                                data-testid="addSort"
-                            >
-                                New Sort
-                            </div>
+                            <div className="ng-popover__txt">New Sort</div>
                         </div>
                     </div>
                     <div className="ng-popover--sort__footer">

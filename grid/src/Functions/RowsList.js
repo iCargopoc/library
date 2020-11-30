@@ -31,21 +31,18 @@ const RowsList = ({
             itemCount={rows.length}
             itemSize={(index) => {
                 const currentRow = rows[index];
-                if (currentRow) {
-                    // If this is a child row in tree grid and its parent is in collapsed state, this row height should be 0.
-                    if (isParentRowCollapsed(currentRow)) {
-                        return 0;
-                    }
-                    return (
-                        calculateRowHeight(
-                            currentRow,
-                            headerGroups && headerGroups.length
-                                ? headerGroups[headerGroups.length - 1].headers
-                                : []
-                        ) + (theme === "portal" ? 10 : 0)
-                    );
+                // If this is a child row in tree grid and its parent is in collapsed state, this row height should be 0.
+                if (isParentRowCollapsed(currentRow)) {
+                    return 0;
                 }
-                return 0;
+                return (
+                    calculateRowHeight(
+                        currentRow,
+                        headerGroups && headerGroups.length
+                            ? headerGroups[headerGroups.length - 1].headers
+                            : []
+                    ) + (theme === "portal" ? 10 : 0)
+                );
             }}
             onItemsRendered={onItemsRendered}
             overscanCount={overScanCount}

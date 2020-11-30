@@ -235,44 +235,8 @@ describe("ColumnReordering unit test", () => {
         document.body.appendChild(mockContainer);
     });
 
-    it("should not render ColumnReordering component", () => {
-        render(
-            <ColumnReordering
-                toggleManageColumnsOverlay={toggleManageColumnsOverlay}
-                columns={mockOriginalColumns}
-                additionalColumn={mockAdditionalColumn}
-                updateColumnStructure={mockUpdateColumnStructure}
-            />,
-            mockContainer
-        );
-        const overlay = document.getElementsByClassName(
-            "neo-grid-popover--column"
-        );
-        expect(overlay.innerHTML).toBeUndefined();
-    });
-
-    it("should render ColumnReordering component", () => {
-        const { getByTestId } = render(
-            <ColumnReordering
-                toggleManageColumnsOverlay={toggleManageColumnsOverlay}
-                columns={mockOriginalColumns}
-                additionalColumn={mockAdditionalColumn}
-                updateColumnStructure={mockUpdateColumnStructure}
-            />,
-            mockContainer
-        );
-        expect(mockContainer).toBeDefined();
-        const cancelButton = getByTestId("cancel_columnsManage");
-        // triggering Save button Click
-        act(() => {
-            cancelButton.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-    });
-
     it("should render ColumnReordering search component", () => {
-        const { getByTestId } = render(
+        const { getByTestId, getAllByTestId } = render(
             <ColumnReordering
                 toggleManageColumnsOverlay={toggleManageColumnsOverlay}
                 columns={mockOriginalColumns}
@@ -280,18 +244,14 @@ describe("ColumnReordering unit test", () => {
                 updateColumnStructure={mockUpdateColumnStructure}
             />
         );
-        const filterList = getByTestId("filterColumnsList");
-        fireEvent.change(filterList, { target: { value: "id" } });
-        expect(filterList.value).toBe("id");
-        fireEvent.change(filterList, { target: { value: "" } });
-        const coloumnBodyInnerHtml = document
-            .getElementsByClassName("column__settings")[0]
-            .getElementsByClassName("column__body")[0]
-            .getElementsByClassName("column__reorder");
+        const columnsCount = getAllByTestId("column-box").length;
+        const additionalColumnsCount = getAllByTestId("additional-column-box")
+            .length;
 
-        expect(coloumnBodyInnerHtml.length).toBe(10);
+        expect(columnsCount).toBe(9);
+        expect(additionalColumnsCount).toBe(1);
         const cancelButton = getByTestId("cancel_columnsManage");
-        // triggering Save button Click
+        // triggering Cancel button Click
         act(() => {
             cancelButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
@@ -322,7 +282,7 @@ describe("ColumnReordering unit test", () => {
     it("Un-select and Select All coloumns", () => {
         // LOGIC-->> UnSelect All Columns by unchecking the select All checkBox
         // expect the coloumn body (on showing all chosen coloumns) to be empty
-        const { getByTestId } = render(
+        const { getByTestId, getAllByTestId } = render(
             <ColumnReordering
                 toggleManageColumnsOverlay={toggleManageColumnsOverlay}
                 columns={mockOriginalColumns}
@@ -336,14 +296,24 @@ describe("ColumnReordering unit test", () => {
         // unchecking the select all checkbox
         fireEvent.click(selectAllCheckBox);
 
-        // checking the select all checkbox
+        // Check column and additional column boxes count
+        let columnsCount = document.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        let additionalColumnsCount = document.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(columnsCount).toBe(0);
+        expect(additionalColumnsCount).toBe(0);
+
+        // checking back the select all checkbox
         fireEvent.click(selectAllCheckBox);
 
-        const coloumnBodyInnerHtml = document
-            .getElementsByClassName("column__settings")[0]
-            .getElementsByClassName("column__body")[0]
-            .getElementsByClassName("column__reorder");
-        expect(coloumnBodyInnerHtml.length).toBe(10);
+        // Check column and additional column boxes count
+        columnsCount = getAllByTestId("column-box").length;
+        additionalColumnsCount = getAllByTestId("additional-column-box").length;
+        expect(columnsCount).toBe(9);
+        expect(additionalColumnsCount).toBe(1);
 
         const cancelButton = getByTestId("cancel_columnsManage");
         // triggering Save button Click
@@ -354,8 +324,8 @@ describe("ColumnReordering unit test", () => {
         });
     });
 
-    it("UnSelect The Segment Coloumn From Column Chooser", () => {
-        const { getByTestId } = render(
+    it("UnSelect and Select The Segment Coloumn From Column Chooser", () => {
+        const { getByTestId, getAllByTestId } = render(
             <ColumnReordering
                 toggleManageColumnsOverlay={toggleManageColumnsOverlay}
                 columns={mockOriginalColumns}
@@ -365,26 +335,44 @@ describe("ColumnReordering unit test", () => {
             mockContainer
         );
 
-        const segmentColumCheckBox = document
-            .getElementsByClassName("column__chooser")[0]
-            .getElementsByClassName("column__checkbox")[3]
-            .getElementsByTagName("input")[0];
+        // Check total column boxes count
+        let columnsCount = document.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        expect(columnsCount).toBe(9);
 
+        // Select segment column's checkbox
+        let segmentColumCheckBox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[2];
         act(() => {
             segmentColumCheckBox.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
 
-        const isSegmentIncludedInBody = document
-            .getElementsByClassName("column__settings")[0]
-            .getElementsByClassName("column__body")[0]
-            .innerHTML.includes("Segment");
+        // Check if 1 column box has been removed
+        columnsCount = document.querySelectorAll("[data-testid='column-box']")
+            .length;
+        expect(columnsCount).toBe(8);
 
-        expect(isSegmentIncludedInBody).toBe(false);
+        // Check back the segment column checkbox
+        segmentColumCheckBox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[2];
+        act(() => {
+            segmentColumCheckBox.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
 
+        // Check if removed column box has been added back
+        columnsCount = document.querySelectorAll("[data-testid='column-box']")
+            .length;
+        expect(columnsCount).toBe(9);
+
+        // Save changes
         const saveButton = getByTestId("save_columnsManage");
-
         // triggering Save button Click
         act(() => {
             saveButton.dispatchEvent(
@@ -393,59 +381,8 @@ describe("ColumnReordering unit test", () => {
         });
     });
 
-    it("UnSelect and Select Segment Column ", () => {
-        const { getByTestId } = render(
-            <ColumnReordering
-                toggleManageColumnsOverlay={toggleManageColumnsOverlay}
-                columns={mockOriginalColumns}
-                additionalColumn={mockAdditionalColumn}
-                updateColumnStructure={mockUpdateColumnStructure}
-            />,
-            mockContainer
-        );
-
-        const noOfColoumnsBeforeSelect = document
-            .getElementsByClassName("column__settings")[0]
-            .getElementsByClassName("column__body")[0]
-            .getElementsByClassName("column__reorder").length;
-
-        const segmentColumCheckBox = document
-            .getElementsByClassName("column__chooser")[0]
-            .getElementsByClassName("column__checkbox")[3]
-            .getElementsByTagName("input")[0];
-
-        // unchecking segment checkbox
-        act(() => {
-            segmentColumCheckBox.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        // checking segment checkbox
-        act(() => {
-            segmentColumCheckBox.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        const noOfColoumnsAfterSelect = document
-            .getElementsByClassName("column__settings")[0]
-            .getElementsByClassName("column__body")[0]
-            .getElementsByClassName("column__reorder").length;
-
-        expect(noOfColoumnsAfterSelect).toEqual(noOfColoumnsBeforeSelect);
-
-        const cancelButton = getByTestId("cancel_columnsManage");
-        // triggering Save button Click
-        act(() => {
-            cancelButton.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-    });
-
     it("UnSelect and Select Remarks Column ", () => {
-        const { getByTestId } = render(
+        const { getByTestId, getAllByTestId } = render(
             <ColumnReordering
                 toggleManageColumnsOverlay={toggleManageColumnsOverlay}
                 columns={mockOriginalColumns}
@@ -455,39 +392,46 @@ describe("ColumnReordering unit test", () => {
             mockContainer
         );
 
-        const noOfColoumnsBeforeSelect = document
-            .getElementsByClassName("column__settings")[0]
-            .getElementsByClassName("column__body")[0]
-            .getElementsByClassName("column__reorder").length;
+        // Check additional column box count
+        let additionalColumnsCount = document.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(additionalColumnsCount).toBe(1);
 
-        const segmentColumCheckBox = document
-            .getElementsByClassName("column__chooser")[0]
-            .getElementsByClassName("column__checkbox")[10]
-            .getElementsByTagName("input")[0];
-
-        // unchecking segment checkbox
+        // Unchecking remarks column
+        let remarksColumnCheckbox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[9];
         act(() => {
-            segmentColumCheckBox.dispatchEvent(
+            remarksColumnCheckbox.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
 
-        // checking segment checkbox
+        // Check if additional column box count is now 0
+        additionalColumnsCount = document.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(additionalColumnsCount).toBe(0);
+
+        // Checking remarks column again
+        remarksColumnCheckbox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[9];
         act(() => {
-            segmentColumCheckBox.dispatchEvent(
+            remarksColumnCheckbox.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
 
-        const noOfColoumnsAfterSelect = document
-            .getElementsByClassName("column__settings")[0]
-            .getElementsByClassName("column__body")[0]
-            .getElementsByClassName("column__reorder").length;
+        // Check if additional column box count is now back to 1
+        additionalColumnsCount = document.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(additionalColumnsCount).toBe(1);
 
-        expect(noOfColoumnsAfterSelect).toEqual(noOfColoumnsBeforeSelect);
-
+        // Cancel changes
         const cancelButton = getByTestId("cancel_columnsManage");
-        // triggering Save button Click
         act(() => {
             cancelButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
@@ -504,24 +448,33 @@ describe("ColumnReordering unit test", () => {
                 updateColumnStructure={mockUpdateColumnStructure}
             />
         );
-        const flightNoInnerCell = container.querySelectorAll(
-            "[type='checkbox']"
-        )[12];
-        act(() => {
-            flightNoInnerCell.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        expect(flightNoInnerCell.checked).toBeFalsy();
-        act(() => {
-            flightNoInnerCell.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        expect(flightNoInnerCell.checked).toBeTruthy();
 
+        // Uncheck inner cell
+        let flightNoInnerCellCheckbox = container.querySelector(
+            "[data-testid='selectInnerCell_column_1_column_1_cell_0']"
+        );
+        act(() => {
+            flightNoInnerCellCheckbox.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if checkbox has been unselected
+        expect(flightNoInnerCellCheckbox.checked).toBeFalsy();
+
+        // Check back inner cell
+        flightNoInnerCellCheckbox = container.querySelector(
+            "[data-testid='selectInnerCell_column_1_column_1_cell_0']"
+        );
+        act(() => {
+            flightNoInnerCellCheckbox.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if checkbox has been selected
+        expect(flightNoInnerCellCheckbox.checked).toBeTruthy();
+
+        // Cancel changes
         const cancelButton = getByTestId("cancel_columnsManage");
-        // triggering Save button Click
         act(() => {
             cancelButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
@@ -529,7 +482,7 @@ describe("ColumnReordering unit test", () => {
         });
     });
 
-    it("UnSelect All and Click Reset Button without columns to expand", () => {
+    it("UnSelect All and Click Reset Button", () => {
         const { getByTestId } = render(
             <ColumnReordering
                 toggleManageColumnsOverlay={toggleManageColumnsOverlay}
@@ -539,32 +492,51 @@ describe("ColumnReordering unit test", () => {
             />,
             mockContainer
         );
-        const selectAllCheckBox = document
-            .getElementsByClassName("column__chooser")[0]
-            .getElementsByClassName("column__body")[0]
-            .getElementsByTagName("input")[1];
+
+        // Check column and additional column boxes count
+        let columnsCount = document.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        let additionalColumnsCount = document.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(columnsCount).toBe(9);
+        expect(additionalColumnsCount).toBe(1);
+
         // un-checking selectAll checkbox
+        const selectAllCheckBox = getByTestId("selectAllSearchableColumns");
         act(() => {
             selectAllCheckBox.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
-        const resetButton = document.getElementsByTagName("button")[0];
-        // clicking Reset button
+
+        // Check column and additional column boxes count
+        columnsCount = document.querySelectorAll("[data-testid='column-box']")
+            .length;
+        additionalColumnsCount = document.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(columnsCount).toBe(0);
+        expect(additionalColumnsCount).toBe(0);
+
+        // Reset changes
+        const resetButton = getByTestId("reset_columnsManage");
         act(() => {
             resetButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
-        const noOfColoumnsAfterReset = document
-            .getElementsByClassName("column__settings")[0]
-            .getElementsByClassName("column__body")[0]
-            .getElementsByClassName("column__reorder").length;
+        columnsCount = document.querySelectorAll("[data-testid='column-box']")
+            .length;
+        additionalColumnsCount = document.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(columnsCount).toBe(9);
+        expect(additionalColumnsCount).toBe(1);
 
-        expect(noOfColoumnsAfterReset).toEqual(10);
-
+        // Cancel changes
         const cancelButton = getByTestId("cancel_columnsManage");
-        // triggering Save button Click
         act(() => {
             cancelButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
@@ -573,7 +545,7 @@ describe("ColumnReordering unit test", () => {
     });
 
     it("Error scenario for no Coloumns Selected", () => {
-        const { getByTestId } = render(
+        const { getByTestId, getAllByTestId } = render(
             <ColumnReordering
                 toggleManageColumnsOverlay={toggleManageColumnsOverlay}
                 columns={mockOriginalColumns}
@@ -583,30 +555,37 @@ describe("ColumnReordering unit test", () => {
             mockContainer
         );
 
-        const selectAllCheckBox = document
-            .getElementsByClassName("column__chooser")[0]
-            .getElementsByClassName("column__body")[0]
-            .getElementsByTagName("input")[1];
-
+        // un-checking selectAll checkbox
+        const selectAllCheckBox = getByTestId("selectAllSearchableColumns");
         act(() => {
             selectAllCheckBox.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
 
-        expect(selectAllCheckBox.checked).toBeFalsy();
+        // Try to save
         const saveButton = getByTestId("save_columnsManage");
-
-        // un-checking selectAll checkbox
         act(() => {
             saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if error message is present
+        const errorMessages = getAllByTestId("column-chooser-error");
+        expect(errorMessages.length).toBe(1);
+
+        // Cancel changes
+        const cancelButton = getByTestId("cancel_columnsManage");
+        act(() => {
+            cancelButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
     });
 
     it("Select InnerCell Of Remarks", () => {
-        const { container } = render(
+        const { getByTestId } = render(
             <ColumnReordering
                 toggleManageColumnsOverlay={toggleManageColumnsOverlay}
                 columns={mockOriginalColumns}
@@ -615,19 +594,33 @@ describe("ColumnReordering unit test", () => {
             />
         );
 
-        const remarksInnerCellCheckBox = container
-            .getElementsByClassName("column__reorder")[9]
-            .getElementsByClassName("column__checkbox")[0]
-            .getElementsByTagName("input")[0];
+        // Uncheck remarks inner cell
+        let remarksInnerCellCheckBox = getByTestId(
+            "selectInnerCell_rowExpand_rowExpand_cell_0"
+        );
         act(() => {
             remarksInnerCellCheckBox.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
+        // Check if checkbox has been unchecked
+        expect(remarksInnerCellCheckBox.checked).toBeFalsy();
+
+        // Check it back
+        remarksInnerCellCheckBox = getByTestId(
+            "selectInnerCell_rowExpand_rowExpand_cell_0"
+        );
+        act(() => {
+            remarksInnerCellCheckBox.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if checkbox has been checked
+        expect(remarksInnerCellCheckBox.checked).toBeTruthy();
     });
 
     it("Trigger search of columns onChnage", () => {
-        render(
+        const { getByTestId, getAllByTestId } = render(
             <ColumnReordering
                 toggleManageColumnsOverlay={toggleManageColumnsOverlay}
                 columns={mockOriginalColumns}
@@ -636,18 +629,28 @@ describe("ColumnReordering unit test", () => {
             />
         );
 
-        const searchColoumnInputField = document
-            .getElementsByClassName("column__chooser")[0]
-            .getElementsByClassName("column__body")[0]
-            .getElementsByTagName("input")[0];
+        // Check total count of checkboxes available
+        let columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
+            .length;
+        expect(columnCheckboxes).toBe(10);
 
-        act(() => {
-            searchColoumnInputField.dispatchEvent(
-                new KeyboardEvent("keyDown", {
-                    event: { target: { value: "id" } }
-                })
-            );
-        });
+        // Filter columns list
+        const filterList = getByTestId("filterColumnsList");
+        expect(filterList.value).toBe("");
+        fireEvent.change(filterList, { target: { value: "id" } });
+        expect(filterList.value).toBe("id");
+        // Check total count of checkboxes available now
+        columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
+            .length;
+        expect(columnCheckboxes).toBe(1);
+
+        // Remove searched value
+        fireEvent.change(filterList, { target: { value: "" } });
+        expect(filterList.value).toBe("");
+        // Check total count of checkboxes available now
+        columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
+            .length;
+        expect(columnCheckboxes).toBe(10);
     });
 
     it("should work drag and drop functionality", () => {

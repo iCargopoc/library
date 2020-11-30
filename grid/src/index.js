@@ -443,7 +443,9 @@ const Grid = (props) => {
                     data-testid="gridComponent"
                     className={`neo-grid ${className || ""}`}
                 >
-                    <h2 className="ng-error">Invalid Column Configuration</h2>
+                    <h2 data-testid="nocolumnserror" className="ng-error">
+                        Invalid Column Configuration
+                    </h2>
                 </div>
             );
         }

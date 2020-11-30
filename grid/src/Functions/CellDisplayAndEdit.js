@@ -81,7 +81,10 @@ const CellDisplayAndEdit = ({
                     ) : null}
                     {cellDisplayContent}
                     {isEditOpen ? (
-                        <div className="neo-grid__content-edit">
+                        <div
+                            className="neo-grid__content-edit"
+                            data-testid="cell-edit-overlay"
+                        >
                             {cellEditContent}
                             <button
                                 type="button"

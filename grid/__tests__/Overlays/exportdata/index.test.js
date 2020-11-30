@@ -261,8 +261,8 @@ describe("Export Data unit test", () => {
             />,
             container
         );
-        const exportOverlayContainer = document.getElementsByClassName(
-            "neo-grid-popover"
+        const exportOverlayContainer = container.querySelectorAll(
+            "[data-testid='exportoverlay']"
         );
         expect(exportOverlayContainer.length).toBe(0);
     });
@@ -279,7 +279,7 @@ describe("Export Data unit test", () => {
         expect(getByText("Export As")).toBeInTheDocument();
     });
     it("should check columns", () => {
-        const { getByTestId } = render(
+        const { getByTestId, getAllByTestId } = render(
             <ExportData
                 toggleExportDataOverlay={mocktoggleExportDataOverlay}
                 rows={mockRows}
@@ -295,9 +295,9 @@ describe("Export Data unit test", () => {
         fireEvent.click(selectAllCheck);
         expect(selectAllCheck.checked).toEqual(true);
 
-        const selectSingleCheck = getByTestId(
-            "selectSingleSearchableColumn_column_6"
-        );
+        const selectSingleCheck = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[2];
         expect(selectSingleCheck.checked).toEqual(true);
         fireEvent.click(selectSingleCheck);
         expect(selectSingleCheck.checked).toEqual(false);
@@ -395,7 +395,7 @@ describe("Export Data unit test", () => {
         fireEvent.click(getByTestId("export_button"));
     });
     it("should search columns in list", () => {
-        const { getByTestId } = render(
+        const { getByTestId, getAllByTestId } = render(
             <ExportData
                 toggleExportDataOverlay={mocktoggleExportDataOverlay}
                 rows={mockRows}
@@ -404,15 +404,31 @@ describe("Export Data unit test", () => {
             />,
             container
         );
+        // Check total count of checkboxes available
+        let columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
+            .length;
+        expect(columnCheckboxes).toBe(5);
+
+        // Filter columns list
         const filterList = getByTestId("filterColumnsList");
         expect(filterList.value).toBe("");
         fireEvent.change(filterList, { target: { value: "id" } });
         expect(filterList.value).toBe("id");
+        // Check total count of checkboxes available now
+        columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
+            .length;
+        expect(columnCheckboxes).toBe(1);
+
+        // Remove searched value
         fireEvent.change(filterList, { target: { value: "" } });
         expect(filterList.value).toBe("");
+        // Check total count of checkboxes available now
+        columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
+            .length;
+        expect(columnCheckboxes).toBe(5);
     });
     it("should select single column", () => {
-        const { getByTestId } = render(
+        const { getByTestId, getAllByTestId } = render(
             <ExportData
                 toggleExportDataOverlay={mocktoggleExportDataOverlay}
                 rows={mockRows}
@@ -424,14 +440,10 @@ describe("Export Data unit test", () => {
         const selectAllCheck = getByTestId("selectAllSearchableColumns");
         fireEvent.click(selectAllCheck);
         expect(selectAllCheck.checked).toEqual(false);
-        const singleColumn = getByTestId(
-            "selectSingleSearchableColumn_column_6"
-        );
+        const singleColumn = getAllByTestId("selectSingleSearchableColumn")[2];
         fireEvent.click(singleColumn);
         expect(singleColumn.checked).toEqual(true);
-        const remarksColumn = getByTestId(
-            "selectSingleSearchableColumn_rowExpand"
-        );
+        const remarksColumn = getAllByTestId("selectSingleSearchableColumn")[4];
         fireEvent.click(remarksColumn);
         expect(remarksColumn.checked).toEqual(true);
         const selectCsv = getByTestId("chk_csv_test");

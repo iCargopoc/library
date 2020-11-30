@@ -981,6 +981,7 @@ const Customgrid = (props) => {
                         return (
                             <div
                                 {...row.getRowProps({ style })}
+                                data-testid="gridrow"
                                 className={`neo-grid__tr ${rowClassName}`}
                             >
                                 <div
@@ -996,6 +997,7 @@ const Customgrid = (props) => {
                                                 <div
                                                     {...cell.getCellProps()}
                                                     className="neo-grid__td"
+                                                    data-testid="gridrowcell"
                                                 >
                                                     {cell.render("Cell")}
                                                 </div>
@@ -1386,7 +1388,10 @@ const Customgrid = (props) => {
                                         )}
                                     </div>
                                 ) : (
-                                    <h2 className="ng-error">
+                                    <h2
+                                        data-testid="nodataerror"
+                                        className="ng-error"
+                                    >
                                         No Records Found
                                     </h2>
                                 )}

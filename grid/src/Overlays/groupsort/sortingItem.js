@@ -99,10 +99,14 @@ const SortItem = ({
     const opacity = isDragging ? 0.5 : 1;
 
     return (
-        <div className="ng-popover--sort__items" style={{ opacity }}>
+        <div
+            className="ng-popover--sort__items"
+            data-testid="sortItem"
+            style={{ opacity }}
+        >
             <div className="ng-popover__reorder">
                 <div
-                    data-testid="sortItem"
+                    data-testid="sortItemDnd"
                     ref={(node) => drag(drop(node))}
                     style={{ cursor: "move" }}
                 >
@@ -193,6 +197,7 @@ const SortItem = ({
                 <div
                     className="ng-popover--sort__icon"
                     role="presentation"
+                    data-testid="sort-copy-icon"
                     onClick={copySort}
                 >
                     <i>
@@ -204,6 +209,7 @@ const SortItem = ({
                 <div
                     className="ng-popover--sort__icon"
                     role="presentation"
+                    data-testid="sort-delete-icon"
                     onClick={deleteSort}
                 >
                     <i>

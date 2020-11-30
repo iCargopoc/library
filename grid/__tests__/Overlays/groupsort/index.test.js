@@ -1,13 +1,12 @@
 /* eslint-disable no-undef */
 import React from "react";
 import ReactDOM from "react-dom";
-import { render, cleanup } from "@testing-library/react";
+import { render, cleanup, fireEvent } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
 import GroupSort from "../../../src/Overlays/groupsort/index";
 
 describe("Group Sort-index test Cases", () => {
-    const isGroupSortLayOverOpen = true;
     const columns = [
         {
             Header: "Flight",
@@ -81,24 +80,7 @@ describe("Group Sort-index test Cases", () => {
     const mockApplyGroupSortOverlay = jest.fn();
     const mockGroupSortOptions = [];
 
-    it("renders Component", () => {
-        // LOGIC-->> render the div
-        // expect sorts--grid to be defined
-        render(
-            <GroupSort
-                groupSortOptions={mockGroupSortOptions}
-                toggleGroupSortOverLay={mockTableGroupSortOverLay}
-                gridColumns={columns}
-                applyGroupSort={mockApplyGroupSortOverlay}
-            />
-        );
-        const div = document.getElementsByClassName("sorts--grid");
-        expect(div).toBeDefined();
-    });
-
-    it("Clear All Sort Options", () => {
-        // LOGIC-->> Click the clear All button
-        // expect innerHTML inside sort body be ""
+    it("Add New Sort And Clear Sort Options", () => {
         act(() => {
             ReactDOM.render(
                 <GroupSort
@@ -110,23 +92,51 @@ describe("Group Sort-index test Cases", () => {
                 container
             );
         });
-        const clearAllButton = container.querySelector("button");
+
+        // Check if overlay is opened
+        const groupSortOverlay = container.querySelectorAll(
+            "[data-testid='groupsortoverlay']"
+        );
+        expect(groupSortOverlay.length).toBe(1);
+
+        // Check number of sort options before adding sort, should be 0
+        let sortOptionsCount = container.querySelectorAll(
+            "[data-testid='sortItem']"
+        ).length;
+        expect(sortOptionsCount).toBe(0);
+
+        // adding a new sort
+        const addSortLink = container.querySelectorAll(
+            "[data-testid='addSort']"
+        )[0];
+        act(() => {
+            addSortLink.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check number of sort options before adding sort, should be 1
+        sortOptionsCount = container.querySelectorAll(
+            "[data-testid='sortItem']"
+        ).length;
+        expect(sortOptionsCount).toBe(1);
+
+        // Clear all sort options
+        const clearAllButton = container.querySelectorAll(
+            "[data-testid='clearSort']"
+        )[0];
         act(() => {
             clearAllButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
-        const sortDivText = document
-            .querySelector("[class=neo-grid-popover__content]")
-            .getElementsByTagName("div")[0].innerHTML;
-
-        // after clear all, the div inside class 'neo-grid-popover__content should be empty
-        expect(sortDivText).toBe("");
+        // Check number of sort options before adding sort, should be back to 0
+        sortOptionsCount = container.querySelectorAll(
+            "[data-testid='sortItem']"
+        ).length;
+        expect(sortOptionsCount).toBe(0);
     });
 
-    it("Apply Sort Test ", () => {
-        // LOGIC-->> Apply  sorting Param
-        // expect the HTML element neo-grid-popover NOT to exists as layover gets closed.
+    it("Update A Sort Parameter And Apply", () => {
         act(() => {
             ReactDOM.render(
                 <GroupSort
@@ -139,22 +149,55 @@ describe("Group Sort-index test Cases", () => {
             );
         });
 
-        const applySortButton = document.getElementsByTagName("button")[1];
+        // Add new sort
+        const addNewSortLink = container.querySelectorAll(
+            "[data-testid='addSort']"
+        )[0];
+        act(() => {
+            addNewSortLink.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Change Sort By
+        const sortBySelect = container.querySelectorAll(
+            "[data-testid='groupSort-sortBy']"
+        )[0];
+        fireEvent.change(sortBySelect, {
+            target: { value: "flight1" }
+        });
+
+        // Change Sort On
+        const sortOnSelect = container.querySelectorAll(
+            "[data-testid='groupSort-sortOn']"
+        )[0];
+        fireEvent.change(sortOnSelect, {
+            target: { value: "flightno1" }
+        });
+
+        // Change Sort Order
+        const sortOrderSelect = container.querySelectorAll(
+            "[data-testid='groupSort-order']"
+        )[0];
+        fireEvent.change(sortOrderSelect, {
+            target: { value: "Descending" }
+        });
+
+        // Apply sort
+        const applySortButton = container.querySelectorAll(
+            "[data-testid='saveSort']"
+        )[0];
         act(() => {
             applySortButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
 
-        const sortLayOverDiv = document.getElementsByClassName(
-            ".neo-grid-popover"
-        )[0];
-        expect(sortLayOverDiv).toBeUndefined();
+        // Mock function should have been called
+        expect(mockApplyGroupSortOverlay).toBeCalled();
     });
 
-    it("Add New Sort ", () => {
-        // LOGIC-->> Add A sorting Param
-        // expect no of rows in the sort__body HTML element to be more than 1 as previous.
+    it("Copy and Delete A Sort Parameter", () => {
         act(() => {
             ReactDOM.render(
                 <GroupSort
@@ -166,124 +209,60 @@ describe("Group Sort-index test Cases", () => {
                 container
             );
         });
-        const lengthOfSortBodyBeforeAdd = document.getElementsByClassName(
-            "sort__bodyContent"
-        ).length;
 
-        const newSortTxt = document
-            .querySelector(".sort__section")
-            .querySelector(".sort__txt");
+        // Check number of sort options before adding sort, should be 0
+        let sortOptionsCount = container.querySelectorAll(
+            "[data-testid='sortItem']"
+        ).length;
+        expect(sortOptionsCount).toBe(0);
 
         // adding a new sort
+        const addSortLink = container.querySelectorAll(
+            "[data-testid='addSort']"
+        )[0];
         act(() => {
-            newSortTxt.dispatchEvent(
+            addSortLink.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
-
-        const lengthOfSortBodyAfterAdd = document.getElementsByClassName(
-            "sort__bodyContent"
+        // Check number of sort options before adding sort, should be 1
+        sortOptionsCount = container.querySelectorAll(
+            "[data-testid='sortItem']"
         ).length;
+        expect(sortOptionsCount).toBe(1);
 
-        expect(lengthOfSortBodyAfterAdd).toBe(lengthOfSortBodyBeforeAdd + 1);
-    });
-
-    it("Update A Sort Parameter", () => {
-        // LOGIC-->> Update a sorting Row by onChange of sortBy Select List
-        // expect the sorting layover should exists.
+        // Copy sort option
+        const copyIcon = container.querySelectorAll(
+            "[data-testid='sort-copy-icon']"
+        )[0];
         act(() => {
-            ReactDOM.render(
-                <GroupSort
-                    groupSortOptions={mockGroupSortOptions}
-                    toggleGroupSortOverLay={mockTableGroupSortOverLay}
-                    gridColumns={columns}
-                    applyGroupSort={mockApplyGroupSortOverlay}
-                />,
-                container
-            );
+            copyIcon.dispatchEvent(new MouseEvent("click", { bubbles: true }));
         });
 
-        const newSortTxt = document
-            .querySelector(".sort__section")
-            .querySelector(".sort__txt");
-
-        act(() => {
-            newSortTxt.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        const sortBySelectList = document
-            .querySelector(".sort__bodyContent")
-            .getElementsByClassName("sort__reorder")[1]
-            .getElementsByTagName("select")[0];
-
-        act(() => {
-            sortBySelectList.dispatchEvent(
-                new MouseEvent("change", { bubbles: true })
-            );
-        });
-        const applySortButton = document.getElementsByTagName("button")[1];
-
-        act(() => {
-            applySortButton.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        const sortByBody = document.querySelector(".sort__bodyContent");
-        expect(sortByBody).toBeDefined();
-    });
-
-    it("Delete A Sort Parameter", () => {
-        // LOGIC-->> check length of HTML element sort__bodyContent before and after delete
-        // length before and after delete should be same.
-        act(() => {
-            ReactDOM.render(
-                <GroupSort
-                    groupSortOptions={mockGroupSortOptions}
-                    toggleGroupSortOverLay={mockTableGroupSortOverLay}
-                    gridColumns={columns}
-                    applyGroupSort={mockApplyGroupSortOverlay}
-                />,
-                container
-            );
-        });
-
-        const lengthOfSortBodyBeforeDelete = document.getElementsByClassName(
-            "sort__bodyContent"
+        // Sort items count should be 2 now
+        sortOptionsCount = container.querySelectorAll(
+            "[data-testid='sortItem']"
         ).length;
+        expect(sortOptionsCount).toBe(2);
 
-        const newSortTxt = document
-            .querySelector(".sort__section")
-            .querySelector(".sort__txt");
-
-        // adding a sorting option
-        act(() => {
-            newSortTxt.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        const deleteIcon = document.getElementsByClassName("sort__icon")[1];
-
-        // deleting a sorting option
+        // Delete Sort option
+        const deleteIcon = container.querySelectorAll(
+            "[data-testid='sort-delete-icon']"
+        )[0];
         act(() => {
             deleteIcon.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
 
-        const lengthOfSortBodyAfterDelete = document.getElementsByClassName(
-            "sort__bodyContent"
+        // Sort items count should be back to 1 now
+        sortOptionsCount = container.querySelectorAll(
+            "[data-testid='sortItem']"
         ).length;
-
-        expect(lengthOfSortBodyBeforeDelete).toBe(lengthOfSortBodyAfterDelete);
+        expect(sortOptionsCount).toBe(1);
     });
 
-    it("Copy A Sort Parameter", () => {
-        // LOGIC-->> check length of HTML element sort__bodyContent before and after copy
-        // length after Copy should be greater than 1 as before Copy.
+    it("Apply duplicate sort options", () => {
         act(() => {
             ReactDOM.render(
                 <GroupSort
@@ -296,27 +275,47 @@ describe("Group Sort-index test Cases", () => {
             );
         });
 
-        const lengthOfSortBodyBeforeCopy = document.getElementsByClassName(
-            "sort__bodyContent"
-        ).length;
+        // adding a new sort
+        const addSortLink = container.querySelectorAll(
+            "[data-testid='addSort']"
+        )[0];
+        act(() => {
+            addSortLink.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
 
-        const copyIcon = document.getElementsByClassName("sort__icon")[0];
-
-        // copying a sorting option
+        // Copy sort option
+        const copyIcon = container.querySelectorAll(
+            "[data-testid='sort-copy-icon']"
+        )[0];
         act(() => {
             copyIcon.dispatchEvent(new MouseEvent("click", { bubbles: true }));
         });
 
-        const lengthOfSortBodyAfterCopy = document.getElementsByClassName(
-            "sort__bodyContent"
-        ).length;
+        // Apply sort
+        const applySortButton = container.querySelectorAll(
+            "[data-testid='saveSort']"
+        )[0];
+        act(() => {
+            applySortButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
 
-        expect(lengthOfSortBodyAfterCopy).toBe(lengthOfSortBodyBeforeCopy + 1);
+        // Check for error
+        const errorMessages = container.querySelectorAll(
+            "[data-testid='duplicate-sort-error']"
+        );
+        expect(errorMessages.length).toBe(1);
     });
 
-    it("Not Rendering the SortLayOver", () => {
-        // LOGIC-->> check render of layover with isGroupSortOverLayOpen as false
-        // exprect HTML element sort__bodyContent to be undefined
+    it("Drag and Drop", () => {
+        const createBubbledEvent = (type, props = {}) => {
+            const event = new Event(type, { bubbles: true });
+            Object.assign(event, props);
+            return event;
+        };
         act(() => {
             ReactDOM.render(
                 <GroupSort
@@ -328,5 +327,51 @@ describe("Group Sort-index test Cases", () => {
                 container
             );
         });
+
+        // adding a new sort
+        const addSortLink = container.querySelectorAll(
+            "[data-testid='addSort']"
+        )[0];
+        act(() => {
+            addSortLink.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Copy sort option
+        const copyIcon = container.querySelectorAll(
+            "[data-testid='sort-copy-icon']"
+        )[0];
+        act(() => {
+            copyIcon.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        });
+
+        // Check if drag and drop options are available
+        const dndOptions = container.querySelectorAll(
+            "[data-testid='sortItemDnd']"
+        );
+        expect(dndOptions.length).toBe(2);
+
+        // Do drag and drop
+        const startingNode = dndOptions[0];
+        const endingNode = dndOptions[1];
+        act(() => {
+            startingNode.dispatchEvent(
+                createBubbledEvent("dragstart", { clientX: 0, clientY: 0 })
+            );
+        });
+        act(() => {
+            endingNode.dispatchEvent(
+                createBubbledEvent("drop", { clientX: 0, clientY: 1 })
+            );
+        });
+
+        // Do drag and don't do drop - false case
+        act(() => {
+            startingNode.dispatchEvent(
+                createBubbledEvent("dragstart", { clientX: 0, clientY: 0 })
+            );
+        });
+        fireEvent.dragEnd(startingNode);
     });
 });

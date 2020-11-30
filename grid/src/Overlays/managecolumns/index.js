@@ -340,6 +340,7 @@ const ColumnReordering = (props) => {
             <ClickAwayListener
                 onClickAway={toggleManageColumnsOverlay}
                 className="ng-popover ng-popover--column"
+                data-testid="managecolumnoverlay"
             >
                 <div className="ng-popover__chooser">
                     <div className="ng-popover__header">
@@ -358,7 +359,10 @@ const ColumnReordering = (props) => {
                         <div>
                             <strong>Column Settings</strong>
                             {isErrorDisplayed ? (
-                                <strong className="ng-popover--column__warning">
+                                <strong
+                                    className="ng-popover--column__warning"
+                                    data-testid="column-chooser-error"
+                                >
                                     Select at least one column
                                     {isAdditionalColumnPresent
                                         ? `(other than
@@ -389,7 +393,10 @@ const ColumnReordering = (props) => {
                             />
                         </DndProvider>
                         {isAdditionalColumnSelected ? (
-                            <div className="ng-popover--column__reorder is-full-width">
+                            <div
+                                className="ng-popover--column__reorder is-full-width"
+                                data-testid="additional-column-box"
+                            >
                                 <div className="ng-popover--column__reorder-head">
                                     {additionalColumnHeader}
                                 </div>

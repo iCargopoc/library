@@ -134,7 +134,7 @@ const ColumnSearch = ({
                                         type="checkbox"
                                         id={`chk_selectSearchableColumn_${columnId}`}
                                         className="form-check-input custom-checkbox form-check-input"
-                                        data-testid={`selectSingleSearchableColumn_${columnId}`}
+                                        data-testid="selectSingleSearchableColumn"
                                         data-columnid={columnId}
                                         data-isadditionalcolumn={
                                             isDisplayInExpandedRegion

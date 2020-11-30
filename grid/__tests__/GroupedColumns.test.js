@@ -396,11 +396,6 @@ describe("render Index file ", () => {
         // Check total number of original columns
         let gridHeader = getAllByTestId("grid-header");
         expect(gridHeader.length).toBe(7); // 1 row selector + 1 row option + 5 normal columns (including 2 columns that comes under group header)
-        // Check if all columns are present
-        let columnHeadingsCount = gridContainer.getElementsByClassName(
-            "column-heading"
-        );
-        expect(columnHeadingsCount.length).toBe(13);
         // Check if flight date is displayed
         let flightDateElem = gridContainer.getElementsByClassName(
             "flight-date"
@@ -415,9 +410,9 @@ describe("render Index file ", () => {
             );
         });
         // UnSelect the Segment Coloumn From Column Chooser
-        const segmentColumCheckBox = getByTestId(
-            "selectSingleSearchableColumn_column_2"
-        );
+        const segmentColumCheckBox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[2];
         act(() => {
             segmentColumCheckBox.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
@@ -445,11 +440,6 @@ describe("render Index file ", () => {
         // Check total number of original columns
         gridHeader = getAllByTestId("grid-header");
         expect(gridHeader.length).toBe(6); // 1 row selector + 1 row option + 4 normal columns (including 2 columns that comes under group header and excluding hidden column)
-        // Check if all columns are present
-        columnHeadingsCount = gridContainer.getElementsByClassName(
-            "column-heading"
-        );
-        expect(columnHeadingsCount.length).toBe(12);
         // Check if flight data has been hidden
         flightDateElem = gridContainer.getElementsByClassName("flight-date");
         expect(flightDateElem.length).toBe(0);
@@ -474,11 +464,6 @@ describe("render Index file ", () => {
         // Check total number of original columns
         gridHeader = getAllByTestId("grid-header");
         expect(gridHeader.length).toBe(7); // 1 row selector + 1 row option + 5 normal columns (including 2 columns that comes under group header)
-        // Check if all columns are present
-        columnHeadingsCount = gridContainer.getElementsByClassName(
-            "column-heading"
-        );
-        expect(columnHeadingsCount.length).toBe(13);
         // Check if flight data has been displayed again
         flightDateElem = gridContainer.getElementsByClassName("flight-date");
         expect(flightDateElem.length).toBeGreaterThan(0);
@@ -486,7 +471,7 @@ describe("render Index file ", () => {
 
     it("test export data overlay", () => {
         mockOffsetSize(600, 600);
-        const { container, getByTestId } = render(
+        const { container, getByTestId, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
                 gridHeight={mockGridHeight}
@@ -516,9 +501,9 @@ describe("render Index file ", () => {
             );
         });
         // UnSelect the Segment Coloumn From Column Chooser
-        const segmentColumCheckBox = getByTestId(
-            "selectSingleSearchableColumn_column_2"
-        );
+        const segmentColumCheckBox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[2];
         act(() => {
             segmentColumCheckBox.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
