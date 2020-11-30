@@ -162,6 +162,7 @@ export const findAllChildRows = (allRows) => {
                     return isParent !== true;
                 }
             }
+            return false;
         });
     }
     return [];
