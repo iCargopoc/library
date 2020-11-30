@@ -1288,8 +1288,12 @@ const Customgrid = (props) => {
                                                                                     </span>
                                                                                 ) : null}
                                                                             </div>
+                                                                            {/* Don't render filter if header is group header or if column filter is disabled */}
+                                                                            {/* If atleast 1 column filter is present, below div wrap has to be present, to maintain the alignment of header text in header cell */}
                                                                             {isGroupHeader ===
-                                                                            false ? (
+                                                                                false &&
+                                                                            columnFilter !==
+                                                                                false ? (
                                                                                 <div
                                                                                     className={`ng-txt-wrap ${
                                                                                         isFilterOpen
