@@ -9,7 +9,7 @@ import Customgrid from "./Customgrid";
 // eslint-disable-next-line import/no-unresolved
 import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 
-const processedData = (gridData) => {
+const processedData = (gridData, parentIdAttribute) => {
     if (gridData && gridData.length > 0) {
         const processedGridData = [];
         gridData.forEach((gridDataItem) => {
@@ -17,10 +17,16 @@ const processedData = (gridData) => {
             updatedData.isParent = true;
             delete updatedData.childData;
             processedGridData.push(updatedData);
-            const { childData, titleId } = gridDataItem;
-            if (childData) {
+            const { childData } = gridDataItem;
+            if (childData && parentIdAttribute) {
+                const parentId = gridDataItem[parentIdAttribute];
                 const { data } = childData;
-                if (data && data.length > 0) {
+                if (
+                    data &&
+                    data.length > 0 &&
+                    parentId !== null &&
+                    parentId !== undefined
+                ) {
                     const {
                         pageNum,
                         endCursor,
@@ -29,7 +35,7 @@ const processedData = (gridData) => {
                     } = childData;
                     data.forEach((dataItem) => {
                         const updatedDataItem = dataItem;
-                        updatedDataItem.titleId = titleId;
+                        updatedDataItem[parentIdAttribute] = parentId;
                         updatedDataItem.pageNum = pageNum;
                         updatedDataItem.endCursor = endCursor;
                         updatedDataItem.pageSize = pageSize;
@@ -427,7 +433,7 @@ const Grid = (props) => {
 
     let processedGridData = gridData && gridData.length > 0 ? gridData : [];
     if (isParentGrid) {
-        processedGridData = getProcessedData(gridData);
+        processedGridData = getProcessedData(gridData, parentIdAttribute);
     }
 
     if (isLoaded) {
