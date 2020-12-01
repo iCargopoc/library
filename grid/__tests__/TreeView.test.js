@@ -774,7 +774,7 @@ describe("render Index file ", () => {
         expect(sortOverlay.length).toBe(0);
     });
 
-    it("test grid with parent data and child data and parentRowExpandable as false - load more - index pagination", () => {
+    it("test grid with parent data and child data and parentRowsToExpand - parent row selection", () => {
         mockOffsetSize(600, 200);
         const { container, getAllByTestId } = render(
             <Grid
@@ -800,6 +800,34 @@ describe("render Index file ", () => {
 
         // Check if Grid id rendered.
         expect(gridContainer).toBeInTheDocument();
+
+        // Select first parent
+        let firstParentRowSelector = getAllByTestId("rowSelector-parentRow")[0];
+        act(() => {
+            firstParentRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Selected checkboxes count should be 6 (1 parent row + 5 child rows)
+        let selectedCheckboxes = gridContainer.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+        expect(selectedCheckboxes.length).toBe(6);
+
+        // Unelect first parent
+        firstParentRowSelector = getAllByTestId("rowSelector-parentRow")[0];
+        act(() => {
+            firstParentRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Selected checkboxes count should be 0
+        selectedCheckboxes = gridContainer.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+        expect(selectedCheckboxes.length).toBe(0);
 
         // Find collapse icons
         // Actually there should be 3, but only 2 are rendered by react-window

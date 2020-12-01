@@ -534,6 +534,7 @@ const Customgrid = (props) => {
     };
 
     const isParentRowOpen = (row) => {
+        let returnValue = false;
         if (parentIdAttribute && row) {
             const { original } = row;
             if (original) {
@@ -543,11 +544,13 @@ const Customgrid = (props) => {
                     rowParentIdAttribute !== undefined
                 ) {
                     // Check if parent row is present in state.
-                    return expandedParentRows.includes(rowParentIdAttribute);
+                    returnValue = expandedParentRows.includes(
+                        rowParentIdAttribute
+                    );
                 }
             }
         }
-        return false;
+        return returnValue;
     };
 
     const toggleParentRow = (row, index) => {
@@ -813,6 +816,7 @@ const Customgrid = (props) => {
     };
 
     const isParentRowSelected = (row) => {
+        let returnValue = false;
         if (row && parentIdAttribute && idAttribute) {
             const { original } = row;
             if (original) {
@@ -854,14 +858,14 @@ const Customgrid = (props) => {
                                 }
                             }
                         });
-                        return (
-                            isChildRowsAvailable && !isAtleastOneChildUnselected
-                        );
+                        returnValue =
+                            isChildRowsAvailable &&
+                            !isAtleastOneChildUnselected;
                     }
                 }
             }
         }
-        return false;
+        return returnValue;
     };
 
     const toggleParentRowSelection = (event, row) => {
