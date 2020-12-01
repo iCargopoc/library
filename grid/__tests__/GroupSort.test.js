@@ -262,7 +262,7 @@ describe("render Index file ", () => {
         data.push({
             travelId: i,
             flight: {
-                flightno: "XX6983",
+                flightno: i % 2 ? "XX6983" : "XX115",
                 date: "23-May-2016"
             },
             segment: {
@@ -398,6 +398,20 @@ describe("render Index file ", () => {
         // Count sort on options
         sortOnOptions = getAllByTestId("groupSort-sortOn-Option");
         expect(sortOnOptions.length).toBe(2);
+
+        // Change sort order
+        const sortOrderSelect = getByTestId("groupSort-order");
+        fireEvent.change(sortOrderSelect, {
+            target: { value: "Descending" }
+        });
+
+        // Apply sort
+        const applySortButton = getByTestId("saveSort");
+        act(() => {
+            applySortButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
     });
 
     it("test server side group sorting", () => {
