@@ -102,7 +102,7 @@ describe("render Customgrid", () => {
         displayCell: (rowData, DisplayTag) => {
             const { remarks } = rowData;
             return (
-                <div className="details-wrap">
+                <div className="remarks-wrap">
                     <DisplayTag columnKey="remarks" cellKey="remarks">
                         <ul>
                             <li>{remarks}</li>
@@ -471,7 +471,7 @@ describe("render Customgrid", () => {
         });
         expect(mockSelectBulkData).toBeCalledTimes(1);
 
-        // Apply column manage
+        // Open column manage overlay
         const toggleManageColumnsOverlay = getByTestId(
             "toggleManageColumnsOverlay"
         );
@@ -480,13 +480,20 @@ describe("render Customgrid", () => {
                 new MouseEvent("click", { bubbles: true })
             );
         });
-        let columnManageOverlay = getByTestId("managecolumnoverlay");
+
+        // Check if overlay is opened
+        let columnManageOverlay = getAllByTestId("managecolumnoverlay");
+        expect(columnManageOverlay.length).toBeGreaterThan(0);
+
+        // Apply changes
         const applyColumnManageButton = getByTestId("save_columnsManage");
         act(() => {
             applyColumnManageButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
+
+        // Check if overlay has been closed
         columnManageOverlay = container.querySelector(
             "[data-testid='managecolumnoverlay']"
         );
