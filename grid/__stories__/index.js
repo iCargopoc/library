@@ -43,7 +43,8 @@ const GridComponent = (props) => {
         passTheme,
         enableServersideSorting,
         treeStructure,
-        parentRowExpandable
+        parentRowExpandable,
+        parentRowsToExpand
     } = props;
     const idAttribute = "travelId";
     const parentIdAttribute = "titleId";
@@ -81,6 +82,12 @@ const GridComponent = (props) => {
 
     const [isDeleteOverlayOpened, setIsDeleteOverlayOpened] = useState(false);
     const [rowDataToDelete, setRowDataToDelete] = useState(null);
+
+    const isParentExpandedByDefault =
+        treeStructure &&
+        parentRowExpandable !== false &&
+        parentRowsToExpand &&
+        parentRowsToExpand.length > 0;
 
     // Loginc for sorting data
     const compareValues = (compareOrder, v1, v2) => {
@@ -1419,7 +1426,10 @@ const GridComponent = (props) => {
 
     useEffect(() => {
         if (treeStructure) {
-            if (parentRowExpandable !== false) {
+            if (
+                parentRowExpandable !== false &&
+                isParentExpandedByDefault !== true
+            ) {
                 setGridData(parentData);
                 setOriginalGridData(parentData);
                 setIndexPageInfo(null);
@@ -1616,7 +1626,11 @@ const GridComponent = (props) => {
                             ? parentRowExpandable
                             : null
                     }
-                    // parentRowsToExpand={[0]}
+                    parentRowsToExpand={
+                        parentRowsToExpand && parentRowsToExpand.length > 0
+                            ? parentRowsToExpand
+                            : null
+                    }
                     rowActions={allProps || passRowActions ? rowActions : null}
                     calculateRowHeight={calculateRowHeight}
                     expandableColumn={allProps || expandableColumn}
