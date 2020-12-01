@@ -100,11 +100,11 @@ const ColumnSearch = ({
                 />
                 <div className="ng-chooser-body__selectall">
                     <div className="ng-chooser-body__checkbox">
-                        <div className="form-check">
+                        <div className="neo-form-check">
                             <input
                                 type="checkbox"
                                 id="chk_selectAllSearchableColumns"
-                                className="form-check-input custom-checkbox form-check-input"
+                                className="neo-checkbox form-check-input"
                                 data-testid="selectAllSearchableColumns"
                                 data-columnid="all"
                                 checked={isSearchableColumnSelected("all")}
@@ -112,7 +112,7 @@ const ColumnSearch = ({
                             />
                             <label
                                 htmlFor="chk_selectAllSearchableColumns"
-                                className="form-check-label"
+                                className="neo-form-check__label"
                             >
                                 Select All
                             </label>
@@ -129,11 +129,11 @@ const ColumnSearch = ({
                     return (
                         <div className="ng-chooser-body__wrap" key={columnId}>
                             <div className="ng-chooser-body__checkwrap">
-                                <div className="form-check">
+                                <div className="neo-form-check">
                                     <input
                                         type="checkbox"
                                         id={`chk_selectSearchableColumn_${columnId}`}
-                                        className="form-check-input custom-checkbox form-check-input"
+                                        className="neo-checkbox form-check-input"
                                         data-testid="selectSingleSearchableColumn"
                                         data-columnid={columnId}
                                         data-isadditionalcolumn={
@@ -146,7 +146,7 @@ const ColumnSearch = ({
                                     />
                                     <label
                                         htmlFor={`chk_selectSearchableColumn_${columnId}`}
-                                        className="form-check-label ng-chooser-body__label"
+                                        className="neo-form-check__label ng-chooser-body__label"
                                     >
                                         {title || Header}
                                     </label>

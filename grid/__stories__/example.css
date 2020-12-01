@@ -61,21 +61,22 @@
 
 /*  Checkbox Styles
 *  ------------------------------------------------------ */
-.form-check {
-    height: 30px;
+.neo-form-check {
     padding: 0;
-    display: flex;
-    align-items: center;
-}
-.form-check .form-check-input {
-    margin-top: 0;
-    margin-left: 0;
-    margin-right: 8px;
-}
-.form-check.form-check-inline {
     display: inline-flex;
+    align-items: center;
+    height: 1.5rem;
 }
-input[type="checkbox"].custom-checkbox.custom-checkbox {
+.neo-form-check.form-check-inline {
+    display: inline-flex;
+    cursor: pointer;
+}
+.neo-form-check__label {
+    margin: 0;
+    padding-left: 0.5rem;
+    cursor: pointer;
+}
+input[type="checkbox"].neo-checkbox {
     -webkit-appearance: initial;
     appearance: initial;
     width: 16px;
@@ -88,11 +89,12 @@ input[type="checkbox"].custom-checkbox.custom-checkbox {
     outline: none;
     background: #fff;
     border-color: #c3c3c3;
+    margin: 0 !important;
 }
-input[type="checkbox"].custom-checkbox.custom-checkbox:focus {
-    border-color: #00aaad;
+input[type="checkbox"].neo-checkbox:focus {
+    border-color: var(--primary);
 }
-input[type="checkbox"].custom-checkbox:checked:after {
+input[type="checkbox"].neo-checkbox:checked:after {
     content: "\2713";
     position: absolute;
     left: 50%;
@@ -101,23 +103,23 @@ input[type="checkbox"].custom-checkbox:checked:after {
     -moz-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-    color: #fff;
+    color: var(--white);
     cursor: pointer;
 }
-input[type="checkbox"].custom-checkbox:checked {
-    background: #00aaad;
+input[type="checkbox"].neo-checkbox:checked {
+    background: var(--primary);
     -webkit-transition: all 0.35s ease;
     transition: all 0.3s ease;
 }
-input[type="checkbox"].custom-checkbox:checked:after {
-    color: #fff;
+input[type="checkbox"].neo-checkbox:checked:after {
+    color: var(--white);
 }
 .form-check-inline .form-check-input {
     position: relative;
 }
-input[type="checkbox"].custom-checkbox:checked {
-    border: 1px solid #00aaad !important;
-    box-shadow: 0px 0px 1px 2px rgba(96, 151, 153, 0.1);
+input[type="checkbox"].neo-checkbox:checked {
+    border: 1px solid var(--primary) !important;
+    box-shadow: 0px 0px 1px 2px var(--primary-light);
 }
 
 /*  Global Styles

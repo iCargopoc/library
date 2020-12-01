@@ -910,11 +910,11 @@ const Customgrid = (props) => {
                             return (
                                 <div {...row.getRowProps({ style })}>
                                     {multiRowSelection !== false ? (
-                                        <div className="form-check">
+                                        <div className="neo-form-check">
                                             <input
                                                 type="checkbox"
                                                 data-testid="rowSelector-parentRow"
-                                                className="form-check-input custom-checkbox form-check-input"
+                                                className="neo-checkbox form-check-input"
                                                 checked={isParentRowSelected(
                                                     row
                                                 )}
@@ -1062,11 +1062,11 @@ const Customgrid = (props) => {
                 >
                     <div className="ng-header-results">
                         {gridHeader === false && multiRowSelection !== false ? (
-                            <div className="form-check">
+                            <div className="neo-form-check">
                                 <input
                                     type="checkbox"
                                     data-testid="rowSelector-allRows-fromHeaderTitle"
-                                    className="form-check-input custom-checkbox form-check-input"
+                                    className="neo-checkbox form-check-input"
                                     checked={isAllRowsSelected()}
                                     onChange={toggleAllRowsSelection}
                                 />

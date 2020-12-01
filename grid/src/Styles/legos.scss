@@ -6,15 +6,6 @@
 .neo-grid {
     color: var(--text-light);
     font-size: rem(12);
-    ::placeholder {
-        color: var(--placeholder);
-    }
-    ::-ms-input-placeholder {
-        color: var(--placeholder);
-    }
-    ::-ms-input-placeholder {
-        color: var(--placeholder);
-    }
     .ng-error {
         margin-top: 20px;
         color: var(--danger);
@@ -29,11 +20,8 @@
         color: #000;
         border: var(--border-grey) solid 1px;
         box-sizing: border-box;
-    }
-    input[type="checkbox"].custom-checkbox.custom-checkbox {
-        margin-bottom: 0;
-    }
-    .form-check {
-        height: auto;
+        &::placeholder {
+            color: var(--placeholder);
+        }
     }
 }

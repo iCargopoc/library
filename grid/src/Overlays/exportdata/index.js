@@ -378,10 +378,10 @@ const ExportData = (props) => {
                     <div className="ng-popover--exports__title">Export As</div>
                     <div className="ng-popover--exports__body">
                         <div className="ng-popover--exports__reorder">
-                            <div className="form-check">
+                            <div className="neo-form-check">
                                 <input
                                     type="checkbox"
-                                    className="form-check-input custom-checkbox form-check-input"
+                                    className="neo-checkbox form-check-input"
                                     id="chk_pdf"
                                     data-testid="chk_pdf_test"
                                     value="pdf"
@@ -391,7 +391,7 @@ const ExportData = (props) => {
                             </div>
                             <label
                                 htmlFor="chk_pdf"
-                                className="form-check-label"
+                                className="neo-form-check__label"
                             >
                                 <div className="ng-popover--exports__file">
                                     <i>
@@ -404,10 +404,10 @@ const ExportData = (props) => {
                             </label>
                         </div>
                         <div className="ng-popover--exports__reorder">
-                            <div className="form-check">
+                            <div className="neo-form-check">
                                 <input
                                     type="checkbox"
-                                    className="form-check-input custom-checkbox form-check-input"
+                                    className="neo-checkbox form-check-input"
                                     id="chk_excel"
                                     data-testid="chk_excel_test"
                                     value="excel"
@@ -417,7 +417,7 @@ const ExportData = (props) => {
                             </div>
                             <label
                                 htmlFor="chk_excel"
-                                className="form-check-label"
+                                className="neo-form-check__label"
                             >
                                 <div className="ng-popover--exports__file">
                                     <i>
@@ -430,10 +430,10 @@ const ExportData = (props) => {
                             </label>
                         </div>
                         <div className="ng-popover--exports__reorder">
-                            <div className="form-check">
+                            <div className="neo-form-check">
                                 <input
                                     type="checkbox"
-                                    className="form-check-input custom-checkbox form-check-input"
+                                    className="neo-checkbox form-check-input"
                                     id="chk_csv"
                                     data-testid="chk_csv_test"
                                     value="csv"
@@ -443,7 +443,7 @@ const ExportData = (props) => {
                             </div>
                             <label
                                 htmlFor="chk_csv"
-                                className="form-check-label"
+                                className="neo-form-check__label"
                             >
                                 <div className="ng-popover--exports__file">
                                     <i>

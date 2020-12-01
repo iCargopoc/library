@@ -29,11 +29,11 @@ const groupedColumnItem = ({
                               key={cellId}
                           >
                               <div className="ng-popover--column__check">
-                                  <div className="form-check">
+                                  <div className="neo-form-check">
                                       <input
                                           type="checkbox"
                                           id={`chk_selectInnerCell_${cellId}`}
-                                          className="form-check-input custom-checkbox form-check-input"
+                                          className="neo-checkbox form-check-input"
                                           data-testid={`selectInnerCell_${id}_${cellId}`}
                                           data-columnid={id}
                                           data-cellid={cellId}
@@ -45,7 +45,7 @@ const groupedColumnItem = ({
                                       />
                                       <label
                                           htmlFor={`chk_selectInnerCell_${cellId}`}
-                                          className="form-check-label"
+                                          className="neo-form-check__label"
                                       >
                                           {cell.Header}
                                       </label>
