@@ -33,7 +33,9 @@ import {
     IconShare,
     IconGroupSort,
     IconSort,
-    IconRefresh
+    IconRefresh,
+    IconExpand,
+    IconCollapse
 } from "./Utilities/SvgUtilities";
 import {
     findSelectedRows,
@@ -531,6 +533,23 @@ const Customgrid = (props) => {
         }
     };
 
+    const isParentRowOpen = (row) => {
+        if (parentIdAttribute && row) {
+            const { original } = row;
+            if (original) {
+                const rowParentIdAttribute = original[parentIdAttribute];
+                if (
+                    rowParentIdAttribute !== null &&
+                    rowParentIdAttribute !== undefined
+                ) {
+                    // Check if parent row is present in state.
+                    return expandedParentRows.includes(rowParentIdAttribute);
+                }
+            }
+        }
+        return false;
+    };
+
     const toggleParentRow = (row, index) => {
         if (parentIdAttribute && row) {
             const { original } = row;
@@ -908,42 +927,45 @@ const Customgrid = (props) => {
                         const { isParent, lastPage } = original;
                         if (isParent === true && isParentGrid) {
                             return (
-                                <div {...row.getRowProps({ style })}>
-                                    {multiRowSelection !== false ? (
-                                        <div className="neo-form-check">
-                                            <input
-                                                type="checkbox"
-                                                data-testid="rowSelector-parentRow"
-                                                className="neo-checkbox form-check-input"
-                                                checked={isParentRowSelected(
-                                                    row
-                                                )}
-                                                onChange={(event) =>
-                                                    toggleParentRowSelection(
-                                                        event,
+                                <div className="ng-accordion" style={style}>
+                                    <div className="ng-accordion__block">
+                                        {multiRowSelection !== false ? (
+                                            <div className="neo-form-check">
+                                                <input
+                                                    type="checkbox"
+                                                    data-testid="rowSelector-parentRow"
+                                                    className="neo-checkbox form-check-input"
+                                                    checked={isParentRowSelected(
                                                         row
-                                                    )
+                                                    )}
+                                                    onChange={(event) =>
+                                                        toggleParentRowSelection(
+                                                            event,
+                                                            row
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                        ) : null}
+                                        {parentRowExpandable !== false ? (
+                                            <i
+                                                role="presentation"
+                                                className="ng-accordion__icon"
+                                                onClick={() =>
+                                                    toggleParentRow(row, index)
                                                 }
-                                            />
-                                        </div>
-                                    ) : null}
-                                    <div style={{ width: "100%" }}>
+                                            >
+                                                {isParentRowOpen(row) ? (
+                                                    <IconCollapse />
+                                                ) : (
+                                                    <IconExpand />
+                                                )}
+                                            </i>
+                                        ) : null}
+                                    </div>
+                                    <div className="ng-accordion__content">
                                         {parentColumn.displayCell(original)}
                                     </div>
-                                    {parentRowExpandable !== false ? (
-                                        <p
-                                            role="presentation"
-                                            style={{
-                                                color: "red",
-                                                cursor: "pointer"
-                                            }}
-                                            onClick={() =>
-                                                toggleParentRow(row, index)
-                                            }
-                                        >
-                                            Expand
-                                        </p>
-                                    ) : null}
                                 </div>
                             );
                         }

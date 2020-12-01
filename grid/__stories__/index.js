@@ -982,13 +982,17 @@ const GridComponent = (props) => {
         displayCell: (rowData) => {
             const { titleId, title, count, lastModified, date, time } = rowData;
             return (
-                <div>
-                    <p className="parentRow">{titleId}</p>
-                    <p className="parentRow">{title}</p>
-                    <p className="parentRow">{count}</p>
-                    <p className="parentRow">{lastModified}</p>
-                    <p className="parentRow">{date}</p>
-                    <p className="parentRow">{time}</p>
+                <div className="parentRow">
+                    <h2 className="parentRowHead">
+                        {title} ({count})
+                    </h2>
+                    <div className="parentRowInfo">
+                        <span className="parentRowInfoType">
+                            Last Modified : {lastModified}
+                        </span>
+                        <span className="parentRowInfoType">{date}</span>
+                        <span className="parentRowInfoType">{time}</span>
+                    </div>
                 </div>
             );
         }

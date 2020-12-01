@@ -108,6 +108,28 @@
             border-bottom: 1px solid var(--border-grey);
             flex-wrap: wrap;
         }
+        .ng-accordion {
+            display: flex;
+            border-bottom: 1px solid var(--border-default);
+            &__block {
+                display: flex;
+                align-items: center;
+            }
+            &__icon {
+                width: 20px;
+                height: 20px;
+                margin: 0 10px;
+                border: var(--border-light) solid 1px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+            &__content {
+                width: 100%;
+            }
+        }
     }
     &__td {
         position: relative;
