@@ -160,7 +160,7 @@ const GridComponent = (props) => {
         return data;
     };
 
-    const sampleParentData = [
+    const parentData = [
         {
             titleId: 0,
             title: "EXCVGRATES",
@@ -1414,8 +1414,8 @@ const GridComponent = (props) => {
 
     useEffect(() => {
         if (treeStructure) {
-            setGridData(sampleParentData);
-            setOriginalGridData(sampleParentData);
+            setGridData(parentData);
+            setOriginalGridData(parentData);
             setIndexPageInfo(null);
             setCursorPageInfo(null);
             setParentColumn(originalParentColumn);
