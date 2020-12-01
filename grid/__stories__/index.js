@@ -42,12 +42,13 @@ const GridComponent = (props) => {
         multiRowSelection,
         passTheme,
         enableServersideSorting,
-        treeStructure
+        treeStructure,
+        parentRowExpandable
     } = props;
     const idAttribute = "travelId";
     const parentIdAttribute = "titleId";
     const gridPageSize = 300;
-    const paginationType = "index"; // or - "cursor"
+    const paginationType = "index"; // or - "cursor" - if Gris is tree view and parentRowExpandable is false, then paginationType should be "index"
     // State for holding index page info
     const [indexPageInfo, setIndexPageInfo] = useState({
         pageNum: 1,
@@ -1418,11 +1419,58 @@ const GridComponent = (props) => {
 
     useEffect(() => {
         if (treeStructure) {
-            setGridData(parentData);
-            setOriginalGridData(parentData);
-            setIndexPageInfo(null);
-            setCursorPageInfo(null);
-            setParentColumn(originalParentColumn);
+            if (parentRowExpandable !== false) {
+                setGridData(parentData);
+                setOriginalGridData(parentData);
+                setIndexPageInfo(null);
+                setCursorPageInfo(null);
+                setParentColumn(originalParentColumn);
+            } else {
+                const newPageSize = 5;
+                const newGridData = [...parentData];
+                fetchData({ pageNum: 1, pageSize: newPageSize }).then(
+                    (firstData) => {
+                        if (firstData && firstData.length > 0) {
+                            newGridData[0].childData = {
+                                pageNum: 1,
+                                pageSize: newPageSize,
+                                lastPage: false,
+                                data: firstData
+                            };
+                        }
+                        fetchData({ pageNum: 11, pageSize: newPageSize }).then(
+                            (secondData) => {
+                                if (secondData && secondData.length > 0) {
+                                    newGridData[1].childData = {
+                                        pageNum: 11,
+                                        pageSize: newPageSize,
+                                        lastPage: false,
+                                        data: secondData
+                                    };
+                                }
+                                fetchData({
+                                    pageNum: 21,
+                                    pageSize: newPageSize
+                                }).then((thirdData) => {
+                                    if (thirdData && thirdData.length > 0) {
+                                        newGridData[2].childData = {
+                                            pageNum: 21,
+                                            pageSize: newPageSize,
+                                            lastPage: false,
+                                            data: thirdData
+                                        };
+                                    }
+                                    setGridData(newGridData);
+                                    setOriginalGridData(newGridData);
+                                    setIndexPageInfo(null);
+                                    setCursorPageInfo(null);
+                                    setParentColumn(originalParentColumn);
+                                });
+                            }
+                        );
+                    }
+                );
+            }
         } else {
             const pageInfo =
                 paginationType === "index" ? indexPageInfo : cursorPageInfo;
@@ -1563,7 +1611,11 @@ const GridComponent = (props) => {
                     }
                     parentColumn={treeStructure ? parentColumn : null}
                     parentIdAttribute={treeStructure ? parentIdAttribute : null}
-                    // parentRowExpandable={false}
+                    parentRowExpandable={
+                        treeStructure && parentRowExpandable
+                            ? parentRowExpandable
+                            : null
+                    }
                     // parentRowsToExpand={[0]}
                     rowActions={allProps || passRowActions ? rowActions : null}
                     calculateRowHeight={calculateRowHeight}

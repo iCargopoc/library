@@ -1129,9 +1129,9 @@ const fileName="Custom filename"
 />
 ```
 
-#### With all props and tree view
+#### Tree view with all props
 
-<Story name="With all props and tree view">
+<Story name="Tree view with all props">
     <GridComponent
         allProps
         className="icargoCustomClass"
@@ -1162,6 +1162,66 @@ const fileName="Custom filename"
     loadMoreData={loadMoreData}
     columns={columns}
     columnToExpand={columnToExpand}
+    parentColumn={parentColumn}
+    parentIdAttribute={parentIdAttribute}
+    rowActions={rowActions}
+    calculateRowHeight={calculateRowHeight}
+    expandableColumn={expandableColumn}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    getRowInfo={getRowInfo}
+    onGridRefresh={onGridRefresh}
+    CustomPanel={CustomPanel}
+    rowsToSelect={rowsToSelect}
+    rowsToDeselect={rowsToDeselect}
+    gridHeader
+    rowSelector
+    globalSearch
+    columnFilter
+    groupSort
+    columnChooser
+    exportData
+    fileName={fileName}
+/>
+```
+
+#### Tree view without expansion
+
+<Story name="Tree view without expansion">
+    <GridComponent
+        allProps
+        className="icargoCustomClass"
+        title="AWBs"
+        gridHeight="80vh"
+        gridWidth="100%"
+        rowsToOverscan={20}
+        CustomPanel={CustomPanel}
+        fileName="Custom filename"
+        rowsForSelection={[1, 7, 17]}
+        fileName="Custom filename"
+        treeStructure
+        parentRowExpandable={false}
+    />
+    ;
+</Story>
+
+```jsx
+<Grid
+    className={className}
+    title={title}
+    gridHeight={gridHeight}
+    gridWidth={gridWidth}
+    gridData={gridData}
+    rowsToOverscan={20}
+    idAttribute={idAttribute}
+    paginationType={paginationType}
+    pageInfo={gridPageInfo}
+    loadMoreData={loadMoreData}
+    columns={columns}
+    columnToExpand={columnToExpand}
+    parentColumn={parentColumn}
+    parentIdAttribute={parentIdAttribute}
+    parentRowExpandable={parentRowExpandable}
     rowActions={rowActions}
     calculateRowHeight={calculateRowHeight}
     expandableColumn={expandableColumn}
