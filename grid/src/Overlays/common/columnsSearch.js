@@ -88,16 +88,19 @@ const ColumnSearch = ({
         );
     }, []);
 
-    if (searchableColumns && searchableColumns.length > 0) {
-        return (
-            <div className="ng-chooser-body">
-                <input
-                    type="text"
-                    placeholder="Search column"
-                    className="ng-chooser-body__txt"
-                    data-testid="filterColumnsList"
-                    onChange={onColumnSearch}
-                />
+    const isSearchableColumnsAvailable =
+        searchableColumns && searchableColumns.length > 0;
+
+    return (
+        <div className="ng-chooser-body">
+            <input
+                type="text"
+                placeholder="Search column"
+                className="ng-chooser-body__txt"
+                data-testid="filterColumnsList"
+                onChange={onColumnSearch}
+            />
+            {isSearchableColumnsAvailable ? (
                 <div className="ng-chooser-body__selectall">
                     <div className="ng-chooser-body__checkbox">
                         <div className="neo-form-check">
@@ -119,46 +122,47 @@ const ColumnSearch = ({
                         </div>
                     </div>
                 </div>
-                {searchableColumns.map((column) => {
-                    const {
-                        columnId,
-                        Header,
-                        title,
-                        isDisplayInExpandedRegion
-                    } = column;
-                    return (
-                        <div className="ng-chooser-body__wrap" key={columnId}>
-                            <div className="ng-chooser-body__checkwrap">
-                                <div className="neo-form-check">
-                                    <input
-                                        type="checkbox"
-                                        id={`chk_selectSearchableColumn_${columnId}`}
-                                        className="neo-checkbox form-check-input"
-                                        data-testid="selectSingleSearchableColumn"
-                                        data-columnid={columnId}
-                                        data-isadditionalcolumn={
-                                            isDisplayInExpandedRegion
-                                        }
-                                        checked={isSearchableColumnSelected(
-                                            columnId
-                                        )}
-                                        onChange={onSearchableColumnChange}
-                                    />
-                                    <label
-                                        htmlFor={`chk_selectSearchableColumn_${columnId}`}
-                                        className="neo-form-check__label"
-                                    >
-                                        {title || Header}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    }
-    return null;
+            ) : null}
+            {isSearchableColumnsAvailable
+                ? searchableColumns.map((column) => {
+                      const {
+                          columnId,
+                          Header,
+                          title,
+                          isDisplayInExpandedRegion
+                      } = column;
+                      return (
+                          <div className="ng-chooser-body__wrap" key={columnId}>
+                              <div className="ng-chooser-body__checkwrap">
+                                  <div className="neo-form-check">
+                                      <input
+                                          type="checkbox"
+                                          id={`chk_selectSearchableColumn_${columnId}`}
+                                          className="neo-checkbox form-check-input"
+                                          data-testid="selectSingleSearchableColumn"
+                                          data-columnid={columnId}
+                                          data-isadditionalcolumn={
+                                              isDisplayInExpandedRegion
+                                          }
+                                          checked={isSearchableColumnSelected(
+                                              columnId
+                                          )}
+                                          onChange={onSearchableColumnChange}
+                                      />
+                                      <label
+                                          htmlFor={`chk_selectSearchableColumn_${columnId}`}
+                                          className="neo-form-check__label"
+                                      >
+                                          {title || Header}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                      );
+                  })
+                : null}
+        </div>
+    );
 };
 
 ColumnSearch.propTypes = {
