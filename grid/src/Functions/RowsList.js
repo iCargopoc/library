@@ -9,6 +9,7 @@ const RowsList = ({
     listRef,
     height,
     isParentRowCollapsed,
+    isLoadMoreChildRowsRequiredForRow,
     calculateRowHeight,
     rows,
     headerGroups,
@@ -31,6 +32,14 @@ const RowsList = ({
             itemCount={rows.length}
             itemSize={(index) => {
                 const currentRow = rows[index];
+                let isLastPage = true;
+                if (currentRow) {
+                    const { original } = currentRow;
+                    if (original) {
+                        const { lastPage } = original;
+                        isLastPage = lastPage;
+                    }
+                }
                 // If this is a child row in tree grid and its parent is in collapsed state, this row height should be 0.
                 if (isParentRowCollapsed(currentRow)) {
                     return 0;
@@ -41,7 +50,10 @@ const RowsList = ({
                         headerGroups && headerGroups.length
                             ? headerGroups[headerGroups.length - 1].headers
                             : []
-                    ) + (theme === "portal" ? 10 : 0)
+                    ) +
+                    (isLoadMoreChildRowsRequiredForRow(index, isLastPage)
+                        ? 34
+                        : 0)
                 );
             }}
             onItemsRendered={onItemsRendered}
@@ -59,6 +71,7 @@ RowsList.propTypes = {
     listRef: PropTypes.any,
     height: PropTypes.number,
     isParentRowCollapsed: PropTypes.func,
+    isLoadMoreChildRowsRequiredForRow: PropTypes.func,
     calculateRowHeight: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
     headerGroups: PropTypes.arrayOf(PropTypes.object),

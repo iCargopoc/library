@@ -917,6 +917,24 @@ const Customgrid = (props) => {
         }
     };
 
+    const isLoadMoreChildRowsRequiredForRow = (index, lastPage) => {
+        let isLoadMoreChildNeeded = false;
+        if (isParentGrid && lastPage === false) {
+            if (index === rows.length - 1) {
+                isLoadMoreChildNeeded = true;
+            } else {
+                const nextRow = rows[index + 1];
+                if (nextRow) {
+                    isLoadMoreChildNeeded =
+                        nextRow &&
+                        nextRow.original &&
+                        nextRow.original.isParent === true;
+                }
+            }
+        }
+        return isLoadMoreChildNeeded;
+    };
+
     // Render each row and cells in each row, using attributes from react window list.
     const RenderRow = useCallback(
         ({ index, style }) => {
@@ -984,22 +1002,6 @@ const Customgrid = (props) => {
                             }
                         }
 
-                        // Check if this row is the last child element of parent, to display the 'Load More' button
-                        let isLoadMoreChildNeeded = false;
-                        if (isParentGrid && lastPage === false) {
-                            if (index === rows.length - 1) {
-                                isLoadMoreChildNeeded = true;
-                            } else {
-                                const nextRow = rows[index + 1];
-                                if (nextRow) {
-                                    isLoadMoreChildNeeded =
-                                        nextRow &&
-                                        nextRow.original &&
-                                        nextRow.original.isParent === true;
-                                }
-                            }
-                        }
-
                         // Check if this is a tree grid, and if parent row is in collapsed state. If yes, do not render its child rows
                         if (isParentRowCollapsed(row)) {
                             return null;
@@ -1045,16 +1047,20 @@ const Customgrid = (props) => {
                                         )}
                                     </div>
                                 ) : null}
-                                {isLoadMoreChildNeeded ? (
-                                    <div className="loadChildData">
+                                {isLoadMoreChildRowsRequiredForRow(
+                                    index,
+                                    lastPage
+                                ) ? (
+                                    <div className="ng-loadmore">
                                         <button
                                             type="button"
+                                            className="neo-btn neo-btn-default btn btn-secondary"
                                             data-testid="load-more-childdata"
                                             onClick={() =>
                                                 loadMoreChildData(row)
                                             }
                                         >
-                                            Load more
+                                            Load more....
                                         </button>
                                     </div>
                                 ) : null}
@@ -1386,6 +1392,9 @@ const Customgrid = (props) => {
                                                         isParentRowCollapsed={
                                                             isParentRowCollapsed
                                                         }
+                                                        isLoadMoreChildRowsRequiredForRow={
+                                                            isLoadMoreChildRowsRequiredForRow
+                                                        }
                                                         calculateRowHeight={
                                                             calculateRowHeight
                                                         }
@@ -1407,6 +1416,9 @@ const Customgrid = (props) => {
                                                 height={height}
                                                 isParentRowCollapsed={
                                                     isParentRowCollapsed
+                                                }
+                                                isLoadMoreChildRowsRequiredForRow={
+                                                    isLoadMoreChildRowsRequiredForRow
                                                 }
                                                 calculateRowHeight={
                                                     calculateRowHeight

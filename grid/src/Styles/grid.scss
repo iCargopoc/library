@@ -131,6 +131,15 @@
                 width: 100%;
             }
         }
+        .ng-loadmore {
+            width: 100%;
+            text-align: center;
+            border-top: #c4cacf solid 1px;
+            padding-top: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
     &__td {
         position: relative;
