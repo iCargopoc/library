@@ -954,6 +954,7 @@ const Customgrid = (props) => {
                                                 onClick={() =>
                                                     toggleParentRow(row, index)
                                                 }
+                                                data-testid="acccordion-expand-collapse"
                                             >
                                                 {isParentRowOpen(row) ? (
                                                     <IconCollapse />
@@ -1044,6 +1045,7 @@ const Customgrid = (props) => {
                                     <div className="loadChildData">
                                         <button
                                             type="button"
+                                            data-testid="load-more-childdata"
                                             onClick={() =>
                                                 loadMoreChildData(row)
                                             }

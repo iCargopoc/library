@@ -257,11 +257,12 @@ const Grid = (props) => {
                 let sortedTreeData = [];
                 const parentDataFromOriginalData = originalData.filter(
                     (dataToFilter) => {
+                        let returnValue = false;
                         if (dataToFilter) {
                             const { isParent } = dataToFilter;
-                            return isParent === true;
+                            returnValue = isParent === true;
                         }
-                        return false;
+                        return returnValue;
                     }
                 );
                 parentDataFromOriginalData.forEach((dataFromGrid) => {

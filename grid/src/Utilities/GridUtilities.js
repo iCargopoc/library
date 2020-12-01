@@ -155,14 +155,15 @@ export const checkIfGroupsortIsApplicable = (columns) => {
 export const findAllChildRows = (allRows) => {
     if (allRows && allRows.length > 0) {
         return allRows.filter((row) => {
+            let returnValue = false;
             if (row) {
                 const { original } = row;
                 if (original) {
                     const { isParent } = original;
-                    return isParent !== true;
+                    returnValue = isParent !== true;
                 }
             }
-            return false;
+            return returnValue;
         });
     }
     return [];
