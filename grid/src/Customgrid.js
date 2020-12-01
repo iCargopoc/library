@@ -1090,7 +1090,7 @@ const Customgrid = (props) => {
                 >
                     <div className="ng-header-results">
                         {gridHeader === false && multiRowSelection !== false ? (
-                            <div className="neo-form-check">
+                            <div className="neo-form-check ng-header-results__check">
                                 <input
                                     type="checkbox"
                                     data-testid="rowSelector-allRows-fromHeaderTitle"

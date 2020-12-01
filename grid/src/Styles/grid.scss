@@ -42,7 +42,7 @@
         .ng-txt-wrap {
             display: none;
             margin-top: auto;
-            padding-top: 5px;
+            padding-top: 6px;
             &__open {
                 display: block;
             }
@@ -51,7 +51,7 @@
             width: 100%;
         }
         .neo-grid__th-icon {
-            margin-left: 5px;
+            margin-left: 4px;
         }
         &.neo-grid__th-group {
             .neo-grid__th-title {
@@ -155,9 +155,9 @@
             justify-content: space-between;
             align-items: center;
             height: 100%;
-            margin-right: 5px;
+            margin-right: 6px;
             box-sizing: border-box;
-            padding: rem(10) 5px;
+            padding: rem(10) 6px;
             &__arrow-up {
                 transform: rotate(-180deg);
             }
@@ -167,7 +167,7 @@
             &__utils-block {
                 position: relative;
                 cursor: pointer;
-                width: rem(15);
+                width: rem(16);
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -188,7 +188,7 @@
                 width: auto;
                 right: 0;
                 top: 0;
-                padding: rem(15) rem(10);
+                padding: rem(16) rem(10);
                 margin-bottom: rem(40);
                 z-index: 9;
                 white-space: nowrap;
@@ -197,7 +197,7 @@
                 position: absolute;
                 top: 5px;
                 right: 5px;
-                font-size: rem(15);
+                font-size: rem(14);
                 color: #ccc;
                 cursor: pointer;
             }
@@ -225,7 +225,7 @@
             background: #fff;
             border: #eee solid 1px;
             top: 5px;
-            padding: 5px;
+            padding: 4px;
             border-radius: 4px;
             width: auto;
             white-space: nowrap;

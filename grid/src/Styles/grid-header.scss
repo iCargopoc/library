@@ -16,8 +16,11 @@
             font-weight: bold;
             align-items: center;
             min-width: rem(90);
+            &__check {
+                padding-right: 4px;
+            }
             &__title {
-                margin-left: rem(5);
+                margin-left: rem(4);
                 display: inline-block;
             }
         }

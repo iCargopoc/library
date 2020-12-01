@@ -70,10 +70,10 @@
                 &__txt {
                     border: 1px solid var(--light-grey);
                     border-radius: 5px;
-                    padding: 0px 5px;
+                    padding: 0px 6px;
                     width: 93%;
-                    height: 25px;
-                    font-size: rem(11);
+                    height: 24px;
+                    font-size: rem(12);
                 }
                 &__wrap {
                     display: flex;
@@ -92,18 +92,18 @@
             width: 100%;
         }
         &--sort {
-            width: 497px;
+            width: 498px;
             &__items {
                 display: flex;
             }
             &__section {
-                margin: 0px 0px 15px 41px;
+                margin: 0px 0px 16px 40px;
                 display: flex;
                 color: var(--dark-grey);
                 width: 14%;
                 cursor: pointer;
                 .ng-popover__txt {
-                    margin-left: 5px;
+                    margin-left: 6px;
                     color: #3c476f;
                     line-height: normal;
                     font-size: rem(12);
@@ -112,7 +112,7 @@
             }
             &__icon-plus {
                 font-size: rem(22);
-                line-height: 13px;
+                line-height: 14px;
                 color: #3c476f;
             }
             &__items-title {
@@ -156,7 +156,7 @@
             }
             &__warning {
                 margin-bottom: 10px;
-                padding-left: 43px;
+                padding-left: 42px;
                 color: var(--danger);
             }
         }
@@ -191,8 +191,8 @@
                 border-radius: 3px;
                 text-align: center;
                 min-height: 150px;
-                margin: 10px 5px;
-                padding: 10px 3px;
+                margin: 10px 4px;
+                padding: 10px 4px;
                 -moz-user-select: none;
                 -ms-user-select: none;
                 -khtml-user-select: none;
@@ -220,7 +220,7 @@
                 justify-content: left;
             }
             &__list {
-                margin-top: 15px;
+                margin-top: 14px;
                 &--group {
                     text-align: left;
                 }
@@ -253,17 +253,17 @@
                 padding: 10px;
                 border-bottom: var(--light-grey) solid 1px;
                 color: #3c425e;
-                font-size: rem(13);
+                font-size: rem(14);
                 display: flex;
             }
             &__close {
                 margin-left: auto;
-                font-size: rem(15);
+                font-size: rem(14);
                 cursor: pointer;
             }
             &__title {
-                padding: 10px 15px 0;
-                font-size: rem(13);
+                padding: 10px 14px 0;
+                font-size: rem(14);
             }
             &__body {
                 display: flex;
@@ -272,22 +272,22 @@
             &__reorder {
                 border: 1px solid var(--dark-grey);
                 border-radius: 5px;
-                height: 85px;
-                margin: 0 5px;
+                height: 86px;
+                margin: 0 4px;
                 padding: 8px 10px;
-                width: 85px;
+                width: 86px;
             }
             &__file {
                 text-align: center;
                 .ng-popover--exports__file-type {
                     display: block;
-                    font-size: rem(13);
+                    font-size: rem(14);
                     font-weight: normal;
                     line-height: normal;
                 }
             }
             &__footer {
-                padding: 15px 10px;
+                padding: 16px 10px;
                 border-top: 1px solid var(--light-grey);
                 position: absolute;
                 bottom: 0px;
