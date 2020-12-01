@@ -1557,8 +1557,8 @@ const GridComponent = (props) => {
                     columnToExpand={
                         allProps || passColumnToExpand ? columnToExpand : null
                     }
-                    // parentColumn={parentColumn}
-                    // parentIdAttribute={parentIdAttribute}
+                    parentColumn={treeStructure ? parentColumn : null}
+                    parentIdAttribute={treeStructure ? parentIdAttribute : null}
                     // parentRowExpandable={false}
                     // parentRowsToExpand={[0]}
                     rowActions={allProps || passRowActions ? rowActions : null}

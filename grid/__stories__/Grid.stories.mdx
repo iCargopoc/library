@@ -48,6 +48,56 @@ const GridComponent = () => {
     // This is required for all functionalities of row selection and row deselection.
     const idAttribute = "travelId";
 
+    // The accessor value of the row identifier (primary key) in the parent data.
+    // This is required only if tree view is required.
+    const parentIdAttribute = "titleId"
+
+    // In tree view, this is the row data of parent rows in the grid
+    const parentData = [
+        {
+            titleId: 0,
+            title: "EXCVGRATES",
+            count: 3,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39"
+        },
+        {
+            titleId: 1,
+            title: "EXCVGRATES",
+            count: 3,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39"
+        },
+        {
+            titleId: 2,
+            title: "EXCVGRATES",
+            count: 1,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39"
+        }
+    ];
+
+    // In tree view, this is the column configuration for parent rows in Grid.
+    // Parent columns will not be displayd anywhere in the Grid.
+    const originalParentColumn = {
+        displayCell: (rowData) => {
+            const { titleId, title, count, lastModified, date, time } = rowData;
+            return (
+                <div>
+                    <p className="parentRow">{titleId}</p>
+                    <p className="parentRow">{title}</p>
+                    <p className="parentRow">{count}</p>
+                    <p className="parentRow">{lastModified}</p>
+                    <p className="parentRow">{date}</p>
+                    <p className="parentRow">{time}</p>
+                </div>
+            );
+        }
+    };
+
     // JSON Data
     const gridData = [{...}, {...}];
 
@@ -261,13 +311,28 @@ const GridComponent = () => {
         // Grid will call this function when user cliks that icon.
     };
 
-    const loadMoreData = (updatedPageInfo) => {
+    const loadMoreData = (updatedPageInfo, parentId) => {
+        /* Grid without tree view */
+
         // Grid will call this function only if pageInfo is passed a prop to Grid and the value of lastPage in the pageInfo is false.
         // This function is called when user reaches bottom row of the grid by scrolling down.
-        // Grid passes in a parameter updatedPageInfo.
-        // If paginationType is "index", updatedPageInfo will be { (pageNum + 1), pageSize}
-        // Else if paginationType is "cursor", updatedPageInfo will be { endCursor, pageSize}
+        // Grid passes in 2 parameters updatedPageInfo and parentId.
+        // parentId will be null in case of Grid without tree view.
+        // updatedPageInfo will be:
+        // 1) If paginationType is "index", updatedPageInfo will be { (pageNum + 1), pageSize}
+        // 2) Else if paginationType is "cursor", updatedPageInfo will be { endCursor, pageSize}
         // Based on the updatedPageInfo, make API call and re-render grid with updated data.
+
+        /* Grid with tree view */
+
+        // Grid will call this function when user clicks the parent row expand icon for the forst time or the load more button present at the end of child data.
+        // Grid passes in 2 parameters updatedPageInfo and parentId.
+        // parentId will be the parentIdAttribute value of the selected parent.
+        // updatedPageInfo will be null if child data of that parent is getting called for the first time (clicks the parent row expand icon for the forst time).
+        // If user is clicking the load more button present at the end of child data, updatedPageInfo will be:
+        // 1) If paginationType is "index" for the corresponding parent, updatedPageInfo will be { (pageNum + 1), pageSize}
+        // 2) Else if paginationType is "cursor" for the corresponding parent, updatedPageInfo will be { endCursor, pageSize}
+        // Based on the updatedPageInfo and parentId, make API call and re-render grid with updated data.
     };
 
     // True if more column data has to be shown while clicking the row expand icon
@@ -325,6 +390,7 @@ const GridComponent = () => {
 
     // Pass this function as a prop to Grid, then Grid will callback this function if user has selected group sorting
     const serverSideSorting = (groupSortOptions) => {
+        // Sort grid data ( or, child data of each parent in case of tree view) based on the sort parameters passed in.
         // This function should re-render the Grid with sorted gridData prop.
         // groupSortOptions is the Object representation of the sorting options that user has selected.
         // Example:
@@ -363,6 +429,10 @@ const GridComponent = () => {
             serverSideSorting={serverSideSorting}
             columns={columns} // *Required
             columnToExpand={columnToExpand}
+            parentColumn={parentColumn} // Only for tree view
+            parentIdAttribute={parentIdAttribute} // Only for tree view
+            parentRowExpandable={parentRowExpandable} // Only for tree view
+            parentRowsToExpand={parentRowsToExpand} // Only for tree view
             rowActions={rowActions}
             calculateRowHeight={calculateRowHeight} // *Required
             expandableColumn={expandableColumn}
@@ -1020,6 +1090,60 @@ const fileName="Custom filename"
         fileName="Custom filename"
         rowsForSelection={[1, 7, 17]}
         fileName="Custom filename"
+    />
+    ;
+</Story>
+
+```jsx
+<Grid
+    className={className}
+    title={title}
+    gridHeight={gridHeight}
+    gridWidth={gridWidth}
+    gridData={gridData}
+    rowsToOverscan={20}
+    idAttribute={idAttribute}
+    paginationType={paginationType}
+    pageInfo={gridPageInfo}
+    loadMoreData={loadMoreData}
+    columns={columns}
+    columnToExpand={columnToExpand}
+    rowActions={rowActions}
+    calculateRowHeight={calculateRowHeight}
+    expandableColumn={expandableColumn}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    getRowInfo={getRowInfo}
+    onGridRefresh={onGridRefresh}
+    CustomPanel={CustomPanel}
+    rowsToSelect={rowsToSelect}
+    rowsToDeselect={rowsToDeselect}
+    gridHeader
+    rowSelector
+    globalSearch
+    columnFilter
+    groupSort
+    columnChooser
+    exportData
+    fileName={fileName}
+/>
+```
+
+#### With all props and tree view
+
+<Story name="With all props and tree view">
+    <GridComponent
+        allProps
+        className="icargoCustomClass"
+        title="AWBs"
+        gridHeight="80vh"
+        gridWidth="100%"
+        rowsToOverscan={20}
+        CustomPanel={CustomPanel}
+        fileName="Custom filename"
+        rowsForSelection={[1, 7, 17]}
+        fileName="Custom filename"
+        treeStructure
     />
     ;
 </Story>
