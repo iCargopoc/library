@@ -449,6 +449,39 @@ describe("render Index file ", () => {
         }
     ];
 
+    const parentDataWithOnlyLastChildData = [
+        {
+            titleId: 0,
+            title: "EXCVGRATES",
+            count: 3,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39"
+        },
+        {
+            titleId: 1,
+            title: "EXCVGRATES",
+            count: 3,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39"
+        },
+        {
+            titleId: 2,
+            title: "EXCVGRATES",
+            count: 1,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39",
+            childData: {
+                pageNum: 21,
+                pageSize: 5,
+                lastPage: false,
+                data: thirdChildData.filter((item, index) => index < 2)
+            }
+        }
+    ];
+
     const mockGridHeight = "80vh";
     const mockGridWidth = "100%";
     const mockTitle = "AWBs";
@@ -614,6 +647,12 @@ describe("render Index file ", () => {
         // Check if Grid id rendered.
         expect(gridContainer).toBeInTheDocument();
 
+        // Check if expand/collapse icons are not present
+        const expandCollapseIcons = document.querySelectorAll(
+            "[data-testid='ng-accordion__icon']"
+        );
+        expect(expandCollapseIcons.length).toBe(0);
+
         // Find load more buttons
         const loadMoreButttons = getAllByTestId("load-more-childdata");
         expect(loadMoreButttons.length).toBe(2); // Actually there should be 3, but only 2 will be loaded as part of virtualization
@@ -655,6 +694,12 @@ describe("render Index file ", () => {
         // Check if Grid id rendered.
         expect(gridContainer).toBeInTheDocument();
 
+        // Check if expand/collapse icons are not present
+        const expandCollapseIcons = document.querySelectorAll(
+            "[data-testid='ng-accordion__icon']"
+        );
+        expect(expandCollapseIcons.length).toBe(0);
+
         // Find load more buttons
         const loadMoreButttons = getAllByTestId("load-more-childdata");
         expect(loadMoreButttons.length).toBe(2); // Actually there should be 3, but only 2 will be loaded as part of virtualization
@@ -667,6 +712,44 @@ describe("render Index file ", () => {
         });
         // Call for child data fetching has to be fired
         expect(mockLoadMoreData).toHaveBeenCalled();
+    });
+
+    it("test grid with parent data and only last parent's child data and parentRowExpandable as false - test load more coming in the last row", () => {
+        mockOffsetSize(600, 1200);
+        const { container, getAllByTestId } = render(
+            <Grid
+                title={mockTitle}
+                gridHeight={mockGridHeight}
+                gridWidth={mockGridWidth}
+                gridData={parentDataWithOnlyLastChildData}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                parentColumn={parentColumn}
+                parentIdAttribute={parentIdAttribute}
+                parentRowExpandable={false}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                rowsToDeselect={mockRowsToDeselect}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Check if expand/collapse icons are not present
+        const expandCollapseIcons = document.querySelectorAll(
+            "[data-testid='ng-accordion__icon']"
+        );
+        expect(expandCollapseIcons.length).toBe(0);
+
+        // Find load more buttons (Only 1 - for the last parent)
+        const loadMoreButttons = getAllByTestId("load-more-childdata");
+        expect(loadMoreButttons.length).toBe(1);
     });
 
     it("test grid with parent data and child data and parentRowExpandable as false - group sort", () => {
