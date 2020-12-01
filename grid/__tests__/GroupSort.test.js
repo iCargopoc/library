@@ -352,7 +352,7 @@ describe("render Index file ", () => {
         expect(groupSortIcon.length).toBe(0);
     });
 
-    it("test group sort options and check the count", () => {
+    it("test group sort options and check the count + along with row select to test useeffect [rowsToSelect, rowsToDeselect, gridData, groupSortOptions]", () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId, getAllByTestId } = render(
             <Grid
@@ -366,6 +366,25 @@ describe("render Index file ", () => {
         const gridContainer = container;
         // Check if grid has been loaded
         expect(gridContainer).toBeInTheDocument();
+
+        /* Select one row and then apply group sort. This will rigger the useeffect */
+
+        // Find checkboxes
+        const rowSelectors = getAllByTestId("rowSelector-singleRow");
+        expect(rowSelectors.length).toBeGreaterThan(0);
+
+        // Select first row
+        act(() => {
+            rowSelectors[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Selected checkbox count should be 1
+        const selectedCheckboxes = gridContainer.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+        expect(selectedCheckboxes.length).toBe(1);
 
         // Open Group sort Icon
         const groupSortIcon = getByTestId("toggleGroupSortOverLay");
