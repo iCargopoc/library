@@ -762,6 +762,6 @@ li {
 
 /*  CUstom class style
 *  ------------------------------------------------------ */
-.icargoCustomClass .neo-grid-header .neo-grid-header__results {
+.icargoCustomClass .ng-header-results {
     color: #3171b2;
 }
