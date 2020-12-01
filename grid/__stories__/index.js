@@ -1622,7 +1622,7 @@ const GridComponent = (props) => {
                     parentColumn={treeStructure ? parentColumn : null}
                     parentIdAttribute={treeStructure ? parentIdAttribute : null}
                     parentRowExpandable={
-                        treeStructure && parentRowExpandable
+                        treeStructure === true && parentRowExpandable === false
                             ? parentRowExpandable
                             : null
                     }
