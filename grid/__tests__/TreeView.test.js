@@ -29,13 +29,6 @@ describe("render Index file ", () => {
             </div>
         );
     });
-    const editedRowValue = {
-        travelId: 0,
-        flight: {
-            flightno: "123",
-            date: "31-Aug-2016"
-        }
-    };
     const mockUpdateDateValue = jest.fn();
     const mockEditCell = jest.fn((rowData, DisplayTag, rowUpdateCallBack) => {
         const { flightno, date } = rowData.flight;
