@@ -14,6 +14,7 @@ import RowDelete from "./cells/RowDelete";
 
 const GridComponent = (props) => {
     const {
+        allProps,
         className,
         title,
         gridHeight,
@@ -1020,7 +1021,11 @@ const GridComponent = (props) => {
                 rowHeight += widthVariable / 1000;
             }
             // Add logic to increase row height if row is expanded
-            if (isExpanded && passColumnToExpand && columnToExpand) {
+            if (
+                isExpanded &&
+                (passColumnToExpand || allProps) &&
+                columnToExpand
+            ) {
                 // Increase height based on the number of inner cells in additional columns
                 rowHeight +=
                     columnToExpand.innerCells &&
@@ -1177,7 +1182,7 @@ const GridComponent = (props) => {
         console.log(selectedRows);
         console.log("Rows deselected: ");
         console.log(deSelectedRows);
-        if (passIdAttribute) {
+        if (allProps || passIdAttribute) {
             setUserSelectedRows(selectedRows);
             // If a row is deselected, remove that row details from 'rowsToSelect' prop value (if present).
             if (deSelectedRows && deSelectedRows.length > 0) {
@@ -1446,10 +1451,10 @@ const GridComponent = (props) => {
         }
         const mappedOriginalColumns = originalColumns.map((column) => {
             const updatedColumn = column;
-            if (!enableGroupHeaders && column.groupHeader) {
+            if (!(allProps || enableGroupHeaders) && column.groupHeader) {
                 delete updatedColumn.groupHeader;
             }
-            if (!enableJsxHeaders && column.title) {
+            if (!(allProps || enableJsxHeaders) && column.title) {
                 // We know that jsx Header is been provided only for Flight column
                 // Hence update the Header value to string "Flight" and delete title
                 updatedColumn.Header = "Flight";
@@ -1539,37 +1544,43 @@ const GridComponent = (props) => {
                     gridWidth={gridWidth}
                     gridData={gridData}
                     rowsToOverscan={rowsToOverscan}
-                    idAttribute={passIdAttribute ? idAttribute : ""}
-                    paginationType={hasPagination ? paginationType : null}
-                    pageInfo={hasPagination ? gridPageInfo : null}
+                    idAttribute={allProps || passIdAttribute ? idAttribute : ""}
+                    paginationType={
+                        allProps || hasPagination ? paginationType : null
+                    }
+                    pageInfo={allProps || hasPagination ? gridPageInfo : null}
                     loadMoreData={loadMoreData}
                     serverSideSorting={
                         enableServersideSorting ? serverSideSorting : null
                     }
                     columns={columns}
-                    columnToExpand={passColumnToExpand ? columnToExpand : null}
-                    parentColumn={parentColumn}
-                    parentIdAttribute={parentIdAttribute}
-                    parentRowExpandable={false}
-                    parentRowsToExpand={[0]}
-                    rowActions={passRowActions ? rowActions : null}
+                    columnToExpand={
+                        allProps || passColumnToExpand ? columnToExpand : null
+                    }
+                    // parentColumn={parentColumn}
+                    // parentIdAttribute={parentIdAttribute}
+                    // parentRowExpandable={false}
+                    // parentRowsToExpand={[0]}
+                    rowActions={allProps || passRowActions ? rowActions : null}
                     calculateRowHeight={calculateRowHeight}
-                    expandableColumn={expandableColumn}
+                    expandableColumn={allProps || expandableColumn}
                     onRowUpdate={onRowUpdate}
                     onRowSelect={onRowSelect}
-                    getRowInfo={passGetRowInfo ? getRowInfo : null}
-                    onGridRefresh={passOnGridRefresh ? onGridRefresh : null}
+                    getRowInfo={allProps || passGetRowInfo ? getRowInfo : null}
+                    onGridRefresh={
+                        allProps || passOnGridRefresh ? onGridRefresh : null
+                    }
                     CustomPanel={CustomPanel}
                     rowsToSelect={rowsToSelect}
                     rowsToDeselect={rowsToDeselect}
                     multiRowSelection={multiRowSelection}
-                    gridHeader={gridHeader}
-                    rowSelector={rowSelector}
-                    globalSearch={globalSearch}
-                    columnFilter={columnFilter}
-                    groupSort={groupSort}
-                    columnChooser={columnChooser}
-                    exportData={exportData}
+                    gridHeader={allProps || gridHeader}
+                    rowSelector={allProps || rowSelector}
+                    globalSearch={allProps || globalSearch}
+                    columnFilter={allProps || columnFilter}
+                    groupSort={allProps || groupSort}
+                    columnChooser={allProps || columnChooser}
+                    exportData={allProps || exportData}
                     fileName={fileName || null}
                 />
             </div>
