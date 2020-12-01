@@ -667,9 +667,10 @@ describe("ColumnReordering unit test", () => {
                 updateColumnStructure={mockUpdateColumnStructure}
             />
         );
-        expect(getAllByTestId("columnItem")).toHaveLength(9);
-        const startingNode = getAllByTestId("columnItem")[0];
-        const endingNode = getAllByTestId("columnItem")[1];
+        const columnDnds = getAllByTestId("columnItemDnd");
+        expect(columnDnds).toHaveLength(9);
+        const startingNode = columnDnds[0];
+        const endingNode = columnDnds[1];
         act(() => {
             startingNode.dispatchEvent(
                 createBubbledEvent("dragstart", { clientX: 0, clientY: 0 })
@@ -678,6 +679,13 @@ describe("ColumnReordering unit test", () => {
                 createBubbledEvent("drop", { clientX: 0, clientY: 1 })
             );
         });
-        expect(mockUpdateColumnStructure).toBeCalled();
+
+        // Do drag and don't do drop - false case
+        act(() => {
+            startingNode.dispatchEvent(
+                createBubbledEvent("dragstart", { clientX: 0, clientY: 0 })
+            );
+        });
+        fireEvent.dragEnd(startingNode);
     });
 });

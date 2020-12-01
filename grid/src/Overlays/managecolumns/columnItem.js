@@ -55,7 +55,7 @@ const ColumnItem = ({
                 data-testid="column-box"
             >
                 <div
-                    data-testid="columnItem"
+                    data-testid="columnItemDnd"
                     ref={(node) => drag(drop(node))}
                     style={{ cursor: "move" }}
                     className="ng-popover--column__drag"
