@@ -61,7 +61,7 @@
         .neo-grid__th-resizer {
             right: -5px;
             left: -5px;
-            width: 10px;
+            width: rem(10);
             height: 100%;
             position: absolute;
             top: 0;
@@ -114,11 +114,12 @@
             &__block {
                 display: flex;
                 align-items: center;
+                padding: 0 4px;
             }
             &__icon {
-                width: 20px;
-                height: 20px;
-                margin: 0 10px;
+                width: rem(20);
+                height: rem(20);
+                margin: 0 rem(10);
                 border: var(--border-light) solid 1px;
                 display: flex;
                 align-items: center;
@@ -156,7 +157,7 @@
             height: 100%;
             margin-right: 5px;
             box-sizing: border-box;
-            padding: 10px 5px;
+            padding: rem(10) 5px;
             &__arrow-up {
                 transform: rotate(-180deg);
             }
@@ -241,17 +242,17 @@
         }
         .neo-grid__row-wrap {
             background: var(--white);
-            border-radius: 12px;
+            border-radius: rem(12);
             &--expand {
-                border-radius: 12px 12px 0 0;
+                border-radius: rem(12) rem(12) 0 0;
             }
         }
         .neo-grid__tr {
-            padding-bottom: 10px;
+            padding-bottom: rem(10);
             border: none;
         }
         .neo-grid__tbody {
-            margin-top: 10px;
+            margin-top: rem(10);
             &--nohead {
                 margin-top: 0;
             }
