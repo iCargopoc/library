@@ -187,9 +187,6 @@
             cursor: pointer;
             color: #dadfe9;
             display: block;
-            @media screen and (max-width: 1024px) {
-                right: 0;
-            }
         }
         .neo-grid__cell-content {
             height: 100%;

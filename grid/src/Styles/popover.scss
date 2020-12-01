@@ -165,6 +165,9 @@
         }
         &--column {
             display: flex;
+            @media only screen and (max-width: 991px) {
+                width: 680px;
+            }
             &__warning {
                 margin-left: 10px;
                 color: var(--danger);
@@ -182,8 +185,8 @@
                 height: 380px;
                 width: 768px;
                 padding-bottom: 60px;
-                .form-check {
-                    margin-bottom: 4px;
+                @media only screen and (max-width: 991px) {
+                    width: 100%;
                 }
             }
             &__reorder {
@@ -295,7 +298,7 @@
                 width: 67%;
                 display: flex;
                 @media only screen and (max-width: 1024px) {
-                    width: 66.1%;
+                    width: 66.8%;
                 }
             }
             &__btns {
