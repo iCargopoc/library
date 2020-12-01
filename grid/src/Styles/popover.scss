@@ -63,7 +63,6 @@
                 width: 180px;
                 overflow-y: auto;
                 overflow-x: hidden;
-
                 &__selectall {
                     display: flex;
                     padding: 0px 10px;
@@ -84,8 +83,6 @@
                 }
                 &__checkwrap {
                     margin-right: 10px;
-                }
-                &__label {
                     font-size: rem(12);
                     color: var(--titlecolor);
                 }

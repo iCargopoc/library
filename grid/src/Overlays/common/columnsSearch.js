@@ -146,7 +146,7 @@ const ColumnSearch = ({
                                     />
                                     <label
                                         htmlFor={`chk_selectSearchableColumn_${columnId}`}
-                                        className="neo-form-check__label ng-chooser-body__label"
+                                        className="neo-form-check__label"
                                     >
                                         {title || Header}
                                     </label>
