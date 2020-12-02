@@ -6,6 +6,8 @@ import {
     extractAdditionalColumn
 } from "./Utilities/ColumnsUtilities";
 import Customgrid from "./Customgrid";
+// Old method
+// import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 // lazy styles inclusion via styleloader
 import __cmpStyles from "./Styles/main.scss";
 
