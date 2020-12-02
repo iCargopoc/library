@@ -171,7 +171,7 @@ describe("render Index file ", () => {
     ];
     for (let i = 1; i < 50; i++) {
         data.push({
-            travelId: i,
+            travelId: i === 3 ? null : i,
             flight: {
                 flightno: "XX6983",
                 date: "23-May-2016"
@@ -370,5 +370,53 @@ describe("render Index file ", () => {
             'input[type="checkbox"]:checked'
         );
         expect(selectedCheckboxes.length).toBe(3);
+    });
+
+    it("test single row selections for row with invalid id attribute", () => {
+        mockOffsetSize(600, 600);
+        const { container, getAllByTestId } = render(
+            <Grid
+                gridData={data}
+                idAttribute="travelId"
+                columns={gridColumns}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                multiRowSelection={false}
+            />
+        );
+        const gridContainer = container;
+        // Check if grid has been loaded
+        expect(gridContainer).toBeInTheDocument();
+
+        // Find checkboxes
+        let rowSelectors = getAllByTestId("rowSelector-singleRow");
+        expect(rowSelectors.length).toBeGreaterThan(0);
+
+        // Select fourth row, where idAttribute is null
+        const firstRowSelector = rowSelectors[3];
+        act(() => {
+            firstRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Checkbox will get selected, but Grid state won't be updated.
+        let selectedCheckboxes = gridContainer.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+        expect(selectedCheckboxes.length).toBe(1);
+
+        // Select second row, where idAttribute is not null
+        rowSelectors = getAllByTestId("rowSelector-singleRow");
+        const secondRowSelector = rowSelectors[1];
+        act(() => {
+            secondRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Selected checkbox count should be 2 now, as Grid is not aware of the first row selection that does not have idAttribute
+        selectedCheckboxes = gridContainer.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+        expect(selectedCheckboxes.length).toBe(2);
     });
 });

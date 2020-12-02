@@ -8,15 +8,13 @@ export const updatedActionsHeaderClass = (isDesktop) => {
             const tableHeaders = document.getElementsByClassName(
                 "neo-grid__thead"
             );
-            if (tableHeaders && tableHeaders.length > 0) {
-                const tableHeader = tableHeaders[0];
-                if (tableContainer.offsetHeight < tableContainer.scrollHeight) {
-                    if (!tableHeader.classList.contains("withScroll")) {
-                        tableHeader.classList.add("withScroll");
-                    }
-                } else {
-                    tableHeader.classList.remove("withScroll");
+            const tableHeader = tableHeaders[0];
+            if (tableContainer.offsetHeight < tableContainer.scrollHeight) {
+                if (!tableHeader.classList.contains("withScroll")) {
+                    tableHeader.classList.add("withScroll");
                 }
+            } else {
+                tableHeader.classList.remove("withScroll");
             }
         }
     }

@@ -624,7 +624,9 @@ const Customgrid = (props) => {
 
     // Add class to last table column header (for actions) if table body is having scroll
     useEffect(() => {
-        updatedActionsHeaderClass(isDesktop);
+        if (gridHeader !== false) {
+            updatedActionsHeaderClass(isDesktop);
+        }
     });
 
     // Rerender list to calculate row height after doing column sort/filter and global search
