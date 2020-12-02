@@ -51,6 +51,7 @@ const RowsList = ({
                             ? headerGroups[headerGroups.length - 1].headers
                             : []
                     ) +
+                    (theme === "portal" ? 10 : 0) +
                     (isLoadMoreChildRowsRequiredForRow(index, isLastPage)
                         ? 34
                         : 0)
