@@ -621,7 +621,7 @@ describe("render Index file ", () => {
     });
 
     it("test grid with parent data and child data and parentRowExpandable as false - load more - index pagination", () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(600, 900);
         const { container, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
@@ -668,7 +668,7 @@ describe("render Index file ", () => {
     });
 
     it("test grid with parent data and child data and parentRowExpandable as false - load more - cursor pagination", () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(600, 900);
         const { container, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
