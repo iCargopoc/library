@@ -32,6 +32,18 @@ describe("Export Data unit test", () => {
                 accessor: "flight",
                 display: true,
                 cellId: "rowExpand_cell_2"
+            },
+            {
+                Header: "FlightHide",
+                accessor: "flight",
+                display: false,
+                cellId: "rowExpand_cell_3"
+            },
+            {
+                Header: "FlightNull",
+                accessor: null,
+                display: true,
+                cellId: "rowExpand_cell_4"
             }
         ],
         columnId: "rowExpand",
@@ -94,6 +106,20 @@ describe("Export Data unit test", () => {
                     display: true,
                     cellId: "column_6_cell_1",
                     isSearchable: true
+                },
+                {
+                    Header: "ValueHide",
+                    accessor: "value",
+                    display: false,
+                    cellId: "column_6_cell_2",
+                    isSearchable: true
+                },
+                {
+                    Header: "PositionNull",
+                    accessor: null,
+                    display: true,
+                    cellId: "column_6_cell_3",
+                    isSearchable: true
                 }
             ],
             disableSortBy: true,
@@ -110,16 +136,34 @@ describe("Export Data unit test", () => {
             isDisplayInExpandedRegion: false,
             display: true,
             isSearchable: true
+        },
+        {
+            Header: "SR",
+            accessor: "sr",
+            width: 90,
+            columnId: "column_9",
+            isDisplayInExpandedRegion: false,
+            display: false,
+            isSearchable: true
+        },
+        {
+            Header: "SRNull",
+            accessor: null,
+            width: 90,
+            columnId: "column_10",
+            isDisplayInExpandedRegion: false,
+            display: true,
+            isSearchable: true
         }
     ];
     const mockRows = [
         {
             id: "0",
             original: {
-                travelId: 0,
+                travelId: null,
                 flight: {
                     flightno: "XX2225",
-                    date: "31-Aug-2016"
+                    date: null
                 },
                 uldPositions: [
                     {
@@ -140,7 +184,7 @@ describe("Export Data unit test", () => {
                     }
                 ],
                 sr: "74/ AWBs",
-                remarks: "Enim aute magna ipsum magna"
+                remarks: undefined
             },
             index: 0,
             depth: 0,
@@ -266,19 +310,22 @@ describe("Export Data unit test", () => {
         );
         expect(exportOverlayContainer.length).toBe(0);
     });
-    it("should render exportdata component", () => {
-        const { getByText } = render(
+    it("should export empty file, as there are no rows", () => {
+        const { getByTestId } = render(
             <ExportData
                 toggleExportDataOverlay={mocktoggleExportDataOverlay}
-                rows={mockRows}
+                rows={[]}
                 columns={mockColumns}
                 additionalColumn={mockAdditionalColumn}
             />,
             container
         );
-        expect(getByText("Export As")).toBeInTheDocument();
+        const selectExcel = getByTestId("chk_excel_test");
+        fireEvent.click(selectExcel);
+        expect(selectExcel.checked).toEqual(true);
+        fireEvent.click(getByTestId("export_button"));
     });
-    it("should check columns", () => {
+    it("should render exportdata component", () => {
         const { getByTestId, getAllByTestId } = render(
             <ExportData
                 toggleExportDataOverlay={mocktoggleExportDataOverlay}
@@ -289,20 +336,20 @@ describe("Export Data unit test", () => {
             container
         );
         const selectAllCheck = getByTestId("selectAllSearchableColumns");
-        expect(selectAllCheck.checked).toEqual(true);
-        fireEvent.click(selectAllCheck);
         expect(selectAllCheck.checked).toEqual(false);
         fireEvent.click(selectAllCheck);
         expect(selectAllCheck.checked).toEqual(true);
+        fireEvent.click(selectAllCheck);
+        expect(selectAllCheck.checked).toEqual(false);
 
         const selectSingleCheck = getAllByTestId(
             "selectSingleSearchableColumn"
         )[2];
-        expect(selectSingleCheck.checked).toEqual(true);
-        fireEvent.click(selectSingleCheck);
         expect(selectSingleCheck.checked).toEqual(false);
         fireEvent.click(selectSingleCheck);
         expect(selectSingleCheck.checked).toEqual(true);
+        fireEvent.click(selectSingleCheck);
+        expect(selectSingleCheck.checked).toEqual(false);
     });
     it("should check all file types and export data", () => {
         const { getByTestId } = render(
@@ -315,8 +362,6 @@ describe("Export Data unit test", () => {
             />,
             container
         );
-        const selectAllCheck = getByTestId("selectAllSearchableColumns");
-        expect(selectAllCheck.checked).toEqual(true);
         const selectPdf = getByTestId("chk_pdf_test");
         fireEvent.click(selectPdf);
         expect(selectPdf.checked).toEqual(true);
@@ -352,6 +397,8 @@ describe("Export Data unit test", () => {
         );
         const selectAllCheck = getByTestId("selectAllSearchableColumns");
         fireEvent.click(selectAllCheck);
+        expect(selectAllCheck.checked).toEqual(true);
+        fireEvent.click(selectAllCheck);
         expect(selectAllCheck.checked).toEqual(false);
         const selectPdf = getByTestId("chk_pdf_test");
         fireEvent.click(selectPdf);
@@ -372,6 +419,8 @@ describe("Export Data unit test", () => {
         );
         const selectAllCheck = getByTestId("selectAllSearchableColumns");
         fireEvent.click(selectAllCheck);
+        expect(selectAllCheck.checked).toEqual(true);
+        fireEvent.click(selectAllCheck);
         expect(selectAllCheck.checked).toEqual(false);
         const selectPdf = getByTestId("chk_pdf_test");
         fireEvent.click(selectPdf);
@@ -388,10 +437,6 @@ describe("Export Data unit test", () => {
             />,
             container
         );
-        const selectAllCheck = getByTestId("selectAllSearchableColumns");
-        expect(selectAllCheck.checked).toEqual(true);
-        const selectPdf = getByTestId("chk_pdf_test");
-        expect(selectPdf.checked).toEqual(false);
         fireEvent.click(getByTestId("export_button"));
     });
     it("should search columns in list", () => {
@@ -407,7 +452,7 @@ describe("Export Data unit test", () => {
         // Check total count of checkboxes available
         let columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
             .length;
-        expect(columnCheckboxes).toBe(5);
+        expect(columnCheckboxes).toBe(7);
 
         // Filter columns list
         const filterList = getByTestId("filterColumnsList");
@@ -425,7 +470,7 @@ describe("Export Data unit test", () => {
         // Check total count of checkboxes available now
         columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
             .length;
-        expect(columnCheckboxes).toBe(5);
+        expect(columnCheckboxes).toBe(7);
     });
     it("should select single column", () => {
         const { getByTestId, getAllByTestId } = render(
@@ -439,13 +484,13 @@ describe("Export Data unit test", () => {
         );
         const selectAllCheck = getByTestId("selectAllSearchableColumns");
         fireEvent.click(selectAllCheck);
-        expect(selectAllCheck.checked).toEqual(false);
+        expect(selectAllCheck.checked).toEqual(true);
         const singleColumn = getAllByTestId("selectSingleSearchableColumn")[2];
         fireEvent.click(singleColumn);
-        expect(singleColumn.checked).toEqual(true);
-        const remarksColumn = getAllByTestId("selectSingleSearchableColumn")[4];
+        expect(singleColumn.checked).toEqual(false);
+        const remarksColumn = getAllByTestId("selectSingleSearchableColumn")[6];
         fireEvent.click(remarksColumn);
-        expect(remarksColumn.checked).toEqual(true);
+        expect(remarksColumn.checked).toEqual(false);
         const selectCsv = getByTestId("chk_csv_test");
         fireEvent.click(selectCsv);
         expect(selectCsv.checked).toEqual(true);

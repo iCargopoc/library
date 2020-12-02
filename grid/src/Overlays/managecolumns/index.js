@@ -156,75 +156,73 @@ const ColumnReordering = (props) => {
 
     // Update the display flag value of inner cell in managedColumns state, based on the selection
     const onInnerCellChange = (event) => {
-        if (event && event.currentTarget) {
-            const { checked, dataset } = event.currentTarget;
-            if (dataset) {
-                const { columnid, cellid, isadditionalcolumn } = dataset;
-                if (isadditionalcolumn === "false") {
-                    setManagedColumns(() => {
-                        return [...managedColumns].map((column) => {
-                            const updatedColumn = { ...column };
-                            const {
-                                columnId,
-                                innerCells,
-                                isGroupHeader
-                            } = updatedColumn;
-                            const groupedColumns = updatedColumn.columns;
-                            if (
-                                columnId === columnid &&
-                                innerCells &&
-                                innerCells.length > 0
-                            ) {
-                                updatedColumn.innerCells = updatedDisplayOfInnerCells(
-                                    [...innerCells],
-                                    cellid,
-                                    checked
-                                );
-                            } else if (
-                                isGroupHeader === true &&
-                                groupedColumns &&
-                                groupedColumns.length > 0
-                            ) {
-                                const updatedColumns = [...groupedColumns].map(
-                                    (col) => {
-                                        const updatedCol = col;
-                                        if (
-                                            col.columnId === columnid &&
-                                            col.innerCells &&
-                                            col.innerCells.length > 0
-                                        ) {
-                                            updatedCol.innerCells = updatedDisplayOfInnerCells(
-                                                [...col.innerCells],
-                                                cellid,
-                                                checked
-                                            );
-                                        }
-                                        return updatedCol;
+        const { checked, dataset } = event.currentTarget;
+        if (dataset) {
+            const { columnid, cellid, isadditionalcolumn } = dataset;
+            if (isadditionalcolumn === "false") {
+                setManagedColumns(() => {
+                    return [...managedColumns].map((column) => {
+                        const updatedColumn = { ...column };
+                        const {
+                            columnId,
+                            innerCells,
+                            isGroupHeader
+                        } = updatedColumn;
+                        const groupedColumns = updatedColumn.columns;
+                        if (
+                            columnId === columnid &&
+                            innerCells &&
+                            innerCells.length > 0
+                        ) {
+                            updatedColumn.innerCells = updatedDisplayOfInnerCells(
+                                [...innerCells],
+                                cellid,
+                                checked
+                            );
+                        } else if (
+                            isGroupHeader === true &&
+                            groupedColumns &&
+                            groupedColumns.length > 0
+                        ) {
+                            const updatedColumns = [...groupedColumns].map(
+                                (col) => {
+                                    const updatedCol = col;
+                                    if (
+                                        col.columnId === columnid &&
+                                        col.innerCells &&
+                                        col.innerCells.length > 0
+                                    ) {
+                                        updatedCol.innerCells = updatedDisplayOfInnerCells(
+                                            [...col.innerCells],
+                                            cellid,
+                                            checked
+                                        );
                                     }
-                                );
-                                updatedColumn.columns = updatedColumns;
-                            }
-                            return updatedColumn;
-                        });
+                                    return updatedCol;
+                                }
+                            );
+                            updatedColumn.columns = updatedColumns;
+                        }
+                        return updatedColumn;
                     });
-                } else if (
-                    isAdditionalColumnPresent &&
-                    managedAdditionalColumn &&
-                    managedAdditionalColumn.innerCells &&
-                    managedAdditionalColumn.innerCells.length > 0
-                ) {
-                    setManagedAdditionalColumn(
-                        update(managedAdditionalColumn, {
-                            innerCells: {
-                                $set: changeInnerCellSelection(
-                                    managedAdditionalColumn.innerCells,
-                                    cellid,
-                                    checked
-                                )
-                            }
-                        })
-                    );
-                }
+                });
+            } else if (
+                isAdditionalColumnPresent &&
+                managedAdditionalColumn &&
+                managedAdditionalColumn.innerCells &&
+                managedAdditionalColumn.innerCells.length > 0
+            ) {
+                setManagedAdditionalColumn(
+                    update(managedAdditionalColumn, {
+                        innerCells: {
+                            $set: changeInnerCellSelection(
+                                managedAdditionalColumn.innerCells,
+                                cellid,
+                                checked
+                            )
+                        }
+                    })
+                );
             }
         }
     };

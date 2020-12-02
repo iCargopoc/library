@@ -752,7 +752,7 @@ describe("render Index file ", () => {
         expect(loadMoreButttons.length).toBe(1);
     });
 
-    it("test grid with parent data and child data and parentRowExpandable as false - group sort", () => {
+    it("test grid with parent data and child data and parentRowExpandable as false - group sort and export", () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId } = render(
             <Grid
@@ -848,6 +848,24 @@ describe("render Index file ", () => {
             "[data-testid='groupsortoverlay']"
         );
         expect(sortOverlay.length).toBe(0);
+
+        // Open export overlay
+        const toggleExportDataOverlay = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            toggleExportDataOverlay.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        const exportOverlay = getByTestId("exportoverlay");
+        expect(exportOverlay).toBeInTheDocument();
+
+        // Select excel file type
+        const selectPdf = getByTestId("chk_pdf_test");
+        fireEvent.click(selectPdf);
+        expect(selectPdf.checked).toEqual(true);
+
+        // Click export data button
+        fireEvent.click(getByTestId("export_button"));
     });
 
     it("test grid with parent data and child data and parentRowsToExpand - parent row selection", () => {

@@ -300,10 +300,8 @@ const Customgrid = (props) => {
                                         onClick: (event) => {
                                             // Set state value to identify if checkbox has been selected or deselected
                                             const selectedType =
-                                                event &&
-                                                event.currentTarget &&
                                                 event.currentTarget.checked ===
-                                                    false
+                                                false
                                                     ? "deselect"
                                                     : "select";
                                             setIsRowSelectionCallbackNeeded(
@@ -339,8 +337,6 @@ const Customgrid = (props) => {
                                             onClick: (event) => {
                                                 // Set state value to identify if checkbox has been selected or deselected
                                                 const selectedType =
-                                                    event &&
-                                                    event.currentTarget &&
                                                     event.currentTarget
                                                         .checked === false
                                                         ? "deselect"
@@ -608,16 +604,11 @@ const Customgrid = (props) => {
 
     // Call method to select/de-select all rows based on the checkbox checked value
     const toggleAllRowsSelection = (event) => {
-        if (event) {
-            const { currentTarget } = event;
-            if (currentTarget) {
-                const { checked } = currentTarget;
-                setIsRowSelectionCallbackNeeded(
-                    checked === true ? "select" : "deselect"
-                );
-                toggleAllRowsSelected(checked);
-            }
-        }
+        const { checked } = event.currentTarget;
+        setIsRowSelectionCallbackNeeded(
+            checked === true ? "select" : "deselect"
+        );
+        toggleAllRowsSelected(checked);
     };
 
     // Add class to last table column header (for actions) if table body is having scroll
@@ -870,14 +861,9 @@ const Customgrid = (props) => {
 
     const toggleParentRowSelection = (event, row) => {
         let selectionType = true;
-        if (event) {
-            const { currentTarget } = event;
-            if (currentTarget) {
-                const { checked } = currentTarget;
-                if (checked === false) {
-                    selectionType = false;
-                }
-            }
+        const { checked } = event.currentTarget;
+        if (checked === false) {
+            selectionType = false;
         }
         if (row && parentIdAttribute && idAttribute) {
             const { original } = row;

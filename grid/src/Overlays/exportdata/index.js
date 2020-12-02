@@ -217,9 +217,11 @@ const ExportData = (props) => {
                                         if (accessorRowValue.length > 0) {
                                             accessorRowValue.forEach(
                                                 (item, itemIndex) => {
-                                                    columnValue = item[
-                                                        innerCellAccessor
-                                                    ].toString();
+                                                    const itemInnerCellAccessor =
+                                                        item[innerCellAccessor];
+                                                    columnValue = itemInnerCellAccessor
+                                                        ? itemInnerCellAccessor.toString()
+                                                        : "";
                                                     columnHeader = `${
                                                         title || Header
                                                     } - ${innerCellHeader}_${itemIndex}`;
@@ -322,13 +324,13 @@ const ExportData = (props) => {
             setWarning("Select at least one column and a file type");
         } else if (filteredManagedColumns.length === 0) {
             setWarning("Select at least one column");
-        } else if (downloadTypes.length === 0) {
+        } else {
             setWarning("Select at least one file type");
         }
     };
 
     const changeDownloadType = (event) => {
-        const { value, checked } = event ? event.currentTarget : "";
+        const { value, checked } = event.currentTarget;
         if (checked) {
             setDownloadTypes(downloadTypes.concat([value]));
         } else {

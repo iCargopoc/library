@@ -33,7 +33,7 @@ const ColumnSearch = ({
 
     // Update searched columns state based on the searched value
     const onColumnSearch = (event) => {
-        let { value } = event ? event.target : "";
+        let { value } = event.target;
         value = value ? value.toLowerCase() : "";
         const allColumns = getAllColumns(gridColumns, additionalColumn);
         if (value !== "") {
@@ -71,12 +71,10 @@ const ColumnSearch = ({
 
     // update the display flag value of column or all columns in managedColumns state, based on the selection
     const onSearchableColumnChange = (event) => {
-        if (event && event.currentTarget) {
-            const { checked, dataset } = event.currentTarget;
-            if (dataset) {
-                const { columnid, isadditionalcolumn } = dataset;
-                updateColumns(columnid, isadditionalcolumn, checked);
-            }
+        const { checked, dataset } = event.currentTarget;
+        if (dataset) {
+            const { columnid, isadditionalcolumn } = dataset;
+            updateColumns(columnid, isadditionalcolumn, checked);
         }
     };
 
