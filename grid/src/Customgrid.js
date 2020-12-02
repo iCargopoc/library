@@ -193,12 +193,10 @@ const Customgrid = (props) => {
 
     // Update state value with the row id on which user has clicked the expand/collpase functionality
     const setExpandedRowDetails = (rowId, isRowExpanded) => {
-        if (rowId) {
-            setUserExpandedRowDetails({
-                id: rowId,
-                isExpanded: isRowExpanded
-            });
-        }
+        setUserExpandedRowDetails({
+            id: rowId,
+            isExpanded: isRowExpanded
+        });
     };
 
     const [expandedParentRows, setExpandedParentRows] = useState([]);

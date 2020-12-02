@@ -954,4 +954,49 @@ describe("render Index file ", () => {
             totalRowsCountInThisPage
         );
     });
+
+    it("test grid without passing callback function", () => {
+        mockOffsetSize(600, 600);
+        const { container, getByTestId, getAllByTestId } = render(
+            <Grid
+                title={mockTitle}
+                gridHeight={mockGridHeight}
+                gridWidth={mockGridWidth}
+                gridData={data}
+                idAttribute="travelId"
+                paginationType="index"
+                pageInfo={pageInfo}
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                rowActions={mockRowActions}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Cell edit
+        const editButton = getAllByTestId("cell-edit-icon");
+        act(() => {
+            editButton[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        const flightNoInput = getByTestId("flightnoinput");
+        expect(flightNoInput.value).toBe("XX2225");
+        fireEvent.change(flightNoInput, { target: { value: "123" } });
+        const setState = jest.fn(() => editedRowValue);
+        const useStateSpy = jest.spyOn(React, "useState");
+        useStateSpy.mockImplementation(() => [editedRowValue, setState]);
+        fireEvent.click(getByTestId("cell-edit-save"));
+
+        const selectRowCheckbox = getAllByTestId("rowSelector-singleRow")[4];
+        act(() => {
+            selectRowCheckbox.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+    });
 });
