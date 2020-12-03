@@ -14,7 +14,9 @@ const ColumnReordering = (props) => {
     const {
         toggleManageColumnsOverlay,
         columns,
+        originalColumns,
         additionalColumn,
+        originalAdditionalColumn,
         updateColumnStructure
     } = props;
 
@@ -186,7 +188,7 @@ const ColumnReordering = (props) => {
                         ) {
                             const updatedColumns = [...groupedColumns].map(
                                 (col) => {
-                                    const updatedCol = col;
+                                    const updatedCol = { ...col };
                                     if (
                                         col.columnId === columnid &&
                                         col.innerCells &&
@@ -230,69 +232,17 @@ const ColumnReordering = (props) => {
     // #endregion
 
     const resetColumnUpdate = () => {
-        const columnsToReset = [...columns].map((column) => {
-            const colToReset = column;
-            const { isGroupHeader, innerCells } = column;
-            const groupedColumns = column.columns;
-            colToReset.display = true;
-            if (
-                isGroupHeader === true &&
-                groupedColumns &&
-                groupedColumns.length > 0
-            ) {
-                const updatedColumns = [...groupedColumns].map((col) => {
-                    const updatedCol = col;
-                    const groupedColInnerCells = col.innerCells;
-                    updatedCol.display = true;
-                    if (
-                        groupedColInnerCells &&
-                        groupedColInnerCells.length > 0
-                    ) {
-                        updatedCol.innerCells = updatedDisplayOfInnerCells(
-                            [...groupedColInnerCells],
-                            "all",
-                            true
-                        );
-                    }
-                    return updatedCol;
-                });
-                colToReset.columns = updatedColumns;
-            }
-            if (innerCells && innerCells.length > 0) {
-                colToReset.innerCells = updatedDisplayOfInnerCells(
-                    [...innerCells],
-                    "all",
-                    true
-                );
-            }
-            return colToReset;
-        });
         setManagedColumns(
             update(managedColumns, {
-                $set: columnsToReset
+                $set: originalColumns
             })
         );
-        const additionalColumnToReset = { ...additionalColumn };
-        additionalColumnToReset.display = true;
-        if (
-            additionalColumnToReset.innerCells &&
-            additionalColumnToReset.innerCells.length > 0
-        ) {
-            const additionalInnerCellsToReset = [
-                ...additionalColumnToReset.innerCells
-            ].map((cell) => {
-                const additionalCellToReset = cell;
-                additionalCellToReset.display = true;
-                return additionalCellToReset;
-            });
-            additionalColumnToReset.innerCells = additionalInnerCellsToReset;
-        }
         setManagedAdditionalColumn(
             update(managedAdditionalColumn, {
-                $set: additionalColumnToReset
+                $set: originalAdditionalColumn
             })
         );
-        updateColumnStructure(columnsToReset, additionalColumnToReset);
+        updateColumnStructure(originalColumns, originalAdditionalColumn);
     };
 
     const onColumnChooserSave = () => {
@@ -491,7 +441,9 @@ const ColumnReordering = (props) => {
 ColumnReordering.propTypes = {
     toggleManageColumnsOverlay: PropTypes.func,
     columns: PropTypes.arrayOf(PropTypes.object),
+    originalColumns: PropTypes.arrayOf(PropTypes.object),
     additionalColumn: PropTypes.object,
+    originalAdditionalColumn: PropTypes.object,
     updateColumnStructure: PropTypes.func
 };
 

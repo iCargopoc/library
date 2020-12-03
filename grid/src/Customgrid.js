@@ -1170,7 +1170,11 @@ const Customgrid = (props) => {
                                             toggleManageColumnsOverlay
                                         }
                                         columns={gridColumns}
+                                        originalColumns={managableColumns}
                                         additionalColumn={additionalColumn}
+                                        originalAdditionalColumn={
+                                            expandedRowData
+                                        }
                                         updateColumnStructure={
                                             updateColumnStructure
                                         }
