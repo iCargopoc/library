@@ -6,7 +6,7 @@ import {
     extractAdditionalColumn
 } from "./Utilities/ColumnsUtilities";
 import Customgrid from "./Customgrid";
-// Old method
+// Old method - eslint-disable-next-line import/no-unresolved
 // import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 // lazy styles inclusion via styleloader
 import __cmpStyles from "./Styles/main.scss";
