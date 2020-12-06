@@ -945,7 +945,7 @@ describe("Group sort functionality test", () => {
                 applyGroupSort={undefined}
             />
         );
-        // Check if grid has been loaded
+        // Check if group sort overlay has been loaded
         const groupSortOverlay = container.querySelectorAll(
             "[data-testid='groupsortoverlay']"
         );

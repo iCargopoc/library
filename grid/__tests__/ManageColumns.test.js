@@ -977,7 +977,7 @@ describe("Column manage functionality test", () => {
         // Check if grid has been loaded
         expect(gridContainer).toBeInTheDocument();
 
-        // Check if grid has been loaded
+        // Check if manage columns overlay has been loaded
         const manageColumnOverlay = container.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
         );
