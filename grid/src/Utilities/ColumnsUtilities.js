@@ -86,10 +86,23 @@ export const extractColumns = (
                     // If there are inner cells and a sort value specified, do sort on that value
                     if (sortValue) {
                         elem.sortType = (rowA, rowB) => {
-                            return rowA.original[accessor][sortValue] >
-                                rowB.original[accessor][sortValue]
-                                ? -1
-                                : 1;
+                            let rowAValue = null;
+                            if (
+                                rowA &&
+                                rowA.original &&
+                                rowA.original[accessor]
+                            ) {
+                                rowAValue = rowA.original[accessor][sortValue];
+                            }
+                            let rowBValue = null;
+                            if (
+                                rowB &&
+                                rowB.original &&
+                                rowB.original[accessor]
+                            ) {
+                                rowBValue = rowB.original[accessor][sortValue];
+                            }
+                            return rowAValue > rowBValue ? -1 : 1;
                         };
                     } else {
                         elem.disableSortBy = true;
@@ -97,9 +110,15 @@ export const extractColumns = (
                 } else {
                     // If no inner cells are there, just do sort on column value
                     elem.sortType = (rowA, rowB) => {
-                        return rowA.original[accessor] > rowB.original[accessor]
-                            ? -1
-                            : 1;
+                        let rowAValue = null;
+                        if (rowA && rowA.original) {
+                            rowAValue = rowA.original[accessor];
+                        }
+                        let rowBValue = null;
+                        if (rowB && rowB.original) {
+                            rowBValue = rowB.original[accessor];
+                        }
+                        return rowAValue > rowBValue ? -1 : 1;
                     };
                 }
             } else {
