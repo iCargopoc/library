@@ -1419,12 +1419,12 @@ describe("ColumnReordering unit test", () => {
         });
 
         // Check if overlay is opened
-        const columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
+        let columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
             .length;
         expect(columnChooserOverlayCount).toBe(1);
 
         // Check if box for additional column is not present
-        const additionalColumnsCount = container.querySelectorAll(
+        let additionalColumnsCount = container.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
         expect(additionalColumnsCount).toBe(0);
@@ -1434,6 +1434,65 @@ describe("ColumnReordering unit test", () => {
             "selectSingleSearchableColumn"
         ).length;
         expect(columnCheckboxCount).toBe(11);
+
+        // Un check select all columns checkbox
+        const selectAllCheckBox = getByTestId("selectAllSearchableColumns");
+        fireEvent.click(selectAllCheckBox);
+
+        // Check column and additional column boxes count in the column setting portion (should be 0)
+        let columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(columnsCount).toBe(0);
+        expect(additionalColumnsCount).toBe(0);
+
+        // Try to apply changes
+        const saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if error message is present
+        const errorMessages = getAllByTestId("column-chooser-error");
+        expect(errorMessages.length).toBe(1);
+
+        // Check back the select all checkbox
+        fireEvent.click(selectAllCheckBox);
+
+        // Check column and additional column boxes count
+        columnsCount = getAllByTestId("column-box").length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(columnsCount).toBe(10);
+        expect(additionalColumnsCount).toBe(0);
+
+        // Reset Changes
+        const resetButton = getByTestId("reset_columnsManage");
+        act(() => {
+            resetButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Close Overlay
+        const closeButton = getByTestId("cancel_columnsManage");
+        act(() => {
+            closeButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is closed
+        columnChooserOverlayCount = container.querySelectorAll(
+            "[data-testid='managecolumnoverlay']"
+        ).length;
+        expect(columnChooserOverlayCount).toBe(0);
     });
 
     it("test manage column icon to be hidden as prop to hide group sort is passed", () => {
