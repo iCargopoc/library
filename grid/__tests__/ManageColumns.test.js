@@ -6,7 +6,7 @@ import { act } from "react-dom/test-utils";
 import Grid from "../src/index";
 import ManageColumn from "../src/Overlays/managecolumns";
 
-describe("ColumnReordering unit test", () => {
+describe("Column manage functionality test", () => {
     const mockOffsetSize = (width, height, scrollHeight) => {
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,

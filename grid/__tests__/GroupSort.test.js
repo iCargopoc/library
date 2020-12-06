@@ -6,7 +6,7 @@ import "@testing-library/jest-dom/extend-expect";
 import Grid from "../src/index";
 import GroupSort from "../src/Overlays/groupsort";
 
-describe("render Index file ", () => {
+describe("Group sort functionality test", () => {
     const mockOffsetSize = (width, height, scrollHeight) => {
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,
