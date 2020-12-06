@@ -182,8 +182,13 @@ const ExportData = (props) => {
             return column.display === true;
         });
 
-        if (filteredManagedColumns.length > 0 && downloadTypes.length > 0) {
-            const rowLength = rows && rows.length > 0 ? rows.length : 0;
+        if (
+            rows &&
+            rows.length > 0 &&
+            filteredManagedColumns.length > 0 &&
+            downloadTypes.length > 0
+        ) {
+            const rowLength = rows.length;
             rows.forEach((rowDetails, index) => {
                 const row = rowDetails.original;
                 if (row.isParent !== true) {
@@ -206,6 +211,8 @@ const ExportData = (props) => {
                         if (accessor) {
                             if (
                                 isInnerCellsPresent &&
+                                accessorRowValue !== null &&
+                                accessorRowValue !== undefined &&
                                 typeof accessorRowValue === "object"
                             ) {
                                 innerCells.forEach((cell) => {
@@ -274,7 +281,11 @@ const ExportData = (props) => {
                                 const expandedCellValue =
                                     row[expandedCellAccessor];
                                 let formattedValue = expandedCellValue;
-                                if (typeof expandedCellValue === "object") {
+                                if (
+                                    expandedCellValue !== null &&
+                                    expandedCellValue !== undefined &&
+                                    typeof expandedCellValue === "object"
+                                ) {
                                     if (expandedCellValue.length > 0) {
                                         const newValues = [];
                                         expandedCellValue.forEach(
@@ -317,6 +328,8 @@ const ExportData = (props) => {
                     downloadCSVFile(filteredRow);
                 }
             });
+        } else if (!(rows && rows.length > 0)) {
+            setWarning("No rows available to export");
         } else if (
             filteredManagedColumns.length === 0 &&
             downloadTypes.length === 0
