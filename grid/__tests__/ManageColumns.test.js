@@ -978,7 +978,7 @@ describe("Column manage functionality test", () => {
         expect(gridContainer).toBeInTheDocument();
 
         // Check if manage columns overlay has been loaded
-        const manageColumnOverlay = container.querySelectorAll(
+        const manageColumnOverlay = gridContainer.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
         );
         expect(manageColumnOverlay.length).toBe(0);
@@ -1092,7 +1092,7 @@ describe("Column manage functionality test", () => {
         });
 
         // Check if overlay is closed
-        columnChooserOverlayCount = container.querySelectorAll(
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
@@ -1173,7 +1173,7 @@ describe("Column manage functionality test", () => {
         });
 
         // Check if overlay is closed
-        columnChooserOverlayCount = container.querySelectorAll(
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
@@ -1284,7 +1284,7 @@ describe("Column manage functionality test", () => {
         });
 
         // Check if overlay is closed
-        columnChooserOverlayCount = container.querySelectorAll(
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
@@ -1351,7 +1351,7 @@ describe("Column manage functionality test", () => {
         });
 
         // Check if overlay is closed
-        columnChooserOverlayCount = container.querySelectorAll(
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
@@ -1386,7 +1386,7 @@ describe("Column manage functionality test", () => {
         });
 
         // Check if overlay is closed
-        columnChooserOverlayCount = container.querySelectorAll(
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
@@ -1419,7 +1419,7 @@ describe("Column manage functionality test", () => {
         expect(columnChooserOverlayCount).toBe(1);
 
         // Check if box for additional column is not present
-        let additionalColumnsCount = container.querySelectorAll(
+        let additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
         expect(additionalColumnsCount).toBe(0);
@@ -1484,7 +1484,7 @@ describe("Column manage functionality test", () => {
         });
 
         // Check if overlay is closed
-        columnChooserOverlayCount = container.querySelectorAll(
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
@@ -1592,7 +1592,7 @@ describe("Column manage functionality test", () => {
         });
 
         // Check if overlay is closed
-        columnChooserOverlayCount = container.querySelectorAll(
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
@@ -1758,7 +1758,7 @@ describe("Column manage functionality test", () => {
         });
 
         // Check if overlay is closed
-        columnChooserOverlayCount = container.querySelectorAll(
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
@@ -1793,7 +1793,7 @@ describe("Column manage functionality test", () => {
         });
 
         // Check if overlay is closed
-        columnChooserOverlayCount = container.querySelectorAll(
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);

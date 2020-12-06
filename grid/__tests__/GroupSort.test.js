@@ -990,7 +990,7 @@ describe("Group sort functionality test", () => {
         });
 
         // Check number of sort options now, should be 0 as there are no columns with accessor
-        const sortOptionsCount = container.querySelectorAll(
+        const sortOptionsCount = gridContainer.querySelectorAll(
             "[data-testid='sortItem']"
         ).length;
         expect(sortOptionsCount).toBe(0);
@@ -1046,7 +1046,7 @@ describe("Group sort functionality test", () => {
         expect(sortOptionsCount).toBe(1);
 
         // Clear all sort options
-        const clearAllButton = container.querySelectorAll(
+        const clearAllButton = gridContainer.querySelectorAll(
             "[data-testid='clearSort']"
         )[0];
         act(() => {
@@ -1128,7 +1128,7 @@ describe("Group sort functionality test", () => {
         });
 
         // Check number of sort options before adding sort, should be 0
-        let sortOptionsCount = container.querySelectorAll(
+        let sortOptionsCount = gridContainer.querySelectorAll(
             "[data-testid='sortItem']"
         ).length;
         expect(sortOptionsCount).toBe(0);
@@ -1187,7 +1187,7 @@ describe("Group sort functionality test", () => {
         });
 
         // Check number of sort options now, should be 0 now
-        sortOptionsCount = container.querySelectorAll(
+        sortOptionsCount = gridContainer.querySelectorAll(
             "[data-testid='sortItem']"
         ).length;
         expect(sortOptionsCount).toBe(0);
@@ -1220,7 +1220,7 @@ describe("Group sort functionality test", () => {
         });
 
         // Check number of sort options before adding sort, should be 0
-        let sortOptionsCount = container.querySelectorAll(
+        let sortOptionsCount = gridContainer.querySelectorAll(
             "[data-testid='sortItem']"
         ).length;
         expect(sortOptionsCount).toBe(0);
@@ -1268,7 +1268,7 @@ describe("Group sort functionality test", () => {
         });
 
         // Check number of sort options now, should be 0 now
-        sortOptionsCount = container.querySelectorAll(
+        sortOptionsCount = gridContainer.querySelectorAll(
             "[data-testid='sortItem']"
         ).length;
         expect(sortOptionsCount).toBe(0);
@@ -1361,7 +1361,7 @@ describe("Group sort functionality test", () => {
         });
 
         // Sort overlay should have been closed
-        const groupSortOverlay = container.querySelectorAll(
+        const groupSortOverlay = gridContainer.querySelectorAll(
             "[data-testid='groupsortoverlay']"
         );
         expect(groupSortOverlay.length).toBe(0);
