@@ -90,7 +90,8 @@ export const extractColumns = (
                             if (
                                 rowA &&
                                 rowA.original &&
-                                rowA.original[accessor]
+                                rowA.original[accessor] !== null &&
+                                rowA.original[accessor] !== undefined
                             ) {
                                 rowAValue = rowA.original[accessor][sortValue];
                             }
@@ -98,7 +99,8 @@ export const extractColumns = (
                             if (
                                 rowB &&
                                 rowB.original &&
-                                rowB.original[accessor]
+                                rowB.original[accessor] !== null &&
+                                rowB.original[accessor] !== undefined
                             ) {
                                 rowBValue = rowB.original[accessor][sortValue];
                             }

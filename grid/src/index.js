@@ -310,17 +310,33 @@ const Grid = (props) => {
                                                 sortOn,
                                                 order
                                             } = option;
+                                            const xSortBy = x[sortBy];
+                                            const ySortBy = y[sortBy];
+                                            let xSortOn = null;
+                                            let ySortOn = null;
+                                            if (
+                                                xSortBy !== null &&
+                                                xSortBy !== undefined
+                                            ) {
+                                                xSortOn = xSortBy[sortOn];
+                                            }
+                                            if (
+                                                ySortBy !== null &&
+                                                ySortBy !== undefined
+                                            ) {
+                                                ySortOn = ySortBy[sortOn];
+                                            }
                                             const newResult =
                                                 sortOn === "value"
                                                     ? compareValues(
                                                           order,
-                                                          x[sortBy],
-                                                          y[sortBy]
+                                                          xSortBy,
+                                                          ySortBy
                                                       )
                                                     : compareValues(
                                                           order,
-                                                          x[sortBy][sortOn],
-                                                          y[sortBy][sortOn]
+                                                          xSortOn,
+                                                          ySortOn
                                                       );
                                             compareResult =
                                                 compareResult || newResult;
@@ -340,18 +356,30 @@ const Grid = (props) => {
             }
             return originalData.sort((x, y) => {
                 let compareResult = 0;
-                groupSortOptions.forEach((option) => {
-                    const { sortBy, sortOn, order } = option;
-                    const newResult =
-                        sortOn === "value"
-                            ? compareValues(order, x[sortBy], y[sortBy])
-                            : compareValues(
-                                  order,
-                                  x[sortBy][sortOn],
-                                  y[sortBy][sortOn]
-                              );
-                    compareResult = compareResult || newResult;
-                });
+                if (
+                    x !== null &&
+                    x !== undefined &&
+                    y !== null &&
+                    y !== undefined
+                )
+                    groupSortOptions.forEach((option) => {
+                        const { sortBy, sortOn, order } = option;
+                        const xSortBy = x[sortBy];
+                        const ySortBy = y[sortBy];
+                        let xSortOn = null;
+                        let ySortOn = null;
+                        if (xSortBy !== null && xSortBy !== undefined) {
+                            xSortOn = xSortBy[sortOn];
+                        }
+                        if (ySortBy !== null && ySortBy !== undefined) {
+                            ySortOn = ySortBy[sortOn];
+                        }
+                        const newResult =
+                            sortOn === "value"
+                                ? compareValues(order, xSortBy, ySortBy)
+                                : compareValues(order, xSortOn, ySortOn);
+                        compareResult = compareResult || newResult;
+                    });
                 return compareResult;
             });
         }
