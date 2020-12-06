@@ -1023,12 +1023,8 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(idCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 9 and 1)
-        columnsCount = gridContainer.querySelectorAll(
-            "[data-testid='column-box']"
-        ).length;
-        additionalColumnsCount = gridContainer.querySelectorAll(
-            "[data-testid='additional-column-box']"
-        ).length;
+        columnsCount = getAllByTestId("column-box").length;
+        additionalColumnsCount = getAllByTestId("additional-column-box").length;
         expect(columnsCount).toBe(9);
         expect(additionalColumnsCount).toBe(1);
 
@@ -1037,12 +1033,8 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(flightCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 9 and 1)
-        columnsCount = gridContainer.querySelectorAll(
-            "[data-testid='column-box']"
-        ).length;
-        additionalColumnsCount = gridContainer.querySelectorAll(
-            "[data-testid='additional-column-box']"
-        ).length;
+        columnsCount = getAllByTestId("column-box").length;
+        additionalColumnsCount = getAllByTestId("additional-column-box").length;
         expect(columnsCount).toBe(9);
         expect(additionalColumnsCount).toBe(1);
 
@@ -1051,12 +1043,8 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(segmentCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 8 and 1)
-        columnsCount = gridContainer.querySelectorAll(
-            "[data-testid='column-box']"
-        ).length;
-        additionalColumnsCount = gridContainer.querySelectorAll(
-            "[data-testid='additional-column-box']"
-        ).length;
+        columnsCount = getAllByTestId("column-box").length;
+        additionalColumnsCount = getAllByTestId("additional-column-box").length;
         expect(columnsCount).toBe(8);
         expect(additionalColumnsCount).toBe(1);
 
@@ -1067,9 +1055,7 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(remarksCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 8 and 0)
-        columnsCount = gridContainer.querySelectorAll(
-            "[data-testid='column-box']"
-        ).length;
+        columnsCount = getAllByTestId("column-box").length;
         additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
@@ -1104,9 +1090,7 @@ describe("ColumnReordering unit test", () => {
         expect(columnChooserOverlayCount).toBe(1);
 
         // Check column and additional column boxes count in the column setting portion (should be 8 and 0)
-        columnsCount = gridContainer.querySelectorAll(
-            "[data-testid='column-box']"
-        ).length;
+        columnsCount = getAllByTestId("column-box").length;
         additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
@@ -1118,9 +1102,7 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(idCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 9 and 0)
-        columnsCount = gridContainer.querySelectorAll(
-            "[data-testid='column-box']"
-        ).length;
+        columnsCount = getAllByTestId("column-box").length;
         additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
@@ -1132,9 +1114,7 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(flightCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 10 and 0)
-        columnsCount = gridContainer.querySelectorAll(
-            "[data-testid='column-box']"
-        ).length;
+        columnsCount = getAllByTestId("column-box").length;
         additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
@@ -1146,9 +1126,7 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(segmentCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 10 and 0)
-        columnsCount = gridContainer.querySelectorAll(
-            "[data-testid='column-box']"
-        ).length;
+        columnsCount = getAllByTestId("column-box").length;
         additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
@@ -1160,12 +1138,8 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(remarksCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 10 and 1)
-        columnsCount = gridContainer.querySelectorAll(
-            "[data-testid='column-box']"
-        ).length;
-        additionalColumnsCount = gridContainer.querySelectorAll(
-            "[data-testid='additional-column-box']"
-        ).length;
+        columnsCount = getAllByTestId("column-box").length;
+        additionalColumnsCount = getAllByTestId("additional-column-box").length;
         expect(columnsCount).toBe(10);
         expect(additionalColumnsCount).toBe(1);
 
