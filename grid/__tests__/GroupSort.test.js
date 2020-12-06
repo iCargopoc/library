@@ -875,8 +875,8 @@ describe("render Index file ", () => {
         return [...newResult, ...data];
     };
 
-    const gridColumnsWithGroupSort = getColumns();
-    const gridColumnsWithoutGroupSort = getColumns().map((col) => {
+    const mockColumnsWithGroupSort = getColumns();
+    const mockColumnsWithoutGroupSort = getColumns().map((col) => {
         const updatedCol = { ...col };
         if (updatedCol) {
             delete updatedCol.isSortable;
@@ -891,7 +891,7 @@ describe("render Index file ", () => {
         }
         return updatedCol;
     });
-    const gridColumnsWithDefaultSortHavingInnerCells = getColumns().map(
+    const mockColumnsWithDefaultSortHavingInnerCells = getColumns().map(
         (col, index) => {
             const updatedCol = { ...col };
             if (index === 0) {
@@ -906,7 +906,7 @@ describe("render Index file ", () => {
             isSortable: true
         }
     ];
-    const gridColumnCellWithoutAccessor = [
+    const mockColumnCellWithoutAccessor = [
         {
             Header: "Null Column",
             isSortable: true
@@ -923,7 +923,7 @@ describe("render Index file ", () => {
             ]
         }
     ];
-    const data = getGridData();
+    const mockData = getGridData();
     const mockServerSideSorting = jest.fn();
     const mockUpdateRowData = jest.fn();
     const mockSelectBulkData = jest.fn();
@@ -955,7 +955,7 @@ describe("render Index file ", () => {
     it("test group sort failing to add sort option with null column", () => {
         const { container, getAllByTestId, getByTestId } = render(
             <Grid
-                gridData={data}
+                gridData={mockData}
                 idAttribute="travelId"
                 columns={gridColumnsWithoutAccessor}
                 onRowUpdate={mockUpdateRowData}
@@ -1007,9 +1007,9 @@ describe("render Index file ", () => {
     it("test group sort, add sort option with column having a cell without accessor", () => {
         const { container, getAllByTestId, getByTestId } = render(
             <Grid
-                gridData={data}
+                gridData={mockData}
                 idAttribute="travelId"
-                columns={gridColumnCellWithoutAccessor}
+                columns={mockColumnCellWithoutAccessor}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
             />
@@ -1060,9 +1060,9 @@ describe("render Index file ", () => {
         mockOffsetSize(600, 600);
         const { container } = render(
             <Grid
-                gridData={data}
+                gridData={mockData}
                 idAttribute="travelId"
-                columns={gridColumnsWithoutGroupSort}
+                columns={mockColumnsWithoutGroupSort}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
             />
@@ -1082,9 +1082,9 @@ describe("render Index file ", () => {
         mockOffsetSize(600, 600);
         const { container } = render(
             <Grid
-                gridData={data}
+                gridData={mockData}
                 idAttribute="travelId"
-                columns={gridColumnsWithGroupSort}
+                columns={mockColumnsWithGroupSort}
                 groupSort={false}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
@@ -1105,9 +1105,9 @@ describe("render Index file ", () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId, getAllByTestId } = render(
             <Grid
-                gridData={data}
+                gridData={mockData}
                 idAttribute="travelId"
-                columns={gridColumnsWithDefaultSortHavingInnerCells}
+                columns={mockColumnsWithDefaultSortHavingInnerCells}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
             />
@@ -1197,9 +1197,9 @@ describe("render Index file ", () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId, getAllByTestId } = render(
             <Grid
-                gridData={data}
+                gridData={mockData}
                 idAttribute="travelId"
-                columns={gridColumnsWithGroupSort}
+                columns={mockColumnsWithGroupSort}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
             />
@@ -1278,9 +1278,9 @@ describe("render Index file ", () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId, getAllByTestId } = render(
             <Grid
-                gridData={data}
+                gridData={mockData}
                 idAttribute="travelId"
-                columns={gridColumnsWithGroupSort}
+                columns={mockColumnsWithGroupSort}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
             />
@@ -1371,10 +1371,10 @@ describe("render Index file ", () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId } = render(
             <Grid
-                gridData={data}
+                gridData={mockData}
                 idAttribute="travelId"
                 serverSideSorting={mockServerSideSorting}
-                columns={gridColumnsWithGroupSort}
+                columns={mockColumnsWithGroupSort}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
             />
@@ -1418,9 +1418,9 @@ describe("render Index file ", () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId, getAllByTestId } = render(
             <Grid
-                gridData={data}
+                gridData={mockData}
                 idAttribute="travelId"
-                columns={gridColumnsWithGroupSort}
+                columns={mockColumnsWithGroupSort}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
             />
