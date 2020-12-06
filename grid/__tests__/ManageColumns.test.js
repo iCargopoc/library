@@ -4,6 +4,7 @@ import { render, cleanup, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import { act } from "react-dom/test-utils";
 import Grid from "../src/index";
+import ManageColumn from "../src/Overlays/managecolumns";
 
 describe("ColumnReordering unit test", () => {
     const mockOffsetSize = (width, height, scrollHeight) => {
@@ -960,161 +961,27 @@ describe("ColumnReordering unit test", () => {
         document.body.appendChild(mockContainer);
     });
 
-    it("test manage column icon to be hidden as prop to hide group sort is passed", () => {
-        mockOffsetSize(1280, 1024);
+    it("test manage column component without columns", () => {
+        mockOffsetSize(600, 600);
         const { container } = render(
-            <Grid
-                gridData={mockData}
-                idAttribute="travelId"
-                columns={mockGridColumns}
-                columnChooser={false}
+            <ManageColumn
+                toggleManageColumnsOverlay={undefined}
+                columns={[]}
+                originalColumns={[]}
+                additionalColumn={null}
+                originalAdditionalColumn={null}
+                updateColumnStructure={undefined}
             />
         );
         const gridContainer = container;
         // Check if grid has been loaded
         expect(gridContainer).toBeInTheDocument();
 
-        // Check Column chooser Icon
-        const columnChooserIcon = gridContainer.querySelectorAll(
-            "[data-testid='toggleManageColumnsOverlay']"
-        );
-        expect(columnChooserIcon.length).toBe(0);
-    });
-
-    it(" test search columns + appy and reset after checking/unchecking select all checkbox", () => {
-        mockOffsetSize(1280, 1024);
-        const { container, getByTestId, getAllByTestId } = render(
-            <Grid
-                gridData={mockData}
-                idAttribute="travelId"
-                columns={mockGridColumns}
-                columnToExpand={mockAdditionalColumn}
-            />
-        );
-        const gridContainer = container;
         // Check if grid has been loaded
-        expect(gridContainer).toBeInTheDocument();
-
-        // Open Column chooser overlay
-        let columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
-        act(() => {
-            columnChooserIcon.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        // Check if overlay is opened
-        let columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
-            .length;
-        expect(columnChooserOverlayCount).toBe(1);
-
-        // Check checkboxes available for each column
-        let columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
-            .length;
-        expect(columnCheckboxes).toBe(12);
-
-        // Filter columns
-        const filterList = getByTestId("filterColumnsList");
-        expect(filterList.value).toBe("");
-        fireEvent.change(filterList, { target: { value: "id" } });
-        expect(filterList.value).toBe("id");
-
-        // Check checkboxes available for each column
-        columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
-            .length;
-        expect(columnCheckboxes).toBe(1);
-
-        // Remove searched value
-        fireEvent.change(filterList, { target: { value: "" } });
-        expect(filterList.value).toBe("");
-        // Check total count of checkboxes available now
-        columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
-            .length;
-        expect(columnCheckboxes).toBe(12);
-
-        // Check column and additional column boxes count in the column setting portion (should be 10 and 1)
-        let columnsCount = getAllByTestId("column-box").length;
-        let additionalColumnsCount = getAllByTestId("additional-column-box")
-            .length;
-        expect(columnsCount).toBe(10);
-        expect(additionalColumnsCount).toBe(1);
-
-        // Un check select all columns checkbox
-        const selectAllCheckBox = getByTestId("selectAllSearchableColumns");
-        fireEvent.click(selectAllCheckBox);
-
-        // Check column and additional column boxes count in the column setting portion (should be 0)
-        columnsCount = document.querySelectorAll("[data-testid='column-box']")
-            .length;
-        additionalColumnsCount = document.querySelectorAll(
-            "[data-testid='additional-column-box']"
-        ).length;
-        expect(columnsCount).toBe(0);
-        expect(additionalColumnsCount).toBe(0);
-
-        // Try to apply changes
-        let saveButton = getByTestId("save_columnsManage");
-        act(() => {
-            saveButton.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        // Check if error message is present
-        const errorMessages = getAllByTestId("column-chooser-error");
-        expect(errorMessages.length).toBe(1);
-
-        // Check back the select all checkbox
-        fireEvent.click(selectAllCheckBox);
-
-        // Check column and additional column boxes count
-        columnsCount = getAllByTestId("column-box").length;
-        additionalColumnsCount = getAllByTestId("additional-column-box").length;
-        expect(columnsCount).toBe(10);
-        expect(additionalColumnsCount).toBe(1);
-
-        // Try to apply changes
-        saveButton = getByTestId("save_columnsManage");
-        act(() => {
-            saveButton.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        // Check if overlay is closed
-        columnChooserOverlayCount = container.querySelectorAll(
+        const manageColumnOverlay = container.querySelectorAll(
             "[data-testid='managecolumnoverlay']"
-        ).length;
-        expect(columnChooserOverlayCount).toBe(0);
-
-        // Open Column chooser overlay
-        columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
-        act(() => {
-            columnChooserIcon.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        // Check if overlay is opened
-        columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
-            .length;
-        expect(columnChooserOverlayCount).toBe(1);
-
-        // Reset Changes
-        const resetButton = getByTestId("reset_columnsManage");
-        act(() => {
-            resetButton.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        // Close Overlay
-        const closeButton = getByTestId("cancel_columnsManage");
-        act(() => {
-            closeButton.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
+        );
+        expect(manageColumnOverlay.length).toBe(0);
     });
 
     it("test appy and reset after checking/unchecking column and additional column checkbox", () => {
@@ -1156,9 +1023,10 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(idCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 9 and 1)
-        columnsCount = document.querySelectorAll("[data-testid='column-box']")
-            .length;
-        additionalColumnsCount = document.querySelectorAll(
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
         expect(columnsCount).toBe(9);
@@ -1169,9 +1037,10 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(flightCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 9 and 1)
-        columnsCount = document.querySelectorAll("[data-testid='column-box']")
-            .length;
-        additionalColumnsCount = document.querySelectorAll(
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
         expect(columnsCount).toBe(9);
@@ -1182,9 +1051,10 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(segmentCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 8 and 1)
-        columnsCount = document.querySelectorAll("[data-testid='column-box']")
-            .length;
-        additionalColumnsCount = document.querySelectorAll(
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
         expect(columnsCount).toBe(8);
@@ -1197,9 +1067,10 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(remarksCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 8 and 0)
-        columnsCount = document.querySelectorAll("[data-testid='column-box']")
-            .length;
-        additionalColumnsCount = document.querySelectorAll(
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
         expect(columnsCount).toBe(8);
@@ -1233,9 +1104,10 @@ describe("ColumnReordering unit test", () => {
         expect(columnChooserOverlayCount).toBe(1);
 
         // Check column and additional column boxes count in the column setting portion (should be 8 and 0)
-        columnsCount = document.querySelectorAll("[data-testid='column-box']")
-            .length;
-        additionalColumnsCount = document.querySelectorAll(
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
         expect(columnsCount).toBe(8);
@@ -1246,9 +1118,10 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(idCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 9 and 0)
-        columnsCount = document.querySelectorAll("[data-testid='column-box']")
-            .length;
-        additionalColumnsCount = document.querySelectorAll(
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
         expect(columnsCount).toBe(9);
@@ -1259,9 +1132,10 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(flightCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 10 and 0)
-        columnsCount = document.querySelectorAll("[data-testid='column-box']")
-            .length;
-        additionalColumnsCount = document.querySelectorAll(
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
         expect(columnsCount).toBe(10);
@@ -1272,9 +1146,10 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(segmentCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 10 and 0)
-        columnsCount = document.querySelectorAll("[data-testid='column-box']")
-            .length;
-        additionalColumnsCount = document.querySelectorAll(
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
         expect(columnsCount).toBe(10);
@@ -1285,9 +1160,10 @@ describe("ColumnReordering unit test", () => {
         fireEvent.click(remarksCheckbox);
 
         // Check column and additional column boxes count in the column setting portion (should be 10 and 1)
-        columnsCount = document.querySelectorAll("[data-testid='column-box']")
-            .length;
-        additionalColumnsCount = document.querySelectorAll(
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
         expect(columnsCount).toBe(10);
@@ -1519,6 +1395,243 @@ describe("ColumnReordering unit test", () => {
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
+    });
+
+    it("test column manage without additional column", () => {
+        mockOffsetSize(1280, 1024);
+        const { container, getByTestId, getAllByTestId } = render(
+            <Grid
+                gridData={mockData}
+                idAttribute="travelId"
+                columns={mockGridColumns}
+            />
+        );
+        const gridContainer = container;
+        // Check if grid has been loaded
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open Column chooser overlay
+        const columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        const columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
+            .length;
+        expect(columnChooserOverlayCount).toBe(1);
+
+        // Check if box for additional column is not present
+        const additionalColumnsCount = container.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(additionalColumnsCount).toBe(0);
+
+        // Check if checkbox for additional column is present
+        const columnCheckboxCount = getAllByTestId(
+            "selectSingleSearchableColumn"
+        ).length;
+        expect(columnCheckboxCount).toBe(11);
+    });
+
+    it("test manage column icon to be hidden as prop to hide group sort is passed", () => {
+        mockOffsetSize(1280, 1024);
+        const { container } = render(
+            <Grid
+                gridData={mockData}
+                idAttribute="travelId"
+                columns={mockGridColumns}
+                columnChooser={false}
+            />
+        );
+        const gridContainer = container;
+        // Check if grid has been loaded
+        expect(gridContainer).toBeInTheDocument();
+
+        // Check Column chooser Icon
+        const columnChooserIcon = gridContainer.querySelectorAll(
+            "[data-testid='toggleManageColumnsOverlay']"
+        );
+        expect(columnChooserIcon.length).toBe(0);
+    });
+
+    it(" test search columns + error scenarios", () => {
+        mockOffsetSize(1280, 1024);
+        const { container, getByTestId, getAllByTestId } = render(
+            <Grid
+                gridData={mockData}
+                idAttribute="travelId"
+                columns={mockGridColumns}
+                columnToExpand={mockAdditionalColumn}
+            />
+        );
+        const gridContainer = container;
+        // Check if grid has been loaded
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open Column chooser overlay
+        let columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        let columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
+            .length;
+        expect(columnChooserOverlayCount).toBe(1);
+
+        // Check checkboxes available for each column
+        let columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
+            .length;
+        expect(columnCheckboxes).toBe(12);
+
+        // Filter columns
+        const filterList = getByTestId("filterColumnsList");
+        expect(filterList.value).toBe("");
+        fireEvent.change(filterList, { target: { value: "id" } });
+        expect(filterList.value).toBe("id");
+
+        // Check checkboxes available for each column
+        columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
+            .length;
+        expect(columnCheckboxes).toBe(1);
+
+        // Remove searched value
+        fireEvent.change(filterList, { target: { value: "" } });
+        expect(filterList.value).toBe("");
+        // Check total count of checkboxes available now
+        columnCheckboxes = getAllByTestId("selectSingleSearchableColumn")
+            .length;
+        expect(columnCheckboxes).toBe(12);
+
+        // Check column and additional column boxes count in the column setting portion (should be 10 and 1)
+        let columnsCount = getAllByTestId("column-box").length;
+        let additionalColumnsCount = getAllByTestId("additional-column-box")
+            .length;
+        expect(columnsCount).toBe(10);
+        expect(additionalColumnsCount).toBe(1);
+
+        // Un check select all columns checkbox
+        let selectAllCheckBox = getByTestId("selectAllSearchableColumns");
+        fireEvent.click(selectAllCheckBox);
+
+        // Check column and additional column boxes count in the column setting portion (should be 0)
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(columnsCount).toBe(0);
+        expect(additionalColumnsCount).toBe(0);
+
+        // Try to apply changes
+        let saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if error message is present
+        let errorMessages = getAllByTestId("column-chooser-error");
+        expect(errorMessages.length).toBe(1);
+
+        // Check back the select all checkbox
+        fireEvent.click(selectAllCheckBox);
+
+        // Check column and additional column boxes count
+        columnsCount = getAllByTestId("column-box").length;
+        additionalColumnsCount = getAllByTestId("additional-column-box").length;
+        expect(columnsCount).toBe(10);
+        expect(additionalColumnsCount).toBe(1);
+
+        // Try to apply changes
+        saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is closed
+        columnChooserOverlayCount = container.querySelectorAll(
+            "[data-testid='managecolumnoverlay']"
+        ).length;
+        expect(columnChooserOverlayCount).toBe(0);
+
+        // Open Column chooser overlay
+        columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
+            .length;
+        expect(columnChooserOverlayCount).toBe(1);
+
+        // Un check all columns again
+        selectAllCheckBox = getByTestId("selectAllSearchableColumns");
+        fireEvent.click(selectAllCheckBox);
+
+        // Check column and additional column boxes count in the column setting portion (should be 0)
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(columnsCount).toBe(0);
+        expect(additionalColumnsCount).toBe(0);
+
+        // Check back additional column
+        const remarksCheckbox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[11];
+        fireEvent.click(remarksCheckbox);
+
+        // Check column and additional column boxes count in the column setting portion (should be 0 and 1)
+        columnsCount = gridContainer.querySelectorAll(
+            "[data-testid='column-box']"
+        ).length;
+        additionalColumnsCount = getAllByTestId("additional-column-box").length;
+        expect(columnsCount).toBe(0);
+        expect(additionalColumnsCount).toBe(1);
+
+        // Try to apply changes
+        saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if error message is present
+        errorMessages = getAllByTestId("column-chooser-error");
+        expect(errorMessages.length).toBe(1);
+
+        // Reset Changes
+        const resetButton = getByTestId("reset_columnsManage");
+        act(() => {
+            resetButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Close Overlay
+        const closeButton = getByTestId("cancel_columnsManage");
+        act(() => {
+            closeButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
     });
 
     it("test drag and drop functionality", () => {

@@ -37,7 +37,8 @@ const ColumnReordering = (props) => {
 
     // Check if additional Column is present or not
     const isAdditionalColumnPresent =
-        additionalColumn &&
+        additionalColumn !== null &&
+        additionalColumn !== undefined &&
         Object.keys(additionalColumn).length > 0 &&
         additionalColumn.innerCells &&
         additionalColumn.innerCells.length > 0;
@@ -112,8 +113,8 @@ const ColumnReordering = (props) => {
     // update the display flag value of column or all columns in managedColumns and managedAdditionalColumn state, based on the selection
     const updateColumns = (columnid, isadditionalcolumn, checked) => {
         if (
-            columnid === "all" ||
-            (isAdditionalColumnPresent && isadditionalcolumn === "true")
+            isAdditionalColumnPresent &&
+            (columnid === "all" || isadditionalcolumn === "true")
         ) {
             // Update additional column state if columnid is "all" or selected column has "isadditionalcolumn"
             updatedDisplayOfAdditionalColumn(checked);
@@ -159,73 +160,66 @@ const ColumnReordering = (props) => {
     // Update the display flag value of inner cell in managedColumns state, based on the selection
     const onInnerCellChange = (event) => {
         const { checked, dataset } = event.currentTarget;
-        if (dataset) {
-            const { columnid, cellid, isadditionalcolumn } = dataset;
-            if (isadditionalcolumn === "false") {
-                setManagedColumns(() => {
-                    return [...managedColumns].map((column) => {
-                        const updatedColumn = { ...column };
-                        const {
-                            columnId,
-                            innerCells,
-                            isGroupHeader
-                        } = updatedColumn;
-                        const groupedColumns = updatedColumn.columns;
-                        if (
-                            columnId === columnid &&
-                            innerCells &&
-                            innerCells.length > 0
-                        ) {
-                            updatedColumn.innerCells = updatedDisplayOfInnerCells(
-                                [...innerCells],
-                                cellid,
-                                checked
-                            );
-                        } else if (
-                            isGroupHeader === true &&
-                            groupedColumns &&
-                            groupedColumns.length > 0
-                        ) {
-                            const updatedColumns = [...groupedColumns].map(
-                                (col) => {
-                                    const updatedCol = { ...col };
-                                    if (
-                                        col.columnId === columnid &&
-                                        col.innerCells &&
-                                        col.innerCells.length > 0
-                                    ) {
-                                        updatedCol.innerCells = updatedDisplayOfInnerCells(
-                                            [...col.innerCells],
-                                            cellid,
-                                            checked
-                                        );
-                                    }
-                                    return updatedCol;
+        const { columnid, cellid, isadditionalcolumn } = dataset;
+        if (isadditionalcolumn === "false") {
+            setManagedColumns(() => {
+                return [...managedColumns].map((column) => {
+                    const updatedColumn = { ...column };
+                    const {
+                        columnId,
+                        innerCells,
+                        isGroupHeader
+                    } = updatedColumn;
+                    const groupedColumns = updatedColumn.columns;
+                    if (
+                        columnId === columnid &&
+                        innerCells &&
+                        innerCells.length > 0
+                    ) {
+                        updatedColumn.innerCells = updatedDisplayOfInnerCells(
+                            [...innerCells],
+                            cellid,
+                            checked
+                        );
+                    } else if (
+                        isGroupHeader === true &&
+                        groupedColumns &&
+                        groupedColumns.length > 0
+                    ) {
+                        const updatedColumns = [...groupedColumns].map(
+                            (col) => {
+                                const updatedCol = { ...col };
+                                if (
+                                    col.columnId === columnid &&
+                                    col.innerCells &&
+                                    col.innerCells.length > 0
+                                ) {
+                                    updatedCol.innerCells = updatedDisplayOfInnerCells(
+                                        [...col.innerCells],
+                                        cellid,
+                                        checked
+                                    );
                                 }
-                            );
-                            updatedColumn.columns = updatedColumns;
-                        }
-                        return updatedColumn;
-                    });
+                                return updatedCol;
+                            }
+                        );
+                        updatedColumn.columns = updatedColumns;
+                    }
+                    return updatedColumn;
                 });
-            } else if (
-                isAdditionalColumnPresent &&
-                managedAdditionalColumn &&
-                managedAdditionalColumn.innerCells &&
-                managedAdditionalColumn.innerCells.length > 0
-            ) {
-                setManagedAdditionalColumn(
-                    update(managedAdditionalColumn, {
-                        innerCells: {
-                            $set: changeInnerCellSelection(
-                                managedAdditionalColumn.innerCells,
-                                cellid,
-                                checked
-                            )
-                        }
-                    })
-                );
-            }
+            });
+        } else {
+            setManagedAdditionalColumn(
+                update(managedAdditionalColumn, {
+                    innerCells: {
+                        $set: changeInnerCellSelection(
+                            managedAdditionalColumn.innerCells,
+                            cellid,
+                            checked
+                        )
+                    }
+                })
+            );
         }
     };
 
@@ -349,56 +343,53 @@ const ColumnReordering = (props) => {
                                     {additionalColumnHeader}
                                 </div>
                                 <div className="ng-popover--column__list">
-                                    {managedAdditionalColumnInnercells.length >
-                                    0
-                                        ? managedAdditionalColumnInnercells.map(
-                                              (cell) => {
-                                                  const {
-                                                      cellId,
-                                                      Header,
-                                                      display
-                                                  } = cell;
-                                                  return (
-                                                      <div
-                                                          className="ng-popover--column__wrap"
-                                                          key={`${cellId}`}
-                                                      >
-                                                          <div className="ng-popover--column__check">
-                                                              <div className="neo-form-check">
-                                                                  <input
-                                                                      type="checkbox"
-                                                                      id={`chk_selectInnerCell_${cellId}`}
-                                                                      className="neo-checkbox form-check-input"
-                                                                      data-testid={`selectInnerCell_${managedAdditionalColumnColumnId}_${cellId}`}
-                                                                      data-columnid={
-                                                                          managedAdditionalColumnColumnId
-                                                                      }
-                                                                      data-cellid={
-                                                                          cellId
-                                                                      }
-                                                                      data-isadditionalcolumn={
-                                                                          managedAdditionalColumnDisplayType
-                                                                      }
-                                                                      checked={
-                                                                          display
-                                                                      }
-                                                                      onChange={
-                                                                          onInnerCellChange
-                                                                      }
-                                                                  />
-                                                                  <label
-                                                                      htmlFor={`chk_selectInnerCell_${cellId}`}
-                                                                      className="neo-form-check__label"
-                                                                  >
-                                                                      {Header}
-                                                                  </label>
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  );
-                                              }
-                                          )
-                                        : null}
+                                    {managedAdditionalColumnInnercells.map(
+                                        (cell) => {
+                                            const {
+                                                cellId,
+                                                Header,
+                                                display
+                                            } = cell;
+                                            return (
+                                                <div
+                                                    className="ng-popover--column__wrap"
+                                                    key={`${cellId}`}
+                                                >
+                                                    <div className="ng-popover--column__check">
+                                                        <div className="neo-form-check">
+                                                            <input
+                                                                type="checkbox"
+                                                                id={`chk_selectInnerCell_${cellId}`}
+                                                                className="neo-checkbox form-check-input"
+                                                                data-testid={`selectInnerCell_${managedAdditionalColumnColumnId}_${cellId}`}
+                                                                data-columnid={
+                                                                    managedAdditionalColumnColumnId
+                                                                }
+                                                                data-cellid={
+                                                                    cellId
+                                                                }
+                                                                data-isadditionalcolumn={
+                                                                    managedAdditionalColumnDisplayType
+                                                                }
+                                                                checked={
+                                                                    display
+                                                                }
+                                                                onChange={
+                                                                    onInnerCellChange
+                                                                }
+                                                            />
+                                                            <label
+                                                                htmlFor={`chk_selectInnerCell_${cellId}`}
+                                                                className="neo-form-check__label"
+                                                            >
+                                                                {Header}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        }
+                                    )}
                                 </div>
                             </div>
                         ) : null}
