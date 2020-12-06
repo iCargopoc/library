@@ -984,6 +984,27 @@ describe("Column manage functionality test", () => {
         expect(manageColumnOverlay.length).toBe(0);
     });
 
+    it("test manage column icon to be hidden as prop to hide group sort is passed", () => {
+        mockOffsetSize(1280, 1024);
+        const { container } = render(
+            <Grid
+                gridData={mockData}
+                idAttribute="travelId"
+                columns={mockGridColumns}
+                columnChooser={false}
+            />
+        );
+        const gridContainer = container;
+        // Check if grid has been loaded
+        expect(gridContainer).toBeInTheDocument();
+
+        // Check Column chooser Icon
+        const columnChooserIcon = gridContainer.querySelectorAll(
+            "[data-testid='toggleManageColumnsOverlay']"
+        );
+        expect(columnChooserIcon.length).toBe(0);
+    });
+
     it("test appy and reset after checking/unchecking column and additional column checkbox", () => {
         mockOffsetSize(1280, 1024);
         const { container, getByTestId, getAllByTestId } = render(
@@ -1467,27 +1488,6 @@ describe("Column manage functionality test", () => {
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
-    });
-
-    it("test manage column icon to be hidden as prop to hide group sort is passed", () => {
-        mockOffsetSize(1280, 1024);
-        const { container } = render(
-            <Grid
-                gridData={mockData}
-                idAttribute="travelId"
-                columns={mockGridColumns}
-                columnChooser={false}
-            />
-        );
-        const gridContainer = container;
-        // Check if grid has been loaded
-        expect(gridContainer).toBeInTheDocument();
-
-        // Check Column chooser Icon
-        const columnChooserIcon = gridContainer.querySelectorAll(
-            "[data-testid='toggleManageColumnsOverlay']"
-        );
-        expect(columnChooserIcon.length).toBe(0);
     });
 
     it(" test search columns + error scenarios", () => {
