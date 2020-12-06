@@ -978,9 +978,7 @@ describe("render Index file ", () => {
         });
 
         // Check if grid has been loaded
-        const groupSortOverlay = container.querySelectorAll(
-            "[data-testid='groupsortoverlay']"
-        );
+        const groupSortOverlay = getAllByTestId("groupsortoverlay");
         expect(groupSortOverlay.length).toBe(1);
 
         // Add sort
@@ -998,9 +996,7 @@ describe("render Index file ", () => {
         expect(sortOptionsCount).toBe(0);
 
         // Clear all sort options
-        const clearAllButton = container.querySelectorAll(
-            "[data-testid='clearSort']"
-        )[0];
+        const clearAllButton = getByTestId("clearSort");
         act(() => {
             clearAllButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
@@ -1034,9 +1030,7 @@ describe("render Index file ", () => {
         });
 
         // Check if grid has been loaded
-        const groupSortOverlay = container.querySelectorAll(
-            "[data-testid='groupsortoverlay']"
-        );
+        const groupSortOverlay = getAllByTestId("groupsortoverlay");
         expect(groupSortOverlay.length).toBe(1);
 
         // Add sort
@@ -1048,9 +1042,7 @@ describe("render Index file ", () => {
         });
 
         // Check number of sort options now, should be 0 as there are no columns with accessor
-        const sortOptionsCount = container.querySelectorAll(
-            "[data-testid='sortItem']"
-        ).length;
+        const sortOptionsCount = getAllByTestId("sortItem").length;
         expect(sortOptionsCount).toBe(1);
 
         // Clear all sort options
