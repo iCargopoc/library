@@ -768,10 +768,10 @@ const GridComponent = (props) => {
                     return (
                         <div className="uld-details">
                             <ul>
-                                {uldPositions.map((positions) => {
+                                {uldPositions.map((positions, index) => {
                                     const { position, value } = positions;
                                     return (
-                                        <li key={`${position}_${value}`}>
+                                        <li key={index}>
                                             <DisplayTag
                                                 columnKey="uldPositions"
                                                 cellKey="position"
