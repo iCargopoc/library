@@ -1,7 +1,9 @@
 /* eslint-disable no-undef */
 import React from "react";
-import { render, cleanup, fireEvent } from "@testing-library/react";
+import { render, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
+/* eslint-disable no-unused-vars */
+import regeneratorRuntime from "regenerator-runtime";
 import { act } from "react-dom/test-utils";
 import Grid from "../src/index";
 import ExportData from "../src/Overlays/exportdata";
@@ -1011,6 +1013,87 @@ describe("Export data functionality test", () => {
         expect(exportDataIcon.length).toBe(0);
     });
 
+    it("test export data without rows", async () => {
+        mockOffsetSize(1280, 1024);
+        const { container, getByTestId, getAllByTestId, getAllByText } = render(
+            <Grid
+                gridData={mockData}
+                idAttribute="travelId"
+                columns={mockGridColumns}
+                columnToExpand={mockAdditionalColumn}
+            />
+        );
+        const gridContainer = container;
+        // Check if grid has been loaded
+        expect(gridContainer).toBeInTheDocument();
+
+        // Global Filter Search with invalid value "asd"
+        let input = getByTestId("globalFilter-textbox");
+        expect(input.value).toBe("");
+        fireEvent.change(input, { target: { value: "asd" } });
+        expect(input.value).toBe("asd");
+
+        // There should not be any records
+        await waitFor(() =>
+            expect(getAllByText("No Records Found").length).toBe(1)
+        );
+
+        // Open Export overlay
+        const exportDataIcon = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            exportDataIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        let exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        expect(exportDataOverlayCount).toBe(1);
+
+        // Select csv
+        const selectCsv = getByTestId("chk_csv_test");
+        expect(selectCsv.checked).toEqual(false);
+        fireEvent.click(selectCsv);
+        expect(selectCsv.checked).toEqual(true);
+
+        // Click export data button
+        const exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check for error
+        const errorMessage = getAllByText("No rows available to export");
+        expect(errorMessage.length).toBe(1);
+
+        // Close overlay
+        const cancelButton = getByTestId("cancel_button");
+        act(() => {
+            cancelButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened now
+        exportDataOverlayCount = gridContainer.querySelectorAll(
+            "[data-testid='exportoverlay']"
+        ).length;
+        expect(exportDataOverlayCount).toBe(0);
+
+        // Clear filter value "asd"
+        input = getByTestId("globalFilter-textbox");
+        expect(input.value).toBe("asd");
+        fireEvent.change(input, { target: { value: "" } });
+        expect(input.value).toBe("");
+
+        // Rows should be present
+        await waitFor(() =>
+            expect(getAllByTestId("gridrow").length).toBeGreaterThan(0)
+        );
+    });
+
     it("test export data warnings", () => {
         mockOffsetSize(1280, 1024);
         const { container, getByTestId, getAllByTestId, getAllByText } = render(
@@ -1163,6 +1246,48 @@ describe("Export data functionality test", () => {
         expect(selectPdf.checked).toEqual(false);
         fireEvent.click(selectPdf);
         expect(selectPdf.checked).toEqual(true);
+
+        // Click export data button
+        const exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+    });
+
+    it("download files with custom file name", () => {
+        mockOffsetSize(1280, 1024);
+        const { container, getByTestId, getAllByTestId } = render(
+            <Grid
+                gridData={mockData}
+                idAttribute="travelId"
+                columns={mockGridColumns}
+                columnToExpand={mockAdditionalColumn}
+                fileName="customFileName"
+            />
+        );
+        const gridContainer = container;
+        // Check if grid has been loaded
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open Export overlay
+        const exportDataIcon = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            exportDataIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        const exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        expect(exportDataOverlayCount).toBe(1);
+
+        // Select csv
+        const selectCsv = getByTestId("chk_csv_test");
+        expect(selectCsv.checked).toEqual(false);
+        fireEvent.click(selectCsv);
+        expect(selectCsv.checked).toEqual(true);
 
         // Click export data button
         const exportButton = getByTestId("export_button");
