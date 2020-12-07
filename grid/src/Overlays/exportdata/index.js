@@ -56,7 +56,7 @@ const ExportData = (props) => {
         ) {
             let atleastOneColumnDisplayed = false;
             const updatedColumns = [...groupedColumns].map((col) => {
-                const updatedCol = col;
+                const updatedCol = { ...col };
                 if (
                     (columnid &&
                         (columnid === "all" || columnid === col.columnId)) ||

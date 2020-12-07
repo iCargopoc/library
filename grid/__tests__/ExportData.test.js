@@ -1333,17 +1333,38 @@ describe("Export data functionality test", () => {
             );
         });
 
+        // Check column and additional column boxes count in the column setting portion (should be 10 and 1)
+        let columnsCount = getAllByTestId("column-box").length;
+        let additionalColumnsCount = getAllByTestId("additional-column-box")
+            .length;
+        expect(columnsCount).toBe(10);
+        expect(additionalColumnsCount).toBe(1);
+
         // Un check Id column checkbox
         const idCheckbox = getAllByTestId("selectSingleSearchableColumn")[2];
         expect(idCheckbox.checked).toBeTruthy();
         fireEvent.click(idCheckbox);
         expect(idCheckbox.checked).toBeFalsy();
 
+        // Check column and additional column boxes count in the column setting portion (should be 9 and 1)
+        columnsCount = getAllByTestId("column-box").length;
+        additionalColumnsCount = getAllByTestId("additional-column-box").length;
+        expect(columnsCount).toBe(9);
+        expect(additionalColumnsCount).toBe(1);
+
         // Un check Remarks column checkbox
         const remarksCheckbox = getAllByTestId(
             "selectSingleSearchableColumn"
         )[11];
         fireEvent.click(remarksCheckbox);
+
+        // Check column and additional column boxes count in the column setting portion (should be 9 and 0)
+        columnsCount = getAllByTestId("column-box").length;
+        additionalColumnsCount = gridContainer.querySelectorAll(
+            "[data-testid='additional-column-box']"
+        ).length;
+        expect(columnsCount).toBe(9);
+        expect(additionalColumnsCount).toBe(0);
 
         // Try to apply changes
         const saveButton = getByTestId("save_columnsManage");
