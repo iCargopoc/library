@@ -1297,4 +1297,182 @@ describe("Export data functionality test", () => {
             );
         });
     });
+
+    it("download files with columns hidden", () => {
+        mockOffsetSize(1280, 1024);
+        const { container, getByTestId, getAllByTestId } = render(
+            <Grid
+                gridData={mockData}
+                idAttribute="travelId"
+                columns={mockGridColumns}
+                columnToExpand={mockAdditionalColumn}
+            />
+        );
+        const gridContainer = container;
+        // Check if grid has been loaded
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open Column chooser overlay
+        const columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        let columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
+            .length;
+        expect(columnChooserOverlayCount).toBe(1);
+
+        // Reset if there are any changes before starting
+        const resetButton = getByTestId("reset_columnsManage");
+        act(() => {
+            resetButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Un check Id column checkbox
+        const idCheckbox = getAllByTestId("selectSingleSearchableColumn")[2];
+        expect(idCheckbox.checked).toBeTruthy();
+        fireEvent.click(idCheckbox);
+        expect(idCheckbox.checked).toBeFalsy();
+
+        // Un check Remarks column checkbox
+        const remarksCheckbox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[11];
+        fireEvent.click(remarksCheckbox);
+
+        // Try to apply changes
+        const saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is closed
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
+            "[data-testid='managecolumnoverlay']"
+        ).length;
+        expect(columnChooserOverlayCount).toBe(0);
+
+        // Open Export overlay
+        const exportDataIcon = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            exportDataIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        const exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        expect(exportDataOverlayCount).toBe(1);
+
+        // Select csv
+        const selectCsv = getByTestId("chk_csv_test");
+        expect(selectCsv.checked).toEqual(false);
+        fireEvent.click(selectCsv);
+        expect(selectCsv.checked).toEqual(true);
+
+        // Click export data button
+        const exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+    });
+
+    it("download files with cells hidden", () => {
+        mockOffsetSize(1280, 1024);
+        const { container, getByTestId, getAllByTestId } = render(
+            <Grid
+                gridData={mockData}
+                idAttribute="travelId"
+                columns={mockGridColumns}
+                columnToExpand={mockAdditionalColumn}
+            />
+        );
+        const gridContainer = container;
+        // Check if grid has been loaded
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open Column chooser overlay
+        const columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        let columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
+            .length;
+        expect(columnChooserOverlayCount).toBe(1);
+
+        // Reset if there are any changes before starting
+        const resetButton = getByTestId("reset_columnsManage");
+        act(() => {
+            resetButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Un check flight number cell checkbox
+        const weightPercentageCheckbox = getByTestId(
+            "selectInnerCell_column_5_column_5_cell_0"
+        );
+        expect(weightPercentageCheckbox.checked).toBeTruthy();
+        fireEvent.click(weightPercentageCheckbox);
+        expect(weightPercentageCheckbox.checked).toBeFalsy();
+
+        // Un check Remarks cell checkbox
+        const remarksCellCheckbox = getByTestId(
+            "selectInnerCell_rowExpand_rowExpand_cell_0"
+        );
+        fireEvent.click(remarksCellCheckbox);
+
+        // Try to apply changes
+        const saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is closed
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
+            "[data-testid='managecolumnoverlay']"
+        ).length;
+        expect(columnChooserOverlayCount).toBe(0);
+
+        // Open Export overlay
+        const exportDataIcon = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            exportDataIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        const exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        expect(exportDataOverlayCount).toBe(1);
+
+        // Select csv
+        const selectCsv = getByTestId("chk_csv_test");
+        expect(selectCsv.checked).toEqual(false);
+        fireEvent.click(selectCsv);
+        expect(selectCsv.checked).toEqual(true);
+
+        // Click export data button
+        const exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+    });
 });
