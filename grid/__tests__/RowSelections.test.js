@@ -27,6 +27,15 @@ describe("render Index file ", () => {
         );
     });
 
+    const getRowInfo = (rowData) => {
+        const { travelId } = rowData;
+        return {
+            isRowExpandable: travelId % 2 === 0,
+            isRowSelectable: travelId <= 5,
+            className: travelId % 10 === 0 ? "disabled" : ""
+        };
+    };
+
     const gridColumns = [
         {
             Header: "Id",
@@ -247,6 +256,7 @@ describe("render Index file ", () => {
                 gridData={data}
                 idAttribute="travelId"
                 columns={gridColumns}
+                getRowInfo={getRowInfo}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
             />
@@ -322,6 +332,7 @@ describe("render Index file ", () => {
                 gridData={data}
                 idAttribute="travelId"
                 columns={gridColumns}
+                getRowInfo={getRowInfo}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 multiRowSelection={false}
@@ -370,6 +381,7 @@ describe("render Index file ", () => {
                 gridData={data}
                 idAttribute="travelId"
                 columns={gridColumns}
+                getRowInfo={getRowInfo}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 rowsToSelect={[0, 1, 2]}
@@ -393,6 +405,7 @@ describe("render Index file ", () => {
                 gridData={data}
                 idAttribute="travelId"
                 columns={gridColumns}
+                getRowInfo={getRowInfo}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 multiRowSelection={false}
