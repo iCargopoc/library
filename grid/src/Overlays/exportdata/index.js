@@ -145,11 +145,19 @@ const ExportData = (props) => {
         const data = new Blob([excelBuffer], { type: fileType });
         const href = await URL.createObjectURL(data);
         const link = document.createElement("a");
+        link.style.visibility = "hidden";
+        link.dataset.testid = "csv-file-download-link";
         link.href = href;
         link.download = exportedFileName + fileExtension;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const exportOverlay = document.querySelector(
+            "[data-testid='exportoverlay']"
+        );
+        exportOverlay.appendChild(link);
+        const linkToDownload = document.querySelector(
+            "[data-testid='csv-file-download-link']"
+        );
+        linkToDownload.click();
+        exportOverlay.removeChild(link);
     };
 
     const downloadXLSFile = async (filteredRowValue) => {
@@ -162,11 +170,19 @@ const ExportData = (props) => {
         const data = new Blob([excelBuffer], { type: fileType });
         const href = await URL.createObjectURL(data);
         const link = document.createElement("a");
+        link.style.visibility = "hidden";
+        link.dataset.testid = "excel-file-download-link";
         link.href = href;
         link.download = exportedFileName + fileExtension;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const exportOverlay = document.querySelector(
+            "[data-testid='exportoverlay']"
+        );
+        exportOverlay.appendChild(link);
+        const linkToDownload = document.querySelector(
+            "[data-testid='excel-file-download-link']"
+        );
+        linkToDownload.click();
+        exportOverlay.removeChild(link);
     };
 
     const exportRowData = () => {
