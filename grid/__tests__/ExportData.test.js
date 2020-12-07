@@ -1143,7 +1143,7 @@ describe("Export data functionality test", () => {
         });
 
         // Check if overlay is opened
-        let exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        const exportDataOverlayCount = getAllByTestId("exportoverlay").length;
         expect(exportDataOverlayCount).toBe(1);
 
         // Select csv
