@@ -1285,6 +1285,9 @@ const Customgrid = (props) => {
                                                         expandedParentRows={
                                                             expandedParentRows
                                                         }
+                                                        reRenderListData={
+                                                            reRenderListData
+                                                        }
                                                     />
                                                 )}
                                             </InfiniteLoader>
@@ -1333,6 +1336,9 @@ const Customgrid = (props) => {
                                                 getRowInfo={getRowInfo}
                                                 expandedParentRows={
                                                     expandedParentRows
+                                                }
+                                                reRenderListData={
+                                                    reRenderListData
                                                 }
                                             />
                                         )}

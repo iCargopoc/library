@@ -26,13 +26,21 @@ const RowsList = ({
     parentColumn,
     additionalColumn,
     getRowInfo,
-    expandedParentRows
+    expandedParentRows,
+    reRenderListData
 }) => {
     const sizeMap = useRef({});
     const setSize = useCallback((index, size) => {
-        sizeMap.current = { ...sizeMap.current, [index]: size };
+        const currentSize = sizeMap.current[index];
+        if (currentSize !== size) {
+            sizeMap.current = { ...sizeMap.current, [index]: size };
+            reRenderListData();
+        }
     }, []);
-    const getSize = useCallback((index) => sizeMap.current[index] || 50, []);
+    const getSize = useCallback((index) => {
+        const rowSize = sizeMap.current[index];
+        return rowSize || 100;
+    }, []);
 
     return (
         <List
@@ -115,7 +123,8 @@ RowsList.propTypes = {
     parentColumn: PropTypes.object,
     additionalColumn: PropTypes.object,
     getRowInfo: PropTypes.func,
-    expandedParentRows: PropTypes.array
+    expandedParentRows: PropTypes.array,
+    reRenderListData: PropTypes.func
 };
 
 export default RowsList;

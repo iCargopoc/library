@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import { IconExpand, IconCollapse } from "../Utilities/SvgUtilities";
+import ParentItem from "./ParentItem";
+import RowItem from "./RowItem";
 
 const RowsListItem = ({
     row,
@@ -22,66 +23,28 @@ const RowsListItem = ({
     additionalColumn,
     getRowInfo
 }) => {
-    const rowItemRef = useRef();
-
-    useEffect(() => {
-        let rowHeight = 50;
-        const rowElement = rowItemRef.current;
-        if (rowElement) {
-            const rowWrap = rowElement.querySelector(
-                "[data-testid='gridrowWrap']"
-            );
-            const expandRegion = rowElement.querySelector(
-                "[data-testid='rowExpandedRegion']"
-            );
-            if (rowWrap) {
-                rowHeight = rowWrap.getBoundingClientRect().height;
-                if (expandRegion) {
-                    rowHeight += expandRegion.getBoundingClientRect().height;
-                }
-            }
-        }
-        setSize(index, rowHeight);
-    });
+    // Check if this is a tree grid, and if parent row is in collapsed state. If yes, do not render its child rows
+    if (isParentRowCollapsed(row)) {
+        return null;
+    }
 
     const { original } = row;
     if (original) {
         const { isParent, lastPage } = original;
         if (isParent === true && isParentGrid) {
             return (
-                <div ref={rowItemRef} className="ng-accordion" style={style}>
-                    <div className="ng-accordion__block">
-                        {multiRowSelection !== false ? (
-                            <div className="neo-form-check">
-                                <input
-                                    type="checkbox"
-                                    data-testid="rowSelector-parentRow"
-                                    className="neo-checkbox form-check-input"
-                                    checked={isParentRowSelected(row)}
-                                    onChange={(event) =>
-                                        toggleParentRowSelection(event, row)
-                                    }
-                                />
-                            </div>
-                        ) : null}
-                        {parentRowExpandable !== false ? (
-                            <i
-                                role="presentation"
-                                className="ng-accordion__icon"
-                                onClick={() => toggleParentRow(row, index)}
-                                data-testid="acccordion-expand-collapse"
-                            >
-                                {isParentRowOpen(row) ? (
-                                    <IconCollapse />
-                                ) : (
-                                    <IconExpand />
-                                )}
-                            </i>
-                        ) : null}
-                    </div>
-                    <div className="ng-accordion__content">
-                        {parentColumn.displayCell(original)}
-                    </div>
+                <div className="ng-accordion" style={style}>
+                    <ParentItem
+                        row={row}
+                        index={index}
+                        multiRowSelection={multiRowSelection}
+                        parentRowExpandable={parentRowExpandable}
+                        isParentRowSelected={isParentRowSelected}
+                        toggleParentRowSelection={toggleParentRowSelection}
+                        toggleParentRow={toggleParentRow}
+                        isParentRowOpen={isParentRowOpen}
+                        parentColumn={parentColumn}
+                    />
                 </div>
             );
         }
@@ -95,62 +58,24 @@ const RowsListItem = ({
             }
         }
 
-        // Check if this is a tree grid, and if parent row is in collapsed state. If yes, do not render its child rows
-        if (isParentRowCollapsed(row)) {
-            return null;
-        }
-
         return (
             <div
-                ref={rowItemRef}
                 {...row.getRowProps({ style })}
                 data-testid="gridrow"
                 className={`neo-grid__tr ${rowClassName}`}
             >
-                <div
-                    data-testid="gridrowWrap"
-                    className={`neo-grid__row-wrap ${
-                        isRowExpandEnabled && row.isExpanded
-                            ? "neo-grid__row-wrap--expand"
-                            : ""
-                    }`}
-                >
-                    {row.cells.map((cell) => {
-                        if (cell.column.display === true) {
-                            return (
-                                <div
-                                    {...cell.getCellProps()}
-                                    className="neo-grid__td"
-                                    data-testid="gridrowcell"
-                                >
-                                    {cell.render("Cell")}
-                                </div>
-                            );
-                        }
-                        return null;
-                    })}
-                </div>
-                {/* Check if row eapand icon is clicked, and if yes, call function to bind content to the expanded region */}
-                {isRowExpandEnabled && row.isExpanded ? (
-                    <div
-                        className="neo-grid__row-expand"
-                        data-testid="rowExpandedRegion"
-                    >
-                        {additionalColumn.Cell(row, additionalColumn)}
-                    </div>
-                ) : null}
-                {isLoadMoreChildRowsRequiredForRow(index, lastPage) ? (
-                    <div className="ng-loadmore">
-                        <button
-                            type="button"
-                            className="neo-btn neo-btn-default btn btn-secondary"
-                            data-testid="load-more-childdata"
-                            onClick={() => loadMoreChildData(row)}
-                        >
-                            Load more....
-                        </button>
-                    </div>
-                ) : null}
+                <RowItem
+                    row={row}
+                    index={index}
+                    setSize={setSize}
+                    isRowExpandEnabled={isRowExpandEnabled}
+                    additionalColumn={additionalColumn}
+                    isLoadMoreChildRowsRequiredForRow={
+                        isLoadMoreChildRowsRequiredForRow
+                    }
+                    lastPage={lastPage}
+                    loadMoreChildData={loadMoreChildData}
+                />
             </div>
         );
     }
