@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React, { useCallback } from "react";
+import React, { useRef, useCallback } from "react";
 import { VariableSizeList as List } from "react-window";
 import PropTypes from "prop-types";
 import RowsListItem from "./RowsListItem";
@@ -28,6 +28,12 @@ const RowsList = ({
     getRowInfo,
     expandedParentRows
 }) => {
+    const sizeMap = useRef({});
+    const setSize = useCallback((index, size) => {
+        sizeMap.current = { ...sizeMap.current, [index]: size };
+    }, []);
+    const getSize = useCallback((index) => sizeMap.current[index] || 50, []);
+
     return (
         <List
             ref={(list) => {
@@ -41,9 +47,7 @@ const RowsList = ({
             }}
             height={height - 60}
             itemCount={rows.length}
-            itemSize={() => {
-                return 150;
-            }}
+            itemSize={getSize}
             onItemsRendered={onItemsRendered}
             overscanCount={overScanCount}
             className="neo-grid__tbody-list"
@@ -59,6 +63,7 @@ const RowsList = ({
                                 row={row}
                                 style={style}
                                 index={index}
+                                setSize={setSize}
                                 isParentGrid={isParentGrid}
                                 multiRowSelection={multiRowSelection}
                                 parentRowExpandable={parentRowExpandable}
