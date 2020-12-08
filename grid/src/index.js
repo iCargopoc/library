@@ -471,6 +471,7 @@ const Grid = (props) => {
                     isDesktop={isDesktop}
                     title={title}
                     gridHeight={gridHeight}
+                    theme={theme}
                     managableColumns={gridColumns}
                     expandedRowData={additionalColumn}
                     parentColumn={parentColumn}

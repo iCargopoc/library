@@ -54,6 +54,7 @@ const Customgrid = (props) => {
         isDesktop,
         title,
         gridHeight,
+        theme,
         managableColumns,
         expandedRowData,
         parentColumn,
@@ -1237,6 +1238,7 @@ const Customgrid = (props) => {
                                                         infiniteLoaderRef={ref}
                                                         listRef={listRef}
                                                         height={height}
+                                                        theme={theme}
                                                         rows={rows}
                                                         overScanCount={
                                                             overScanCount
@@ -1295,6 +1297,7 @@ const Customgrid = (props) => {
                                             <RowsList
                                                 listRef={listRef}
                                                 height={height}
+                                                theme={theme}
                                                 rows={rows}
                                                 overScanCount={overScanCount}
                                                 prepareRow={prepareRow}
@@ -1365,6 +1368,7 @@ Customgrid.propTypes = {
     isDesktop: PropTypes.bool,
     title: PropTypes.string,
     gridHeight: PropTypes.string,
+    theme: PropTypes.string,
     managableColumns: PropTypes.arrayOf(PropTypes.object),
     parentColumn: PropTypes.object,
     parentIdAttribute: PropTypes.string,

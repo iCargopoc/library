@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 const RowItem = ({
     row,
+    theme,
     index,
     setSize,
     isRowExpandEnabled,
@@ -20,14 +21,23 @@ const RowItem = ({
             const rowWrap = rowElement.querySelector(
                 "[data-testid='gridrowWrap']"
             );
-            const expandRegion = rowElement.querySelector(
-                "[data-testid='rowExpandedRegion']"
-            );
             if (rowWrap) {
+                const expandRegion = rowElement.querySelector(
+                    "[data-testid='rowExpandedRegion']"
+                );
                 rowHeight = rowWrap.getBoundingClientRect().height;
                 if (expandRegion) {
                     rowHeight += expandRegion.getBoundingClientRect().height;
                 }
+                const loadMoreChild = rowElement.querySelector(
+                    "[data-testid='loadMoreChild']"
+                );
+                if (loadMoreChild) {
+                    rowHeight += loadMoreChild.getBoundingClientRect().height;
+                }
+            }
+            if (theme === "portal") {
+                rowHeight += 10;
             }
         }
         setSize(index, rowHeight);
@@ -68,7 +78,7 @@ const RowItem = ({
                 </div>
             ) : null}
             {isLoadMoreChildRowsRequiredForRow(index, lastPage) ? (
-                <div className="ng-loadmore">
+                <div className="ng-loadmore" data-testid="loadMoreChild">
                     <button
                         type="button"
                         className="neo-btn neo-btn-default btn btn-secondary"
@@ -85,6 +95,7 @@ const RowItem = ({
 
 RowItem.propTypes = {
     row: PropTypes.object,
+    theme: PropTypes.string,
     index: PropTypes.number,
     setSize: PropTypes.func,
     isRowExpandEnabled: PropTypes.bool,

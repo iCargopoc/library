@@ -6,6 +6,7 @@ import RowItem from "./RowItem";
 const RowsListItem = ({
     row,
     style,
+    theme,
     index,
     setSize,
     isParentGrid,
@@ -66,6 +67,7 @@ const RowsListItem = ({
             >
                 <RowItem
                     row={row}
+                    theme={theme}
                     index={index}
                     setSize={setSize}
                     isRowExpandEnabled={isRowExpandEnabled}
@@ -85,6 +87,7 @@ const RowsListItem = ({
 RowsListItem.propTypes = {
     row: PropTypes.object,
     style: PropTypes.object,
+    theme: PropTypes.string,
     index: PropTypes.number,
     setSize: PropTypes.func,
     isParentGrid: PropTypes.bool,

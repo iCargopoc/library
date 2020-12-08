@@ -9,6 +9,7 @@ const RowsList = ({
     infiniteLoaderRef,
     listRef,
     height,
+    theme,
     rows,
     overScanCount,
     prepareRow,
@@ -70,6 +71,7 @@ const RowsList = ({
                             <RowsListItem
                                 row={row}
                                 style={style}
+                                theme={theme}
                                 index={index}
                                 setSize={setSize}
                                 isParentGrid={isParentGrid}
@@ -106,6 +108,7 @@ RowsList.propTypes = {
     infiniteLoaderRef: PropTypes.any,
     listRef: PropTypes.any,
     height: PropTypes.number,
+    theme: PropTypes.string,
     rows: PropTypes.arrayOf(PropTypes.object),
     overScanCount: PropTypes.number,
     prepareRow: PropTypes.func,
