@@ -1,21 +1,32 @@
 /* eslint-disable no-param-reassign */
-import React from "react";
+import React, { useCallback } from "react";
 import { VariableSizeList as List } from "react-window";
 import PropTypes from "prop-types";
+import RowsListItem from "./RowsListItem";
 
 const RowsList = ({
     onItemsRendered,
     infiniteLoaderRef,
     listRef,
     height,
-    isParentRowCollapsed,
-    isLoadMoreChildRowsRequiredForRow,
-    calculateRowHeight,
     rows,
-    headerGroups,
-    theme,
     overScanCount,
-    RenderRow
+    prepareRow,
+    isParentGrid,
+    multiRowSelection,
+    parentRowExpandable,
+    isRowExpandEnabled,
+    isParentRowSelected,
+    isParentRowCollapsed,
+    toggleParentRowSelection,
+    toggleParentRow,
+    isParentRowOpen,
+    isLoadMoreChildRowsRequiredForRow,
+    loadMoreChildData,
+    parentColumn,
+    additionalColumn,
+    getRowInfo,
+    expandedParentRows
 }) => {
     return (
         <List
@@ -30,38 +41,49 @@ const RowsList = ({
             }}
             height={height - 60}
             itemCount={rows.length}
-            itemSize={(index) => {
-                const currentRow = rows[index];
-                let isLastPage = true;
-                if (currentRow) {
-                    const { original } = currentRow;
-                    if (original) {
-                        const { lastPage } = original;
-                        isLastPage = lastPage;
-                    }
-                }
-                // If this is a child row in tree grid and its parent is in collapsed state, this row height should be 0.
-                if (isParentRowCollapsed(currentRow)) {
-                    return 0;
-                }
-                return (
-                    calculateRowHeight(
-                        currentRow,
-                        headerGroups && headerGroups.length
-                            ? headerGroups[headerGroups.length - 1].headers
-                            : []
-                    ) +
-                    (theme === "portal" ? 10 : 0) +
-                    (isLoadMoreChildRowsRequiredForRow(index, isLastPage)
-                        ? 34
-                        : 0)
-                );
+            itemSize={() => {
+                return 150;
             }}
             onItemsRendered={onItemsRendered}
             overscanCount={overScanCount}
             className="neo-grid__tbody-list"
         >
-            {RenderRow}
+            {useCallback(
+                ({ index, style }) => {
+                    if (rows && rows.length > 0 && index >= 0) {
+                        // if (isItemLoaded(index)) - This check never became false during testing. Hence avoiding it to reach 100% code coverage in JEST test.
+                        const row = rows[index];
+                        prepareRow(row);
+                        return (
+                            <RowsListItem
+                                row={row}
+                                style={style}
+                                index={index}
+                                isParentGrid={isParentGrid}
+                                multiRowSelection={multiRowSelection}
+                                parentRowExpandable={parentRowExpandable}
+                                isRowExpandEnabled={isRowExpandEnabled}
+                                isParentRowSelected={isParentRowSelected}
+                                isParentRowCollapsed={isParentRowCollapsed}
+                                toggleParentRowSelection={
+                                    toggleParentRowSelection
+                                }
+                                toggleParentRow={toggleParentRow}
+                                isParentRowOpen={isParentRowOpen}
+                                isLoadMoreChildRowsRequiredForRow={
+                                    isLoadMoreChildRowsRequiredForRow
+                                }
+                                loadMoreChildData={loadMoreChildData}
+                                parentColumn={parentColumn}
+                                additionalColumn={additionalColumn}
+                                getRowInfo={getRowInfo}
+                            />
+                        );
+                    }
+                    return null;
+                },
+                [rows, additionalColumn, expandedParentRows]
+            )}
         </List>
     );
 };
@@ -71,14 +93,24 @@ RowsList.propTypes = {
     infiniteLoaderRef: PropTypes.any,
     listRef: PropTypes.any,
     height: PropTypes.number,
-    isParentRowCollapsed: PropTypes.func,
-    isLoadMoreChildRowsRequiredForRow: PropTypes.func,
-    calculateRowHeight: PropTypes.func,
     rows: PropTypes.arrayOf(PropTypes.object),
-    headerGroups: PropTypes.arrayOf(PropTypes.object),
-    theme: PropTypes.string,
     overScanCount: PropTypes.number,
-    RenderRow: PropTypes.func
+    prepareRow: PropTypes.func,
+    isParentGrid: PropTypes.bool,
+    multiRowSelection: PropTypes.bool,
+    parentRowExpandable: PropTypes.bool,
+    isRowExpandEnabled: PropTypes.bool,
+    isParentRowSelected: PropTypes.func,
+    isParentRowCollapsed: PropTypes.func,
+    toggleParentRowSelection: PropTypes.func,
+    toggleParentRow: PropTypes.func,
+    isParentRowOpen: PropTypes.func,
+    isLoadMoreChildRowsRequiredForRow: PropTypes.func,
+    loadMoreChildData: PropTypes.func,
+    parentColumn: PropTypes.object,
+    additionalColumn: PropTypes.object,
+    getRowInfo: PropTypes.func,
+    expandedParentRows: PropTypes.array
 };
 
 export default RowsList;

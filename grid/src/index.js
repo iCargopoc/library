@@ -88,7 +88,6 @@ const Grid = (props) => {
         onRowUpdate,
         onRowSelect,
         getRowInfo,
-        calculateRowHeight,
         expandableColumn,
         CustomPanel,
         multiRowSelection,
@@ -201,46 +200,6 @@ const Grid = (props) => {
 
     // Local state value for holding the additional column configuration
     const [additionalColumn, setAdditionalColumn] = useState(null);
-
-    // Add logic to calculate height of each row, based on the content of  or more columns
-    // This can be used only if developer using the component has not passed a function to calculate row height
-    const calculateDefaultRowHeight = (row, columnsInGrid) => {
-        // Minimum height for each row
-        let rowHeight = 50;
-        if (columnsInGrid && columnsInGrid.length > 0 && row) {
-            // Get properties of a row
-            const { original, isExpanded } = row;
-            // Find the column with maximum width configured, from grid columns list
-            const columnWithMaxWidth = [...columnsInGrid].sort((a, b) => {
-                return b.width - a.width;
-            })[0];
-            // Get column properties including the user resized column width (totalFlexWidth)
-            const { id, width, totalFlexWidth } = columnWithMaxWidth;
-            // Get row value of that column
-            const rowValue = original[id];
-            if (rowValue) {
-                // Find the length of text of data in that column
-                const textLength = Object.values(rowValue).join(",").length;
-                // This is a formula that was created for the test data used.
-                rowHeight += Math.ceil((80 * textLength) / totalFlexWidth);
-                const widthVariable =
-                    totalFlexWidth > width
-                        ? totalFlexWidth - width
-                        : width - totalFlexWidth;
-                rowHeight += widthVariable / 1000;
-            }
-            // Add logic to increase row height if row is expanded
-            if (isExpanded && additionalColumn) {
-                // Increase height based on the number of inner cells in additional columns
-                rowHeight +=
-                    additionalColumn.innerCells &&
-                    additionalColumn.innerCells.length > 0
-                        ? additionalColumn.innerCells.length * 35
-                        : 35;
-            }
-        }
-        return rowHeight;
-    };
 
     const isParentGrid = parentColumn !== null && parentColumn !== undefined;
 
@@ -510,7 +469,6 @@ const Grid = (props) => {
             >
                 <Customgrid
                     isDesktop={isDesktop}
-                    theme={theme}
                     title={title}
                     gridHeight={gridHeight}
                     managableColumns={gridColumns}
@@ -534,12 +492,6 @@ const Grid = (props) => {
                     searchColumn={searchColumn}
                     onRowSelect={onRowSelect}
                     getRowInfo={getRowInfo}
-                    calculateRowHeight={
-                        calculateRowHeight &&
-                        typeof calculateRowHeight === "function"
-                            ? calculateRowHeight
-                            : calculateDefaultRowHeight
-                    }
                     expandableColumn={expandableColumn}
                     rowActions={rowActions}
                     hasNextPage={pageInfo ? !pageInfo.lastPage : false}
@@ -598,7 +550,6 @@ Grid.propTypes = {
     onRowUpdate: PropTypes.func,
     onRowSelect: PropTypes.func,
     getRowInfo: PropTypes.func,
-    calculateRowHeight: PropTypes.func,
     expandableColumn: PropTypes.bool,
     rowActions: PropTypes.any,
     CustomPanel: PropTypes.any,

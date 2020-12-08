@@ -33,9 +33,7 @@ import {
     IconShare,
     IconGroupSort,
     IconSort,
-    IconRefresh,
-    IconExpand,
-    IconCollapse
+    IconRefresh
 } from "./Utilities/SvgUtilities";
 import {
     findSelectedRows,
@@ -54,7 +52,6 @@ const listRef = createRef(null);
 const Customgrid = (props) => {
     const {
         isDesktop,
-        theme,
         title,
         gridHeight,
         managableColumns,
@@ -73,7 +70,6 @@ const Customgrid = (props) => {
         searchColumn,
         onRowSelect,
         getRowInfo,
-        calculateRowHeight,
         expandableColumn,
         rowActions,
         hasNextPage,
@@ -922,145 +918,6 @@ const Customgrid = (props) => {
         return isLoadMoreChildNeeded;
     };
 
-    // Render each row and cells in each row, using attributes from react window list.
-    const RenderRow = useCallback(
-        ({ index, style }) => {
-            if (rows && rows.length > 0 && index >= 0) {
-                // if (isItemLoaded(index)) - This check never became false during testing. Hence avoiding it to reach 100% code coverage in JEST test.
-                const row = rows[index];
-                prepareRow(row);
-
-                if (row) {
-                    const { original } = row;
-                    if (original) {
-                        const { isParent, lastPage } = original;
-                        if (isParent === true && isParentGrid) {
-                            return (
-                                <div className="ng-accordion" style={style}>
-                                    <div className="ng-accordion__block">
-                                        {multiRowSelection !== false ? (
-                                            <div className="neo-form-check">
-                                                <input
-                                                    type="checkbox"
-                                                    data-testid="rowSelector-parentRow"
-                                                    className="neo-checkbox form-check-input"
-                                                    checked={isParentRowSelected(
-                                                        row
-                                                    )}
-                                                    onChange={(event) =>
-                                                        toggleParentRowSelection(
-                                                            event,
-                                                            row
-                                                        )
-                                                    }
-                                                />
-                                            </div>
-                                        ) : null}
-                                        {parentRowExpandable !== false ? (
-                                            <i
-                                                role="presentation"
-                                                className="ng-accordion__icon"
-                                                onClick={() =>
-                                                    toggleParentRow(row, index)
-                                                }
-                                                data-testid="acccordion-expand-collapse"
-                                            >
-                                                {isParentRowOpen(row) ? (
-                                                    <IconCollapse />
-                                                ) : (
-                                                    <IconExpand />
-                                                )}
-                                            </i>
-                                        ) : null}
-                                    </div>
-                                    <div className="ng-accordion__content">
-                                        {parentColumn.displayCell(original)}
-                                    </div>
-                                </div>
-                            );
-                        }
-
-                        // Add classname passed by developer from getRowInfo prop to required rows
-                        let rowClassName = "";
-                        if (getRowInfo && typeof getRowInfo === "function") {
-                            const rowInfo = getRowInfo(original);
-                            if (rowInfo && rowInfo.className) {
-                                rowClassName = rowInfo.className;
-                            }
-                        }
-
-                        // Check if this is a tree grid, and if parent row is in collapsed state. If yes, do not render its child rows
-                        if (isParentRowCollapsed(row)) {
-                            return null;
-                        }
-
-                        return (
-                            <div
-                                {...row.getRowProps({ style })}
-                                data-testid="gridrow"
-                                className={`neo-grid__tr ${rowClassName}`}
-                            >
-                                <div
-                                    className={`neo-grid__row-wrap ${
-                                        isRowExpandEnabled && row.isExpanded
-                                            ? "neo-grid__row-wrap--expand"
-                                            : ""
-                                    }`}
-                                >
-                                    {row.cells.map((cell) => {
-                                        if (cell.column.display === true) {
-                                            return (
-                                                <div
-                                                    {...cell.getCellProps()}
-                                                    className="neo-grid__td"
-                                                    data-testid="gridrowcell"
-                                                >
-                                                    {cell.render("Cell")}
-                                                </div>
-                                            );
-                                        }
-                                        return null;
-                                    })}
-                                </div>
-                                {/* Check if row eapand icon is clicked, and if yes, call function to bind content to the expanded region */}
-                                {isRowExpandEnabled && row.isExpanded ? (
-                                    <div
-                                        className="neo-grid__row-expand"
-                                        data-testid="rowExpandedRegion"
-                                    >
-                                        {additionalColumn.Cell(
-                                            row,
-                                            additionalColumn
-                                        )}
-                                    </div>
-                                ) : null}
-                                {isLoadMoreChildRowsRequiredForRow(
-                                    index,
-                                    lastPage
-                                ) ? (
-                                    <div className="ng-loadmore">
-                                        <button
-                                            type="button"
-                                            className="neo-btn neo-btn-default btn btn-secondary"
-                                            data-testid="load-more-childdata"
-                                            onClick={() =>
-                                                loadMoreChildData(row)
-                                            }
-                                        >
-                                            Load more....
-                                        </button>
-                                    </div>
-                                ) : null}
-                            </div>
-                        );
-                    }
-                }
-            }
-            return null;
-        },
-        [rows, additionalColumn, expandedParentRows]
-    );
-
     if (!isFirstRendering && gridColumns && gridColumns.length > 0) {
         // Check if atleast 1 column has group sort option enabled, and display group sort icon only if there is atleast 1.
         const isGroupSortNeeded = checkIfGroupsortIsApplicable(
@@ -1380,24 +1237,54 @@ const Customgrid = (props) => {
                                                         infiniteLoaderRef={ref}
                                                         listRef={listRef}
                                                         height={height}
+                                                        rows={rows}
+                                                        overScanCount={
+                                                            overScanCount
+                                                        }
+                                                        prepareRow={prepareRow}
+                                                        isParentGrid={
+                                                            isParentGrid
+                                                        }
+                                                        multiRowSelection={
+                                                            multiRowSelection
+                                                        }
+                                                        parentRowExpandable={
+                                                            parentRowExpandable
+                                                        }
+                                                        isRowExpandEnabled={
+                                                            isRowExpandEnabled
+                                                        }
+                                                        isParentRowSelected={
+                                                            isParentRowSelected
+                                                        }
                                                         isParentRowCollapsed={
                                                             isParentRowCollapsed
+                                                        }
+                                                        toggleParentRowSelection={
+                                                            toggleParentRowSelection
+                                                        }
+                                                        toggleParentRow={
+                                                            toggleParentRow
+                                                        }
+                                                        isParentRowOpen={
+                                                            isParentRowOpen
                                                         }
                                                         isLoadMoreChildRowsRequiredForRow={
                                                             isLoadMoreChildRowsRequiredForRow
                                                         }
-                                                        calculateRowHeight={
-                                                            calculateRowHeight
+                                                        loadMoreChildData={
+                                                            loadMoreChildData
                                                         }
-                                                        rows={rows}
-                                                        headerGroups={
-                                                            headerGroups
+                                                        parentColumn={
+                                                            parentColumn
                                                         }
-                                                        theme={theme}
-                                                        overScanCount={
-                                                            overScanCount
+                                                        additionalColumn={
+                                                            additionalColumn
                                                         }
-                                                        RenderRow={RenderRow}
+                                                        getRowInfo={getRowInfo}
+                                                        expandedParentRows={
+                                                            expandedParentRows
+                                                        }
                                                     />
                                                 )}
                                             </InfiniteLoader>
@@ -1405,20 +1292,48 @@ const Customgrid = (props) => {
                                             <RowsList
                                                 listRef={listRef}
                                                 height={height}
+                                                rows={rows}
+                                                overScanCount={overScanCount}
+                                                prepareRow={prepareRow}
+                                                isParentGrid={isParentGrid}
+                                                multiRowSelection={
+                                                    multiRowSelection
+                                                }
+                                                parentRowExpandable={
+                                                    parentRowExpandable
+                                                }
+                                                isRowExpandEnabled={
+                                                    isRowExpandEnabled
+                                                }
+                                                isParentRowSelected={
+                                                    isParentRowSelected
+                                                }
                                                 isParentRowCollapsed={
                                                     isParentRowCollapsed
+                                                }
+                                                toggleParentRowSelection={
+                                                    toggleParentRowSelection
+                                                }
+                                                toggleParentRow={
+                                                    toggleParentRow
+                                                }
+                                                isParentRowOpen={
+                                                    isParentRowOpen
                                                 }
                                                 isLoadMoreChildRowsRequiredForRow={
                                                     isLoadMoreChildRowsRequiredForRow
                                                 }
-                                                calculateRowHeight={
-                                                    calculateRowHeight
+                                                loadMoreChildData={
+                                                    loadMoreChildData
                                                 }
-                                                rows={rows}
-                                                headerGroups={headerGroups}
-                                                theme={theme}
-                                                overScanCount={overScanCount}
-                                                RenderRow={RenderRow}
+                                                parentColumn={parentColumn}
+                                                additionalColumn={
+                                                    additionalColumn
+                                                }
+                                                getRowInfo={getRowInfo}
+                                                expandedParentRows={
+                                                    expandedParentRows
+                                                }
                                             />
                                         )}
                                     </div>
@@ -1442,7 +1357,6 @@ const Customgrid = (props) => {
 
 Customgrid.propTypes = {
     isDesktop: PropTypes.bool,
-    theme: PropTypes.string,
     title: PropTypes.string,
     gridHeight: PropTypes.string,
     managableColumns: PropTypes.arrayOf(PropTypes.object),
@@ -1460,7 +1374,6 @@ Customgrid.propTypes = {
     searchColumn: PropTypes.func,
     onRowSelect: PropTypes.func,
     getRowInfo: PropTypes.func,
-    calculateRowHeight: PropTypes.func,
     expandableColumn: PropTypes.bool,
     isExpandContentAvailable: PropTypes.bool,
     hasNextPage: PropTypes.bool,
