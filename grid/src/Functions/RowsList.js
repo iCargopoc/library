@@ -36,7 +36,7 @@ const RowsList = ({
             const currentSize = sizeMap.current[index];
             if (currentSize !== size) {
                 sizeMap.current = { ...sizeMap.current, [index]: size };
-                reRenderListData();
+                reRenderListData(index);
             }
         },
         [rows, additionalColumn, expandedParentRows]

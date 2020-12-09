@@ -464,53 +464,14 @@ const Customgrid = (props) => {
     };
 
     // Recalculate row height from index 50 less than the last rendered item index in the list
-    const reRenderListData = (index, isForced) => {
-        const numIndex = Number(index);
-        let indexToReset = numIndex && numIndex >= 0 ? numIndex : 0;
+    const reRenderListData = (index) => {
         if (listRef && listRef.current) {
             const { current } = listRef;
             if (current) {
-                const { _instanceProps } = current;
-                if (_instanceProps && indexToReset === 0 && isForced !== true) {
-                    const expectedItemsCount = overScanCount + 30;
-                    const { lastMeasuredIndex } = _instanceProps;
-                    if (isParentGrid) {
-                        indexToReset = 0;
-                        if (
-                            parentIdAttribute !== null &&
-                            parentIdAttribute !== undefined
-                        ) {
-                            const indexOfFirstParentInExpandedState = rows.findIndex(
-                                (row) => {
-                                    if (row) {
-                                        const { original } = row;
-                                        if (original) {
-                                            const { isParent } = original;
-                                            if (isParent === true) {
-                                                const parentId =
-                                                    original[parentIdAttribute];
-                                                if (
-                                                    parentId !== null &&
-                                                    parentId !== undefined
-                                                ) {
-                                                    return expandedParentRows.includes(
-                                                        parentId
-                                                    );
-                                                }
-                                            }
-                                        }
-                                    }
-                                    return false;
-                                }
-                            );
-                            if (indexOfFirstParentInExpandedState >= 0) {
-                                indexToReset = indexOfFirstParentInExpandedState;
-                            }
-                        }
-                    } else if (lastMeasuredIndex > expectedItemsCount) {
-                        indexToReset = lastMeasuredIndex - expectedItemsCount;
-                    }
-                }
+                const indexToReset =
+                    index !== null && index !== undefined && index >= 0
+                        ? index
+                        : 0;
                 current.resetAfterIndex(indexToReset, true);
             }
         }
