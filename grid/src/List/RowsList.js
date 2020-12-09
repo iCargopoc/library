@@ -2,7 +2,7 @@
 import React, { useRef, useCallback } from "react";
 import { VariableSizeList as List } from "react-window";
 import PropTypes from "prop-types";
-import RowsListItem from "./RowsListItem";
+import ListItem from "./ListItem";
 
 const RowsList = ({
     onItemsRendered,
@@ -74,7 +74,7 @@ const RowsList = ({
                         const row = rows[index];
                         prepareRow(row);
                         return (
-                            <RowsListItem
+                            <ListItem
                                 row={row}
                                 style={style}
                                 theme={theme}

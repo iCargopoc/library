@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ParentItem from "./ParentItem";
-import ChildItem from "./ChildItem";
+import CollapsedChildItem from "./CollapsedChildItem";
 import RowItem from "./RowItem";
 
-const RowsListItem = ({
+const ListItem = ({
     row,
     style,
     theme,
@@ -26,7 +26,7 @@ const RowsListItem = ({
     getRowInfo
 }) => {
     if (isParentRowCollapsed(row)) {
-        return <ChildItem index={index} setSize={setSize} />;
+        return <CollapsedChildItem index={index} setSize={setSize} />;
     }
 
     const { original } = row;
@@ -86,7 +86,7 @@ const RowsListItem = ({
     return null;
 };
 
-RowsListItem.propTypes = {
+ListItem.propTypes = {
     row: PropTypes.object,
     style: PropTypes.object,
     theme: PropTypes.string,
@@ -108,4 +108,4 @@ RowsListItem.propTypes = {
     getRowInfo: PropTypes.func
 };
 
-export default RowsListItem;
+export default ListItem;
