@@ -36,7 +36,7 @@ const RowsList = ({
             const currentSize = sizeMap.current[index];
             if (currentSize !== size) {
                 sizeMap.current = { ...sizeMap.current, [index]: size };
-            reRenderListData();
+                reRenderListData();
             }
         },
         [rows, additionalColumn, expandedParentRows]
@@ -44,7 +44,7 @@ const RowsList = ({
     const getSize = useCallback(
         (index) => {
             const rowSize = sizeMap.current[index];
-            return rowSize || 50;
+            return rowSize !== undefined && rowSize !== null ? rowSize : 50;
         },
         [rows, additionalColumn, expandedParentRows]
     );
