@@ -31,17 +31,23 @@ const RowsList = ({
     reRenderListData
 }) => {
     const sizeMap = useRef({});
-    const setSize = useCallback((index, size) => {
-        const currentSize = sizeMap.current[index];
-        if (currentSize !== size) {
-            sizeMap.current = { ...sizeMap.current, [index]: size };
+    const setSize = useCallback(
+        (index, size) => {
+            const currentSize = sizeMap.current[index];
+            if (currentSize !== size) {
+                sizeMap.current = { ...sizeMap.current, [index]: size };
             reRenderListData();
-        }
-    }, []);
-    const getSize = useCallback((index) => {
-        const rowSize = sizeMap.current[index];
-        return rowSize || 100;
-    }, []);
+            }
+        },
+        [rows, additionalColumn, expandedParentRows]
+    );
+    const getSize = useCallback(
+        (index) => {
+            const rowSize = sizeMap.current[index];
+            return rowSize || 50;
+        },
+        [rows, additionalColumn, expandedParentRows]
+    );
 
     return (
         <List

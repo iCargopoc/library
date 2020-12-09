@@ -581,8 +581,6 @@ const Customgrid = (props) => {
                     });
                     if (!childRow) {
                         loadMoreChildData(row);
-                    } else {
-                        reRenderListData(index, true);
                     }
                 }
             }
@@ -616,29 +614,16 @@ const Customgrid = (props) => {
         }
     });
 
-    // Rerender list to calculate row height after doing column sort/filter and global search
-    useEffect(() => {
-        if (!isFirstRendering) {
-            reRenderListData();
-        }
-    }, [globalFilter, filters, sortBy]);
-
     // Update state, when user is updating columns configuration from outside Grid
     // Recalculate the row height from index 0 as columns config has been changed
     useEffect(() => {
         setGridColumns(managableColumns);
-        if (!isFirstRendering) {
-            reRenderListData();
-        }
     }, [managableColumns]);
 
     // Update state, when user is updating additional column configuration from outside Grid
     // Recalculate the row height from index 0 as additional columns config has been changed
     useEffect(() => {
         setAdditionalColumn(expandedRowData);
-        if (!isFirstRendering) {
-            reRenderListData();
-        }
     }, [expandedRowData]);
 
     // Update the boolean value used to identify if this is the first time render of Grid
@@ -759,23 +744,6 @@ const Customgrid = (props) => {
             }
         }
     }, [selectedRowIds]);
-
-    // Recalculate the row height from expanded/collapsed row index
-    useEffect(() => {
-        if (userExpandedRowDetails && !isFirstRendering) {
-            const { id } = userExpandedRowDetails;
-            if (id) {
-                reRenderListData(id);
-            }
-        }
-    }, [userExpandedRowDetails]);
-
-    // Recalculate the row height from index 0 as data has been changed or group sort is applied
-    useEffect(() => {
-        if (!isFirstRendering) {
-            reRenderListData();
-        }
-    }, [gridData, groupSortOptions]);
 
     // Check if parent id attribute is present in the list of opened parent attributes.
     const isParentRowCollapsed = (childRow) => {

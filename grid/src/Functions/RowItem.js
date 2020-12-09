@@ -36,10 +36,11 @@ const RowItem = ({
                     rowHeight += loadMoreChild.getBoundingClientRect().height;
                 }
             }
-            if (theme === "portal") {
-                rowHeight += 10;
-            }
         }
+        if (theme === "portal") {
+            rowHeight += 10;
+        }
+        rowHeight = Math.ceil(rowHeight);
         setSize(index, rowHeight);
     });
 

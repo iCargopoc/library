@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { IconExpand, IconCollapse } from "../Utilities/SvgUtilities";
 
 const ParentItem = ({
     row,
+    theme,
     index,
+    setSize,
     multiRowSelection,
     parentRowExpandable,
     isParentRowSelected,
@@ -13,6 +15,25 @@ const ParentItem = ({
     isParentRowOpen,
     parentColumn
 }) => {
+    const parentItemRef = useRef();
+
+    useEffect(() => {
+        let parentHeight = 50;
+        const parentElement = parentItemRef.current;
+        if (parentElement) {
+            const parentElementHeight = parentElement.getBoundingClientRect()
+                .height;
+            if (parentElementHeight > parentHeight) {
+                parentHeight = parentElementHeight;
+            }
+        }
+        if (theme === "portal") {
+            parentHeight += 10;
+        }
+        parentHeight = Math.ceil(parentHeight);
+        setSize(index, parentHeight);
+    });
+
     const { original } = row;
     return (
         <>
@@ -45,7 +66,11 @@ const ParentItem = ({
                     </i>
                 ) : null}
             </div>
-            <div className="ng-accordion__content">
+            <div
+                ref={parentItemRef}
+                className="ng-accordion__content"
+                data-testid="parentRowContent"
+            >
                 {parentColumn.displayCell(original)}
             </div>
         </>
@@ -54,7 +79,9 @@ const ParentItem = ({
 
 ParentItem.propTypes = {
     row: PropTypes.object,
+    theme: PropTypes.string,
     index: PropTypes.number,
+    setSize: PropTypes.func,
     multiRowSelection: PropTypes.bool,
     parentRowExpandable: PropTypes.bool,
     isParentRowSelected: PropTypes.func,

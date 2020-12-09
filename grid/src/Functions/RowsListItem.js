@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ParentItem from "./ParentItem";
+import ChildItem from "./ChildItem";
 import RowItem from "./RowItem";
 
 const RowsListItem = ({
@@ -24,9 +25,8 @@ const RowsListItem = ({
     additionalColumn,
     getRowInfo
 }) => {
-    // Check if this is a tree grid, and if parent row is in collapsed state. If yes, do not render its child rows
     if (isParentRowCollapsed(row)) {
-        return null;
+        return <ChildItem index={index} setSize={setSize} />;
     }
 
     const { original } = row;
@@ -37,7 +37,9 @@ const RowsListItem = ({
                 <div className="ng-accordion" style={style}>
                     <ParentItem
                         row={row}
+                        theme={theme}
                         index={index}
+                        setSize={setSize}
                         multiRowSelection={multiRowSelection}
                         parentRowExpandable={parentRowExpandable}
                         isParentRowSelected={isParentRowSelected}
