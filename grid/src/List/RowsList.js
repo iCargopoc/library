@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable no-param-reassign */
 import React, { useRef, useCallback, useEffect } from "react";
 import { VariableSizeList as List } from "react-window";
@@ -50,16 +51,17 @@ const RowsList = ({
             if (isParentRowCollapsed(currentRow)) {
                 return 0;
             }
-            const rowSize = sizeMap.current[index];
-            let rowSizeToReturn = 50;
+            const { current } = sizeMap;
+            const rowSize = current[index];
+            let rowSizeToReturn = null;
             if (rowSize !== undefined && rowSize !== null) {
                 rowSizeToReturn = rowSize;
             } else if (isParentRow) {
-                rowSizeToReturn = sizeMap.current[0];
+                rowSizeToReturn = current[0];
             } else {
-                rowSizeToReturn = sizeMap.current[1];
+                rowSizeToReturn = current[1];
             }
-            return rowSizeToReturn;
+            return rowSizeToReturn || 50;
         },
         [rows, additionalColumn, expandedParentRows]
     );

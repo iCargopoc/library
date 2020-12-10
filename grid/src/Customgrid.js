@@ -185,17 +185,6 @@ const Customgrid = (props) => {
         []
     );
 
-    // Local state value for storing user expanded/collapsed row Id and expanded state
-    const [userExpandedRowDetails, setUserExpandedRowDetails] = useState(null);
-
-    // Update state value with the row id on which user has clicked the expand/collpase functionality
-    const setExpandedRowDetails = (rowId, isRowExpanded) => {
-        setUserExpandedRowDetails({
-            id: rowId,
-            isExpanded: isRowExpanded
-        });
-    };
-
     const [expandedParentRows, setExpandedParentRows] = useState([]);
 
     // Global Search Filter Logic - React table wants all parameters passed into useTable function to be memoized
@@ -245,7 +234,7 @@ const Customgrid = (props) => {
         rows,
         prepareRow,
         preFilteredRows,
-        state: { globalFilter, selectedRowIds, filters, sortBy },
+        state: { globalFilter, selectedRowIds },
         setGlobalFilter,
         toggleRowSelected,
         toggleAllRowsSelected
@@ -400,16 +389,7 @@ const Customgrid = (props) => {
                                         <span
                                             className="ng-action__expander"
                                             data-testid="rowExpanderIcon"
-                                            {...row.getToggleRowExpandedProps({
-                                                onClick: () => {
-                                                    // Update local state value to identify row expand and rerender the row
-                                                    setExpandedRowDetails(
-                                                        row.id,
-                                                        row.isExpanded
-                                                    );
-                                                    row.toggleRowExpanded();
-                                                }
-                                            })}
+                                            {...row.getToggleRowExpandedProps()}
                                         >
                                             <i>
                                                 <IconAngle
@@ -506,7 +486,7 @@ const Customgrid = (props) => {
         return returnValue;
     };
 
-    const toggleParentRow = (row, index) => {
+    const toggleParentRow = (row) => {
         if (parentIdAttribute && row) {
             const { original } = row;
             if (original) {
