@@ -5,7 +5,7 @@
 .neo-grid {
     &__thead {
         background: var(--light-grey);
-        border-bottom: 1px solid var(--border);
+        border-bottom: rem(1) solid var(--border);
         flex-wrap: wrap;
         &:last-child {
             margin-bottom: rem(50);
@@ -26,12 +26,12 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        border-left: 1px solid transparent;
-        border-right: 1px solid transparent;
+        border-left: rem(1) solid transparent;
+        border-right: rem(1) solid transparent;
         position: relative;
         &:hover {
-            border-left: 1px solid var(--border-grey);
-            border-right: 1px solid var(--border-grey);
+            border-left: rem(1) solid var(--border-grey);
+            border-right: rem(1) solid var(--border-grey);
         }
         .neo-grid__th-title {
             height: 100%;
@@ -41,7 +41,7 @@
         .ng-txt-wrap {
             display: none;
             margin-top: auto;
-            padding-top: 6px;
+            padding-top: rem(6);
             &__open {
                 display: block;
             }
@@ -50,7 +50,7 @@
             width: 100%;
         }
         .neo-grid__th-icon {
-            margin-left: 4px;
+            margin-left: rem(4);
         }
         &.neo-grid__th-group {
             .neo-grid__th-title {
@@ -58,8 +58,8 @@
             }
         }
         .neo-grid__th-resizer {
-            right: -5px;
-            left: -5px;
+            right: rem(-5);
+            left: rem(-5);
             width: rem(10);
             height: 100%;
             position: absolute;
@@ -81,7 +81,7 @@
             will-change: auto !important;
         }
         .neo-grid__row-selector {
-            padding: 8px 4px;
+            padding: rem(8) rem(4);
             height: 100%;
             display: flex;
             align-items: flex-start;
@@ -104,12 +104,12 @@
             }
         }
         .neo-grid__tr {
-            border-bottom: 1px solid var(--light-grey);
+            border-bottom: rem(1) solid var(--light-grey);
             flex-wrap: wrap;
         }
         .ng-accordion {
             display: flex;
-            border-bottom: 1px solid var(--border-default);
+            border-bottom: rem(1) solid var(--border-default);
             &__container {
                 width: 100%;
                 display: flex;
@@ -117,13 +117,13 @@
             &__block {
                 display: flex;
                 align-items: center;
-                padding: 0 4px;
+                padding: 0 rem(4);
             }
             &__icon {
                 width: rem(20);
                 height: rem(20);
                 margin: 0 rem(10);
-                border: var(--border-light) solid 1px;
+                border: var(--border-light) solid rem(1);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -137,7 +137,7 @@
         .ng-loadmore {
             width: 100%;
             text-align: center;
-            border-top: var(--light-grey) solid 1px;
+            border-top: var(--light-grey) solid rem(1);
             padding: rem(8) 0;
             display: flex;
             justify-content: center;
@@ -170,9 +170,9 @@
             justify-content: space-between;
             align-items: center;
             height: 100%;
-            margin-right: 6px;
+            margin-right: rem(6);
             box-sizing: border-box;
-            padding: rem(10) 6px;
+            padding: rem(10) rem(6);
             &__arrow-up {
                 transform: rotate(-180deg);
             }
@@ -189,17 +189,17 @@
             }
             &__kebab {
                 background: var(--icon-primary);
-                width: 4px;
-                height: 4px;
+                width: rem(4);
+                height: rem(4);
                 display: block;
-                margin-bottom: 2px;
+                margin-bottom: rem(2);
             }
             &__popover {
                 display: block;
                 position: absolute;
                 background: var(--white);
-                border-radius: 4px;
-                border: var(--border) solid 1px;
+                border-radius: rem(4);
+                border: var(--border) solid rem(1);
                 width: auto;
                 right: 0;
                 top: 0;
@@ -210,8 +210,8 @@
             }
             &__close {
                 position: absolute;
-                top: 5px;
-                right: 5px;
+                top: rem(5);
+                right: rem(5);
                 font-size: rem(14);
                 cursor: pointer;
             }
@@ -219,8 +219,8 @@
 
         .neo-grid__cell-edit {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: rem(8);
+            right: rem(8);
             cursor: pointer;
             display: block;
         }
@@ -232,13 +232,13 @@
             position: absolute;
             z-index: 9;
             background: var(--white);
-            border: var(--light-grey) solid 1px;
-            top: 5px;
-            padding: 4px;
-            border-radius: 4px;
+            border: var(--light-grey) solid rem(1);
+            top: rem(5);
+            padding: rem(4);
+            border-radius: rem(4);
             width: auto;
             white-space: nowrap;
-            box-shadow: 0px 0px 8px 0px var(--box-shadow);
+            box-shadow: 0 0 rem(8) 0 var(--box-shadow);
         }
     }
 
