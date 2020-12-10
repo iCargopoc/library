@@ -43,18 +43,30 @@ const RowsList = ({
     const getSize = useCallback(
         (index) => {
             const currentRow = rows[index];
+            const isParentRow =
+                currentRow &&
+                currentRow.original &&
+                currentRow.original.isParent === true;
             if (isParentRowCollapsed(currentRow)) {
                 return 0;
             }
             const rowSize = sizeMap.current[index];
-            return rowSize !== undefined && rowSize !== null ? rowSize : 50;
+            let rowSizeToReturn = 50;
+            if (rowSize !== undefined && rowSize !== null) {
+                rowSizeToReturn = rowSize;
+            } else if (isParentRow) {
+                rowSizeToReturn = sizeMap.current[0];
+            } else {
+                rowSizeToReturn = sizeMap.current[1];
+            }
+            return rowSizeToReturn;
         },
         [rows, additionalColumn, expandedParentRows]
     );
 
     useEffect(() => {
         reRenderListData();
-    });
+    }, [rows]);
 
     return (
         <List
