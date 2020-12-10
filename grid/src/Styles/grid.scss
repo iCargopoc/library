@@ -137,7 +137,7 @@
         .ng-loadmore {
             width: 100%;
             text-align: center;
-            border-top: #c4cacf solid 1px;
+            border-top: var(--light-grey) solid 1px;
             padding: rem(8) 0;
             display: flex;
             justify-content: center;
@@ -149,7 +149,7 @@
     }
     &__table {
         margin-bottom: 1rem;
-        color: #212529;
+        color: var(--default);
         .neo-grid__content {
             display: table;
             width: 100%;
@@ -188,7 +188,7 @@
                 align-items: center;
             }
             &__kebab {
-                background: #999999;
+                background: var(--icon-primary);
                 width: 4px;
                 height: 4px;
                 display: block;
@@ -197,9 +197,9 @@
             &__popover {
                 display: block;
                 position: absolute;
-                background: #fff;
+                background: var(--white);
                 border-radius: 4px;
-                border: #dadada solid 1px;
+                border: var(--border) solid 1px;
                 width: auto;
                 right: 0;
                 top: 0;
@@ -213,7 +213,6 @@
                 top: 5px;
                 right: 5px;
                 font-size: rem(14);
-                color: #ccc;
                 cursor: pointer;
             }
         }
@@ -223,22 +222,17 @@
             top: 8px;
             right: 8px;
             cursor: pointer;
-            color: #dadfe9;
             display: block;
         }
         .neo-grid__cell-content {
             height: 100%;
-            a {
-                font-size: 2em;
-                color: #333;
-            }
         }
         .neo-grid__content-edit {
             display: flex;
             position: absolute;
             z-index: 9;
-            background: #fff;
-            border: #eee solid 1px;
+            background: var(--white);
+            border: var(--light-grey) solid 1px;
             top: 5px;
             padding: 4px;
             border-radius: 4px;

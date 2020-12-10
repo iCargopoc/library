@@ -82,7 +82,7 @@
                     border-radius: 3px;
                     padding: 0 rem(10);
                     border-bottom: none;
-                    &:last-child{
+                    &:last-child {
                         border-bottom: 1px solid var(--border);
                     }
                 }
@@ -109,7 +109,7 @@
                 cursor: pointer;
                 .ng-popover__txt {
                     margin-left: 6px;
-                    color: #3c476f;
+                    color: var(--primary);
                     line-height: normal;
                     font-size: rem(12);
                     font-weight: normal;
@@ -118,7 +118,7 @@
             &__icon-plus {
                 font-size: rem(22);
                 line-height: 14px;
-                color: #3c476f;
+                color: var(--primary);
             }
             &__items-title {
                 display: flex;
@@ -128,12 +128,12 @@
             &__item-text {
                 font-size: rem(12);
                 position: relative;
-                left: -28px;
+                left: -41px;
                 &:nth-child(2) {
-                    left: -58px;
+                    left: -69px;
                 }
                 &:nth-child(3) {
-                    left: -88px;
+                    left: -100px;
                 }
             }
             &__reorder {
@@ -145,10 +145,10 @@
                 cursor: pointer;
             }
             &__select {
-                width: 120px;
-                height: 28px;
+                width: rem(120);
+                height: rem(28);
                 border-radius: 3px;
-                border-color: #d7d7d7;
+                border-color: var(--border);
                 color: rgba(26, 72, 105, 0.6);
             }
             &__footer {
@@ -192,7 +192,7 @@
                 }
             }
             &__reorder {
-                border: 1px solid #8da3b4;
+                border: 1px solid var(--border);
                 border-radius: 3px;
                 text-align: center;
                 min-height: 150px;
@@ -259,7 +259,6 @@
             &__header {
                 padding: 10px;
                 border-bottom: var(--light-grey) solid 1px;
-                color: #3c425e;
                 font-size: rem(14);
                 display: flex;
             }
