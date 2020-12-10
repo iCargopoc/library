@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useEffect } from "react";
 import { VariableSizeList as List } from "react-window";
 import PropTypes from "prop-types";
 import ListItem from "./ListItem";
@@ -36,18 +36,25 @@ const RowsList = ({
             const currentSize = sizeMap.current[index];
             if (currentSize !== size) {
                 sizeMap.current = { ...sizeMap.current, [index]: size };
-                reRenderListData(index);
             }
         },
         [rows, additionalColumn, expandedParentRows]
     );
     const getSize = useCallback(
         (index) => {
+            const currentRow = rows[index];
+            if (isParentRowCollapsed(currentRow)) {
+                return 0;
+            }
             const rowSize = sizeMap.current[index];
             return rowSize !== undefined && rowSize !== null ? rowSize : 50;
         },
         [rows, additionalColumn, expandedParentRows]
     );
+
+    useEffect(() => {
+        reRenderListData();
+    });
 
     return (
         <List

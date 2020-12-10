@@ -36,7 +36,7 @@ const ParentItem = ({
 
     const { original } = row;
     return (
-        <>
+        <div ref={parentItemRef} className="ng-accordion__container">
             <div className="ng-accordion__block">
                 {multiRowSelection !== false ? (
                     <div className="neo-form-check">
@@ -67,13 +67,12 @@ const ParentItem = ({
                 ) : null}
             </div>
             <div
-                ref={parentItemRef}
                 className="ng-accordion__content"
                 data-testid="parentRowContent"
             >
                 {parentColumn.displayCell(original)}
             </div>
-        </>
+        </div>
     );
 };
 

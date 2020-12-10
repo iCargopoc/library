@@ -110,6 +110,10 @@
         .ng-accordion {
             display: flex;
             border-bottom: 1px solid var(--border-default);
+            &__container {
+                width: 100%;
+                display: flex;
+            }
             &__block {
                 display: flex;
                 align-items: center;

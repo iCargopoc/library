@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ParentItem from "./ParentItem";
-import CollapsedChildItem from "./CollapsedChildItem";
 import RowItem from "./RowItem";
 
 const ListItem = ({
@@ -26,7 +25,7 @@ const ListItem = ({
     getRowInfo
 }) => {
     if (isParentRowCollapsed(row)) {
-        return <CollapsedChildItem index={index} setSize={setSize} />;
+        return null;
     }
 
     const { original } = row;
