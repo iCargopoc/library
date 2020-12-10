@@ -4,16 +4,14 @@
 }
 .neo-grid {
     &__header {
-        background-color: var(--secondary);
+        background-color: var(--light_hover);
         display: flex;
         padding: rem(8) rem(4);
         justify-content: space-between;
-        border-bottom: 1px solid var(--border-grey);
         .ng-header-results {
             display: flex;
             font-size: rem(14);
-            color: var(--titlecolor);
-            font-weight: bold;
+            color: var(--textcolor);
             align-items: center;
             min-width: rem(90);
             &__check {
@@ -45,8 +43,8 @@
                 position: relative;
             }
             &__icons {
-                margin-left: rem(4);
-                border: var(--border-grey) solid 1px;
+                margin-left: rem(8);
+                border: var(--border) solid 1px;
                 border-radius: rem(3);
                 cursor: pointer;
                 line-height: 1px;
@@ -55,6 +53,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                background: var(--white);
             }
         }
     }

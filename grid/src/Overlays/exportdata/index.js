@@ -385,7 +385,7 @@ const ExportData = (props) => {
             >
                 <div className="ng-popover__chooser">
                     <div className="ng-popover--exports__header">
-                        <strong>Export Data</strong>
+                        <span>Export Data</span>
                     </div>
                     <ColumnSearch
                         columns={columns}

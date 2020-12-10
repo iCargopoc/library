@@ -880,12 +880,12 @@ const Customgrid = (props) => {
                                 />
                             </div>
                         ) : null}
-                        <strong className="ng-header-results__count">
+                        <span className="ng-header-results__count">
                             {totalRecordsCount > 0 &&
                             rows.length === gridData.length
                                 ? totalRecordsCount
                                 : findAllChildRows(rows).length}
-                        </strong>
+                        </span>
                         <span className="ng-header-results__title">
                             {title || "Rows"}
                         </span>

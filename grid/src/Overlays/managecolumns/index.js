@@ -286,7 +286,7 @@ const ColumnReordering = (props) => {
             >
                 <div className="ng-popover__chooser">
                     <div className="ng-popover__header">
-                        <strong>Column Chooser</strong>
+                        <span>Column Chooser</span>
                     </div>
                     <ColumnSearch
                         columns={[...columns]}
@@ -299,7 +299,7 @@ const ColumnReordering = (props) => {
                 <div className="ng-popover__settings">
                     <div className="ng-popover__header">
                         <div>
-                            <strong>Column Settings</strong>
+                            <span>Column Settings</span>
                             {isErrorDisplayed ? (
                                 <strong
                                     className="ng-popover--column__warning"

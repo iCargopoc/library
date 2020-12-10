@@ -4,8 +4,8 @@
 }
 .neo-grid {
     &__thead {
-        background: var(--secondary);
-        border-bottom: 1px solid var(--border-grey);
+        background: var(--light-grey);
+        border-bottom: 1px solid var(--border);
         flex-wrap: wrap;
         &:last-child {
             margin-bottom: rem(50);
@@ -21,12 +21,11 @@
         }
     }
     &__th {
-        padding: 8px 4px;
-        color: #204d6f;
+        padding: rem(4);
+        color: var(--textcolor);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        font-weight: bold;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
         position: relative;
@@ -105,7 +104,7 @@
             }
         }
         .neo-grid__tr {
-            border-bottom: 1px solid var(--border-grey);
+            border-bottom: 1px solid var(--light-grey);
             flex-wrap: wrap;
         }
         .ng-accordion {
@@ -135,8 +134,7 @@
             width: 100%;
             text-align: center;
             border-top: #c4cacf solid 1px;
-            padding-top: 8px;
-            padding-bottom: 8px;
+            padding: rem(8) 0;
             display: flex;
             justify-content: center;
             align-items: center;
