@@ -522,6 +522,8 @@ const Customgrid = (props) => {
                     });
                     if (!childRow) {
                         loadMoreChildData(row);
+                    } else {
+                        reRenderListData(row.index);
                     }
                 }
             }

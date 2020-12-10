@@ -1,6 +1,6 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-param-reassign */
-import React, { useRef, useCallback, useEffect } from "react";
+import React, { useRef, useCallback } from "react";
 import { VariableSizeList as List } from "react-window";
 import PropTypes from "prop-types";
 import ListItem from "./ListItem";
@@ -37,6 +37,7 @@ const RowsList = ({
             const currentSize = sizeMap.current[index];
             if (currentSize !== size) {
                 sizeMap.current = { ...sizeMap.current, [index]: size };
+                reRenderListData(index);
             }
         },
         [rows, additionalColumn, expandedParentRows]
@@ -65,10 +66,6 @@ const RowsList = ({
         },
         [rows, additionalColumn, expandedParentRows]
     );
-
-    useEffect(() => {
-        reRenderListData();
-    }, [rows]);
 
     return (
         <List
