@@ -17,7 +17,7 @@
         border-radius: rem(3);
         padding: rem(1) 0 0 rem(4);
         font-size: rem(12);
-        color: #000;
+        color: var(--textcolor);
         border: var(--border-grey) solid rem(1);
         box-sizing: border-box;
         &::placeholder {

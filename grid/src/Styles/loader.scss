@@ -10,7 +10,7 @@
     &__dots-block {
         width: rem(380);
         padding: rem(20) 0 rem(10);
-        border: #dce1e5 solid rem(1);
+        border: var(--border) solid rem(1);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -18,7 +18,7 @@
     &__dots {
         -webkit-transition: all 6000ms ease;
         transition: all 6000ms ease;
-        background: rgba(96, 116, 136, 0.5);
+        background: var(--light-grey);
         height: rem(8);
         width: rem(8);
         margin: 0 rem(2) 0 0;
@@ -45,12 +45,12 @@
         100% {
             -webkit-transform: translate(0, 0);
             transform: translate(0, 0);
-            background-color: rgba(96, 116, 136, 0.5);
+            background: var(--light-grey);
         }
         10% {
             -webkit-transform: translate(0, rem(-15));
             transform: translate(0, rem(-15));
-            background-color: rgba(96, 116, 136, 1);
+            background: var(--dark-grey);
         }
     }
     @keyframes wave {
@@ -59,12 +59,12 @@
         100% {
             -webkit-transform: translate(0, 0);
             transform: translate(0, 0);
-            background-color: rgba(96, 116, 136, 0.5);
+            background: var(--light-grey);
         }
         10% {
             -webkit-transform: translate(0, rem(-15));
             transform: translate(0, rem(-15));
-            background-color: rgba(96, 116, 136, 1);
+            background: var(--dark-grey);
         }
     }
 }
