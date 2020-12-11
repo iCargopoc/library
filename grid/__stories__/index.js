@@ -5,6 +5,7 @@ import Grid from "../src/index";
 import FlightIcon from "./images/FlightIcon.png";
 import { fetchData } from "./getData";
 import { getValueOfDate } from "./utils/DateUtility";
+import DetailsView from "./cells/DetailsView";
 import FlightEdit from "./cells/FlightEdit";
 import SrEdit from "./cells/SrEdit";
 import SegmentEdit from "./cells/SegmentEdit";
@@ -463,176 +464,14 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                if (rowData.details) {
-                    const {
-                        startTime,
-                        endTime,
-                        status,
-                        additionalStatus,
-                        flightModel,
-                        bodyType,
-                        type,
-                        timeStatus
-                    } = rowData.details;
-                    const timeStatusArray = timeStatus
-                        ? timeStatus.split(" ")
-                        : [];
-                    const timeValue = timeStatusArray.shift();
-                    const timeText = timeStatusArray.join(" ");
-                    if (
-                        isExpandableColumn === null ||
-                        isExpandableColumn === true
-                    ) {
-                        return (
-                            <div className="details-wrap">
-                                <ul>
-                                    <li>
-                                        <DisplayTag
-                                            columnKey="details"
-                                            cellKey="startTime"
-                                        >
-                                            {startTime}
-                                        </DisplayTag>
-                                        -
-                                        <DisplayTag
-                                            columnKey="details"
-                                            cellKey="endTime"
-                                        >
-                                            {endTime}
-                                        </DisplayTag>
-                                    </li>
-                                    <li className="divider">|</li>
-                                    <li>
-                                        <DisplayTag
-                                            columnKey="details"
-                                            cellKey="status"
-                                        >
-                                            <span>{status}</span>
-                                        </DisplayTag>
-                                    </li>
-                                    <li className="divider">|</li>
-                                    <li>
-                                        <DisplayTag
-                                            columnKey="details"
-                                            cellKey="additionalStatus"
-                                        >
-                                            {additionalStatus}
-                                        </DisplayTag>
-                                    </li>
-                                    <li className="divider">|</li>
-                                    <li>
-                                        <DisplayTag
-                                            columnKey="details"
-                                            cellKey="flightModel"
-                                        >
-                                            {flightModel}
-                                        </DisplayTag>
-                                    </li>
-                                    <li className="divider">|</li>
-                                    <li>
-                                        <DisplayTag
-                                            columnKey="details"
-                                            cellKey="bodyType"
-                                        >
-                                            {bodyType}
-                                        </DisplayTag>
-                                    </li>
-                                    <li className="divider">|</li>
-                                    <li>
-                                        <span>
-                                            <DisplayTag
-                                                columnKey="details"
-                                                cellKey="type"
-                                            >
-                                                {type}
-                                            </DisplayTag>
-                                        </span>
-                                    </li>
-                                    <li className="divider">|</li>
-                                    <li>
-                                        <DisplayTag
-                                            columnKey="details"
-                                            cellKey="timeStatus"
-                                        >
-                                            <strong>{timeValue} </strong>
-                                            <span>{timeText}</span>
-                                        </DisplayTag>
-                                    </li>
-                                </ul>
-                            </div>
-                        );
-                    }
-                    return (
-                        <div className="details-wrap">
-                            <ul>
-                                <li>
-                                    <DisplayTag
-                                        columnKey="details"
-                                        cellKey="startTime"
-                                    >
-                                        {startTime}
-                                    </DisplayTag>
-                                    -
-                                    <DisplayTag
-                                        columnKey="details"
-                                        cellKey="endTime"
-                                    >
-                                        {endTime}
-                                    </DisplayTag>
-                                </li>
-                                <li className="divider">|</li>
-                                <li>
-                                    <DisplayTag
-                                        columnKey="details"
-                                        cellKey="status"
-                                    >
-                                        <span>{status}</span>
-                                    </DisplayTag>
-                                </li>
-                                <li className="divider">|</li>
-                                <li>
-                                    <DisplayTag
-                                        columnKey="details"
-                                        cellKey="flightModel"
-                                    >
-                                        {flightModel}
-                                    </DisplayTag>
-                                </li>
-                                <li className="divider">|</li>
-                                <li>
-                                    <DisplayTag
-                                        columnKey="details"
-                                        cellKey="bodyType"
-                                    >
-                                        {bodyType}
-                                    </DisplayTag>
-                                </li>
-                                <li className="divider">|</li>
-                                <li>
-                                    <span>
-                                        <DisplayTag
-                                            columnKey="details"
-                                            cellKey="type"
-                                        >
-                                            {type}
-                                        </DisplayTag>
-                                    </span>
-                                </li>
-                                <li className="divider">|</li>
-                                <li>
-                                    <DisplayTag
-                                        columnKey="details"
-                                        cellKey="timeStatus"
-                                    >
-                                        <strong>{timeValue} </strong>
-                                        <span>{timeText}</span>
-                                    </DisplayTag>
-                                </li>
-                            </ul>
-                        </div>
-                    );
-                }
-                return null;
+                return (
+                    <DetailsView
+                        rowData={rowData}
+                        DisplayTag={DisplayTag}
+                        isDesktop={isDesktop}
+                        isExpandableColumn={isExpandableColumn}
+                    />
+                );
             }
         },
         {
