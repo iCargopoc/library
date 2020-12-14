@@ -1265,15 +1265,15 @@ const GridComponent = (props) => {
 
     useEffect(() => {
         if (treeStructure) {
+            setParentColumn(originalParentColumn);
+            setIndexPageInfo(null);
+            setCursorPageInfo(null);
             if (
                 parentRowExpandable !== false &&
                 isParentExpandedByDefault !== true
             ) {
                 setGridData(parentData);
                 setOriginalGridData(parentData);
-                setIndexPageInfo(null);
-                setCursorPageInfo(null);
-                setParentColumn(originalParentColumn);
             } else {
                 const newPageSize = 5;
                 const newGridData = [...parentData];
@@ -1311,9 +1311,6 @@ const GridComponent = (props) => {
                                     }
                                     setGridData(newGridData);
                                     setOriginalGridData(newGridData);
-                                    setIndexPageInfo(null);
-                                    setCursorPageInfo(null);
-                                    setParentColumn(originalParentColumn);
                                 });
                             }
                         );
