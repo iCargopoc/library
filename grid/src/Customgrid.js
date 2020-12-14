@@ -269,9 +269,9 @@ const Customgrid = (props) => {
                         disableSortBy: true,
                         display: true,
                         isGroupHeader: false,
-                        minWidth: 35,
-                        width: 35,
-                        maxWidth: 35,
+                        minWidth: isParentGrid ? 65 : 35,
+                        width: isParentGrid ? 65 : 35,
+                        maxWidth: isParentGrid ? 65 : 35,
                         Header: (headerSelectProps) => {
                             const {
                                 getToggleAllRowsSelectedProps

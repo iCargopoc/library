@@ -64,7 +64,9 @@ const ListItem = ({
             <div
                 {...row.getRowProps({ style })}
                 data-testid="gridrow"
-                className={`neo-grid__tr ${rowClassName}`}
+                className={`neo-grid__tr ${
+                    isParentGrid ? "neo-grid__child" : ""
+                } ${rowClassName}`}
             >
                 <RowItem
                     row={row}

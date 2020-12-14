@@ -4,6 +4,7 @@
 }
 .neo-grid {
     &__header {
+        font-size: rem(12);
         background-color: var(--light_hover);
         display: flex;
         padding: rem(8) rem(4);
