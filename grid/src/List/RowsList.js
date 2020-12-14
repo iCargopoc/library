@@ -64,7 +64,7 @@ const RowsList = ({
     };
 
     useEffect(() => {
-        reRenderListData(0);
+        reRenderListData();
     });
 
     return (

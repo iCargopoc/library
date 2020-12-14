@@ -443,15 +443,24 @@ const Customgrid = (props) => {
         }
     };
 
-    // Recalculate row height from index 50 less than the last rendered item index in the list
+    // Recalculate row height from index passed as parameter. If not passed 50 less than the last rendered item index in the list
     const reRenderListData = (index) => {
-        if (listRef && listRef.current) {
+        if (listRef) {
             const { current } = listRef;
             if (current) {
-                const indexToReset =
-                    index !== null && index !== undefined && index >= 0
-                        ? index
-                        : 0;
+                let indexToReset = 0;
+                if (index !== null && index !== undefined && index >= 0) {
+                    indexToReset = index;
+                } else {
+                    const { _instanceProps } = current;
+                    if (_instanceProps) {
+                        const expectedItemsCount = overScanCount + 30;
+                        const { lastMeasuredIndex } = _instanceProps;
+                        const difference =
+                            lastMeasuredIndex - expectedItemsCount;
+                        indexToReset = difference >= 0 ? difference : 0;
+                    }
+                }
                 current.resetAfterIndex(indexToReset, true);
             }
         }
