@@ -36,7 +36,6 @@ const ListItem = ({
                 <div className="ng-accordion" style={style}>
                     <ParentItem
                         row={row}
-                        theme={theme}
                         index={index}
                         setSize={setSize}
                         multiRowSelection={multiRowSelection}

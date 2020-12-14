@@ -5,7 +5,6 @@ import { IconExpand, IconCollapse } from "../Utilities/SvgUtilities";
 
 const ParentItem = ({
     row,
-    theme,
     index,
     setSize,
     multiRowSelection,
@@ -21,11 +20,7 @@ const ParentItem = ({
         <Measure
             bounds
             onResize={(contentRect) => {
-                let rowItemHeight = contentRect.bounds.height;
-                if (theme === "portal") {
-                    rowItemHeight += 10;
-                }
-                setSize(index, rowItemHeight);
+                setSize(index, contentRect.bounds.height);
             }}
         >
             {({ measureRef }) => (
@@ -75,7 +70,6 @@ const ParentItem = ({
 
 ParentItem.propTypes = {
     row: PropTypes.object,
-    theme: PropTypes.string,
     index: PropTypes.number,
     setSize: PropTypes.func,
     multiRowSelection: PropTypes.bool,
