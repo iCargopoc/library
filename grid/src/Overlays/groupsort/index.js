@@ -185,25 +185,23 @@ const GroupSort = (props) => {
                         <div className="ng-popover__txt">New Sort</div>
                     </div>
                 </div>
-                <div className="ng-popover--sort__footer">
-                    <div className="ng-popover__btns">
-                        <button
-                            type="button"
-                            data-testid="clearSort"
-                            className="neo-btn neo-btn-link btn btn-secondary"
-                            onClick={clearSortingOptions}
-                        >
-                            Clear All
-                        </button>
-                        <button
-                            type="button"
-                            data-testid="saveSort"
-                            className="neo-btn neo-btn-primary btn btn-secondary"
-                            onClick={applySort}
-                        >
-                            Ok
-                        </button>
-                    </div>
+                <div className="ng-popover__footer">
+                    <button
+                        type="button"
+                        data-testid="clearSort"
+                        className="neo-btn neo-btn-link btn btn-secondary"
+                        onClick={clearSortingOptions}
+                    >
+                        Clear All
+                    </button>
+                    <button
+                        type="button"
+                        data-testid="saveSort"
+                        className="neo-btn neo-btn-primary btn btn-secondary"
+                        onClick={applySort}
+                    >
+                        Ok
+                    </button>
                 </div>
             </ClickAwayListener>
         );

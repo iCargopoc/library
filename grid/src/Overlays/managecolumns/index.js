@@ -394,33 +394,31 @@ const ColumnReordering = (props) => {
                             </div>
                         ) : null}
                     </div>
-                    <div className="ng-popover--column__footer">
-                        <div className="ng-popover--column__btns">
-                            <button
-                                type="button"
-                                className="neo-btn neo-btn-default btn btn-secondary"
-                                data-testid="reset_columnsManage"
-                                onClick={resetColumnUpdate}
-                            >
-                                Reset
-                            </button>
-                            <button
-                                type="button"
-                                className="neo-btn neo-btn-default btn btn-secondary"
-                                data-testid="cancel_columnsManage"
-                                onClick={toggleManageColumnsOverlay}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
-                                className="neo-btn neo-btn-primary btn btn-secondary"
-                                data-testid="save_columnsManage"
-                                onClick={onColumnChooserSave}
-                            >
-                                Save
-                            </button>
-                        </div>
+                    <div className="ng-popover__footer">
+                        <button
+                            type="button"
+                            className="neo-btn neo-btn-default btn btn-secondary"
+                            data-testid="reset_columnsManage"
+                            onClick={resetColumnUpdate}
+                        >
+                            Reset
+                        </button>
+                        <button
+                            type="button"
+                            className="neo-btn neo-btn-default btn btn-secondary"
+                            data-testid="cancel_columnsManage"
+                            onClick={toggleManageColumnsOverlay}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            className="neo-btn neo-btn-primary btn btn-secondary"
+                            data-testid="save_columnsManage"
+                            onClick={onColumnChooserSave}
+                        >
+                            Save
+                        </button>
                     </div>
                 </div>
             </ClickAwayListener>

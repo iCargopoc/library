@@ -492,25 +492,23 @@ const ExportData = (props) => {
                             </span>
                         </div>
                     </div>
-                    <div className="ng-popover--exports__footer">
-                        <div className="ng-popover--exports__btns">
-                            <button
-                                type="button"
-                                data-testid="cancel_button"
-                                className="neo-btn neo-btn-primary btn btn-secondary"
-                                onClick={toggleExportDataOverlay}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
-                                data-testid="export_button"
-                                className="neo-btn neo-btn-default btn btn-secondary"
-                                onClick={exportRowData}
-                            >
-                                Export
-                            </button>
-                        </div>
+                    <div className="ng-popover__footer">
+                        <button
+                            type="button"
+                            data-testid="cancel_button"
+                            className="neo-btn neo-btn-primary btn btn-secondary"
+                            onClick={toggleExportDataOverlay}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            data-testid="export_button"
+                            className="neo-btn neo-btn-default btn btn-secondary"
+                            onClick={exportRowData}
+                        >
+                            Export
+                        </button>
                     </div>
                 </div>
             </ClickAwayListener>
