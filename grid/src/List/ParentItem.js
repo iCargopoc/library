@@ -1,5 +1,6 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
+import Measure from "react-measure";
 import { IconExpand, IconCollapse } from "../Utilities/SvgUtilities";
 
 const ParentItem = ({
@@ -15,64 +16,60 @@ const ParentItem = ({
     isParentRowOpen,
     parentColumn
 }) => {
-    const parentItemRef = useRef();
-
-    useEffect(() => {
-        let parentHeight = 50;
-        const parentElement = parentItemRef.current;
-        if (parentElement) {
-            const parentElementHeight = parentElement.getBoundingClientRect()
-                .height;
-            if (parentElementHeight > parentHeight) {
-                parentHeight = parentElementHeight;
-            }
-        }
-        if (theme === "portal") {
-            parentHeight += 10;
-        }
-        parentHeight = Math.ceil(parentHeight);
-        setSize(index, parentHeight);
-    });
-
     const { original } = row;
     return (
-        <div ref={parentItemRef} className="ng-accordion__container">
-            <div className="ng-accordion__block">
-                {multiRowSelection !== false ? (
-                    <div className="neo-form-check">
-                        <input
-                            type="checkbox"
-                            data-testid="rowSelector-parentRow"
-                            className="neo-checkbox form-check-input"
-                            checked={isParentRowSelected(row)}
-                            onChange={(event) =>
-                                toggleParentRowSelection(event, row)
-                            }
-                        />
+        <Measure
+            bounds
+            onResize={(contentRect) => {
+                let rowItemHeight = contentRect.bounds.height;
+                if (theme === "portal") {
+                    rowItemHeight += 10;
+                }
+                setSize(index, rowItemHeight);
+            }}
+        >
+            {({ measureRef }) => (
+                <div ref={measureRef} className="ng-accordion__container">
+                    <div className="ng-accordion__session">
+                        <div className="ng-accordion__block">
+                            {multiRowSelection !== false ? (
+                                <div className="neo-form-check">
+                                    <input
+                                        type="checkbox"
+                                        data-testid="rowSelector-parentRow"
+                                        className="neo-checkbox form-check-input"
+                                        checked={isParentRowSelected(row)}
+                                        onChange={(event) =>
+                                            toggleParentRowSelection(event, row)
+                                        }
+                                    />
+                                </div>
+                            ) : null}
+                            {parentRowExpandable !== false ? (
+                                <i
+                                    role="presentation"
+                                    className="ng-accordion__icon"
+                                    onClick={() => toggleParentRow(row, index)}
+                                    data-testid="acccordion-expand-collapse"
+                                >
+                                    {isParentRowOpen(row) ? (
+                                        <IconCollapse />
+                                    ) : (
+                                        <IconExpand />
+                                    )}
+                                </i>
+                            ) : null}
+                        </div>
+                        <div
+                            className="ng-accordion__content"
+                            data-testid="parentRowContent"
+                        >
+                            {parentColumn.displayCell(original)}
+                        </div>
                     </div>
-                ) : null}
-                {parentRowExpandable !== false ? (
-                    <i
-                        role="presentation"
-                        className="ng-accordion__icon"
-                        onClick={() => toggleParentRow(row, index)}
-                        data-testid="acccordion-expand-collapse"
-                    >
-                        {isParentRowOpen(row) ? (
-                            <IconCollapse />
-                        ) : (
-                            <IconExpand />
-                        )}
-                    </i>
-                ) : null}
-            </div>
-            <div
-                className="ng-accordion__content"
-                data-testid="parentRowContent"
-            >
-                {parentColumn.displayCell(original)}
-            </div>
-        </div>
+                </div>
+            )}
+        </Measure>
     );
 };
 

@@ -112,6 +112,10 @@
             border-bottom: rem(1) solid var(--border-default);
             &__container {
                 width: 100%;
+                display: table;
+            }
+            &__session {
+                width: 100%;
                 display: flex;
             }
             &__block {
@@ -156,6 +160,7 @@
         }
         .neo-grid__row-container {
             width: 100%;
+            display: table;
         }
         .neo-grid__row-wrap {
             width: 100%;

@@ -1,6 +1,6 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-param-reassign */
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useEffect } from "react";
 import { VariableSizeList as List } from "react-window";
 import PropTypes from "prop-types";
 import ListItem from "./ListItem";
@@ -32,40 +32,40 @@ const RowsList = ({
     reRenderListData
 }) => {
     const sizeMap = useRef({});
-    const setSize = useCallback(
-        (index, size) => {
-            const currentSize = sizeMap.current[index];
-            if (currentSize !== size) {
-                sizeMap.current = { ...sizeMap.current, [index]: size };
-                reRenderListData(index);
-            }
-        },
-        [rows, additionalColumn, expandedParentRows]
-    );
-    const getSize = useCallback(
-        (index) => {
-            const currentRow = rows[index];
-            const isParentRow =
-                currentRow &&
-                currentRow.original &&
-                currentRow.original.isParent === true;
-            if (isParentRowCollapsed(currentRow)) {
-                return 0;
-            }
-            const { current } = sizeMap;
-            const rowSize = current[index];
-            let rowSizeToReturn = null;
-            if (rowSize !== undefined && rowSize !== null) {
-                rowSizeToReturn = rowSize;
-            } else if (isParentRow) {
-                rowSizeToReturn = current[0];
-            } else {
-                rowSizeToReturn = current[1];
-            }
-            return rowSizeToReturn || 50;
-        },
-        [rows, additionalColumn, expandedParentRows]
-    );
+
+    const setSize = (index, size) => {
+        const currentSize = sizeMap.current[index];
+        if (currentSize !== size) {
+            sizeMap.current = { ...sizeMap.current, [index]: size };
+            reRenderListData(index);
+        }
+    };
+
+    const getSize = (index) => {
+        const currentRow = rows[index];
+        const isParentRow =
+            currentRow &&
+            currentRow.original &&
+            currentRow.original.isParent === true;
+        if (isParentRowCollapsed(currentRow)) {
+            return 0;
+        }
+        const { current } = sizeMap;
+        const rowSize = current[index];
+        let rowSizeToReturn = null;
+        if (rowSize !== undefined && rowSize !== null) {
+            rowSizeToReturn = rowSize;
+        } else if (isParentRow) {
+            rowSizeToReturn = current[0];
+        } else {
+            rowSizeToReturn = current[1];
+        }
+        return rowSizeToReturn || 50;
+    };
+
+    useEffect(() => {
+        reRenderListData(0);
+    });
 
     return (
         <List
