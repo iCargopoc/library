@@ -10,9 +10,7 @@ export const updatedActionsHeaderClass = (isDesktop) => {
             );
             const tableHeader = tableHeaders[0];
             if (tableContainer.offsetHeight < tableContainer.scrollHeight) {
-                if (!tableHeader.classList.contains("withScroll")) {
-                    tableHeader.classList.add("withScroll");
-                }
+                tableHeader.classList.add("withScroll");
             } else {
                 tableHeader.classList.remove("withScroll");
             }
