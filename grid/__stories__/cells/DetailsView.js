@@ -31,6 +31,22 @@ const DetailsView = ({
         if (isExpandableColumn === null || isExpandableColumn === true) {
             return (
                 <div className="details-wrap">
+                    <span
+                        className="details-additional-data"
+                        aria-hidden="true"
+                        onClick={updateClick}
+                    >
+                        Click here
+                    </span>
+                    {isClicked ? (
+                        <div>
+                            <p>Display item 1</p>
+                            <p>Display item 2</p>
+                            <p>Display item 3</p>
+                            <p>Display item 4</p>
+                            <p>Display item 5</p>
+                        </div>
+                    ) : null}
                     <ul>
                         {repeatArray.map((arrayItem, index) => {
                             if (index <= travelId % 5) {
@@ -119,7 +135,13 @@ const DetailsView = ({
         }
         return (
             <div className="details-wrap  full-data">
-                <span onClick={updateClick}>Click here</span>
+                <span
+                    className="details-additional-data"
+                    aria-hidden="true"
+                    onClick={updateClick}
+                >
+                    Click here
+                </span>
                 {isClicked ? (
                     <div>
                         <p>Display item 1</p>

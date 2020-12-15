@@ -512,6 +512,11 @@ li {
     margin: 0;
     padding: 0;
 }
+.details-wrap .details-additional-data {
+    color: red;
+    cursor: pointer;
+    text-decoration: underline;
+}
 .details-wrap ul li {
     display: inline;
     padding-right: 5px;
