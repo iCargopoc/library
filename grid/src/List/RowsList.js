@@ -65,6 +65,10 @@ const RowsList = ({
 
     useEffect(() => {
         reRenderListData();
+        return () => {
+            listRef.current = null;
+            infiniteLoaderRef(null);
+        };
     }, []);
 
     return (
