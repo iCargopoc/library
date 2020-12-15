@@ -846,48 +846,6 @@ const GridComponent = (props) => {
     };
     const [parentColumn, setParentColumn] = useState(null);
 
-    const calculateRowHeight = (row, gridColumns) => {
-        // Minimum height for each row
-        let rowHeight = 50;
-        if (gridColumns && gridColumns.length > 0 && row) {
-            // Get properties of a row
-            const { original, isExpanded } = row;
-            // Find the column with maximum width configured, from grid columns list
-            const columnWithMaxWidth = [...gridColumns].sort((a, b) => {
-                return b.width - a.width;
-            })[0];
-            // Get column properties including the user resized column width (totalFlexWidth)
-            const { id, width, totalFlexWidth } = columnWithMaxWidth;
-            // Get row value of that column
-            const rowValue = original[id];
-            if (rowValue) {
-                // Find the length of text of data in that column
-                const textLength = Object.values(rowValue).join(",").length;
-                // This is a formula that was created for the test data used.
-                rowHeight += Math.ceil((80 * textLength) / totalFlexWidth);
-                const widthVariable =
-                    totalFlexWidth > width
-                        ? totalFlexWidth - width
-                        : width - totalFlexWidth;
-                rowHeight += widthVariable / 1000;
-            }
-            // Add logic to increase row height if row is expanded
-            if (
-                isExpanded &&
-                (passColumnToExpand || allProps) &&
-                columnToExpand
-            ) {
-                // Increase height based on the number of inner cells in additional columns
-                rowHeight +=
-                    columnToExpand.innerCells &&
-                    columnToExpand.innerCells.length > 0
-                        ? columnToExpand.innerCells.length * 35
-                        : 35;
-            }
-        }
-        return rowHeight;
-    };
-
     const updateData = (data, originalRow, updatedRow) => {
         return data.map((row) => {
             let newRow = row;
@@ -1468,7 +1426,6 @@ const GridComponent = (props) => {
                             : null
                     }
                     rowActions={allProps || passRowActions ? rowActions : null}
-                    calculateRowHeight={calculateRowHeight}
                     expandableColumn={allProps || expandableColumn}
                     onRowUpdate={onRowUpdate}
                     onRowSelect={onRowSelect}
