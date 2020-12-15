@@ -19,6 +19,10 @@ describe("render Index file ", () => {
             configurable: true,
             value: width
         });
+        Object.defineProperty(window, "innerWidth", {
+            configurable: true,
+            value: width
+        });
     }
 
     const mockDisplayCell = jest.fn(() => {
@@ -150,6 +154,51 @@ describe("render Index file ", () => {
                 );
             },
             isSearchable: true
+        },
+        {
+            Header: "Segment",
+            accessor: "segment",
+            width: 50,
+            disableFilters: false,
+            display: false,
+            innerCells: [
+                {
+                    Header: "From",
+                    accessor: "from",
+                    display: false,
+                    isSortable: false,
+                    isSearchable: false
+                },
+                {
+                    Header: "To",
+                    accessor: "to",
+                    display: false,
+                    isSortable: false,
+                    isSearchable: false
+                }
+            ]
+        },
+        {
+            Header: "Null Column",
+            accessor: "null"
+        },
+        {
+            Header: "Undefined Cell",
+            accessor: "undefined",
+            innerCells: [
+                {
+                    Header: "From",
+                    accessor: "undefined"
+                },
+                {
+                    Header: "To",
+                    accessor: "undefined"
+                }
+            ],
+            sortValue: "undefined",
+            displayCell: () => {
+                return <p>Undefined column with cell</p>;
+            }
         }
     ];
 
@@ -476,7 +525,7 @@ describe("render Index file ", () => {
     });
 
     it("test row options functionalities and column sort with row height calculation, custom panel and refresh button not passed", () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(1440, 900);
         const { getAllByTestId, container, getByTestId } = render(
             <Grid
                 title={mockTitle}
@@ -532,21 +581,36 @@ describe("render Index file ", () => {
         );
         expect(overlayContainer.length).toBe(0);
 
-        // Column Sort
+        // Flight column Sort
         const flightSort = getAllByTestId("column-header-sort")[2];
         act(() => {
             flightSort.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
+        // Id column Sort
         const idSort = getAllByTestId("column-header-sort")[1];
         act(() => {
             idSort.dispatchEvent(new MouseEvent("click", { bubbles: true }));
         });
+        // Null column Sort
+        const nullColumnSort = getAllByTestId("column-header-sort")[6];
+        act(() => {
+            nullColumnSort.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Undefined cell Sort
+        const undefinedCellSort = getAllByTestId("column-header-sort")[7];
+        act(() => {
+            undefinedCellSort.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
     });
 
     it("test grid with 2 rows to trigger the load more page function", () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(1440, 900);
         const { container } = render(
             <Grid
                 title={mockTitle}
@@ -569,7 +633,7 @@ describe("render Index file ", () => {
     });
 
     it("test Grid loading with row selector and all header icons hidden, custom panel and refresh button shown", () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(1440, 900);
         const { container } = render(
             <Grid
                 title={mockTitle}
@@ -642,7 +706,7 @@ describe("render Index file ", () => {
     });
 
     it("test Grid loading without any data", () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(1440, 900);
         const { container, getByTestId } = render(
             <Grid
                 title={mockTitle}
@@ -675,7 +739,7 @@ describe("render Index file ", () => {
     });
 
     it("test Grid loading without columns", () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(1440, 900);
         const { container, getByTestId } = render(
             <Grid
                 title={mockTitle}
@@ -708,7 +772,7 @@ describe("render Index file ", () => {
     });
 
     it("test row selection retained after applying group sort", () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(1440, 900);
         const { container, getByTestId, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
@@ -770,7 +834,7 @@ describe("render Index file ", () => {
     });
 
     it("test display of row specific expand icon and class names", () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(1440, 900);
         const { container, getAllByTestId } = render(
             <Grid
                 gridData={data}
@@ -812,7 +876,7 @@ describe("render Index file ", () => {
     });
 
     it("test grid without passing callback function", () => {
-        mockOffsetSize(600, 600);
+        mockOffsetSize(1440, 900);
         const { container, getByTestId, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
