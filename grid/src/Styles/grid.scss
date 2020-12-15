@@ -52,6 +52,25 @@
         }
         .neo-grid__th-icon {
             margin-left: rem(4);
+            display: flex;
+            flex-direction: column;
+            .ng-icon {
+                height: rem(10);
+                width: rem(10);
+                &.neo-grid__sort-desc {
+                    transform: rotate(-180deg);
+                    &.is-active {
+                        fill: var(--default);
+                    }
+                }
+                &.neo-grid__sort-asc {
+                    position: relative;
+                    top: rem(-3);
+                    &.is-active {
+                        fill: var(--default);
+                    }
+                }
+            }
         }
         &.neo-grid__th-group {
             .neo-grid__th-title {
@@ -73,9 +92,6 @@
             -webkit-user-select: none; /* Chrome, Safari, and Opera */
             -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
         }
-    }
-    &__sort-desc {
-        transform: rotate(-180deg);
     }
     &__tbody {
         .neo-grid__tbody-list {
@@ -202,11 +218,8 @@
                 align-items: center;
             }
             &__kebab {
-                background: var(--icon-primary);
-                width: rem(4);
-                height: rem(4);
-                display: block;
-                margin-bottom: rem(2);
+                width: rem(15);
+                height: rem(15);
             }
             &__popover {
                 display: block;
@@ -253,6 +266,13 @@
             width: auto;
             white-space: nowrap;
             box-shadow: 0 0 rem(8) 0 var(--box-shadow);
+            .ng-icon {
+                height: rem(15);
+                width: rem(15);
+                &.ng-icon--tick {
+                    fill: var(--white);
+                }
+            }
         }
     }
 

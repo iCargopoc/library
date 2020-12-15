@@ -22,4 +22,9 @@
             color: var(--placeholder);
         }
     }
+    .ng-icon {
+        height: rem(12);
+        width: rem(12);
+        fill: var(--icon-primary);
+    }
 }

@@ -395,8 +395,8 @@ const Customgrid = (props) => {
                                                 <IconAngle
                                                     className={
                                                         row.isExpanded
-                                                            ? "ng-action__arrow-up"
-                                                            : "ng-action__arrow-down"
+                                                            ? "ng-icon ng-action__arrow-up"
+                                                            : "ng-icon ng-action__arrow-down"
                                                     }
                                                 />
                                             </i>
@@ -902,7 +902,7 @@ const Customgrid = (props) => {
                                     onClick={toggleColumnFilter}
                                 >
                                     <i>
-                                        <IconFilter />
+                                        <IconFilter className="ng-icon" />
                                     </i>
                                 </div>
                             </div>
@@ -1078,11 +1078,18 @@ const Customgrid = (props) => {
                                                                                         {isSorted ? (
                                                                                             <i className="neo-grid__th-icon">
                                                                                                 <IconSort
-                                                                                                    className={
+                                                                                                    className={`ng-icon neo-grid__sort-desc ${
                                                                                                         isSortedDesc
-                                                                                                            ? "neo-grid__sort-asc"
-                                                                                                            : "neo-grid__sort-desc"
-                                                                                                    }
+                                                                                                            ? "is-active"
+                                                                                                            : ""
+                                                                                                    }`}
+                                                                                                />
+                                                                                                <IconSort
+                                                                                                    className={`ng-icon neo-grid__sort-asc ${
+                                                                                                        isSortedDesc
+                                                                                                            ? ""
+                                                                                                            : "is-active"
+                                                                                                    }`}
                                                                                                 />
                                                                                             </i>
                                                                                         ) : (
