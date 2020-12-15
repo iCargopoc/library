@@ -655,7 +655,7 @@ describe("render Index file ", () => {
 
         // Find load more buttons
         const loadMoreButttons = getAllByTestId("load-more-childdata");
-        expect(loadMoreButttons.length).toBe(2); // Actually there should be 3, but only 2 will be loaded as part of virtualization
+        expect(loadMoreButttons.length).toBe(3);
 
         // Click first parent's load more
         act(() => {
@@ -702,7 +702,7 @@ describe("render Index file ", () => {
 
         // Find load more buttons
         const loadMoreButttons = getAllByTestId("load-more-childdata");
-        expect(loadMoreButttons.length).toBe(2); // Actually there should be 3, but only 2 will be loaded as part of virtualization
+        expect(loadMoreButttons.length).toBe(3);
 
         // Click first parent's load more
         act(() => {
