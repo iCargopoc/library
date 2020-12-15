@@ -65,15 +65,17 @@ const RowsList = ({
 
     useEffect(() => {
         reRenderListData();
-    });
+    }, []);
 
     return (
         <List
             ref={(list) => {
-                if (infiniteLoaderRef) {
-                    infiniteLoaderRef(list);
+                if (list !== null && list !== undefined) {
+                    if (infiniteLoaderRef) {
+                        infiniteLoaderRef(list);
+                    }
+                    listRef.current = list;
                 }
-                listRef.current = list;
             }}
             style={{
                 overflowX: "hidden"
