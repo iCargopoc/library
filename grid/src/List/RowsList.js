@@ -87,39 +87,34 @@ const RowsList = ({
         >
             {useCallback(
                 ({ index, style }) => {
-                    if (rows && rows.length > 0 && index >= 0) {
-                        // if (isItemLoaded(index)) - This check never became false during testing. Hence avoiding it to reach 100% code coverage in JEST test.
-                        const row = rows[index];
-                        prepareRow(row);
-                        return (
-                            <ListItem
-                                row={row}
-                                style={style}
-                                theme={theme}
-                                index={index}
-                                setSize={setSize}
-                                isParentGrid={isParentGrid}
-                                multiRowSelection={multiRowSelection}
-                                parentRowExpandable={parentRowExpandable}
-                                isRowExpandEnabled={isRowExpandEnabled}
-                                isParentRowSelected={isParentRowSelected}
-                                isParentRowCollapsed={isParentRowCollapsed}
-                                toggleParentRowSelection={
-                                    toggleParentRowSelection
-                                }
-                                toggleParentRow={toggleParentRow}
-                                isParentRowOpen={isParentRowOpen}
-                                isLoadMoreChildRowsRequiredForRow={
-                                    isLoadMoreChildRowsRequiredForRow
-                                }
-                                loadMoreChildData={loadMoreChildData}
-                                parentColumn={parentColumn}
-                                additionalColumn={additionalColumn}
-                                getRowInfo={getRowInfo}
-                            />
-                        );
-                    }
-                    return null;
+                    // if (isItemLoaded(index)) - This check never became false during testing. Hence avoiding it to reach 100% code coverage in JEST test.
+                    const row = rows[index];
+                    prepareRow(row);
+                    return (
+                        <ListItem
+                            row={row}
+                            style={style}
+                            theme={theme}
+                            index={index}
+                            setSize={setSize}
+                            isParentGrid={isParentGrid}
+                            multiRowSelection={multiRowSelection}
+                            parentRowExpandable={parentRowExpandable}
+                            isRowExpandEnabled={isRowExpandEnabled}
+                            isParentRowSelected={isParentRowSelected}
+                            isParentRowCollapsed={isParentRowCollapsed}
+                            toggleParentRowSelection={toggleParentRowSelection}
+                            toggleParentRow={toggleParentRow}
+                            isParentRowOpen={isParentRowOpen}
+                            isLoadMoreChildRowsRequiredForRow={
+                                isLoadMoreChildRowsRequiredForRow
+                            }
+                            loadMoreChildData={loadMoreChildData}
+                            parentColumn={parentColumn}
+                            additionalColumn={additionalColumn}
+                            getRowInfo={getRowInfo}
+                        />
+                    );
                 },
                 [rows, additionalColumn, expandedParentRows]
             )}
