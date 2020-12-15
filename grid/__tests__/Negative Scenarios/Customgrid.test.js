@@ -1,11 +1,8 @@
 /* eslint-disable no-undef */
 import React from "react";
-import { render, fireEvent, cleanup, waitFor } from "@testing-library/react";
-import { act } from "react-dom/test-utils";
+import { render, cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-/* eslint-disable no-unused-vars */
-import regeneratorRuntime from "regenerator-runtime";
-import Customgrid from "../src/Customgrid";
+import Customgrid from "../../src/Customgrid";
 
 describe("render Customgrid", () => {
     function mockOffsetSize(width, height, scrollHeight) {
@@ -370,10 +367,9 @@ describe("render Customgrid", () => {
         document.body.appendChild(mockContainer);
     });
     afterEach(cleanup);
-
-    it("should render Customgrid", () => {
+    it("test grid with scroll height less than window height", () => {
         mockOffsetSize(600, 600, 400);
-        const { getAllByTestId, getByTestId, container } = render(
+        const { getAllByTestId } = render(
             <Customgrid
                 isDesktop
                 title={mockTitle}
@@ -396,118 +392,13 @@ describe("render Customgrid", () => {
                 getSortedData={mockGetSortedData}
             />
         );
-
-        // Open group sort
-        const toggleGroupSortOverLay = getByTestId("toggleGroupSortOverLay");
-        act(() => {
-            toggleGroupSortOverLay.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        let sortOverlay = getByTestId("groupsortoverlay");
-
-        // Add new sort
-        const addNewSort = getByTestId("addSort");
-        act(() => {
-            addNewSort.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        const applySortButton = getByTestId("saveSort");
-        act(() => {
-            applySortButton.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        sortOverlay = container.querySelector(
-            "[data-testid='groupsortoverlay']"
-        );
-        expect(sortOverlay).toBeNull();
-
-        // Row Selector
-        const selectAllRowsCheckbox = getByTestId("rowSelector-allRows");
-        act(() => {
-            selectAllRowsCheckbox.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        expect(mockSelectBulkData).toBeCalledTimes(1);
-
-        // Open column manage overlay
-        const toggleManageColumnsOverlay = getByTestId(
-            "toggleManageColumnsOverlay"
-        );
-        act(() => {
-            toggleManageColumnsOverlay.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        // Check if overlay is opened
-        let columnManageOverlay = getAllByTestId("managecolumnoverlay");
-        expect(columnManageOverlay.length).toBeGreaterThan(0);
-
-        // Apply changes
-        const applyColumnManageButton = getByTestId("save_columnsManage");
-        act(() => {
-            applyColumnManageButton.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-
-        // Check if overlay has been closed
-        columnManageOverlay = container.querySelector(
-            "[data-testid='managecolumnoverlay']"
-        );
-        expect(columnManageOverlay).toBeNull();
-
-        // Export Overlay Open-close
-        const toggleExportDataOverlay = getByTestId("toggleExportDataOverlay");
-        act(() => {
-            toggleExportDataOverlay.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        let exportOverlay = getByTestId("exportoverlay");
-        expect(exportOverlay).toBeInTheDocument();
-        act(() => {
-            toggleExportDataOverlay.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        exportOverlay = container.querySelector(
-            "[data-testid='exportoverlay']"
-        );
-        expect(exportOverlay).toBeNull();
-
-        // Row Options
-        // Open actions overlay
-        const rowActionOpenLinks = getAllByTestId("rowActions-open-link");
-        act(() => {
-            rowActionOpenLinks[0].dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        // Check if row actions overlay has been opened
-        let rowActionsOverlay = getByTestId("rowActions-kebab-overlay");
-        expect(rowActionsOverlay).toBeInTheDocument();
-        // Click close button
-        const closeButton = getByTestId("close-rowActions-kebab-overlay");
-        act(() => {
-            closeButton.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        // Check if overlay has been closed
-        rowActionsOverlay = container.querySelector(
-            "[data-testid='rowActions-kebab-overlay']"
-        );
-        expect(rowActionsOverlay).toBeNull();
+        // Test number of rows
+        const rowsCount = getAllByTestId("gridrow").length;
+        expect(rowsCount).toBe(16);
     });
-
-    it("test global search for grid", async () => {
+    it("test grid with scroll height greater than window height", () => {
         mockOffsetSize(600, 600, 800);
-        const { getByTestId } = render(
+        const { getAllByTestId } = render(
             <Customgrid
                 isDesktop
                 title={mockTitle}
@@ -530,14 +421,8 @@ describe("render Customgrid", () => {
                 getSortedData={mockGetSortedData}
             />
         );
-
-        // Global Filter Search
-        const input = getByTestId("globalFilter-textbox");
-        fireEvent.change(input, { target: { value: "1" } });
-        expect(input.value).toBe("1");
-        await waitFor(() => expect(mocksearchColumn).toBeCalled());
-        fireEvent.change(input, { target: { value: "" } });
-        expect(input.value).toBe("");
-        await waitFor(() => expect(mocksearchColumn).toBeCalled());
+        // Test number of rows
+        const rowsCount = getAllByTestId("gridrow").length;
+        expect(rowsCount).toBe(16);
     });
 });

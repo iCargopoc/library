@@ -71,7 +71,7 @@ describe("CellDisplayAndEditTag unit test", () => {
         document.body.appendChild(container);
     });
     afterEach(cleanup);
-    it("should renders component with cellkey and columnkey", () => {
+    it("should render component with cellkey and columnkey", () => {
         const componnet = render(
             <CellDisplayAndEditContext.Provider
                 value={{
@@ -108,6 +108,20 @@ describe("CellDisplayAndEditTag unit test", () => {
                 }}
             >
                 <CellDisplayAndEditTag />
+            </CellDisplayAndEditContext.Provider>,
+            container
+        );
+        expect(componnet).toBeDefined();
+    });
+    it("should return null when invalid cellkey ispassed", () => {
+        const componnet = render(
+            <CellDisplayAndEditContext.Provider
+                value={{
+                    column: columnMockData,
+                    columns: columnsMockData
+                }}
+            >
+                <CellDisplayAndEditTag cellKey="invalid" />
             </CellDisplayAndEditContext.Provider>,
             container
         );
