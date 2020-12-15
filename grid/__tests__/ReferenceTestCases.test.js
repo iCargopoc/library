@@ -271,10 +271,6 @@ describe("Reference test cases", () => {
             remarks: "Labore irure."
         });
     }
-
-    // Return row actions to be displayed in the Kebab menu of Grid
-    const mockRowActions = jest.fn();
-
     const mockOnRowUpdate = jest.fn();
     const mockOnRowSelect = jest.fn();
     const mockLoadMoreData = jest.fn();
@@ -370,45 +366,5 @@ describe("Reference test cases", () => {
             );
         });
         expect(mockOnRowSelect).toBeCalled();
-    });
-
-    it("test row actions", () => {
-        const { container, getAllByTestId, getByTestId } = render(
-            <Grid
-                gridData={data}
-                idAttribute="travelId"
-                paginationType="index"
-                pageInfo={pageInfo}
-                columns={gridColumns}
-                rowActions={mockRowActions}
-                onRowUpdate={mockOnRowUpdate}
-                onRowSelect={mockOnRowSelect}
-            />
-        );
-        const gridContainer = container;
-        expect(gridContainer).toBeInTheDocument();
-
-        // Open actions overlay
-        const rowActionOpenLinks = getAllByTestId("rowActions-open-link");
-        act(() => {
-            rowActionOpenLinks[0].dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        // Check if row actions overlay has been opened
-        const rowActionsOverlay = getByTestId("rowActions-kebab-overlay");
-        expect(rowActionsOverlay).toBeInTheDocument();
-        // Click close button
-        const closeButton = getByTestId("close-rowActions-kebab-overlay");
-        act(() => {
-            closeButton.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        // Check if overlay has been closed
-        const overlayContainer = container.getElementsByClassName(
-            "row-options-overlay"
-        );
-        expect(overlayContainer.length).toBe(0);
     });
 });
