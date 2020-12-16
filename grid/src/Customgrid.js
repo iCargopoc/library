@@ -492,7 +492,7 @@ const Customgrid = (props) => {
 
     const toggleParentRow = (row) => {
         if (parentIdAttribute && row) {
-            const { original } = row;
+            const { original, index } = row;
             const rowParentIdAttribute = original[parentIdAttribute];
             if (
                 rowParentIdAttribute !== null &&
@@ -526,7 +526,7 @@ const Customgrid = (props) => {
                 if (!childRow) {
                     loadMoreChildData(row);
                 } else {
-                    reRenderListData(row.index);
+                    reRenderListData(index);
                 }
             }
         }
@@ -644,6 +644,12 @@ const Customgrid = (props) => {
             });
         }
     }, [rowsToSelect, rowsToDeselect, gridData, groupSortOptions]);
+
+    useEffect(() => {
+        if (!isFirstRendering && isParentGrid && fixedRowHeight === true) {
+            reRenderListData();
+        }
+    }, [gridData]);
 
     useEffect(() => {
         if (parentRowsToExpand && parentRowsToExpand.length > 0) {
