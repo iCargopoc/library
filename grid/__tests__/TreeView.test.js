@@ -940,4 +940,47 @@ describe("render Index file ", () => {
         accordionIcons = getAllByTestId("acccordion-expand-collapse");
         expect(accordionIcons.length).toBe(3);
     });
+
+    it("test grid with parent data and child data and parentRowsToExpand - parent row selection without idAttribute", () => {
+        mockOffsetSize(600, 200);
+        const { container, getAllByTestId } = render(
+            <Grid
+                title={mockTitle}
+                gridHeight={mockGridHeight}
+                gridWidth={mockGridWidth}
+                gridData={parentDataWithAllChildData}
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                parentColumn={parentColumn}
+                parentIdAttribute={parentIdAttribute}
+                parentRowsToExpand={[0]}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                rowsToDeselect={mockRowsToDeselect}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Select first parent
+        const firstParentRowSelector = getAllByTestId(
+            "rowSelector-parentRow"
+        )[0];
+        act(() => {
+            firstParentRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Selected checkboxes count should be 0
+        const selectedCheckboxes = gridContainer.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+        expect(selectedCheckboxes.length).toBe(0);
+    });
 });

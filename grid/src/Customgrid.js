@@ -718,46 +718,42 @@ const Customgrid = (props) => {
         let returnValue = false;
         if (row && parentIdAttribute && idAttribute) {
             const { original } = row;
-            const { isParent } = original;
-            if (isParent === true) {
-                const rowParentIdAttribute = original[parentIdAttribute];
-                if (
-                    rowParentIdAttribute !== null &&
-                    rowParentIdAttribute !== undefined
-                ) {
-                    let isAtleastOneChildUnselected = false;
-                    let isChildRowsAvailable = false;
-                    preFilteredRows.forEach((gridRow) => {
-                        if (gridRow) {
-                            const gridRowOriginal = gridRow.original;
+            const rowParentIdAttribute = original[parentIdAttribute];
+            if (
+                rowParentIdAttribute !== null &&
+                rowParentIdAttribute !== undefined
+            ) {
+                let isAtleastOneChildUnselected = false;
+                let isChildRowsAvailable = false;
+                preFilteredRows.forEach((gridRow) => {
+                    if (gridRow) {
+                        const gridRowOriginal = gridRow.original;
+                        if (
+                            gridRowOriginal &&
+                            gridRowOriginal.isParent !== true
+                        ) {
+                            const parentIdOfChildRow =
+                                gridRowOriginal[parentIdAttribute];
+                            const rowIdAttribute = gridRowOriginal[idAttribute];
                             if (
-                                gridRowOriginal &&
-                                gridRowOriginal.isParent !== true
+                                parentIdOfChildRow !== null &&
+                                parentIdOfChildRow !== undefined &&
+                                rowParentIdAttribute === parentIdOfChildRow
                             ) {
-                                const parentIdOfChildRow =
-                                    gridRowOriginal[parentIdAttribute];
-                                const rowIdAttribute =
-                                    gridRowOriginal[idAttribute];
+                                isChildRowsAvailable = true;
                                 if (
-                                    parentIdOfChildRow !== null &&
-                                    parentIdOfChildRow !== undefined &&
-                                    rowParentIdAttribute === parentIdOfChildRow
+                                    !userSelectedRowIdentifiers.includes(
+                                        rowIdAttribute
+                                    )
                                 ) {
-                                    isChildRowsAvailable = true;
-                                    if (
-                                        !userSelectedRowIdentifiers.includes(
-                                            rowIdAttribute
-                                        )
-                                    ) {
-                                        isAtleastOneChildUnselected = true;
-                                    }
+                                    isAtleastOneChildUnselected = true;
                                 }
                             }
                         }
-                    });
-                    returnValue =
-                        isChildRowsAvailable && !isAtleastOneChildUnselected;
-                }
+                    }
+                });
+                returnValue =
+                    isChildRowsAvailable && !isAtleastOneChildUnselected;
             }
         }
         return returnValue;
