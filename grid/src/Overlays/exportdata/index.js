@@ -384,7 +384,7 @@ const ExportData = (props) => {
                 data-testid="exportoverlay"
             >
                 <div className="ng-popover__chooser">
-                    <div className="ng-popover--exports__header">
+                    <div className="ng-popover__header">
                         <span>Export Data</span>
                     </div>
                     <ColumnSearch
@@ -396,7 +396,7 @@ const ExportData = (props) => {
                     />
                 </div>
                 <div className="ng-popover__settings">
-                    <div className="ng-popover--exports__header">
+                    <div className="ng-popover__header">
                         <div className="ng-popover--exports__close">
                             <i
                                 aria-hidden="true"

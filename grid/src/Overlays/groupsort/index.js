@@ -145,7 +145,7 @@ const GroupSort = (props) => {
                 data-testid="groupsortoverlay"
             >
                 <div className="ng-popover__header">
-                    <span>Sort</span>
+                    <span>Group Sort</span>
                     <div className="ng-popover__close">
                         <i aria-hidden="true" onClick={toggleGroupSortOverLay}>
                             <IconCancel className="ng-icon" />
