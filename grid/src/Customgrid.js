@@ -735,14 +735,30 @@ const Customgrid = (props) => {
                         ) {
                             const parentIdOfChildRow =
                                 gridRowOriginal[parentIdAttribute];
-                            const rowIdAttribute = gridRowOriginal[idAttribute];
                             if (
                                 parentIdOfChildRow !== null &&
                                 parentIdOfChildRow !== undefined &&
                                 rowParentIdAttribute === parentIdOfChildRow
                             ) {
                                 isChildRowsAvailable = true;
+                                const rowIdAttribute =
+                                    gridRowOriginal[idAttribute];
+                                let isRowSelectable = true;
                                 if (
+                                    getRowInfo &&
+                                    typeof getRowInfo === "function"
+                                ) {
+                                    const rowInfo = getRowInfo(gridRowOriginal);
+                                    if (
+                                        rowInfo &&
+                                        rowInfo.isRowSelectable === false
+                                    ) {
+                                        isRowSelectable = false;
+                                    }
+                                }
+
+                                if (
+                                    isRowSelectable &&
                                     !userSelectedRowIdentifiers.includes(
                                         rowIdAttribute
                                     )
