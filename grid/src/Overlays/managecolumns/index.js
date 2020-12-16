@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import update from "immutability-helper";
 import ColumnSearch from "../common/columnsSearch";
 import ColumnsList from "./columnsList";
-import { IconClose } from "../../Utilities/SvgUtilities";
+import { IconCancel } from "../../Utilities/SvgUtilities";
 
 const ColumnReordering = (props) => {
     const {
@@ -319,7 +319,7 @@ const ColumnReordering = (props) => {
                             onClick={toggleManageColumnsOverlay}
                         >
                             <i>
-                                <IconClose />
+                                <IconCancel className="ng-icon" />
                             </i>
                         </div>
                     </div>

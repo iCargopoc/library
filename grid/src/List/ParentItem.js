@@ -48,9 +48,9 @@ const ParentItem = ({
                                     data-testid="acccordion-expand-collapse"
                                 >
                                     {isParentRowOpen(row) ? (
-                                        <IconCollapse />
+                                        <IconCollapse className="ng-icon" />
                                     ) : (
-                                        <IconExpand />
+                                        <IconExpand className="ng-icon" />
                                     )}
                                 </i>
                             ) : null}

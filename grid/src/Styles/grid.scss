@@ -159,6 +159,9 @@
                 justify-content: center;
                 border-radius: 50%;
                 cursor: pointer;
+                .ng-icon {
+                    fill: var(--primary);
+                }
             }
             &__content {
                 width: 100%;
@@ -266,12 +269,8 @@
             width: auto;
             white-space: nowrap;
             box-shadow: 0 0 rem(8) 0 var(--box-shadow);
-            .ng-icon {
-                height: rem(15);
-                width: rem(15);
-                &.ng-icon--tick {
-                    fill: var(--white);
-                }
+            .ng-icon--tick {
+                fill: var(--white);
             }
         }
     }

@@ -111,6 +111,10 @@
             width: rem(498);
             &__items {
                 display: flex;
+                .ng-icon {
+                    height: rem(15);
+                    width: rem(15);
+                }
             }
             &__section {
                 margin: 0 0 rem(16) rem(40);

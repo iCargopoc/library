@@ -7,7 +7,7 @@ import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
 import SortingList from "./sortingList";
 import { convertToIndividualColumns } from "../../Utilities/GridUtilities";
-import { IconClose } from "../../Utilities/SvgUtilities";
+import { IconCancel } from "../../Utilities/SvgUtilities";
 
 const GroupSort = (props) => {
     const {
@@ -148,7 +148,7 @@ const GroupSort = (props) => {
                     <span>Sort</span>
                     <div className="ng-popover__close">
                         <i aria-hidden="true" onClick={toggleGroupSortOverLay}>
-                            <IconClose />
+                            <IconCancel className="ng-icon" />
                         </i>
                     </div>
                 </div>

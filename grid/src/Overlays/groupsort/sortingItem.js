@@ -201,7 +201,7 @@ const SortItem = ({
                     onClick={copySort}
                 >
                     <i>
-                        <SortCopy />
+                        <SortCopy className="ng-icon" />
                     </i>
                 </div>
             </div>
@@ -213,7 +213,7 @@ const SortItem = ({
                     onClick={deleteSort}
                 >
                     <i>
-                        <SortDelete />
+                        <SortDelete className="ng-icon" />
                     </i>
                 </div>
             </div>

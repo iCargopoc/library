@@ -38,10 +38,17 @@
                     height: 100%;
                     display: flex;
                     align-items: center;
+                    .ng-icon {
+                        height: rem(15);
+                        width: rem(15);
+                    }
                 }
             }
             &__items {
                 position: relative;
+                .ng-icon--refresh {
+                    zoom: 1.4;
+                }
             }
             &__icons {
                 margin-left: rem(8);

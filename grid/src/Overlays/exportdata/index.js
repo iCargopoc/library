@@ -9,7 +9,7 @@ import ColumnSearch from "../common/columnsSearch";
 import {
     IconCsv,
     IconExcel,
-    IconClose,
+    IconCancel,
     IconPdf
 } from "../../Utilities/SvgUtilities";
 import { convertToIndividualColumns } from "../../Utilities/GridUtilities";
@@ -402,7 +402,7 @@ const ExportData = (props) => {
                                 aria-hidden="true"
                                 onClick={toggleExportDataOverlay}
                             >
-                                <IconClose />
+                                <IconCancel className="ng-icon" />
                             </i>
                         </div>
                     </div>

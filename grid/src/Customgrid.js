@@ -973,7 +973,7 @@ const Customgrid = (props) => {
                                     onClick={onGridRefresh}
                                 >
                                     <i>
-                                        <IconRefresh />
+                                        <IconRefresh className="ng-icon ng-icon--refresh" />
                                     </i>
                                 </div>
                             </div>
