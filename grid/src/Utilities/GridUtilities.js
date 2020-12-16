@@ -39,11 +39,9 @@ export const findSelectedRows = (rows, selectedRowIds, getRowInfo) => {
                     });
                     if (selectedRow) {
                         const { original } = selectedRow;
-                        if (original) {
-                            const { isParent } = original;
-                            if (isParent !== true) {
-                                rowsSelectedByUser.push(original);
-                            }
+                        const { isParent } = original;
+                        if (isParent !== true) {
+                            rowsSelectedByUser.push(original);
                         }
                     }
                 }
@@ -162,10 +160,8 @@ export const findAllChildRows = (allRows) => {
             let returnValue = false;
             if (row) {
                 const { original } = row;
-                if (original) {
-                    const { isParent } = original;
-                    returnValue = isParent !== true;
-                }
+                const { isParent } = original;
+                returnValue = isParent !== true;
             }
             return returnValue;
         });

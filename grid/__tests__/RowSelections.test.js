@@ -398,7 +398,7 @@ describe("render Index file ", () => {
         expect(selectedCheckboxes.length).toBe(3);
     });
 
-    it("test single row selections for row with invalid id attribute", () => {
+    it("test single row selections for row where id attribute value is null", () => {
         mockOffsetSize(600, 600);
         const { container, getAllByTestId } = render(
             <Grid
