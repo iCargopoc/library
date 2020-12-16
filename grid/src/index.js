@@ -9,7 +9,7 @@ import Customgrid from "./Customgrid";
 // Old method - eslint-disable-next-line import/no-unresolved
 // import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 // lazy styles inclusion via styleloader
-import __cmpStyles from "./Styles/main.scss";
+// import __cmpStyles from "./Styles/main.scss";
 
 const processedData = (gridData, parentIdAttribute) => {
     if (gridData && gridData.length > 0) {
@@ -54,16 +54,16 @@ const processedData = (gridData, parentIdAttribute) => {
 const getProcessedData = memoize(processedData);
 
 const Grid = (props) => {
-    useEffect(() => {
-        if (__cmpStyles.use) {
-            __cmpStyles.use();
-        }
-        return () => {
-            if (__cmpStyles.unuse) {
-                __cmpStyles.unuse();
-            }
-        };
-    }, []);
+    // useEffect(() => {
+    //     if (__cmpStyles.use) {
+    //         __cmpStyles.use();
+    //     }
+    //     return () => {
+    //         if (__cmpStyles.unuse) {
+    //             __cmpStyles.unuse();
+    //         }
+    //     };
+    // }, []);
 
     const {
         className,

@@ -895,7 +895,7 @@ describe("render Index file ", () => {
         expect(selectedRowCheckboxes.length).toBe(1);
     });
 
-    it("test display of row specific expand icon and class names", () => {
+    it("test display of row specific expand icon and class names for fixedSizeGrid Grid", () => {
         mockOffsetSize(1440, 900);
         const { container, getAllByTestId } = render(
             <Grid
@@ -909,6 +909,7 @@ describe("render Index file ", () => {
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 getRowInfo={getRowInfo}
+                fixedSizeGrid
             />
         );
         const gridContainer = container;
