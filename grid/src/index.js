@@ -101,7 +101,7 @@ const Grid = (props) => {
         onGridRefresh,
         rowsToSelect,
         rowsToDeselect,
-        fixedSizeGrid,
+        fixedRowHeight,
         fileName
     } = props;
 
@@ -514,7 +514,7 @@ const Grid = (props) => {
                     onGridRefresh={onGridRefresh}
                     rowsToSelect={rowsToSelect}
                     rowsToDeselect={rowsToDeselect}
-                    fixedSizeGrid={fixedSizeGrid}
+                    fixedRowHeight={fixedRowHeight}
                 />
                 {isNextPageLoading ? (
                     <div className="ng-loader">
@@ -567,7 +567,7 @@ Grid.propTypes = {
     onGridRefresh: PropTypes.func,
     rowsToSelect: PropTypes.array,
     rowsToDeselect: PropTypes.array,
-    fixedSizeGrid: PropTypes.bool,
+    fixedRowHeight: PropTypes.bool,
     fileName: PropTypes.string
 };
 

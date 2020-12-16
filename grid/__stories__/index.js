@@ -18,7 +18,7 @@ const GridComponent = (props) => {
         allProps,
         className,
         title,
-        fixedSizeGrid,
+        fixedRowHeight,
         gridHeight,
         gridWidth,
         rowsToOverscan,
@@ -338,7 +338,7 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                if (fixedSizeGrid !== true) {
+                if (fixedRowHeight !== true) {
                     return (
                         <FlightEdit
                             rowData={rowData}
@@ -403,7 +403,7 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                if (fixedSizeGrid !== true) {
+                if (fixedRowHeight !== true) {
                     return (
                         <SegmentEdit
                             airportCodeList={airportCodeList}
@@ -477,7 +477,7 @@ const GridComponent = (props) => {
                         DisplayTag={DisplayTag}
                         isDesktop={isDesktop}
                         isExpandableColumn={isExpandableColumn}
-                        fixedSizeGrid={fixedSizeGrid}
+                        fixedRowHeight={fixedRowHeight}
                     />
                 );
             }
@@ -714,7 +714,7 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                if (fixedSizeGrid !== true) {
+                if (fixedRowHeight !== true) {
                     return (
                         <SrEdit
                             rowData={rowData}
@@ -1083,7 +1083,7 @@ const GridComponent = (props) => {
         return (
             <RowAction
                 rowData={rowData}
-                fixedSizeGrid={fixedSizeGrid}
+                fixedRowHeight={fixedRowHeight}
                 closeOverlay={closeOverlay}
                 bindRowEditOverlay={bindRowEditOverlay}
                 bindRowDeleteOverlay={bindRowDeleteOverlay}
@@ -1423,7 +1423,7 @@ const GridComponent = (props) => {
                     }
                     columns={columns}
                     columnToExpand={
-                        (allProps && fixedSizeGrid !== true) ||
+                        (allProps && fixedRowHeight !== true) ||
                         passColumnToExpand
                             ? columnToExpand
                             : null
@@ -1442,7 +1442,8 @@ const GridComponent = (props) => {
                     }
                     rowActions={allProps || passRowActions ? rowActions : null}
                     expandableColumn={
-                        (allProps && fixedSizeGrid !== true) || expandableColumn
+                        (allProps && fixedRowHeight !== true) ||
+                        expandableColumn
                     }
                     onRowUpdate={onRowUpdate}
                     onRowSelect={onRowSelect}
@@ -1453,7 +1454,7 @@ const GridComponent = (props) => {
                     CustomPanel={CustomPanel}
                     rowsToSelect={rowsToSelect}
                     rowsToDeselect={rowsToDeselect}
-                    fixedSizeGrid={fixedSizeGrid}
+                    fixedRowHeight={fixedRowHeight}
                     multiRowSelection={multiRowSelection}
                     gridHeader={allProps || gridHeader}
                     rowSelector={allProps || rowSelector}

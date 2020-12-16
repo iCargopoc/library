@@ -621,7 +621,7 @@ describe("render Index file ", () => {
         expect(mockLoadMoreData).toHaveBeenCalled();
     });
 
-    it("test grid with parent data and child data and parentRowExpandable as false - load more - index pagination for fixedSizeGrid Grid", () => {
+    it("test grid with parent data and child data and parentRowExpandable as false - load more - index pagination for fixedRowHeight Grid", () => {
         mockOffsetSize(600, 900);
         const { container, getAllByTestId } = render(
             <Grid
@@ -641,7 +641,7 @@ describe("render Index file ", () => {
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 rowsToDeselect={mockRowsToDeselect}
-                fixedSizeGrid
+                fixedRowHeight
             />
         );
         const gridContainer = container;

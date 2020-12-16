@@ -385,7 +385,7 @@ const GridComponent = () => {
 
     // If all rows of Grid requires same height, Grid will measure height of only first row.
     // And then uses this row height for all other rows.
-    const fixedSizeGrid = true;
+    const fixedRowHeight = true;
 
     // Pass this function as a prop to Grid, then Grid will callback this function if user has selected group sorting
     const serverSideSorting = (groupSortOptions) => {
@@ -441,7 +441,7 @@ const GridComponent = () => {
             CustomPanel={CustomPanel}
             rowsToSelect={rowsToSelect}
             rowsToDeselect={rowsToDeselect}
-            fixedSizeGrid={fixedSizeGrid}
+            fixedRowHeight={fixedRowHeight}
             multiRowSelection={multiRowSelection}
             gridHeader={gridHeader}
             rowSelector={rowSelector}
@@ -551,7 +551,7 @@ const GridComponent = () => {
 #### With fixed row size
 
 <Story name="With fixed row size">
-    <GridComponent fixedSizeGrid gridHeight="80vh" />;
+    <GridComponent fixedRowHeight gridHeight="80vh" />;
 </Story>
 
 ```jsx
@@ -562,7 +562,7 @@ const GridComponent = () => {
     gridHeight="80vh"
     gridData={gridData}
     columns={columns}
-    fixedSizeGrid={fixedSizeGrid}
+    fixedRowHeight={fixedRowHeight}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
 />
@@ -1182,7 +1182,7 @@ const fileName="Custom filename"
         allProps
         className="icargoCustomClass"
         title="AWBs"
-        fixedSizeGrid
+        fixedRowHeight
         gridHeight="80vh"
         gridWidth="100%"
         rowsToOverscan={20}
@@ -1199,7 +1199,7 @@ const fileName="Custom filename"
 <Grid
     className={className}
     title={title}
-    fixedSizeGrid={fixedSizeGrid}
+    fixedRowHeight={fixedRowHeight}
     gridHeight={gridHeight}
     gridWidth={gridWidth}
     gridData={gridData}

@@ -4,7 +4,7 @@ import DeleteIcon from "../images/DeleteIcon.png";
 
 const RowAction = ({
     rowData,
-    fixedSizeGrid,
+    fixedRowHeight,
     closeOverlay,
     bindRowEditOverlay,
     bindRowDeleteOverlay
@@ -20,7 +20,7 @@ const RowAction = ({
     const { travelId } = rowData;
     return (
         <ul>
-            {fixedSizeGrid !== true ? (
+            {fixedRowHeight !== true ? (
                 <li role="presentation" onClick={openEditOverlay}>
                     <span>
                         <i>

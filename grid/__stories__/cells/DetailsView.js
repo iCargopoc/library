@@ -5,7 +5,7 @@ const DetailsView = ({
     DisplayTag,
     isDesktop,
     isExpandableColumn,
-    fixedSizeGrid
+    fixedRowHeight
 }) => {
     const [isClicked, setIsClicked] = useState(false);
 
@@ -25,17 +25,17 @@ const DetailsView = ({
             timeStatus
         } = rowData.details;
         const { travelId } = rowData;
-        const repeatArray = Array.from(Array(fixedSizeGrid ? 1 : 5).keys());
+        const repeatArray = Array.from(Array(fixedRowHeight ? 1 : 5).keys());
         const timeStatusArray = timeStatus ? timeStatus.split(" ") : [];
         const timeValue = timeStatusArray.shift();
         const timeText = timeStatusArray.join(" ");
         if (
-            fixedSizeGrid !== true &&
+            fixedRowHeight !== true &&
             (isExpandableColumn === null || isExpandableColumn === true)
         ) {
             return (
                 <div className="details-wrap">
-                    {fixedSizeGrid !== true ? (
+                    {fixedRowHeight !== true ? (
                         <span
                             className="details-additional-data"
                             aria-hidden="true"
@@ -141,7 +141,7 @@ const DetailsView = ({
         }
         return (
             <div className="details-wrap  full-data">
-                {fixedSizeGrid !== true ? (
+                {fixedRowHeight !== true ? (
                     <span
                         className="details-additional-data"
                         aria-hidden="true"

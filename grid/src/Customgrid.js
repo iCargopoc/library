@@ -91,7 +91,7 @@ const Customgrid = (props) => {
         onGridRefresh,
         rowsToSelect,
         rowsToDeselect,
-        fixedSizeGrid
+        fixedRowHeight
     } = props;
 
     // Over scan count for react-window list
@@ -1196,8 +1196,8 @@ const Customgrid = (props) => {
                                                         reRenderListData={
                                                             reRenderListData
                                                         }
-                                                        fixedSizeGrid={
-                                                            fixedSizeGrid
+                                                        fixedRowHeight={
+                                                            fixedRowHeight
                                                         }
                                                     />
                                                 )}
@@ -1252,7 +1252,7 @@ const Customgrid = (props) => {
                                                 reRenderListData={
                                                     reRenderListData
                                                 }
-                                                fixedSizeGrid={fixedSizeGrid}
+                                                fixedRowHeight={fixedRowHeight}
                                             />
                                         )}
                                     </div>
@@ -1318,7 +1318,7 @@ Customgrid.propTypes = {
     onGridRefresh: PropTypes.func,
     rowsToSelect: PropTypes.array,
     rowsToDeselect: PropTypes.array,
-    fixedSizeGrid: PropTypes.bool
+    fixedRowHeight: PropTypes.bool
 };
 
 export default Customgrid;

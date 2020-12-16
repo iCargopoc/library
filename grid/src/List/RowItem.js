@@ -13,16 +13,16 @@ const RowItem = ({
     lastPage,
     loadMoreChildData,
     isParentGrid,
-    fixedSizeGrid
+    fixedRowHeight
 }) => {
     return (
         <Measure
             bounds
             onResize={(contentRect) => {
                 if (
-                    fixedSizeGrid !== true || // Calcualte if not fixedSizeGrid
-                    (!isParentGrid && index === 0) || // calculate if fixedSizeGrid and index is 0 of normal Grid
-                    (isParentGrid && index === 1) // calculate if fixedSizeGrid and index is 1 of parent Grid
+                    fixedRowHeight !== true || // Calcualte if not fixedRowHeight
+                    (!isParentGrid && index === 0) || // calculate if fixedRowHeight and index is 0 of normal Grid
+                    (isParentGrid && index === 1) // calculate if fixedRowHeight and index is 1 of parent Grid
                 ) {
                     let rowItemHeight = contentRect.bounds.height;
                     if (theme === "portal") {
@@ -99,7 +99,7 @@ RowItem.propTypes = {
     lastPage: PropTypes.bool,
     loadMoreChildData: PropTypes.func,
     isParentGrid: PropTypes.bool,
-    fixedSizeGrid: PropTypes.bool
+    fixedRowHeight: PropTypes.bool
 };
 
 export default RowItem;

@@ -23,7 +23,7 @@ const ListItem = ({
     parentColumn,
     additionalColumn,
     getRowInfo,
-    fixedSizeGrid
+    fixedRowHeight
 }) => {
     if (isParentRowCollapsed(row)) {
         return null;
@@ -80,7 +80,7 @@ const ListItem = ({
                 lastPage={lastPage}
                 loadMoreChildData={loadMoreChildData}
                 isParentGrid={isParentGrid}
-                fixedSizeGrid={fixedSizeGrid}
+                fixedRowHeight={fixedRowHeight}
             />
         </div>
     );
@@ -106,7 +106,7 @@ ListItem.propTypes = {
     parentColumn: PropTypes.object,
     additionalColumn: PropTypes.object,
     getRowInfo: PropTypes.func,
-    fixedSizeGrid: PropTypes.bool
+    fixedRowHeight: PropTypes.bool
 };
 
 export default ListItem;
