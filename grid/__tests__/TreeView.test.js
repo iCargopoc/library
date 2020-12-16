@@ -630,7 +630,7 @@ describe("render Index file ", () => {
 
     it("test grid with parent data and child data and parentRowExpandable as false - load more - index pagination for fixedRowHeight Grid", () => {
         mockOffsetSize(600, 900);
-        const { container, getAllByTestId } = render(
+        const { container, getAllByTestId, getByTestId } = render(
             <Grid
                 title={mockTitle}
                 gridHeight={mockGridHeight}
@@ -655,6 +655,31 @@ describe("render Index file ", () => {
 
         // Check if Grid id rendered.
         expect(gridContainer).toBeInTheDocument();
+
+        // Open Group sort overlay
+        const groupSortIcon = getAllByTestId("toggleGroupSortOverLay");
+        expect(groupSortIcon.length).toBe(1);
+        act(() => {
+            groupSortIcon[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Add sort option
+        const addSortLink = getByTestId("addSort");
+        act(() => {
+            addSortLink.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Apply sort options
+        const applySortButton = getByTestId("saveSort");
+        act(() => {
+            applySortButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
 
         // Check if expand/collapse icons are not present
         const expandCollapseIcons = document.querySelectorAll(

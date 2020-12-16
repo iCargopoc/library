@@ -649,7 +649,7 @@ const Customgrid = (props) => {
         if (!isFirstRendering && isParentGrid && fixedRowHeight === true) {
             reRenderListData();
         }
-    }, [gridData]);
+    }, [gridData, groupSortOptions]);
 
     useEffect(() => {
         if (parentRowsToExpand && parentRowsToExpand.length > 0) {
