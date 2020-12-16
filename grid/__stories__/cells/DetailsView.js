@@ -4,7 +4,8 @@ const DetailsView = ({
     rowData,
     DisplayTag,
     isDesktop,
-    isExpandableColumn
+    isExpandableColumn,
+    fixedSizeGrid
 }) => {
     const [isClicked, setIsClicked] = useState(false);
 
@@ -24,20 +25,25 @@ const DetailsView = ({
             timeStatus
         } = rowData.details;
         const { travelId } = rowData;
-        const repeatArray = Array.from(Array(5).keys());
+        const repeatArray = Array.from(Array(fixedSizeGrid ? 1 : 5).keys());
         const timeStatusArray = timeStatus ? timeStatus.split(" ") : [];
         const timeValue = timeStatusArray.shift();
         const timeText = timeStatusArray.join(" ");
-        if (isExpandableColumn === null || isExpandableColumn === true) {
+        if (
+            fixedSizeGrid !== true &&
+            (isExpandableColumn === null || isExpandableColumn === true)
+        ) {
             return (
                 <div className="details-wrap">
-                    <span
-                        className="details-additional-data"
-                        aria-hidden="true"
-                        onClick={updateClick}
-                    >
-                        Click here
-                    </span>
+                    {fixedSizeGrid !== true ? (
+                        <span
+                            className="details-additional-data"
+                            aria-hidden="true"
+                            onClick={updateClick}
+                        >
+                            Click here
+                        </span>
+                    ) : null}
                     {isClicked ? (
                         <div>
                             <p>Display item 1</p>
@@ -47,7 +53,7 @@ const DetailsView = ({
                             <p>Display item 5</p>
                         </div>
                     ) : null}
-                    <ul>
+                    <ul className="details-expanded-content">
                         {repeatArray.map((arrayItem, index) => {
                             if (index <= travelId % 5) {
                                 return (
@@ -135,13 +141,15 @@ const DetailsView = ({
         }
         return (
             <div className="details-wrap  full-data">
-                <span
-                    className="details-additional-data"
-                    aria-hidden="true"
-                    onClick={updateClick}
-                >
-                    Click here
-                </span>
+                {fixedSizeGrid !== true ? (
+                    <span
+                        className="details-additional-data"
+                        aria-hidden="true"
+                        onClick={updateClick}
+                    >
+                        Click here
+                    </span>
+                ) : null}
                 {isClicked ? (
                     <div>
                         <p>Display item 1</p>
