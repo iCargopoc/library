@@ -530,7 +530,7 @@ describe("render Index file ", () => {
         expect(errorMessage.length).toBe(1);
     });
 
-    it("test grid with simple parent data - index pagination", () => {
+    it("test grid with simple parent data - index pagination and single row selection", () => {
         mockOffsetSize(600, 600);
         const { container, getAllByTestId } = render(
             <Grid
@@ -549,6 +549,7 @@ describe("render Index file ", () => {
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 rowsToDeselect={mockRowsToDeselect}
+                multiRowSelection={false}
             />
         );
         const gridContainer = container;
