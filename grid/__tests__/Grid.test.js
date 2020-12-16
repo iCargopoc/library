@@ -224,6 +224,30 @@ describe("render Index file ", () => {
         }
     };
 
+    const mockHiddenAdditionalColumn = {
+        Header: "Remarks",
+        innerCells: [
+            {
+                Header: "Remarks",
+                accessor: "remarks",
+                display: false
+            }
+        ],
+        display: false,
+        displayCell: (rowData, DisplayTag) => {
+            const { remarks } = rowData;
+            return (
+                <div className="details-wrap">
+                    <DisplayTag columnKey="remarks" cellKey="remarks">
+                        <ul>
+                            <li>{remarks}</li>
+                        </ul>
+                    </DisplayTag>
+                </div>
+            );
+        }
+    };
+
     const mockAdditionalColumnWithoutInnerCells = {
         Header: "Remarks",
         displayCell: (rowData, DisplayTag) => {
@@ -622,7 +646,7 @@ describe("render Index file ", () => {
                 pageInfo={smallPageInfo}
                 loadMoreData={mockLoadMoreData}
                 columns={gridColumns}
-                columnToExpand={mockAdditionalColumn}
+                columnToExpand={mockHiddenAdditionalColumn}
                 rowActions={mockRowActions}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
