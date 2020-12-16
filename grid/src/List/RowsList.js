@@ -29,7 +29,8 @@ const RowsList = ({
     additionalColumn,
     getRowInfo,
     expandedParentRows,
-    reRenderListData
+    reRenderListData,
+    fixedSizeGrid
 }) => {
     const sizeMap = useRef({});
 
@@ -43,24 +44,37 @@ const RowsList = ({
 
     const getSize = (index) => {
         const currentRow = rows[index];
-        const isParentRow =
-            currentRow &&
-            currentRow.original &&
-            currentRow.original.isParent === true;
+        const { original } = currentRow;
+        const { lastPage, isParent } = original;
+        const isParentRow = isParent === true;
         if (isParentRowCollapsed(currentRow)) {
             return 0;
         }
         const { current } = sizeMap;
-        const rowSize = current[index];
-        let rowSizeToReturn = null;
-        if (rowSize !== undefined && rowSize !== null) {
-            rowSizeToReturn = rowSize;
-        } else if (isParentRow) {
-            rowSizeToReturn = current[0];
-        } else {
-            rowSizeToReturn = current[1];
+        const firstRowSize = current[0];
+        const secondRowSize = current[1];
+        const defaultRowSize = 50;
+
+        if (fixedSizeGrid === true && !isParentRow) {
+            if (isParentGrid) {
+                if (isLoadMoreChildRowsRequiredForRow(index, lastPage)) {
+                    return secondRowSize + 52 || defaultRowSize + 52;
+                }
+                return secondRowSize || defaultRowSize;
+            }
+            return firstRowSize || defaultRowSize;
         }
-        return rowSizeToReturn || 50;
+
+        const currentRowSize = current[index];
+        let rowSizeToReturn = null;
+        if (currentRowSize !== undefined && currentRowSize !== null) {
+            rowSizeToReturn = currentRowSize;
+        } else if (isParentRow) {
+            rowSizeToReturn = firstRowSize;
+        } else {
+            rowSizeToReturn = secondRowSize;
+        }
+        return rowSizeToReturn || defaultRowSize;
     };
 
     useEffect(() => {
@@ -121,6 +135,7 @@ const RowsList = ({
                             parentColumn={parentColumn}
                             additionalColumn={additionalColumn}
                             getRowInfo={getRowInfo}
+                            fixedSizeGrid={fixedSizeGrid}
                         />
                     );
                 },
@@ -154,7 +169,8 @@ RowsList.propTypes = {
     additionalColumn: PropTypes.object,
     getRowInfo: PropTypes.func,
     expandedParentRows: PropTypes.array,
-    reRenderListData: PropTypes.func
+    reRenderListData: PropTypes.func,
+    fixedSizeGrid: PropTypes.bool
 };
 
 export default RowsList;

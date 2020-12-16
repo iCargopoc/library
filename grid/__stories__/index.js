@@ -1436,6 +1436,7 @@ const GridComponent = (props) => {
                     CustomPanel={CustomPanel}
                     rowsToSelect={rowsToSelect}
                     rowsToDeselect={rowsToDeselect}
+                    fixedSizeGrid
                     multiRowSelection={multiRowSelection}
                     gridHeader={allProps || gridHeader}
                     rowSelector={allProps || rowSelector}

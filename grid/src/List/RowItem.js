@@ -11,17 +11,25 @@ const RowItem = ({
     additionalColumn,
     isLoadMoreChildRowsRequiredForRow,
     lastPage,
-    loadMoreChildData
+    loadMoreChildData,
+    isParentGrid,
+    fixedSizeGrid
 }) => {
     return (
         <Measure
             bounds
             onResize={(contentRect) => {
-                let rowItemHeight = contentRect.bounds.height;
-                if (theme === "portal") {
-                    rowItemHeight += 10;
+                if (
+                    fixedSizeGrid !== true || // Calcualte if not fixedSizeGrid
+                    (!isParentGrid && index === 0) || // calculate if fixedSizeGrid and index is 0 of normal Grid
+                    (isParentGrid && index === 1) // calculate if fixedSizeGrid and index is 1 of parent Grid
+                ) {
+                    let rowItemHeight = contentRect.bounds.height;
+                    if (theme === "portal") {
+                        rowItemHeight += 10;
+                    }
+                    setSize(index, rowItemHeight);
                 }
-                setSize(index, rowItemHeight);
             }}
         >
             {({ measureRef }) => (
@@ -89,7 +97,9 @@ RowItem.propTypes = {
     additionalColumn: PropTypes.object,
     isLoadMoreChildRowsRequiredForRow: PropTypes.func,
     lastPage: PropTypes.bool,
-    loadMoreChildData: PropTypes.func
+    loadMoreChildData: PropTypes.func,
+    isParentGrid: PropTypes.bool,
+    fixedSizeGrid: PropTypes.bool
 };
 
 export default RowItem;
