@@ -532,20 +532,58 @@ describe("render Index file ", () => {
         expect(sortOverlay).toBeNull();
 
         // Cell edit
-        const editButton = getAllByTestId("cell-edit-icon");
+        let editButton = getAllByTestId("cell-edit-icon");
         act(() => {
             editButton[0].dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
+
+        // Check if edit overlay is opened
+        let editOverlays = container.querySelectorAll(
+            "[data-testid='cell-edit-overlay']"
+        );
+        expect(editOverlays.length).toBeGreaterThan(0);
+
+        // Simply save the overlay
+        fireEvent.click(getByTestId("cell-edit-save"));
+
+        // Check if edit overlay is closed
+        editOverlays = container.querySelectorAll(
+            "[data-testid='cell-edit-overlay']"
+        );
+        expect(editOverlays.length).toBe(0);
+
+        // No call back as data has not been changed
+        expect(mockUpdateRowData).not.toHaveBeenCalled();
+
+        // Again open cell edit
+        editButton = getAllByTestId("cell-edit-icon");
+        act(() => {
+            editButton[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if edit overlay is opened
+        editOverlays = container.querySelectorAll(
+            "[data-testid='cell-edit-overlay']"
+        );
+        expect(editOverlays.length).toBeGreaterThan(0);
+
+        // Update flight number
         const flightNoInput = getByTestId("flightnoinput");
         expect(flightNoInput.value).toBe("XX6983");
         fireEvent.change(flightNoInput, { target: { value: "123" } });
 
+        // Save the changes
         const setState = jest.fn(() => editedRowValue);
         const useStateSpy = jest.spyOn(React, "useState");
         useStateSpy.mockImplementation(() => [editedRowValue, setState]);
         fireEvent.click(getByTestId("cell-edit-save"));
+
+        // Call back should be made as data has been changed
+        expect(mockUpdateRowData).toHaveBeenCalled();
     });
 
     it("test row options functionalities and column sort with row height calculation, custom panel and refresh button not passed", () => {
