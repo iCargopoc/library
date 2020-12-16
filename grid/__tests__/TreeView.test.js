@@ -482,6 +482,13 @@ describe("render Index file ", () => {
         }
     ];
 
+    const mockGetRowInfo = (rowData) => {
+        const { travelId } = rowData;
+        return {
+            isRowSelectable: travelId !== 0
+        };
+    };
+
     const mockGridHeight = "80vh";
     const mockGridWidth = "100%";
     const mockTitle = "AWBs";
@@ -890,6 +897,7 @@ describe("render Index file ", () => {
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 rowsToDeselect={mockRowsToDeselect}
+                getRowInfo={mockGetRowInfo}
             />
         );
         const gridContainer = container;
@@ -905,11 +913,12 @@ describe("render Index file ", () => {
             );
         });
 
-        // Selected checkboxes count should be 6 (1 parent row + 5 child rows)
+        // Selected checkboxes count should be 5 (1 parent row + 4 child rows).
+        // Row with travel id 0 doesn't have checkbox because of rwInfo.
         let selectedCheckboxes = gridContainer.querySelectorAll(
             'input[type="checkbox"]:checked'
         );
-        expect(selectedCheckboxes.length).toBe(6);
+        expect(selectedCheckboxes.length).toBe(5);
 
         // Unelect first parent
         firstParentRowSelector = getAllByTestId("rowSelector-parentRow")[0];
