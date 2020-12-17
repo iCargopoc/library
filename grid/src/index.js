@@ -1,5 +1,5 @@
+// @flow
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import memoize from "lodash.memoize";
 import {
     extractColumns,
@@ -11,10 +11,13 @@ import Customgrid from "./Customgrid";
 // lazy styles inclusion via styleloader
 import __cmpStyles from "./Styles/main.scss";
 
-const processedData = (gridData, parentIdAttribute) => {
+const processedData = (
+    gridData: Object,
+    parentIdAttribute: Object
+): ?[Object] => {
     if (gridData && gridData.length > 0) {
-        const processedGridData = [];
-        gridData.forEach((gridDataItem) => {
+        const processedGridData = [null];
+        gridData.forEach((gridDataItem: Object) => {
             const updatedData = { ...gridDataItem };
             updatedData.isParent = true;
             delete updatedData.childData;
@@ -35,7 +38,7 @@ const processedData = (gridData, parentIdAttribute) => {
                         pageSize,
                         lastPage
                     } = childData;
-                    data.forEach((dataItem) => {
+                    data.forEach((dataItem: Object) => {
                         const updatedDataItem = dataItem;
                         updatedDataItem[parentIdAttribute] = parentId;
                         updatedDataItem.pageNum = pageNum;
@@ -49,12 +52,12 @@ const processedData = (gridData, parentIdAttribute) => {
         });
         return processedGridData;
     }
-    return [];
+    return [null];
 };
 const getProcessedData = memoize(processedData);
 
-const Grid = (props) => {
-    useEffect(() => {
+const Grid = (props: Object): ?React$Element<*> => {
+    useEffect((): Function => {
         if (__cmpStyles.use) {
             __cmpStyles.use();
         }
@@ -116,7 +119,11 @@ const Grid = (props) => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     // Logic for searching in each column
-    const searchColumn = (column, original, searchText) => {
+    const searchColumn = (
+        column: Object,
+        original: Object,
+        searchText: Object
+    ): boolean => {
         // Check if row is parent row
         const { isParent } = original;
         // Return value
@@ -138,8 +145,8 @@ const Grid = (props) => {
                     // Enter if cell value is array
                     if (rowAccessorValue.length > 0) {
                         // Loop through cell array value and check if searched text is present
-                        rowAccessorValue.forEach((value) => {
-                            innerCells.forEach((cell) => {
+                        rowAccessorValue.forEach((value: Object) => {
+                            innerCells.forEach((cell: Object) => {
                                 const dataAccessor = value[cell.accessor];
                                 const isSearchEnabled = cell.isSearchable;
                                 if (
@@ -156,7 +163,7 @@ const Grid = (props) => {
                         });
                     } else {
                         // If cell value is an object, loop through inner cells and check if searched text is present
-                        innerCells.forEach((cell) => {
+                        innerCells.forEach((cell: Object) => {
                             const dataAccessor =
                                 original[accessor][cell.accessor];
                             const isSearchEnabled = cell.isSearchable;
@@ -191,7 +198,11 @@ const Grid = (props) => {
     };
 
     // Gets triggered when one row item is updated
-    const updateRowInGrid = (original, updatedRow, isSubComponentRow) => {
+    const updateRowInGrid = (
+        original: Object,
+        updatedRow: Object,
+        isSubComponentRow: Object
+    ): Function => {
         if (onRowUpdate) {
             onRowUpdate(original, updatedRow, isSubComponentRow);
         }
@@ -219,7 +230,11 @@ const Grid = (props) => {
 
     // #region - Group sorting logic
     // Function to return sorting logic based on the user selected order of sort
-    const compareValues = (compareOrder, v1, v2) => {
+    const compareValues = (
+        compareOrder: Object,
+        v1: Object,
+        v2: Object
+    ): number => {
         let returnValue = 0;
         if (compareOrder === "Ascending") {
             if (v1 > v2) {
@@ -237,7 +252,10 @@ const Grid = (props) => {
         return returnValue;
     };
     // Function to return sorted data
-    const getSortedData = (originalData, groupSortOptions) => {
+    const getSortedData = (
+        originalData: Object,
+        groupSortOptions: Object
+    ): [Object] => {
         if (
             originalData &&
             originalData.length > 0 &&
@@ -249,9 +267,9 @@ const Grid = (props) => {
                 parentIdAttribute !== null &&
                 parentIdAttribute !== undefined
             ) {
-                let sortedTreeData = [];
+                let sortedTreeData = [null];
                 const parentDataFromOriginalData = originalData.filter(
-                    (dataToFilter) => {
+                    (dataToFilter: Object): boolean => {
                         let returnValue = false;
                         if (dataToFilter) {
                             const { isParent } = dataToFilter;
@@ -260,7 +278,7 @@ const Grid = (props) => {
                         return returnValue;
                     }
                 );
-                parentDataFromOriginalData.forEach((dataFromGrid) => {
+                parentDataFromOriginalData.forEach((dataFromGrid: Object) => {
                     if (dataFromGrid) {
                         sortedTreeData.push(dataFromGrid);
                         const parentIdentifier =
@@ -270,7 +288,7 @@ const Grid = (props) => {
                             parentIdentifier !== undefined
                         ) {
                             const childRowsOfParent = originalData.filter(
-                                (origData) => {
+                                (origData: Object): boolean => {
                                     return (
                                         origData &&
                                         origData.isParent !== true &&
@@ -284,45 +302,47 @@ const Grid = (props) => {
                                 childRowsOfParent.length > 0
                             ) {
                                 const sortedChildData = childRowsOfParent.sort(
-                                    (x, y) => {
+                                    (x: Object, y: Object): number => {
                                         let compareResult = 0;
-                                        groupSortOptions.forEach((option) => {
-                                            const {
-                                                sortBy,
-                                                sortOn,
-                                                order
-                                            } = option;
-                                            const xSortBy = x[sortBy];
-                                            const ySortBy = y[sortBy];
-                                            let xSortOn = null;
-                                            let ySortOn = null;
-                                            if (
-                                                xSortBy !== null &&
-                                                xSortBy !== undefined
-                                            ) {
-                                                xSortOn = xSortBy[sortOn];
+                                        groupSortOptions.forEach(
+                                            (option: Object) => {
+                                                const {
+                                                    sortBy,
+                                                    sortOn,
+                                                    order
+                                                } = option;
+                                                const xSortBy = x[sortBy];
+                                                const ySortBy = y[sortBy];
+                                                let xSortOn = null;
+                                                let ySortOn = null;
+                                                if (
+                                                    xSortBy !== null &&
+                                                    xSortBy !== undefined
+                                                ) {
+                                                    xSortOn = xSortBy[sortOn];
+                                                }
+                                                if (
+                                                    ySortBy !== null &&
+                                                    ySortBy !== undefined
+                                                ) {
+                                                    ySortOn = ySortBy[sortOn];
+                                                }
+                                                const newResult =
+                                                    sortOn === "value"
+                                                        ? compareValues(
+                                                              order,
+                                                              xSortBy,
+                                                              ySortBy
+                                                          )
+                                                        : compareValues(
+                                                              order,
+                                                              xSortOn,
+                                                              ySortOn
+                                                          );
+                                                compareResult =
+                                                    compareResult || newResult;
                                             }
-                                            if (
-                                                ySortBy !== null &&
-                                                ySortBy !== undefined
-                                            ) {
-                                                ySortOn = ySortBy[sortOn];
-                                            }
-                                            const newResult =
-                                                sortOn === "value"
-                                                    ? compareValues(
-                                                          order,
-                                                          xSortBy,
-                                                          ySortBy
-                                                      )
-                                                    : compareValues(
-                                                          order,
-                                                          xSortOn,
-                                                          ySortOn
-                                                      );
-                                            compareResult =
-                                                compareResult || newResult;
-                                        });
+                                        );
                                         return compareResult;
                                     }
                                 );
@@ -336,7 +356,7 @@ const Grid = (props) => {
                 });
                 return sortedTreeData;
             }
-            return originalData.sort((x, y) => {
+            return originalData.sort((x: Object, y: Object): number => {
                 let compareResult = 0;
                 if (
                     x !== null &&
@@ -344,7 +364,7 @@ const Grid = (props) => {
                     y !== null &&
                     y !== undefined
                 )
-                    groupSortOptions.forEach((option) => {
+                    groupSortOptions.forEach((option: Object) => {
                         const { sortBy, sortOn, order } = option;
                         const xSortBy = x[sortBy];
                         const ySortBy = y[sortBy];
@@ -369,7 +389,7 @@ const Grid = (props) => {
     };
     // #endregion
 
-    const loadChildData = (row) => {
+    const loadChildData = (row: Object): Function => {
         if (row && parentIdAttribute) {
             const { lastPage, pageNum, pageSize, endCursor } = row;
             const isIntialLoad =
