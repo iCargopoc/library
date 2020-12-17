@@ -403,17 +403,17 @@ const Grid = (props) => {
             const { lastPage, pageNum, pageSize, endCursor } = pageInfo;
             if (lastPage === false) {
                 setIsNextPageLoading(true);
-                if (paginationType === "cursor") {
-                    loadMoreData({
-                        endCursor,
-                        pageSize
-                    });
-                } else {
-                    loadMoreData({
-                        pageNum: pageNum + 1,
-                        pageSize
-                    });
-                }
+                    if (paginationType === "cursor") {
+                        loadMoreData({
+                            endCursor,
+                            pageSize
+                        });
+                    } else {
+                        loadMoreData({
+                            pageNum: pageNum + 1,
+                            pageSize
+                        });
+                    }
             }
         }
     };
@@ -516,15 +516,6 @@ const Grid = (props) => {
                     rowsToDeselect={rowsToDeselect}
                     fixedRowHeight={fixedRowHeight}
                 />
-                {isNextPageLoading ? (
-                    <div className="ng-loader">
-                        <div className="ng-loader__dots-block">
-                            <span className="ng-loader__dots" />
-                            <span className="ng-loader__dots" />
-                            <span className="ng-loader__dots" />
-                        </div>
-                    </div>
-                ) : null}
             </div>
         );
     }

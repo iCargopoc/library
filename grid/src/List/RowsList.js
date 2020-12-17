@@ -30,7 +30,8 @@ const RowsList = ({
     getRowInfo,
     expandedParentRows,
     reRenderListData,
-    fixedRowHeight
+    fixedRowHeight,
+    isLoadMoreRequiredForNormalRow
 }) => {
     const sizeMap = useRef({});
 
@@ -136,6 +137,9 @@ const RowsList = ({
                             additionalColumn={additionalColumn}
                             getRowInfo={getRowInfo}
                             fixedRowHeight={fixedRowHeight}
+                            isLoadMoreRequiredForNormalRow={
+                                isLoadMoreRequiredForNormalRow
+                            }
                         />
                     );
                 },
@@ -170,7 +174,8 @@ RowsList.propTypes = {
     getRowInfo: PropTypes.func,
     expandedParentRows: PropTypes.array,
     reRenderListData: PropTypes.func,
-    fixedRowHeight: PropTypes.bool
+    fixedRowHeight: PropTypes.bool,
+    isLoadMoreRequiredForNormalRow: PropTypes.func
 };
 
 export default RowsList;

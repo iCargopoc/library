@@ -840,6 +840,10 @@ const Customgrid = (props) => {
         return isLoadMoreChildNeeded;
     };
 
+    const isLoadMoreRequiredForNormalRow = (index) => {
+        return index === rows.length - 1 && isNextPageLoading;
+    };
+
     if (!isFirstRendering && gridColumns && gridColumns.length > 0) {
         // Check if atleast 1 column has group sort option enabled, and display group sort icon only if there is atleast 1.
         const isGroupSortNeeded = checkIfGroupsortIsApplicable(
@@ -1221,6 +1225,9 @@ const Customgrid = (props) => {
                                                         fixedRowHeight={
                                                             fixedRowHeight
                                                         }
+                                                        isLoadMoreRequiredForNormalRow={
+                                                            isLoadMoreRequiredForNormalRow
+                                                        }
                                                     />
                                                 )}
                                             </InfiniteLoader>
@@ -1275,6 +1282,9 @@ const Customgrid = (props) => {
                                                     reRenderListData
                                                 }
                                                 fixedRowHeight={fixedRowHeight}
+                                                isLoadMoreRequiredForNormalRow={
+                                                    isLoadMoreRequiredForNormalRow
+                                                }
                                             />
                                         )}
                                     </div>

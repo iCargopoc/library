@@ -13,7 +13,8 @@ const RowItem = ({
     lastPage,
     loadMoreChildData,
     isParentGrid,
-    fixedRowHeight
+    fixedRowHeight,
+    isLoadMoreRequiredForNormalRow
 }) => {
     return (
         <Measure
@@ -67,6 +68,16 @@ const RowItem = ({
                             {additionalColumn.Cell(row, additionalColumn)}
                         </div>
                     ) : null}
+                    {isLoadMoreRequiredForNormalRow(index) ? (
+                        <div className="ng-loader">
+                            <div className="ng-loader__block">
+                                <div className="ng-loader__item" />
+                                <div className="ng-loader__item" />
+                                <div className="ng-loader__item" />
+                                <div className="ng-loader__item" />
+                            </div>
+                        </div>
+                    ) : null}
                     {isLoadMoreChildRowsRequiredForRow(index, lastPage) ? (
                         <div
                             className="ng-loadmore"
@@ -99,7 +110,8 @@ RowItem.propTypes = {
     lastPage: PropTypes.bool,
     loadMoreChildData: PropTypes.func,
     isParentGrid: PropTypes.bool,
-    fixedRowHeight: PropTypes.bool
+    fixedRowHeight: PropTypes.bool,
+    isNextPageLoading: PropTypes.bool
 };
 
 export default RowItem;

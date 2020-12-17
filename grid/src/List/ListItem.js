@@ -23,7 +23,8 @@ const ListItem = ({
     parentColumn,
     additionalColumn,
     getRowInfo,
-    fixedRowHeight
+    fixedRowHeight,
+    isLoadMoreRequiredForNormalRow
 }) => {
     if (isParentRowCollapsed(row)) {
         return null;
@@ -81,6 +82,7 @@ const ListItem = ({
                 loadMoreChildData={loadMoreChildData}
                 isParentGrid={isParentGrid}
                 fixedRowHeight={fixedRowHeight}
+                isLoadMoreRequiredForNormalRow={isLoadMoreRequiredForNormalRow}
             />
         </div>
     );
@@ -106,7 +108,8 @@ ListItem.propTypes = {
     parentColumn: PropTypes.object,
     additionalColumn: PropTypes.object,
     getRowInfo: PropTypes.func,
-    fixedRowHeight: PropTypes.bool
+    fixedRowHeight: PropTypes.bool,
+    isLoadMoreRequiredForNormalRow: PropTypes.func
 };
 
 export default ListItem;
