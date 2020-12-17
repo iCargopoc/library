@@ -403,17 +403,17 @@ const Grid = (props) => {
             const { lastPage, pageNum, pageSize, endCursor } = pageInfo;
             if (lastPage === false) {
                 setIsNextPageLoading(true);
-                    if (paginationType === "cursor") {
-                        loadMoreData({
-                            endCursor,
-                            pageSize
-                        });
-                    } else {
-                        loadMoreData({
-                            pageNum: pageNum + 1,
-                            pageSize
-                        });
-                    }
+                if (paginationType === "cursor") {
+                    loadMoreData({
+                        endCursor,
+                        pageSize
+                    });
+                } else {
+                    loadMoreData({
+                        pageNum: pageNum + 1,
+                        pageSize
+                    });
+                }
             }
         }
     };
