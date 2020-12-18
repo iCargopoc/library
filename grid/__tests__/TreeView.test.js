@@ -489,7 +489,6 @@ describe("render Index file ", () => {
         };
     };
 
-    const mockGridHeight = "80vh";
     const mockGridWidth = "100%";
     const mockTitle = "AWBs";
 
@@ -511,7 +510,6 @@ describe("render Index file ", () => {
         const { container, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 gridData={[]}
                 idAttribute="travelId"
@@ -542,7 +540,6 @@ describe("render Index file ", () => {
         const { container, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 gridData={parentData}
                 idAttribute="travelId"
@@ -588,7 +585,6 @@ describe("render Index file ", () => {
         const { container, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 gridData={parentData}
                 idAttribute="travelId"
@@ -633,7 +629,6 @@ describe("render Index file ", () => {
         const { container, getAllByTestId, getByTestId } = render(
             <Grid
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 gridData={parentDataWithAllChildData}
                 idAttribute="travelId"
@@ -706,7 +701,6 @@ describe("render Index file ", () => {
         const { container, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 gridData={parentDataWithAllChildData}
                 idAttribute="travelId"
@@ -753,7 +747,6 @@ describe("render Index file ", () => {
         const { container, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 gridData={parentDataWithOnlyLastChildData}
                 idAttribute="travelId"
@@ -791,7 +784,6 @@ describe("render Index file ", () => {
         const { container, getByTestId } = render(
             <Grid
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 gridData={parentDataWithAllChildData}
                 idAttribute="travelId"
@@ -907,7 +899,6 @@ describe("render Index file ", () => {
         const { container, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 gridData={parentDataWithAllChildData}
                 idAttribute="travelId"
@@ -982,7 +973,6 @@ describe("render Index file ", () => {
         const { container, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 gridData={parentDataWithAllChildData}
                 paginationType="index"

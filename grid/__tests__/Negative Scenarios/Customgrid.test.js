@@ -291,7 +291,6 @@ describe("render Customgrid", () => {
         });
     }
 
-    const mockGridHeight = "80vh";
     const mockGridWidth = "100%";
     const mockTitle = "AWBs";
     const mockRowActions = jest.fn();
@@ -373,7 +372,6 @@ describe("render Customgrid", () => {
             <Customgrid
                 isDesktop
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 managableColumns={gridColumns}
                 expandedRowData={mockAdditionalColumn}
@@ -402,7 +400,6 @@ describe("render Customgrid", () => {
             <Customgrid
                 isDesktop
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 managableColumns={gridColumns}
                 expandedRowData={mockAdditionalColumn}

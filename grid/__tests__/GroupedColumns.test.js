@@ -313,7 +313,6 @@ describe("render Index file ", () => {
         });
     }
 
-    const mockGridHeight = "80vh";
     const mockGridWidth = "100%";
     const mockTitle = "AWBs";
 
@@ -333,7 +332,6 @@ describe("render Index file ", () => {
         const { container, getByTestId, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 gridData={data}
                 idAttribute="travelId"
@@ -435,7 +433,6 @@ describe("render Index file ", () => {
         const { container, getByTestId, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
-                gridHeight={mockGridHeight}
                 gridWidth={mockGridWidth}
                 gridData={data}
                 idAttribute="travelId"

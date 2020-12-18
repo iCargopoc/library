@@ -19,7 +19,6 @@ const GridComponent = (props) => {
         className,
         title,
         fixedRowHeight,
-        gridHeight,
         gridWidth,
         rowsToOverscan,
         passColumnToExpand,
@@ -1408,7 +1407,6 @@ const GridComponent = (props) => {
                     className={className}
                     theme={passTheme ? theme : null}
                     title={title}
-                    gridHeight={gridHeight}
                     gridWidth={gridWidth}
                     gridData={gridData}
                     rowsToOverscan={rowsToOverscan}

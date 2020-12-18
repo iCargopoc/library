@@ -417,7 +417,6 @@ const GridComponent = () => {
             className="icargoCustomClass"
             theme={theme}
             title="AWBs"
-            gridHeight="80vh"
             gridWidth="100%"
             gridData={gridData} // *Required
             rowsToOverscan={rowsToOverscan}
@@ -512,24 +511,6 @@ const GridComponent = () => {
 />
 ```
 
-#### With custom grid height
-
-<Story name="With custom height">
-    <GridComponent gridHeight="80vh" />;
-</Story>
-
-```jsx
-// Grid height will be '80vh' of the screen.
-
-<Grid
-    gridHeight="80vh"
-    gridData={gridData}
-    columns={columns}
-    onRowUpdate={onRowUpdate}
-    onRowSelect={onRowSelect}
-/>
-```
-
 #### With custom grid width
 
 <Story name="With custom grid width">
@@ -551,7 +532,7 @@ const GridComponent = () => {
 #### With fixed row size
 
 <Story name="With fixed row size">
-    <GridComponent fixedRowHeight gridHeight="80vh" />;
+    <GridComponent fixedRowHeight />;
 </Story>
 
 ```jsx
@@ -559,7 +540,6 @@ const GridComponent = () => {
 
 <Grid
     title="AWBs"
-    gridHeight="80vh"
     gridData={gridData}
     columns={columns}
     fixedRowHeight={fixedRowHeight}
@@ -1075,7 +1055,6 @@ const fileName="Custom filename"
         allProps
         className="icargoCustomClass"
         title="AWBs"
-        gridHeight="80vh"
         gridWidth="100%"
         rowsToOverscan={20}
         CustomPanel={CustomPanel}
@@ -1090,7 +1069,6 @@ const fileName="Custom filename"
 <Grid
     className={className}
     title={title}
-    gridHeight={gridHeight}
     gridWidth={gridWidth}
     gridData={gridData}
     rowsToOverscan={20}
@@ -1127,7 +1105,6 @@ const fileName="Custom filename"
         allProps
         className="icargoCustomClass"
         title="AWBs"
-        gridHeight="80vh"
         gridWidth="100%"
         rowsToOverscan={20}
         CustomPanel={CustomPanel}
@@ -1143,7 +1120,6 @@ const fileName="Custom filename"
 <Grid
     className={className}
     title={title}
-    gridHeight={gridHeight}
     gridWidth={gridWidth}
     gridData={gridData}
     rowsToOverscan={20}
@@ -1183,7 +1159,6 @@ const fileName="Custom filename"
         className="icargoCustomClass"
         title="AWBs"
         fixedRowHeight
-        gridHeight="80vh"
         gridWidth="100%"
         rowsToOverscan={20}
         CustomPanel={CustomPanel}
@@ -1200,7 +1175,6 @@ const fileName="Custom filename"
     className={className}
     title={title}
     fixedRowHeight={fixedRowHeight}
-    gridHeight={gridHeight}
     gridWidth={gridWidth}
     gridData={gridData}
     rowsToOverscan={20}
@@ -1239,7 +1213,6 @@ const fileName="Custom filename"
         allProps
         className="icargoCustomClass"
         title="AWBs"
-        gridHeight="80vh"
         gridWidth="100%"
         rowsToOverscan={20}
         CustomPanel={CustomPanel}
@@ -1256,7 +1229,6 @@ const fileName="Custom filename"
 <Grid
     className={className}
     title={title}
-    gridHeight={gridHeight}
     gridWidth={gridWidth}
     gridData={gridData}
     rowsToOverscan={20}
@@ -1296,7 +1268,6 @@ const fileName="Custom filename"
         allProps
         className="icargoCustomClass"
         title="AWBs"
-        gridHeight="80vh"
         gridWidth="100%"
         rowsToOverscan={20}
         CustomPanel={CustomPanel}
@@ -1313,7 +1284,6 @@ const fileName="Custom filename"
 <Grid
     className={className}
     title={title}
-    gridHeight={gridHeight}
     gridWidth={gridWidth}
     gridData={gridData}
     rowsToOverscan={20}
