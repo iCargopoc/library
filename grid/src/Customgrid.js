@@ -905,8 +905,8 @@ const Customgrid = (props) => {
                                     data-testid="toggleColumnFilter"
                                     onClick={toggleColumnFilter}
                                 >
-                                    <i>
-                                        <IconFilter className="ng-icon" />
+                                    <i className="ng-icon-block">
+                                        <IconFilter className="ng-icon ng-icon--filter" />
                                     </i>
                                 </div>
                             </div>
@@ -919,7 +919,7 @@ const Customgrid = (props) => {
                                     data-testid="toggleGroupSortOverLay"
                                     onClick={toggleGroupSortOverLay}
                                 >
-                                    <i>
+                                    <i className="ng-icon-block">
                                         <IconGroupSort className="ng-icon" />
                                     </i>
                                 </div>
@@ -943,7 +943,7 @@ const Customgrid = (props) => {
                                     data-testid="toggleManageColumnsOverlay"
                                     onClick={toggleManageColumnsOverlay}
                                 >
-                                    <i>
+                                    <i className="ng-icon-block">
                                         <IconColumns className="ng-icon" />
                                     </i>
                                 </div>
@@ -973,7 +973,7 @@ const Customgrid = (props) => {
                                     data-testid="toggleExportDataOverlay"
                                     onClick={toggleExportDataOverlay}
                                 >
-                                    <i>
+                                    <i className="ng-icon-block">
                                         <IconShare className="ng-icon" />
                                     </i>
                                 </div>
@@ -998,8 +998,8 @@ const Customgrid = (props) => {
                                     data-testid="refreshGrid"
                                     onClick={onGridRefresh}
                                 >
-                                    <i>
-                                        <IconRefresh className="ng-icon ng-icon--refresh" />
+                                    <i className="ng-icon-block">
+                                        <IconRefresh className="ng-icon" />
                                     </i>
                                 </div>
                             </div>

@@ -112,6 +112,15 @@
             width: rem(498);
             &__items {
                 display: flex;
+                .ng-popover__reorder {
+                    .ng-icon-block {
+                        display: flex;
+                        margin-top: rem(8);
+                        .ng-icon {
+                            zoom: 1;
+                        }
+                    }
+                }
                 .ng-icon {
                     height: rem(15);
                     width: rem(15);
@@ -278,16 +287,29 @@
                 border-radius: rem(5);
                 height: rem(86);
                 margin: 0 rem(4);
-                padding: rem(8) rem(10);
+                padding: rem(2) rem(8);
                 width: rem(86);
                 line-height: normal;
             }
             &__file {
                 text-align: center;
+                .ng-icon {
+                    zoom: 2.7;
+                    &--pdf {
+                        fill: var(--danger);
+                    }
+                    &--excel {
+                        fill: var(--success);
+                    }
+                    &--csv {
+                        fill: var(--default);
+                    }
+                }
                 .ng-popover--exports__file-type {
                     display: block;
-                    font-size: rem(14);
+                    font-size: rem(12);
                     line-height: normal;
+                    margin-top: rem(4);
                 }
             }
             &__warning {

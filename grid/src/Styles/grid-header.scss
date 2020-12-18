@@ -46,8 +46,13 @@
             }
             &__items {
                 position: relative;
-                .ng-icon--refresh {
-                    zoom: 1.4;
+                .ng-icon-block {
+                    .ng-icon {
+                        zoom: 1.4;
+                        &--filter {
+                            zoom: 1;
+                        }
+                    }
                 }
             }
             &__icons {

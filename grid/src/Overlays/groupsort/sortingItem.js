@@ -114,7 +114,7 @@ const SortItem = ({
                     ref={(node) => drag(drop(node))}
                     style={{ cursor: "move" }}
                 >
-                    <i>
+                    <i className="ng-icon-block">
                         <IconDragVertical className="ng-icon" />
                     </i>
                 </div>
