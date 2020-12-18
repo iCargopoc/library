@@ -53,7 +53,6 @@ const Customgrid = (props) => {
     const {
         isDesktop,
         title,
-        gridHeight,
         theme,
         managableColumns,
         expandedRowData,
@@ -1011,7 +1010,6 @@ const Customgrid = (props) => {
                 <div
                     className="neo-grid__table"
                     style={{
-                        height: gridHeight || "50vh",
                         overflowX: "auto",
                         overflowY: "hidden"
                     }}
@@ -1309,7 +1307,6 @@ const Customgrid = (props) => {
 Customgrid.propTypes = {
     isDesktop: PropTypes.bool,
     title: PropTypes.string,
-    gridHeight: PropTypes.string,
     theme: PropTypes.string,
     managableColumns: PropTypes.arrayOf(PropTypes.object),
     parentColumn: PropTypes.object,

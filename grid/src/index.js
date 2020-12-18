@@ -69,7 +69,6 @@ const Grid = (props) => {
         className,
         theme,
         title,
-        gridHeight,
         gridWidth,
         gridData,
         rowsToOverscan,
@@ -471,7 +470,6 @@ const Grid = (props) => {
                 <Customgrid
                     isDesktop={isDesktop}
                     title={title}
-                    gridHeight={gridHeight}
                     theme={theme}
                     managableColumns={gridColumns}
                     expandedRowData={additionalColumn}
@@ -526,7 +524,6 @@ Grid.propTypes = {
     className: PropTypes.string,
     theme: PropTypes.string,
     title: PropTypes.string,
-    gridHeight: PropTypes.string,
     gridWidth: PropTypes.string,
     columns: PropTypes.arrayOf(PropTypes.object),
     columnToExpand: PropTypes.object,

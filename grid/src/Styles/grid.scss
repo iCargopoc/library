@@ -3,6 +3,9 @@
     @return #{$remSize}rem;
 }
 .neo-grid {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     &__thead {
         font-size: rem(12);
         background: var(--light-grey);
@@ -180,8 +183,15 @@
     &__td {
         position: relative;
     }
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
     &__table {
-        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
         .neo-grid__content {
             display: table;
             width: 100%;
