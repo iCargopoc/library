@@ -426,7 +426,7 @@ const ExportData = (props) => {
                             >
                                 <div className="ng-popover--exports__file">
                                     <i>
-                                        <IconPdf />
+                                        <IconPdf className="ng-icon" />
                                     </i>
                                     <span className="ng-popover--exports__file-type">
                                         PDF
@@ -452,7 +452,7 @@ const ExportData = (props) => {
                             >
                                 <div className="ng-popover--exports__file">
                                     <i>
-                                        <IconExcel />
+                                        <IconExcel className="ng-icon" />
                                     </i>
                                     <span className="ng-popover--exports__file-type">
                                         Excel
@@ -478,7 +478,7 @@ const ExportData = (props) => {
                             >
                                 <div className="ng-popover--exports__file">
                                     <i>
-                                        <IconCsv />
+                                        <IconCsv className="ng-icon" />
                                     </i>
                                     <span className="ng-popover--exports__file-type">
                                         CSV

@@ -921,7 +921,7 @@ const Customgrid = (props) => {
                                     onClick={toggleGroupSortOverLay}
                                 >
                                     <i>
-                                        <IconGroupSort />
+                                        <IconGroupSort className="ng-icon" />
                                     </i>
                                 </div>
                                 {isGroupSortOverLayOpen ? (
@@ -945,7 +945,7 @@ const Customgrid = (props) => {
                                     onClick={toggleManageColumnsOverlay}
                                 >
                                     <i>
-                                        <IconColumns />
+                                        <IconColumns className="ng-icon" />
                                     </i>
                                 </div>
                                 {isManageColumnOverlayOpen ? (
@@ -975,7 +975,7 @@ const Customgrid = (props) => {
                                     onClick={toggleExportDataOverlay}
                                 >
                                     <i>
-                                        <IconShare />
+                                        <IconShare className="ng-icon" />
                                     </i>
                                 </div>
                                 {isExportOverlayOpen ? (
