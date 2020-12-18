@@ -111,7 +111,8 @@ RowItem.propTypes = {
     loadMoreChildData: PropTypes.func,
     isParentGrid: PropTypes.bool,
     fixedRowHeight: PropTypes.bool,
-    isNextPageLoading: PropTypes.bool
+    isNextPageLoading: PropTypes.bool,
+    isLoadMoreRequiredForNormalRow: PropTypes.func
 };
 
 export default RowItem;
