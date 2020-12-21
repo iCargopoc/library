@@ -47,6 +47,8 @@ const GridComponent = (props) => {
         parentRowExpandable,
         parentRowsToExpand
     } = props;
+    const isSubComponentGrid = true;
+
     const idAttribute = "travelId";
     const parentIdAttribute = "titleId";
     const gridPageSize = 300;
@@ -856,6 +858,37 @@ const GridComponent = (props) => {
     };
     const [parentColumn, setParentColumn] = useState(null);
 
+    const originalSubComponentColumns = [
+        {
+            Header: "Component Id",
+            accessor: "componentId",
+            width: 50,
+            displayCell: (
+                rowData,
+                DisplayTag,
+                isDesktop,
+                isExpandableColumn
+            ) => {
+                const { componentId } = rowData;
+                if (componentId !== null && componentId !== undefined) {
+                    return (
+                        <div className="travelId-details">
+                            <span>{componentId}</span>
+                        </div>
+                    );
+                }
+                return null;
+            }
+        }
+    ];
+    originalColumns.forEach((col, index) => {
+        if (index > 2 && index % 2 === 0) {
+            originalSubComponentColumns.push(col);
+        }
+    });
+
+    const [subComponentColumnns, setSubComponentColumnns] = useState([]);
+
     const updateData = (data, originalRow, updatedRow) => {
         return data.map((row) => {
             let newRow = row;
@@ -1189,10 +1222,28 @@ const GridComponent = (props) => {
             }
             fetchData(info).then((data) => {
                 if (data && data.length > 0) {
+                    let updatedData = data;
+                    if (isSubComponentGrid) {
+                        updatedData = data.map((item, itemIndex) => {
+                            const updatedItem = { ...item };
+                            const { travelId } = updatedItem;
+                            let subCompData = gridData.filter(
+                                (ite, ind) =>
+                                    ind >= itemIndex && ind < itemIndex + 5
+                            );
+                            subCompData = subCompData.map((dat) => {
+                                const updatedDat = { ...dat };
+                                updatedDat.componentId = travelId;
+                                return updatedDat;
+                            });
+                            updatedItem.subComponentData = subCompData;
+                            return updatedItem;
+                        });
+                    }
                     setGridData(
-                        getSortedData(gridData.concat(data), sortOptions)
+                        getSortedData(gridData.concat(updatedData), sortOptions)
                     );
-                    setOriginalGridData(originalGridData.concat(data));
+                    setOriginalGridData(originalGridData.concat(updatedData));
                     if (paginationType === "index") {
                         setIndexPageInfo({
                             ...indexPageInfo,
@@ -1291,13 +1342,32 @@ const GridComponent = (props) => {
                 paginationType === "index" ? indexPageInfo : cursorPageInfo;
             fetchData(pageInfo).then((data) => {
                 if (data && data.length > 0) {
-                    setGridData(data);
-                    setOriginalGridData(data);
+                    let updatedData = data;
+                    if (isSubComponentGrid) {
+                        updatedData = data.map((item, itemIndex) => {
+                            const updatedItem = { ...item };
+                            const { travelId } = updatedItem;
+                            let subCompData = data.filter(
+                                (ite, ind) =>
+                                    ind >= itemIndex && ind < itemIndex + 5
+                            );
+                            subCompData = subCompData.map((dat) => {
+                                const updatedDat = { ...dat };
+                                updatedDat.componentId = travelId;
+                                return updatedDat;
+                            });
+                            updatedItem.subComponentData = subCompData;
+                            return updatedItem;
+                        });
+                        setSubComponentColumnns(originalSubComponentColumns);
+                    }
+                    setGridData(updatedData);
+                    setOriginalGridData(updatedData);
                     // Update local state based on rowsToSelect
                     if (rowsForSelection && rowsForSelection.length > 0) {
                         setRowsToSelect(rowsForSelection);
                         setUserSelectedRows(
-                            data.filter((initialData) => {
+                            updatedData.filter((initialData) => {
                                 const { travelId } = initialData;
                                 return rowsForSelection.includes(travelId);
                             })
@@ -1409,7 +1479,7 @@ const GridComponent = (props) => {
                     title={title}
                     gridWidth={gridWidth}
                     gridData={gridData}
-                    rowsToOverscan={rowsToOverscan}
+                    rowsToOverscan={isSubComponentGrid ? 5 : rowsToOverscan}
                     idAttribute={allProps || passIdAttribute ? idAttribute : ""}
                     paginationType={
                         allProps || hasPagination ? paginationType : null
@@ -1438,6 +1508,7 @@ const GridComponent = (props) => {
                             ? parentRowsToExpand
                             : null
                     }
+                    subComponentColumnns={subComponentColumnns}
                     rowActions={allProps || passRowActions ? rowActions : null}
                     expandableColumn={
                         (allProps && fixedRowHeight !== true) ||

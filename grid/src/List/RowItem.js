@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Measure from "react-measure";
+import SubComponent from "./SubComponent";
 
 const RowItem = ({
     row,
@@ -14,7 +15,9 @@ const RowItem = ({
     loadMoreChildData,
     isParentGrid,
     fixedRowHeight,
-    isLoadMoreRequiredForNormalRow
+    isLoadMoreRequiredForNormalRow,
+    subComponentColumnns,
+    isSubComponentGrid
 }) => {
     return (
         <Measure
@@ -68,6 +71,12 @@ const RowItem = ({
                             {additionalColumn.Cell(row, additionalColumn)}
                         </div>
                     ) : null}
+                    {isSubComponentGrid ? (
+                        <SubComponent
+                            subComponentData={row.original.subComponentData}
+                            subComponentColumnns={subComponentColumnns}
+                        />
+                    ) : null}
                     {isLoadMoreRequiredForNormalRow(index) ? (
                         <div className="ng-loader">
                             <div className="ng-loader__block">
@@ -112,7 +121,9 @@ RowItem.propTypes = {
     isParentGrid: PropTypes.bool,
     fixedRowHeight: PropTypes.bool,
     isNextPageLoading: PropTypes.bool,
-    isLoadMoreRequiredForNormalRow: PropTypes.func
+    isLoadMoreRequiredForNormalRow: PropTypes.func,
+    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
+    isSubComponentGrid: PropTypes.bool
 };
 
 export default RowItem;

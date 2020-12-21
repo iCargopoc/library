@@ -83,6 +83,7 @@ const Grid = (props) => {
         parentIdAttribute,
         parentRowExpandable,
         parentRowsToExpand,
+        subComponentColumnns,
         rowActions,
         onRowUpdate,
         onRowSelect,
@@ -202,6 +203,13 @@ const Grid = (props) => {
     const [additionalColumn, setAdditionalColumn] = useState(null);
 
     const isParentGrid = parentColumn !== null && parentColumn !== undefined;
+
+    const [gridSubComponentColumns, setGridSubComponentColumns] = useState([]);
+
+    let isSubComponentGrid =
+        subComponentColumnns !== null &&
+        subComponentColumnns !== undefined &&
+        subComponentColumnns.length > 0;
 
     // #region - Group sorting logic
     // Function to return sorting logic based on the user selected order of sort
@@ -438,6 +446,24 @@ const Grid = (props) => {
     }, [columns, columnToExpand]);
 
     useEffect(() => {
+        isSubComponentGrid =
+            subComponentColumnns !== null &&
+            subComponentColumnns !== undefined &&
+            subComponentColumnns.length > 0;
+        setGridSubComponentColumns(
+            extractColumns(
+                subComponentColumnns,
+                searchColumn,
+                isDesktop,
+                updateRowInGrid,
+                expandableColumn,
+                isParentGrid,
+                isSubComponentGrid
+            )
+        );
+    }, [subComponentColumnns]);
+
+    useEffect(() => {
         setIsLoaded(true);
     }, []);
 
@@ -477,6 +503,8 @@ const Grid = (props) => {
                     parentIdAttribute={parentIdAttribute}
                     parentRowExpandable={parentRowExpandable}
                     parentRowsToExpand={parentRowsToExpand}
+                    subComponentColumnns={gridSubComponentColumns}
+                    isSubComponentGrid={isSubComponentGrid}
                     loadChildData={loadChildData}
                     isParentGrid={isParentGrid}
                     gridData={processedGridData}
@@ -531,6 +559,7 @@ Grid.propTypes = {
     parentIdAttribute: PropTypes.string,
     parentRowExpandable: PropTypes.bool,
     parentRowsToExpand: PropTypes.array,
+    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
     gridData: PropTypes.arrayOf(PropTypes.object),
     rowsToOverscan: PropTypes.number,
     idAttribute: PropTypes.string,
