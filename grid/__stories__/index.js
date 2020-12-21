@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./example.css";
 import Grid from "../src/index";
 import FlightIcon from "./images/FlightIcon.png";
-import { fetchData } from "./getData";
+import { fetchData, fetchSubComponentData } from "./getData";
 import { getValueOfDate } from "./utils/DateUtility";
 import DetailsView from "./cells/DetailsView";
 import FlightEdit from "./cells/FlightEdit";
@@ -860,8 +860,7 @@ const GridComponent = (props) => {
 
     const originalSubComponentColumns = [
         {
-            Header: "Component Id",
-            accessor: "componentId",
+            Header: "HAWB No",
             width: 50,
             displayCell: (
                 rowData,
@@ -869,23 +868,193 @@ const GridComponent = (props) => {
                 isDesktop,
                 isExpandableColumn
             ) => {
-                const { componentId } = rowData;
-                if (componentId !== null && componentId !== undefined) {
+                const { hawbId } = rowData;
+                if (hawbId !== null && hawbId !== undefined) {
                     return (
                         <div className="travelId-details">
-                            <span>{componentId}</span>
+                            <span>{hawbId}</span>
                         </div>
                     );
                 }
                 return null;
             }
+        },
+        {
+            Header: "AWB Details",
+            accessor: "hawb",
+            onlyInDesktop: true,
+            width: 300,
+            innerCells: [
+                {
+                    Header: "From",
+                    accessor: "from"
+                },
+                {
+                    Header: "To",
+                    accessor: "to"
+                },
+                {
+                    Header: "Goods Type",
+                    accessor: "goodsType"
+                },
+                {
+                    Header: "Hawb No",
+                    accessor: "hawbNo"
+                },
+                {
+                    Header: "Ports",
+                    accessor: "ports"
+                },
+                {
+                    Header: "Status",
+                    accessor: "status"
+                },
+                {
+                    Header: "Type",
+                    accessor: "type"
+                },
+                {
+                    Header: "Std",
+                    accessor: "std"
+                }
+            ],
+            disableSortBy: true,
+            isSearchable: true,
+            displayCell: (
+                rowData,
+                DisplayTag,
+                isDesktop,
+                isExpandableColumn
+            ) => {
+                const { hawb } = rowData;
+                const {
+                    from,
+                    to,
+                    goodsType,
+                    hawbNo,
+                    ports,
+                    status,
+                    std,
+                    type
+                } = hawb;
+                const { item1, item2, item3, item4 } = std;
+                return (
+                    <div
+                        className="details-wrap"
+                        style={{ marginRight: "35px" }}
+                    >
+                        <ul className="details-expanded-content">
+                            <li>
+                                <DisplayTag columnKey="hawb" cellKey="from">
+                                    {from}
+                                </DisplayTag>
+                                -
+                                <DisplayTag columnKey="hawb" cellKey="to">
+                                    {to}
+                                </DisplayTag>
+                            </li>
+                            <li className="divider">|</li>
+                            <li>
+                                <DisplayTag columnKey="hawb" cellKey="status">
+                                    <span>{status}</span>
+                                </DisplayTag>
+                            </li>
+                            <li className="divider">|</li>
+                            <li>
+                                <DisplayTag
+                                    columnKey="hawb"
+                                    cellKey="goodsType"
+                                >
+                                    {goodsType}
+                                </DisplayTag>
+                            </li>
+                            <li className="divider">|</li>
+                            <li>
+                                <DisplayTag columnKey="hawb" cellKey="hawbNo">
+                                    {hawbNo}
+                                </DisplayTag>
+                            </li>
+                            <li className="divider">|</li>
+                            <li>
+                                <DisplayTag columnKey="hawb" cellKey="ports">
+                                    {ports}
+                                </DisplayTag>
+                            </li>
+                            <li className="divider">|</li>
+                            <li>
+                                <span>
+                                    <DisplayTag columnKey="hawb" cellKey="type">
+                                        {type}
+                                    </DisplayTag>
+                                </span>
+                            </li>
+                            <li className="divider">|</li>
+                            <li>
+                                <DisplayTag columnKey="hawb" cellKey="std">
+                                    <strong>{item1} </strong>
+                                    <span>{item2}</span>
+                                    <strong> {item3} </strong>
+                                    <span>{item4}</span>
+                                </DisplayTag>
+                            </li>
+                        </ul>
+                    </div>
+                );
+            }
+        },
+        {
+            Header: "SCR Details",
+            accessor: "scr",
+            innerCells: [
+                {
+                    Header: "ACK",
+                    accessor: "ack"
+                },
+                {
+                    Header: "NUM",
+                    accessor: "num"
+                },
+                {
+                    Header: "Status",
+                    accessor: "status"
+                }
+            ],
+            disableSortBy: true,
+            isSearchable: true,
+            displayCell: (
+                rowData,
+                DisplayTag,
+                isDesktop,
+                isExpandableColumn
+            ) => {
+                const { scr } = rowData;
+                const { ack, num, status } = scr;
+                return (
+                    <div className="details-wrap">
+                        <ul className="details-expanded-content">
+                            <li>
+                                <DisplayTag columnKey="scr" cellKey="ack">
+                                    <span>{ack}</span>
+                                </DisplayTag>
+                            </li>
+                            <li className="divider">|</li>
+                            <li>
+                                <DisplayTag columnKey="scr" cellKey="num">
+                                    {num}
+                                </DisplayTag>
+                            </li>
+                            <li className="divider">|</li>
+                            <li>
+                                <DisplayTag columnKey="scr" cellKey="status">
+                                    {status}
+                                </DisplayTag>
+                            </li>
+                        </ul>
+                    </div>
+                );
+            }
         }
     ];
-    originalColumns.forEach((col, index) => {
-        if (index > 2 && index % 2 === 0) {
-            originalSubComponentColumns.push(col);
-        }
-    });
 
     const [subComponentColumnns, setSubComponentColumnns] = useState([]);
 
@@ -1222,38 +1391,81 @@ const GridComponent = (props) => {
             }
             fetchData(info).then((data) => {
                 if (data && data.length > 0) {
-                    let updatedData = data;
                     if (isSubComponentGrid) {
-                        updatedData = data.map((item, itemIndex) => {
-                            const updatedItem = { ...item };
-                            const { travelId } = updatedItem;
-                            let subCompData = gridData.filter(
-                                (ite, ind) =>
-                                    ind >= itemIndex && ind < itemIndex + 5
-                            );
-                            subCompData = subCompData.map((dat) => {
-                                const updatedDat = { ...dat };
-                                updatedDat.componentId = travelId;
-                                return updatedDat;
-                            });
-                            updatedItem.subComponentData = subCompData;
-                            return updatedItem;
-                        });
-                    }
-                    setGridData(
-                        getSortedData(gridData.concat(updatedData), sortOptions)
-                    );
-                    setOriginalGridData(originalGridData.concat(updatedData));
-                    if (paginationType === "index") {
-                        setIndexPageInfo({
-                            ...indexPageInfo,
-                            pageNum: updatedPageInfo.pageNum
+                        let pageNumner =
+                            info.pageNum ||
+                            Math.ceil(info.endCursor / gridPageSize);
+                        if (pageNumner > 15) {
+                            pageNumner -= 15;
+                        }
+                        fetchSubComponentData({
+                            pageNum: pageNumner,
+                            pageSize: gridPageSize
+                        }).then((subComponentData) => {
+                            if (
+                                subComponentData &&
+                                subComponentData.length > 0
+                            ) {
+                                const updatedData = [...data].map(
+                                    (item, itemIndex) => {
+                                        const updatedItem = { ...item };
+                                        const { travelId } = updatedItem;
+                                        let subCompData = subComponentData.filter(
+                                            (ite, ind) =>
+                                                ind >= itemIndex &&
+                                                ind <
+                                                    itemIndex +
+                                                        Math.floor(
+                                                            Math.random() * 11
+                                                        )
+                                        );
+                                        subCompData = subCompData.map((dat) => {
+                                            const updatedDat = { ...dat };
+                                            updatedDat.travelId = travelId;
+                                            return updatedDat;
+                                        });
+                                        updatedItem.subComponentData = subCompData;
+                                        return updatedItem;
+                                    }
+                                );
+                                setGridData(
+                                    getSortedData(
+                                        gridData.concat(updatedData),
+                                        sortOptions
+                                    )
+                                );
+                                setOriginalGridData(
+                                    originalGridData.concat(updatedData)
+                                );
+                                if (paginationType === "index") {
+                                    setIndexPageInfo({
+                                        ...indexPageInfo,
+                                        pageNum: updatedPageInfo.pageNum
+                                    });
+                                } else {
+                                    setCursorPageInfo({
+                                        ...cursorPageInfo,
+                                        endCursor: info.endCursor
+                                    });
+                                }
+                            }
                         });
                     } else {
-                        setCursorPageInfo({
-                            ...cursorPageInfo,
-                            endCursor: info.endCursor
-                        });
+                        setGridData(
+                            getSortedData(gridData.concat(data), sortOptions)
+                        );
+                        setOriginalGridData(originalGridData.concat(data));
+                        if (paginationType === "index") {
+                            setIndexPageInfo({
+                                ...indexPageInfo,
+                                pageNum: updatedPageInfo.pageNum
+                            });
+                        } else {
+                            setCursorPageInfo({
+                                ...cursorPageInfo,
+                                endCursor: info.endCursor
+                            });
+                        }
                     }
                 } else if (paginationType === "index") {
                     setIndexPageInfo({
@@ -1342,36 +1554,78 @@ const GridComponent = (props) => {
                 paginationType === "index" ? indexPageInfo : cursorPageInfo;
             fetchData(pageInfo).then((data) => {
                 if (data && data.length > 0) {
-                    let updatedData = data;
                     if (isSubComponentGrid) {
-                        updatedData = data.map((item, itemIndex) => {
-                            const updatedItem = { ...item };
-                            const { travelId } = updatedItem;
-                            let subCompData = data.filter(
-                                (ite, ind) =>
-                                    ind >= itemIndex && ind < itemIndex + 5
-                            );
-                            subCompData = subCompData.map((dat) => {
-                                const updatedDat = { ...dat };
-                                updatedDat.componentId = travelId;
-                                return updatedDat;
-                            });
-                            updatedItem.subComponentData = subCompData;
-                            return updatedItem;
+                        let pageNumner =
+                            pageInfo.pageNum ||
+                            Math.ceil(pageInfo.endCursor / gridPageSize);
+                        if (pageNumner > 15) {
+                            pageNumner -= 15;
+                        }
+                        fetchSubComponentData({
+                            pageNum: pageNumner,
+                            pageSize: gridPageSize
+                        }).then((subComponentData) => {
+                            if (
+                                subComponentData &&
+                                subComponentData.length > 0
+                            ) {
+                                const updatedData = [...data].map(
+                                    (item, itemIndex) => {
+                                        const updatedItem = { ...item };
+                                        const { travelId } = updatedItem;
+                                        let subCompData = subComponentData.filter(
+                                            (ite, ind) =>
+                                                ind >= itemIndex &&
+                                                ind <
+                                                    itemIndex +
+                                                        Math.floor(
+                                                            Math.random() * 11
+                                                        )
+                                        );
+                                        subCompData = subCompData.map((dat) => {
+                                            const updatedDat = { ...dat };
+                                            updatedDat.travelId = travelId;
+                                            return updatedDat;
+                                        });
+                                        updatedItem.subComponentData = subCompData;
+                                        return updatedItem;
+                                    }
+                                );
+                                setGridData(updatedData);
+                                setOriginalGridData(updatedData);
+                                setSubComponentColumnns(
+                                    originalSubComponentColumns
+                                );
+                                // Update local state based on rowsToSelect
+                                if (
+                                    rowsForSelection &&
+                                    rowsForSelection.length > 0
+                                ) {
+                                    setRowsToSelect(rowsForSelection);
+                                    setUserSelectedRows(
+                                        data.filter((initialData) => {
+                                            const { travelId } = initialData;
+                                            return rowsForSelection.includes(
+                                                travelId
+                                            );
+                                        })
+                                    );
+                                }
+                            }
                         });
-                        setSubComponentColumnns(originalSubComponentColumns);
-                    }
-                    setGridData(updatedData);
-                    setOriginalGridData(updatedData);
-                    // Update local state based on rowsToSelect
-                    if (rowsForSelection && rowsForSelection.length > 0) {
-                        setRowsToSelect(rowsForSelection);
-                        setUserSelectedRows(
-                            updatedData.filter((initialData) => {
-                                const { travelId } = initialData;
-                                return rowsForSelection.includes(travelId);
-                            })
-                        );
+                    } else {
+                        setGridData(data);
+                        setOriginalGridData(data);
+                        // Update local state based on rowsToSelect
+                        if (rowsForSelection && rowsForSelection.length > 0) {
+                            setRowsToSelect(rowsForSelection);
+                            setUserSelectedRows(
+                                data.filter((initialData) => {
+                                    const { travelId } = initialData;
+                                    return rowsForSelection.includes(travelId);
+                                })
+                            );
+                        }
                     }
                 } else if (paginationType === "index") {
                     setIndexPageInfo({
