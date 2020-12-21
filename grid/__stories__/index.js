@@ -885,7 +885,7 @@ const GridComponent = (props) => {
             Header: "AWB Details",
             accessor: "hawb",
             onlyInDesktop: true,
-            width: 300,
+            width: 400,
             innerCells: [
                 {
                     Header: "From",
@@ -1021,8 +1021,7 @@ const GridComponent = (props) => {
                     accessor: "status"
                 }
             ],
-            disableSortBy: true,
-            isSearchable: true,
+            width: 100,
             displayCell: (
                 rowData,
                 DisplayTag,
