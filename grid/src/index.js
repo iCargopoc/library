@@ -190,9 +190,9 @@ const Grid = (props) => {
     };
 
     // Gets triggered when one row item is updated
-    const updateRowInGrid = (original, updatedRow) => {
+    const updateRowInGrid = (original, updatedRow, isSubComponentRow) => {
         if (onRowUpdate) {
-            onRowUpdate(original, updatedRow);
+            onRowUpdate(original, updatedRow, isSubComponentRow);
         }
     };
 
@@ -437,7 +437,8 @@ const Grid = (props) => {
                 isDesktop,
                 updateRowInGrid,
                 expandableColumn,
-                isParentGrid
+                isParentGrid,
+                false
             )
         );
         setAdditionalColumn(
@@ -458,7 +459,7 @@ const Grid = (props) => {
                 updateRowInGrid,
                 expandableColumn,
                 isParentGrid,
-                isSubComponentGrid
+                true
             )
         );
     }, [subComponentColumnns]);

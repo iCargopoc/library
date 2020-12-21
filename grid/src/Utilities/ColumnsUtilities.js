@@ -9,7 +9,8 @@ export const extractColumns = (
     isDesktop,
     updateRowInGrid,
     expandableColumn,
-    isParentGrid
+    isParentGrid,
+    isSubComponentColumns
 ) => {
     if (columns && columns.length > 0) {
         // Remove iPad only columns from desktop and vice-versa
@@ -25,7 +26,10 @@ export const extractColumns = (
             const elem = column;
 
             // Add column Id
-            elem.columnId = `column_${index}`;
+            elem.columnId =
+                isSubComponentColumns === true
+                    ? `subComponentColumn_${index}`
+                    : `column_${index}`;
 
             // Set display flag to true if not present
             if (elem.display !== false) {
@@ -41,7 +45,10 @@ export const extractColumns = (
                     const cellElem = cell;
 
                     // Add column Id
-                    cellElem.cellId = `column_${index}_cell_${cellIndex}`;
+                    cellElem.cellId =
+                        isSubComponentColumns === true
+                            ? `subComponentColumn_${index}_cell_${cellIndex}`
+                            : `column_${index}_cell_${cellIndex}`;
 
                     // Set the display flag to true if not present
                     if (cellElem.display !== false) {
@@ -49,7 +56,10 @@ export const extractColumns = (
                     }
 
                     // Update isInnerCellSortable to true if any of the inner cells are sortable
-                    if (cellElem.isSortable === true) {
+                    if (
+                        cellElem.isSortable === true &&
+                        isSubComponentColumns !== true
+                    ) {
                         isInnerCellSortable = true;
                     }
 
@@ -57,7 +67,8 @@ export const extractColumns = (
                 });
 
                 // Update isSortable prop of column based on the value of isInnerCellSortable
-                elem.isSortable = isInnerCellSortable;
+                elem.isSortable =
+                    isInnerCellSortable && isSubComponentColumns !== true;
             }
 
             // Add an indentifier that this is a column not for expanded region
@@ -75,13 +86,18 @@ export const extractColumns = (
                             updateRowInGrid={updateRowInGrid}
                             expandableColumn={expandableColumn}
                             isDesktop={isDesktop}
+                            isSubComponentColumns={isSubComponentColumns}
                         />
                     );
                 };
             }
 
             // Add logic to sort column if sort is not disabled
-            if (!elem.disableSortBy && !isParentGrid) {
+            if (
+                !elem.disableSortBy &&
+                isParentGrid !== true &&
+                isSubComponentColumns !== true
+            ) {
                 if (isInnerCellsPresent) {
                     // If there are inner cells and a sort value specified, do sort on that value
                     if (sortValue) {
@@ -122,7 +138,7 @@ export const extractColumns = (
             }
 
             // Add logic to filter column if column filter is not disabled
-            if (!elem.disableFilters) {
+            if (!elem.disableFilters && isSubComponentColumns !== true) {
                 elem.filter = (rows, id, filterValue) => {
                     const searchText = filterValue
                         ? filterValue.toLowerCase()

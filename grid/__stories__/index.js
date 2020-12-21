@@ -8,6 +8,7 @@ import { getValueOfDate } from "./utils/DateUtility";
 import DetailsView from "./cells/DetailsView";
 import FlightEdit from "./cells/FlightEdit";
 import SrEdit from "./cells/SrEdit";
+import ScrNumEdit from "./cells/ScrNumEdit";
 import SegmentEdit from "./cells/SegmentEdit";
 import RowAction from "./cells/RowAction";
 import RowEdit from "./cells/RowEdit";
@@ -51,6 +52,7 @@ const GridComponent = (props) => {
 
     const idAttribute = "travelId";
     const parentIdAttribute = "titleId";
+    const subComponentIdAttribute = "hawbId";
     const gridPageSize = 300;
     const paginationType = "index"; // or - "cursor" - if Gris is tree view and parentRowExpandable is false, then paginationType should be "index"
     // State for holding index page info
@@ -1052,6 +1054,23 @@ const GridComponent = (props) => {
                         </ul>
                     </div>
                 );
+            },
+            editCell: (
+                rowData,
+                DisplayTag,
+                rowUpdateCallBack,
+                isDesktop,
+                isExpandableColumn
+            ) => {
+                if (fixedRowHeight !== true) {
+                    return (
+                        <ScrNumEdit
+                            rowData={rowData}
+                            rowUpdateCallBack={rowUpdateCallBack}
+                        />
+                    );
+                }
+                return null;
             }
         }
     ];
@@ -1068,11 +1087,11 @@ const GridComponent = (props) => {
         });
     };
 
-    const onRowUpdate = (originalRow, updatedRow) => {
+    const onRowUpdate = (originalRow, updatedRow, isSubComponentRow) => {
         setGridData((old) =>
             old.map((row) => {
                 if (row) {
-                    let rowToUpdate = row;
+                    let rowToUpdate = { ...row };
                     if (treeStructure) {
                         const { childData } = row;
                         if (childData) {
@@ -1089,7 +1108,22 @@ const GridComponent = (props) => {
                     } else if (
                         rowToUpdate[idAttribute] === originalRow[idAttribute]
                     ) {
-                        rowToUpdate = updatedRow;
+                        if (isSubComponentGrid) {
+                            rowToUpdate.subComponentData = [
+                                ...rowToUpdate.subComponentData
+                            ].map((data) => {
+                                let dataToUpdate = { ...data };
+                                if (
+                                    dataToUpdate[subComponentIdAttribute] ===
+                                    updatedRow[subComponentIdAttribute]
+                                ) {
+                                    dataToUpdate = updatedRow;
+                                }
+                                return dataToUpdate;
+                            });
+                        } else {
+                            rowToUpdate = updatedRow;
+                        }
                     }
                     return rowToUpdate;
                 }

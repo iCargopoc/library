@@ -9,7 +9,8 @@ const CellDisplayAndEdit = ({
     row,
     updateRowInGrid,
     expandableColumn,
-    isDesktop
+    isDesktop,
+    isSubComponentColumns
 }) => {
     const { column, columns } = row;
     if (column && row.row) {
@@ -35,7 +36,11 @@ const CellDisplayAndEdit = ({
 
         const saveEdit = () => {
             if (editedRowValue) {
-                updateRowInGrid(original, editedRowValue);
+                updateRowInGrid(
+                    original,
+                    editedRowValue,
+                    isSubComponentColumns
+                );
             }
             closeEdit();
         };
@@ -117,7 +122,8 @@ CellDisplayAndEdit.propTypes = {
     row: PropTypes.object,
     updateRowInGrid: PropTypes.func,
     expandableColumn: PropTypes.bool,
-    isDesktop: PropTypes.bool
+    isDesktop: PropTypes.bool,
+    isSubComponentColumns: PropTypes.bool
 };
 
 export default CellDisplayAndEdit;
