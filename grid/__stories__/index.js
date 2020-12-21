@@ -1107,7 +1107,7 @@ const GridComponent = (props) => {
                     } else if (
                         rowToUpdate[idAttribute] === originalRow[idAttribute]
                     ) {
-                        if (isSubComponentGrid) {
+                        if (isSubComponentRow) {
                             rowToUpdate.subComponentData = [
                                 ...rowToUpdate.subComponentData
                             ].map((data) => {
@@ -1132,7 +1132,7 @@ const GridComponent = (props) => {
         setOriginalGridData((old) =>
             old.map((row) => {
                 if (row) {
-                    let rowToUpdate = row;
+                    let rowToUpdate = { ...row };
                     if (treeStructure) {
                         const { childData } = row;
                         if (childData) {
@@ -1149,7 +1149,22 @@ const GridComponent = (props) => {
                     } else if (
                         rowToUpdate[idAttribute] === originalRow[idAttribute]
                     ) {
-                        rowToUpdate = updatedRow;
+                        if (isSubComponentRow) {
+                            rowToUpdate.subComponentData = [
+                                ...rowToUpdate.subComponentData
+                            ].map((data) => {
+                                let dataToUpdate = { ...data };
+                                if (
+                                    dataToUpdate[subComponentIdAttribute] ===
+                                    updatedRow[subComponentIdAttribute]
+                                ) {
+                                    dataToUpdate = updatedRow;
+                                }
+                                return dataToUpdate;
+                            });
+                        } else {
+                            rowToUpdate = updatedRow;
+                        }
                     }
                     return rowToUpdate;
                 }
