@@ -84,6 +84,7 @@ const Grid = (props) => {
         parentRowExpandable,
         parentRowsToExpand,
         subComponentColumnns,
+        subComponentColumnToExpand,
         rowActions,
         onRowUpdate,
         onRowSelect,
@@ -205,6 +206,11 @@ const Grid = (props) => {
     const isParentGrid = parentColumn !== null && parentColumn !== undefined;
 
     const [gridSubComponentColumns, setGridSubComponentColumns] = useState([]);
+
+    const [
+        gridSubComponentAdditionalColumn,
+        setGridSubComponentAdditionalColumn
+    ] = useState(null);
 
     let isSubComponentGrid =
         subComponentColumnns !== null &&
@@ -442,7 +448,12 @@ const Grid = (props) => {
             )
         );
         setAdditionalColumn(
-            extractAdditionalColumn(columnToExpand, isDesktop, updateRowInGrid)
+            extractAdditionalColumn(
+                columnToExpand,
+                isDesktop,
+                updateRowInGrid,
+                false
+            )
         );
     }, [columns, columnToExpand]);
 
@@ -462,7 +473,15 @@ const Grid = (props) => {
                 true
             )
         );
-    }, [subComponentColumnns]);
+        setGridSubComponentAdditionalColumn(
+            extractAdditionalColumn(
+                subComponentColumnToExpand,
+                isDesktop,
+                updateRowInGrid,
+                true
+            )
+        );
+    }, [subComponentColumnns, subComponentColumnToExpand]);
 
     useEffect(() => {
         setIsLoaded(true);
@@ -505,6 +524,9 @@ const Grid = (props) => {
                     parentRowExpandable={parentRowExpandable}
                     parentRowsToExpand={parentRowsToExpand}
                     subComponentColumnns={gridSubComponentColumns}
+                    subComponentAdditionalColumn={
+                        gridSubComponentAdditionalColumn
+                    }
                     isSubComponentGrid={isSubComponentGrid}
                     loadChildData={loadChildData}
                     isParentGrid={isParentGrid}
@@ -561,6 +583,7 @@ Grid.propTypes = {
     parentRowExpandable: PropTypes.bool,
     parentRowsToExpand: PropTypes.array,
     subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
+    subComponentColumnToExpand: PropTypes.object,
     gridData: PropTypes.arrayOf(PropTypes.object),
     rowsToOverscan: PropTypes.number,
     idAttribute: PropTypes.string,

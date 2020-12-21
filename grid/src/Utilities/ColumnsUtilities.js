@@ -185,14 +185,21 @@ export const extractColumns = (
     return [];
 };
 
-export const extractAdditionalColumn = (additionalColumn, isDesktop) => {
+export const extractAdditionalColumn = (
+    additionalColumn,
+    isDesktop,
+    isSubComponentColumns
+) => {
     if (additionalColumn) {
         const { innerCells } = additionalColumn;
         const isInnerCellsPresent = innerCells && innerCells.length > 0;
         const element = additionalColumn;
 
         // Add column Id
-        element.columnId = `rowExpand`;
+        element.columnId =
+            isSubComponentColumns === true
+                ? "subComponentRowExpand"
+                : `rowExpand`;
 
         // Set display flag to true if not present
         if (element.display !== false) {
@@ -213,7 +220,7 @@ export const extractAdditionalColumn = (additionalColumn, isDesktop) => {
                 const cellElem = cell;
 
                 // Add column Id
-                cellElem.cellId = `rowExpand_cell_${cellIndex}`;
+                cellElem.cellId = `subComponentRowExpand_cell_${cellIndex}`;
 
                 // Set the display flag to true if not present
                 if (cellElem.display !== false) {

@@ -61,6 +61,7 @@ const Customgrid = (props) => {
         parentRowExpandable,
         parentRowsToExpand,
         subComponentColumnns,
+        subComponentAdditionalColumn,
         isSubComponentGrid,
         loadChildData,
         isParentGrid,
@@ -1191,6 +1192,9 @@ const Customgrid = (props) => {
                                                         subComponentColumnns={
                                                             subComponentColumnns
                                                         }
+                                                        subComponentAdditionalColumn={
+                                                            subComponentAdditionalColumn
+                                                        }
                                                         isSubComponentGrid={
                                                             isSubComponentGrid
                                                         }
@@ -1264,6 +1268,9 @@ const Customgrid = (props) => {
                                                 subComponentColumnns={
                                                     subComponentColumnns
                                                 }
+                                                subComponentAdditionalColumn={
+                                                    subComponentAdditionalColumn
+                                                }
                                                 isSubComponentGrid={
                                                     isSubComponentGrid
                                                 }
@@ -1328,6 +1335,7 @@ Customgrid.propTypes = {
     parentRowExpandable: PropTypes.bool,
     parentRowsToExpand: PropTypes.array,
     subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
+    subComponentAdditionalColumn: PropTypes.object,
     isSubComponentGrid: PropTypes.bool,
     loadChildData: PropTypes.func,
     isParentGrid: PropTypes.bool,

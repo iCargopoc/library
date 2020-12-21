@@ -17,6 +17,7 @@ const RowItem = ({
     fixedRowHeight,
     isLoadMoreRequiredForNormalRow,
     subComponentColumnns,
+    subComponentAdditionalColumn,
     isSubComponentGrid
 }) => {
     return (
@@ -75,6 +76,9 @@ const RowItem = ({
                         <SubComponent
                             subComponentData={row.original.subComponentData}
                             subComponentColumnns={subComponentColumnns}
+                            subComponentAdditionalColumn={
+                                subComponentAdditionalColumn
+                            }
                         />
                     ) : null}
                     {isLoadMoreRequiredForNormalRow(index) ? (
@@ -123,6 +127,7 @@ RowItem.propTypes = {
     isNextPageLoading: PropTypes.bool,
     isLoadMoreRequiredForNormalRow: PropTypes.func,
     subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
+    subComponentAdditionalColumn: PropTypes.object,
     isSubComponentGrid: PropTypes.bool
 };
 

@@ -24,6 +24,7 @@ const RowsList = ({
     toggleParentRow,
     isParentRowOpen,
     subComponentColumnns,
+    subComponentAdditionalColumn,
     isSubComponentGrid,
     isLoadMoreChildRowsRequiredForRow,
     loadMoreChildData,
@@ -138,6 +139,9 @@ const RowsList = ({
                             parentColumn={parentColumn}
                             additionalColumn={additionalColumn}
                             subComponentColumnns={subComponentColumnns}
+                            subComponentAdditionalColumn={
+                                subComponentAdditionalColumn
+                            }
                             isSubComponentGrid={isSubComponentGrid}
                             getRowInfo={getRowInfo}
                             fixedRowHeight={fixedRowHeight}
@@ -181,6 +185,7 @@ RowsList.propTypes = {
     fixedRowHeight: PropTypes.bool,
     isLoadMoreRequiredForNormalRow: PropTypes.func,
     subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
+    subComponentAdditionalColumn: PropTypes.object,
     isSubComponentGrid: PropTypes.bool
 };
 

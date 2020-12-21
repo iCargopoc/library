@@ -1073,8 +1073,28 @@ const GridComponent = (props) => {
             }
         }
     ];
-
     const [subComponentColumnns, setSubComponentColumnns] = useState([]);
+
+    const originalSubComponentColumnToExpand = {
+        Header: "Additional Column",
+        innerCells: [{ Header: "Remarks", accessor: "remarks" }],
+        displayCell: (rowData, DisplayTag, isDesktop) => {
+            const { remarks } = rowData;
+            return (
+                <div className="remarks-wrap details-wrap">
+                    <DisplayTag columnKey="remarks" cellKey="remarks">
+                        <ul>
+                            <li>{remarks}</li>
+                        </ul>
+                    </DisplayTag>
+                </div>
+            );
+        }
+    };
+    const [
+        subComponentColumnToExpand,
+        setSubComponentColumnToExpand
+    ] = useState(null);
 
     const updateData = (data, originalRow, updatedRow) => {
         return data.map((row) => {
@@ -1644,6 +1664,9 @@ const GridComponent = (props) => {
                                 setSubComponentColumnns(
                                     originalSubComponentColumns
                                 );
+                                setSubComponentColumnToExpand(
+                                    originalSubComponentColumnToExpand
+                                );
                                 // Update local state based on rowsToSelect
                                 if (
                                     rowsForSelection &&
@@ -1811,6 +1834,7 @@ const GridComponent = (props) => {
                             : null
                     }
                     subComponentColumnns={subComponentColumnns}
+                    subComponentColumnToExpand={subComponentColumnToExpand}
                     rowActions={allProps || passRowActions ? rowActions : null}
                     expandableColumn={
                         (allProps && fixedRowHeight !== true) ||
