@@ -27,7 +27,8 @@ const ListItem = ({
     isSubComponentGrid,
     getRowInfo,
     fixedRowHeight,
-    isLoadMoreRequiredForNormalRow
+    isLoadMoreRequiredForNormalRow,
+    rowSelector
 }) => {
     if (isParentRowCollapsed(row)) {
         return null;
@@ -49,6 +50,7 @@ const ListItem = ({
                     toggleParentRow={toggleParentRow}
                     isParentRowOpen={isParentRowOpen}
                     parentColumn={parentColumn}
+                    rowSelector={rowSelector}
                 />
             </div>
         );
@@ -118,7 +120,8 @@ ListItem.propTypes = {
     subComponentAdditionalColumn: PropTypes.object,
     isSubComponentGrid: PropTypes.bool,
     fixedRowHeight: PropTypes.bool,
-    isLoadMoreRequiredForNormalRow: PropTypes.func
+    isLoadMoreRequiredForNormalRow: PropTypes.func,
+    rowSelector: PropTypes.bool
 };
 
 export default ListItem;

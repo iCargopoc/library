@@ -13,7 +13,8 @@ const ParentItem = ({
     toggleParentRowSelection,
     toggleParentRow,
     isParentRowOpen,
-    parentColumn
+    parentColumn,
+    rowSelector
 }) => {
     const { original } = row;
     return (
@@ -27,7 +28,8 @@ const ParentItem = ({
                 <div ref={measureRef} className="ng-accordion__container">
                     <div className="ng-accordion__session">
                         <div className="ng-accordion__block">
-                            {multiRowSelection !== false ? (
+                            {multiRowSelection !== false &&
+                            rowSelector !== false ? (
                                 <div className="neo-form-check">
                                     <input
                                         type="checkbox"
@@ -78,7 +80,8 @@ ParentItem.propTypes = {
     toggleParentRowSelection: PropTypes.func,
     toggleParentRow: PropTypes.func,
     isParentRowOpen: PropTypes.func,
-    parentColumn: PropTypes.object
+    parentColumn: PropTypes.object,
+    rowSelector: PropTypes.bool
 };
 
 export default ParentItem;

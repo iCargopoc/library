@@ -867,7 +867,9 @@ const Customgrid = (props) => {
                     }`}
                 >
                     <div className="ng-header-results">
-                        {gridHeader === false && multiRowSelection !== false ? (
+                        {gridHeader === false &&
+                        multiRowSelection !== false &&
+                        rowSelector !== false ? (
                             <div className="neo-form-check ng-header-results__check">
                                 <input
                                     type="checkbox"
@@ -1238,6 +1240,9 @@ const Customgrid = (props) => {
                                                         isLoadMoreRequiredForNormalRow={
                                                             isLoadMoreRequiredForNormalRow
                                                         }
+                                                        rowSelector={
+                                                            rowSelector
+                                                        }
                                                     />
                                                 )}
                                             </InfiniteLoader>
@@ -1304,6 +1309,7 @@ const Customgrid = (props) => {
                                                 isLoadMoreRequiredForNormalRow={
                                                     isLoadMoreRequiredForNormalRow
                                                 }
+                                                rowSelector={rowSelector}
                                             />
                                         )}
                                     </div>

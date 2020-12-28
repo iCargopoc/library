@@ -34,7 +34,8 @@ const RowsList = ({
     expandedParentRows,
     reRenderListData,
     fixedRowHeight,
-    isLoadMoreRequiredForNormalRow
+    isLoadMoreRequiredForNormalRow,
+    rowSelector
 }) => {
     const sizeMap = useRef({});
 
@@ -148,6 +149,7 @@ const RowsList = ({
                             isLoadMoreRequiredForNormalRow={
                                 isLoadMoreRequiredForNormalRow
                             }
+                            rowSelector={rowSelector}
                         />
                     );
                 },
@@ -186,7 +188,8 @@ RowsList.propTypes = {
     isLoadMoreRequiredForNormalRow: PropTypes.func,
     subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
     subComponentAdditionalColumn: PropTypes.object,
-    isSubComponentGrid: PropTypes.bool
+    isSubComponentGrid: PropTypes.bool,
+    rowSelector: PropTypes.bool
 };
 
 export default RowsList;
