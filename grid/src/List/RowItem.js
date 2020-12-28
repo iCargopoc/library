@@ -18,7 +18,10 @@ const RowItem = ({
     isLoadMoreRequiredForNormalRow,
     subComponentColumnns,
     subComponentAdditionalColumn,
-    isSubComponentGrid
+    isSubComponentGrid,
+    getRowInfo,
+    rowActions,
+    expandableColumn
 }) => {
     const { isExpanded, cells, original } = row;
     const { subComponentData } = original;
@@ -85,6 +88,9 @@ const RowItem = ({
                             subComponentAdditionalColumn={
                                 subComponentAdditionalColumn
                             }
+                            getRowInfo={getRowInfo}
+                            rowActions={rowActions}
+                            expandableColumn={expandableColumn}
                         />
                     ) : null}
                     {isLoadMoreRequiredForNormalRow(index) ? (
@@ -134,7 +140,10 @@ RowItem.propTypes = {
     isLoadMoreRequiredForNormalRow: PropTypes.func,
     subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
     subComponentAdditionalColumn: PropTypes.object,
-    isSubComponentGrid: PropTypes.bool
+    isSubComponentGrid: PropTypes.bool,
+    getRowInfo: PropTypes.func,
+    rowActions: PropTypes.any,
+    expandableColumn: PropTypes.bool
 };
 
 export default RowItem;

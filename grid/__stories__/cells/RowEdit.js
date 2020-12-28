@@ -11,7 +11,7 @@ const RowEdit = ({
     const [updatedRowData, setUpdatedRowData] = useState(rowData);
 
     const saveRowEdit = () => {
-        onRowUpdate(rowData, updatedRowData);
+        onRowUpdate(rowData, updatedRowData, false);
         unbindRowEditOverlay();
     };
 

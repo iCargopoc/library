@@ -1,14 +1,26 @@
 import React, { useMemo } from "react";
 import { useTable, useFlexLayout, useExpanded } from "react-table";
 import PropTypes from "prop-types";
+import RowOptions from "../Functions/RowOptions";
 import { IconAngle } from "../Utilities/SvgUtilities";
 
 const SubComponent = (props) => {
     const {
         subComponentData,
         subComponentColumnns,
-        subComponentAdditionalColumn
+        subComponentAdditionalColumn,
+        getRowInfo,
+        rowActions,
+        expandableColumn
     } = props;
+
+    const isRowExpandEnabled = !!(
+        subComponentAdditionalColumn &&
+        Object.keys(subComponentAdditionalColumn).length > 0 &&
+        subComponentAdditionalColumn.display === true &&
+        subComponentAdditionalColumn.Cell &&
+        typeof subComponentAdditionalColumn.Cell === "function"
+    );
 
     const columns = useMemo(() => subComponentColumnns);
     const data = useMemo(() => [...subComponentData]);
@@ -28,43 +40,73 @@ const SubComponent = (props) => {
         useFlexLayout,
         useExpanded,
         (hooks) => {
-            hooks.allColumns.push((hookColumns) => [
-                ...hookColumns,
-                {
-                    id: "custom",
-                    columnId: "column_custom_1",
-                    disableResizing: true,
-                    disableFilters: true,
-                    disableSortBy: true,
-                    display: true,
-                    isGroupHeader: false,
-                    minWidth: 35,
-                    width: 35,
-                    maxWidth: 35,
-                    Cell: (cellCustomProps) => {
-                        const { row } = cellCustomProps;
-                        return (
-                            <div className="ng-action">
-                                <span
-                                    className="ng-action__expander"
-                                    data-testid="rowExpanderIcon"
-                                    {...row.getToggleRowExpandedProps()}
-                                >
-                                    <i>
-                                        <IconAngle
-                                            className={
-                                                row.isExpanded
-                                                    ? "ng-icon ng-action__arrow-up"
-                                                    : "ng-icon ng-action__arrow-down"
-                                            }
+            // Add last column only if required
+            const isRowActionsAvailable = !!(
+                rowActions && typeof rowActions === "function"
+            ); // If row actions are available
+            const isRowExpandAvailable = isRowExpandEnabled || expandableColumn; // If row expand option is available
+            if (isRowActionsAvailable || isRowExpandAvailable) {
+                hooks.allColumns.push((hookColumns) => [
+                    ...hookColumns,
+                    {
+                        id: "subComponentCustom",
+                        columnId: "subComponentColumn_custom_1",
+                        disableResizing: true,
+                        disableFilters: true,
+                        disableSortBy: true,
+                        display: true,
+                        isGroupHeader: false,
+                        minWidth: 35,
+                        width: 35,
+                        maxWidth: 35,
+                        Cell: (cellCustomProps) => {
+                            const { row } = cellCustomProps;
+                            // Check if expand icon is required for this row using the getRowInfo prop passed
+                            let isRowExpandable = true;
+                            if (
+                                getRowInfo &&
+                                typeof getRowInfo === "function"
+                            ) {
+                                const rowInfo = getRowInfo(row.original, true);
+                                if (
+                                    rowInfo &&
+                                    rowInfo.isRowExpandable === false
+                                ) {
+                                    isRowExpandable = false;
+                                }
+                            }
+                            return (
+                                <div className="ng-action">
+                                    {isRowActionsAvailable ? (
+                                        <RowOptions
+                                            row={row}
+                                            rowActions={rowActions}
+                                            isSubComponentRow
                                         />
-                                    </i>
-                                </span>
-                            </div>
-                        );
+                                    ) : null}
+                                    {isRowExpandAvailable && isRowExpandable ? (
+                                        <span
+                                            className="ng-action__expander"
+                                            data-testid="rowExpanderIcon"
+                                            {...row.getToggleRowExpandedProps()}
+                                        >
+                                            <i>
+                                                <IconAngle
+                                                    className={
+                                                        row.isExpanded
+                                                            ? "ng-icon ng-action__arrow-up"
+                                                            : "ng-icon ng-action__arrow-down"
+                                                    }
+                                                />
+                                            </i>
+                                        </span>
+                                    ) : null}
+                                </div>
+                            );
+                        }
                     }
-                }
-            ]);
+                ]);
+            }
         }
     );
     return (
@@ -100,39 +142,55 @@ const SubComponent = (props) => {
                 <div {...getTableBodyProps()} className="neo-grid__tbody">
                     {rows.map((row) => {
                         prepareRow(row);
-                        return (
-                            <div className="neo-grid__row-container">
-                                <div
-                                    data-testid="gridrowWrap"
-                                    className="neo-grid__row-wrap"
-                                >
-                                    {row.cells.map((cell) => {
-                                        if (cell.column.display === true) {
-                                            return (
-                                                <div
-                                                    {...cell.getCellProps()}
-                                                    className="neo-grid__td"
-                                                    data-testid="gridrowcell"
-                                                >
-                                                    {cell.render("Cell")}
-                                                </div>
-                                            );
-                                        }
-                                        return null;
-                                    })}
-                                </div>
 
-                                {row.isExpanded ? (
+                        const { original, cells, isExpanded } = row;
+                        // Add classname passed by developer from getRowInfo prop to required rows
+                        let rowClassName = "";
+                        if (getRowInfo && typeof getRowInfo === "function") {
+                            const rowInfo = getRowInfo(original, true);
+                            if (rowInfo && rowInfo.className) {
+                                rowClassName = rowInfo.className;
+                            }
+                        }
+                        return (
+                            <div
+                                {...row.getRowProps()}
+                                data-testid="gridrow"
+                                className={`neo-grid__tr ${rowClassName}`}
+                            >
+                                <div className="neo-grid__row-container">
                                     <div
-                                        className="neo-grid__row-expand"
-                                        data-testid="rowExpandedRegion"
+                                        data-testid="gridrowWrap"
+                                        className="neo-grid__row-wrap"
                                     >
-                                        {subComponentAdditionalColumn.Cell(
-                                            row,
-                                            subComponentAdditionalColumn
-                                        )}
+                                        {cells.map((cell) => {
+                                            if (cell.column.display === true) {
+                                                return (
+                                                    <div
+                                                        {...cell.getCellProps()}
+                                                        className="neo-grid__td"
+                                                        data-testid="gridrowcell"
+                                                    >
+                                                        {cell.render("Cell")}
+                                                    </div>
+                                                );
+                                            }
+                                            return null;
+                                        })}
                                     </div>
-                                ) : null}
+
+                                    {isExpanded ? (
+                                        <div
+                                            className="neo-grid__row-expand"
+                                            data-testid="rowExpandedRegion"
+                                        >
+                                            {subComponentAdditionalColumn.Cell(
+                                                row,
+                                                subComponentAdditionalColumn
+                                            )}
+                                        </div>
+                                    ) : null}
+                                </div>
                             </div>
                         );
                     })}
@@ -151,5 +209,8 @@ export default SubComponent;
 SubComponent.propTypes = {
     subComponentData: PropTypes.arrayOf(PropTypes.object),
     subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
-    subComponentAdditionalColumn: PropTypes.object
+    subComponentAdditionalColumn: PropTypes.object,
+    getRowInfo: PropTypes.func,
+    rowActions: PropTypes.any,
+    expandableColumn: PropTypes.bool
 };

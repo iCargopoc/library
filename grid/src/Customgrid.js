@@ -310,7 +310,7 @@ const Customgrid = (props) => {
                                 getRowInfo &&
                                 typeof getRowInfo === "function"
                             ) {
-                                const rowInfo = getRowInfo(row.original);
+                                const rowInfo = getRowInfo(row.original, false);
                                 if (
                                     rowInfo &&
                                     rowInfo.isRowSelectable === false
@@ -372,7 +372,7 @@ const Customgrid = (props) => {
                                 getRowInfo &&
                                 typeof getRowInfo === "function"
                             ) {
-                                const rowInfo = getRowInfo(row.original);
+                                const rowInfo = getRowInfo(row.original, false);
                                 if (
                                     rowInfo &&
                                     rowInfo.isRowExpandable === false
@@ -386,6 +386,7 @@ const Customgrid = (props) => {
                                         <RowOptions
                                             row={row}
                                             rowActions={rowActions}
+                                            isSubComponentRow={false}
                                         />
                                     ) : null}
                                     {isRowExpandAvailable && isRowExpandable ? (
@@ -756,7 +757,10 @@ const Customgrid = (props) => {
                                     getRowInfo &&
                                     typeof getRowInfo === "function"
                                 ) {
-                                    const rowInfo = getRowInfo(gridRowOriginal);
+                                    const rowInfo = getRowInfo(
+                                        gridRowOriginal,
+                                        false
+                                    );
                                     if (
                                         rowInfo &&
                                         rowInfo.isRowSelectable === false
@@ -1243,6 +1247,10 @@ const Customgrid = (props) => {
                                                         rowSelector={
                                                             rowSelector
                                                         }
+                                                        rowActions={rowActions}
+                                                        expandableColumn={
+                                                            expandableColumn
+                                                        }
                                                     />
                                                 )}
                                             </InfiniteLoader>
@@ -1310,6 +1318,10 @@ const Customgrid = (props) => {
                                                     isLoadMoreRequiredForNormalRow
                                                 }
                                                 rowSelector={rowSelector}
+                                                rowActions={rowActions}
+                                                expandableColumn={
+                                                    expandableColumn
+                                                }
                                             />
                                         )}
                                     </div>

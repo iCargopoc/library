@@ -4,20 +4,28 @@ import DeleteIcon from "../images/DeleteIcon.png";
 
 const RowAction = ({
     rowData,
+    isSubComponentRow,
     fixedRowHeight,
     closeOverlay,
     bindRowEditOverlay,
     bindRowDeleteOverlay
 }) => {
     const openEditOverlay = () => {
-        bindRowEditOverlay(rowData);
+        bindRowEditOverlay(rowData, isSubComponentRow);
         closeOverlay();
     };
     const openDeleteOverlay = () => {
-        bindRowDeleteOverlay(rowData);
+        bindRowDeleteOverlay(rowData, isSubComponentRow);
         closeOverlay();
     };
-    const { travelId } = rowData;
+    let isDeleteOptionNeeded = true;
+    if (isSubComponentRow) {
+        const { hawbId } = rowData;
+        isDeleteOptionNeeded = hawbId % 2 === 0;
+    } else {
+        const { travelId } = rowData;
+        isDeleteOptionNeeded = travelId % 2 === 0;
+    }
     return (
         <ul>
             {fixedRowHeight !== true ? (
@@ -30,7 +38,7 @@ const RowAction = ({
                     </span>
                 </li>
             ) : null}
-            {travelId % 2 === 0 ? (
+            {isDeleteOptionNeeded % 2 === 0 ? (
                 <li role="presentation" onClick={openDeleteOverlay}>
                     <span>
                         <i>

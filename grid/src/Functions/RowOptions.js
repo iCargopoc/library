@@ -3,7 +3,7 @@ import ClickAwayListener from "react-click-away-listener";
 import PropTypes from "prop-types";
 import { IconCancel, IconKebab } from "../Utilities/SvgUtilities";
 
-const RowOptions = ({ row, rowActions }) => {
+const RowOptions = ({ row, rowActions, isSubComponentRow }) => {
     const { original } = row;
 
     const [isRowOptionsOpen, setRowOptionsOpen] = useState(false);
@@ -18,7 +18,8 @@ const RowOptions = ({ row, rowActions }) => {
 
     const rowActionsOverlayContent = rowActions(
         original,
-        closeRowOptionsOverlay
+        closeRowOptionsOverlay,
+        isSubComponentRow
     );
 
     return (
@@ -55,7 +56,8 @@ const RowOptions = ({ row, rowActions }) => {
 };
 RowOptions.propTypes = {
     row: PropTypes.object,
-    rowActions: PropTypes.any
+    rowActions: PropTypes.any,
+    isSubComponentRow: PropTypes.bool
 };
 
 export default RowOptions;

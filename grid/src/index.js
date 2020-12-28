@@ -212,10 +212,7 @@ const Grid = (props) => {
         setGridSubComponentAdditionalColumn
     ] = useState(null);
 
-    let isSubComponentGrid =
-        subComponentColumnns !== null &&
-        subComponentColumnns !== undefined &&
-        subComponentColumnns.length > 0;
+    let isSubComponentGrid = gridSubComponentColumns.length > 0;
 
     // #region - Group sorting logic
     // Function to return sorting logic based on the user selected order of sort

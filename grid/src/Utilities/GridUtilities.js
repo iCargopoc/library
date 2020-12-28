@@ -27,15 +27,17 @@ export const findSelectedRows = (rows, selectedRowIds, getRowInfo) => {
                 const isSelected = objEntry[1];
                 if (isSelected) {
                     const selectedRow = rows.find((flatRow) => {
+                        const { id } = flatRow;
                         if (getRowInfo && typeof getRowInfo === "function") {
-                            const rowInfo = getRowInfo(flatRow.original);
+                            const { original } = flatRow;
+                            const rowInfo = getRowInfo(original);
                             return (
                                 !(
                                     rowInfo && rowInfo.isRowSelectable === false
-                                ) && flatRow.id === rowId
+                                ) && id === rowId
                             );
                         }
-                        return flatRow.id === rowId;
+                        return id === rowId;
                     });
                     if (selectedRow) {
                         const { original } = selectedRow;

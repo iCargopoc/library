@@ -112,11 +112,11 @@ const GridComponent = () => {
             disableResizing: true,
             isSortable: true, // This column will appear in groupsort overlay only if 'isSortable' value is true.
             isSearchable: true,
-            displayCell: (rowData, DisplayTag, isDesktop, isExpandableColumn) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 // rowData -> Entire row data from gridData
                 // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell
                 // isDesktop -> Whether Grid considers this screen as desktop or tablet
-                // isExpandableColumn -> If the row of this data is in expanded state or not
+                // isColumnExpanded -> If the row of this data is in expanded state or not
                 const { travelId } = rowData;
                 return (
                     <div className="travelId-details">
@@ -156,11 +156,11 @@ const GridComponent = () => {
             ],
             sortValue: "flightno",
             isSearchable: true,
-            displayCell: (rowData, DisplayTag, isDesktop, isExpandableColumn) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 // rowData -> Entire row data from gridData
                 // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell
                 // isDesktop -> Whether Grid considers this screen as desktop or tablet
-                // isExpandableColumn -> If the row of this data is in expanded state or not
+                // isColumnExpanded -> If the row of this data is in expanded state or not
                 const { flightno, date } = rowData.flight;
                 return (
                     <div className="flight-details">
@@ -173,12 +173,12 @@ const GridComponent = () => {
                     </div>
                 );
             },
-            editCell: (rowData, DisplayTag, rowUpdateCallBack, isDesktop, isExpandableColumn) => {
+            editCell: (rowData, DisplayTag, rowUpdateCallBack, isDesktop, isColumnExpanded) => {
                 // rowData -> Entire row data from gridData
                 // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell
                 // rowUpdateCallBack -> Callback method provided by Grid, which has to be called whenever user edits any field in edit form
                 // isDesktop -> Whether Grid considers this screen as desktop or tablet
-                // isExpandableColumn -> If the row of this data is in expanded state or not
+                // isColumnExpanded -> If the row of this data is in expanded state or not
                 return (
                     <FlightEdit
                         rowData={rowData}
@@ -212,13 +212,13 @@ const GridComponent = () => {
                 rowData,
                 DisplayTag,
                 isDesktop,
-                isExpandableColumn
+                isColumnExpanded
             ) => {
                 // rowData -> Entire row data from gridData
                 // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell
                 // rowUpdateCallBack -> Callback method provided by Grid, which has to be called whenever user edits any field in edit form
                 // isDesktop -> Whether Grid considers this screen as desktop or tablet
-                // isExpandableColumn -> If the row of this data is in expanded state or not
+                // isColumnExpanded -> If the row of this data is in expanded state or not
                 const { from, to } = rowData.segment;
                 return (
                     <div className="segment-details">
@@ -594,8 +594,8 @@ const columnToExpand = {
 </Story>
 
 ```jsx
-// expandableColumn = true - can use isExpandableColumn value in display cell to show more data while expanding a row.
-// expandableColumn = false - isExpandableColumn value in display cell will be null/undefined. Use this to show complete data at once.
+// expandableColumn = true - can use isColumnExpanded value in display cell to show more data while expanding a row.
+// expandableColumn = false - isColumnExpanded value in display cell will be null/undefined. Use this to show complete data at once.
 
 <Grid
     gridData={gridData}

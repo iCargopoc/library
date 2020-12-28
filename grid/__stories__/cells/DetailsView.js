@@ -4,7 +4,7 @@ const DetailsView = ({
     rowData,
     DisplayTag,
     isDesktop,
-    isExpandableColumn,
+    isColumnExpanded,
     fixedRowHeight
 }) => {
     const [isClicked, setIsClicked] = useState(false);
@@ -31,7 +31,7 @@ const DetailsView = ({
         const timeText = timeStatusArray.join(" ");
         if (
             fixedRowHeight !== true &&
-            (isExpandableColumn === null || isExpandableColumn === true)
+            (isColumnExpanded === null || isColumnExpanded === true)
         ) {
             return (
                 <div className="details-wrap">

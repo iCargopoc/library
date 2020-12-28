@@ -28,7 +28,9 @@ const ListItem = ({
     getRowInfo,
     fixedRowHeight,
     isLoadMoreRequiredForNormalRow,
-    rowSelector
+    rowSelector,
+    rowActions,
+    expandableColumn
 }) => {
     if (isParentRowCollapsed(row)) {
         return null;
@@ -59,7 +61,7 @@ const ListItem = ({
     // Add classname passed by developer from getRowInfo prop to required rows
     let rowClassName = "";
     if (getRowInfo && typeof getRowInfo === "function") {
-        const rowInfo = getRowInfo(original);
+        const rowInfo = getRowInfo(original, false);
         if (rowInfo && rowInfo.className) {
             rowClassName = rowInfo.className;
         }
@@ -91,6 +93,9 @@ const ListItem = ({
                 isParentGrid={isParentGrid}
                 fixedRowHeight={fixedRowHeight}
                 isLoadMoreRequiredForNormalRow={isLoadMoreRequiredForNormalRow}
+                getRowInfo={getRowInfo}
+                rowActions={rowActions}
+                expandableColumn={expandableColumn}
             />
         </div>
     );
@@ -121,7 +126,9 @@ ListItem.propTypes = {
     isSubComponentGrid: PropTypes.bool,
     fixedRowHeight: PropTypes.bool,
     isLoadMoreRequiredForNormalRow: PropTypes.func,
-    rowSelector: PropTypes.bool
+    rowSelector: PropTypes.bool,
+    rowActions: PropTypes.any,
+    expandableColumn: PropTypes.bool
 };
 
 export default ListItem;

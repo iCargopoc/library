@@ -1,9 +1,14 @@
 import React from "react";
 import ClickAwayListener from "react-click-away-listener";
 
-const RowDelete = ({ rowData, onRowDelete, unbindRowDeleteOverlay }) => {
+const RowDelete = ({
+    rowData,
+    isSubComponentRowForEditAndDelete,
+    onRowDelete,
+    unbindRowDeleteOverlay
+}) => {
     const deleteRow = () => {
-        onRowDelete(rowData);
+        onRowDelete(rowData, isSubComponentRowForEditAndDelete);
         unbindRowDeleteOverlay();
     };
     const closeRowDeleteOverlay = () => {

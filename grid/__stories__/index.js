@@ -12,6 +12,7 @@ import ScrNumEdit from "./cells/ScrNumEdit";
 import SegmentEdit from "./cells/SegmentEdit";
 import RowAction from "./cells/RowAction";
 import RowEdit from "./cells/RowEdit";
+import SubRowEdit from "./cells/SubRowEdit";
 import RowDelete from "./cells/RowDelete";
 
 const GridComponent = (props) => {
@@ -87,6 +88,11 @@ const GridComponent = (props) => {
 
     const [isDeleteOverlayOpened, setIsDeleteOverlayOpened] = useState(false);
     const [rowDataToDelete, setRowDataToDelete] = useState(null);
+
+    const [
+        isSubComponentRowForEditAndDelete,
+        setIsSubComponentRowForEditAndDelete
+    ] = useState(false);
 
     const isParentExpandedByDefault =
         treeStructure &&
@@ -265,12 +271,7 @@ const GridComponent = (props) => {
             disableFilters: true,
             isSearchable: true,
             isSortable: true,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { travelId } = rowData;
                 if (travelId !== null && travelId !== undefined) {
                     return (
@@ -313,12 +314,7 @@ const GridComponent = (props) => {
             ],
             sortValue: "flightno",
             isSearchable: true,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 if (rowData.flight) {
                     const { flightno, date } = rowData.flight;
                     return (
@@ -339,7 +335,7 @@ const GridComponent = (props) => {
                 DisplayTag,
                 rowUpdateCallBack,
                 isDesktop,
-                isExpandableColumn
+                isColumnExpanded
             ) => {
                 if (fixedRowHeight !== true) {
                     return (
@@ -375,12 +371,7 @@ const GridComponent = (props) => {
             ],
             disableSortBy: true,
             isSearchable: false,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 if (rowData.segment) {
                     const { from, to } = rowData.segment;
                     return (
@@ -404,7 +395,7 @@ const GridComponent = (props) => {
                 DisplayTag,
                 rowUpdateCallBack,
                 isDesktop,
-                isExpandableColumn
+                isColumnExpanded
             ) => {
                 if (fixedRowHeight !== true) {
                     return (
@@ -468,18 +459,13 @@ const GridComponent = (props) => {
             ],
             disableSortBy: true,
             isSearchable: true,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 return (
                     <DetailsView
                         rowData={rowData}
                         DisplayTag={DisplayTag}
                         isDesktop={isDesktop}
-                        isExpandableColumn={isExpandableColumn}
+                        isColumnExpanded={isColumnExpanded}
                         fixedRowHeight={fixedRowHeight}
                     />
                 );
@@ -506,12 +492,7 @@ const GridComponent = (props) => {
             ],
             sortValue: "percentage",
             isSearchable: true,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 if (rowData.weight) {
                     const { percentage, value } = rowData.weight;
                     const splitValue = value ? value.split("/") : [];
@@ -557,12 +538,7 @@ const GridComponent = (props) => {
             ],
             sortValue: "percentage",
             isSearchable: true,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 if (rowData.volume) {
                     const { percentage, value } = rowData.volume;
                     const splitValue = value ? value.split("/") : [];
@@ -607,12 +583,7 @@ const GridComponent = (props) => {
             ],
             disableSortBy: true,
             isSearchable: true,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { uldPositions } = rowData;
                 if (uldPositions) {
                     return (
@@ -664,12 +635,7 @@ const GridComponent = (props) => {
                     isSearchable: true
                 }
             ],
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 if (rowData.revenue) {
                     const { revenue, yeild } = rowData.revenue;
                     return (
@@ -694,12 +660,7 @@ const GridComponent = (props) => {
             width: 90,
             isSortable: true,
             isSearchable: true,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { sr } = rowData;
                 if (sr) {
                     return (
@@ -715,7 +676,7 @@ const GridComponent = (props) => {
                 DisplayTag,
                 rowUpdateCallBack,
                 isDesktop,
-                isExpandableColumn
+                isColumnExpanded
             ) => {
                 if (fixedRowHeight !== true) {
                     return (
@@ -746,12 +707,7 @@ const GridComponent = (props) => {
             ],
             disableSortBy: true,
             isSearchable: false,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 if (rowData.queuedBooking) {
                     const { sr, volume } = rowData.queuedBooking;
                     return (
@@ -864,12 +820,7 @@ const GridComponent = (props) => {
         {
             Header: "HAWB No",
             width: 50,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawbId } = rowData;
                 if (hawbId !== null && hawbId !== undefined) {
                     return (
@@ -922,12 +873,7 @@ const GridComponent = (props) => {
             ],
             disableSortBy: true,
             isSearchable: true,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawb } = rowData;
                 const {
                     from,
@@ -940,6 +886,85 @@ const GridComponent = (props) => {
                     type
                 } = hawb;
                 const { item1, item2, item3, item4 } = std;
+                if (
+                    fixedRowHeight !== true &&
+                    (isColumnExpanded === null || isColumnExpanded === true)
+                ) {
+                    return (
+                        <div
+                            className="details-wrap"
+                            style={{ marginRight: "35px" }}
+                        >
+                            <ul className="details-expanded-content">
+                                <li>
+                                    <DisplayTag columnKey="hawb" cellKey="from">
+                                        {from}
+                                    </DisplayTag>
+                                    -
+                                    <DisplayTag columnKey="hawb" cellKey="to">
+                                        {to}
+                                    </DisplayTag>
+                                </li>
+                                <li className="divider">|</li>
+                                <li>
+                                    <DisplayTag
+                                        columnKey="hawb"
+                                        cellKey="status"
+                                    >
+                                        <span>{status}</span>
+                                    </DisplayTag>
+                                </li>
+                                <li className="divider">|</li>
+                                <li>
+                                    <DisplayTag
+                                        columnKey="hawb"
+                                        cellKey="goodsType"
+                                    >
+                                        {goodsType}
+                                    </DisplayTag>
+                                </li>
+                                <li className="divider">|</li>
+                                <li>
+                                    <DisplayTag
+                                        columnKey="hawb"
+                                        cellKey="hawbNo"
+                                    >
+                                        {hawbNo}
+                                    </DisplayTag>
+                                </li>
+                                <li className="divider">|</li>
+                                <li>
+                                    <DisplayTag
+                                        columnKey="hawb"
+                                        cellKey="ports"
+                                    >
+                                        {ports}
+                                    </DisplayTag>
+                                </li>
+                                <li className="divider">|</li>
+                                <li>
+                                    <span>
+                                        <DisplayTag
+                                            columnKey="hawb"
+                                            cellKey="type"
+                                        >
+                                            {type}
+                                        </DisplayTag>
+                                    </span>
+                                </li>
+                                <li className="divider">|</li>
+                                <li>
+                                    <DisplayTag columnKey="hawb" cellKey="std">
+                                        <strong>{item1} </strong>
+                                        <span>{item2}</span>
+                                        <strong> {item3} </strong>
+                                        <span>{item4}</span>
+                                    </DisplayTag>
+                                </li>
+                            </ul>
+                        </div>
+                    );
+                }
                 return (
                     <div
                         className="details-wrap"
@@ -982,23 +1007,6 @@ const GridComponent = (props) => {
                                     {ports}
                                 </DisplayTag>
                             </li>
-                            <li className="divider">|</li>
-                            <li>
-                                <span>
-                                    <DisplayTag columnKey="hawb" cellKey="type">
-                                        {type}
-                                    </DisplayTag>
-                                </span>
-                            </li>
-                            <li className="divider">|</li>
-                            <li>
-                                <DisplayTag columnKey="hawb" cellKey="std">
-                                    <strong>{item1} </strong>
-                                    <span>{item2}</span>
-                                    <strong> {item3} </strong>
-                                    <span>{item4}</span>
-                                </DisplayTag>
-                            </li>
                         </ul>
                     </div>
                 );
@@ -1022,12 +1030,7 @@ const GridComponent = (props) => {
                 }
             ],
             width: 100,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isExpandableColumn
-            ) => {
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { scr } = rowData;
                 const { ack, num, status } = scr;
                 return (
@@ -1059,7 +1062,7 @@ const GridComponent = (props) => {
                 DisplayTag,
                 rowUpdateCallBack,
                 isDesktop,
-                isExpandableColumn
+                isColumnExpanded
             ) => {
                 if (fixedRowHeight !== true) {
                     return (
@@ -1193,7 +1196,7 @@ const GridComponent = (props) => {
         );
     };
 
-    const onRowDelete = (originalRow) => {
+    const onRowDelete = (originalRow, isSubComponentRow) => {
         if (treeStructure) {
             setGridData((old) =>
                 old.map((row) => {
@@ -1239,6 +1242,47 @@ const GridComponent = (props) => {
                         return rowToUpdate;
                     }
                     return row;
+                })
+            );
+        } else if (isSubComponentRow) {
+            setGridData((old) =>
+                old.map((row) => {
+                    const oldRow = { ...row };
+                    if (
+                        oldRow &&
+                        oldRow.subComponentData &&
+                        oldRow.subComponentData.length > 0
+                    ) {
+                        oldRow.subComponentData = [
+                            ...oldRow.subComponentData
+                        ].filter((subRow) => {
+                            return (
+                                subRow[subComponentIdAttribute] !==
+                                originalRow[subComponentIdAttribute]
+                            );
+                        });
+                    }
+                    return oldRow;
+                })
+            );
+            setOriginalGridData((old) =>
+                old.map((row) => {
+                    const oldRow = { ...row };
+                    if (
+                        oldRow &&
+                        oldRow.subComponentData &&
+                        oldRow.subComponentData.length > 0
+                    ) {
+                        oldRow.subComponentData = [
+                            ...oldRow.subComponentData
+                        ].filter((subRow) => {
+                            return (
+                                subRow[subComponentIdAttribute] !==
+                                originalRow[subComponentIdAttribute]
+                            );
+                        });
+                    }
+                    return oldRow;
                 })
             );
         } else {
@@ -1330,28 +1374,33 @@ const GridComponent = (props) => {
         console.log("Grid Refreshed");
     };
 
-    const bindRowEditOverlay = (rowData) => {
+    const bindRowEditOverlay = (rowData, isSubComponentRow) => {
         setRowDataToEdit(rowData);
         setIsEditOverlayOpened(true);
+        setIsSubComponentRowForEditAndDelete(isSubComponentRow);
     };
     const unbindRowEditOverlay = () => {
         setRowDataToEdit(null);
         setIsEditOverlayOpened(false);
+        setIsSubComponentRowForEditAndDelete(false);
     };
 
-    const bindRowDeleteOverlay = (rowData) => {
+    const bindRowDeleteOverlay = (rowData, isSubComponentRow) => {
         setRowDataToDelete(rowData);
         setIsDeleteOverlayOpened(true);
+        setIsSubComponentRowForEditAndDelete(isSubComponentRow);
     };
     const unbindRowDeleteOverlay = () => {
         setRowDataToDelete(null);
         setIsDeleteOverlayOpened(false);
+        setIsSubComponentRowForEditAndDelete(false);
     };
 
-    const rowActions = (rowData, closeOverlay) => {
+    const rowActions = (rowData, closeOverlay, isSubComponentRow) => {
         return (
             <RowAction
                 rowData={rowData}
+                isSubComponentRow={isSubComponentRow}
                 fixedRowHeight={fixedRowHeight}
                 closeOverlay={closeOverlay}
                 bindRowEditOverlay={bindRowEditOverlay}
@@ -1765,7 +1814,15 @@ const GridComponent = (props) => {
     const gridPageInfo =
         paginationType === "index" ? indexPageInfo : cursorPageInfo;
 
-    const getRowInfo = (rowData) => {
+    const getRowInfo = (rowData, isSubComponentRow) => {
+        if (isSubComponentRow) {
+            const { hawbId } = rowData;
+            return {
+                isRowExpandable: hawbId % 2 === 0,
+                isRowSelectable: hawbId % 3 !== 0,
+                className: hawbId % 5 === 0 ? "disabled" : ""
+            };
+        }
         const { travelId } = rowData;
         return {
             isRowExpandable: travelId % 2 === 0,
@@ -1795,18 +1852,30 @@ const GridComponent = (props) => {
                 </div>
                 {isEditOverlayOpened && rowDataToEdit !== null ? (
                     <div className="overlay">
-                        <RowEdit
-                            rowData={rowDataToEdit}
-                            airportCodeList={airportCodeList}
-                            onRowUpdate={onRowUpdate}
-                            unbindRowEditOverlay={unbindRowEditOverlay}
-                        />
+                        {isSubComponentRowForEditAndDelete === true ? (
+                            <SubRowEdit
+                                rowData={rowDataToEdit}
+                                airportCodeList={airportCodeList}
+                                onRowUpdate={onRowUpdate}
+                                unbindRowEditOverlay={unbindRowEditOverlay}
+                            />
+                        ) : (
+                            <RowEdit
+                                rowData={rowDataToEdit}
+                                airportCodeList={airportCodeList}
+                                onRowUpdate={onRowUpdate}
+                                unbindRowEditOverlay={unbindRowEditOverlay}
+                            />
+                        )}
                     </div>
                 ) : null}
                 {isDeleteOverlayOpened && rowDataToDelete !== null ? (
                     <div className="overlay">
                         <RowDelete
                             rowData={rowDataToDelete}
+                            isSubComponentRowForEditAndDelete={
+                                isSubComponentRowForEditAndDelete
+                            }
                             onRowDelete={onRowDelete}
                             unbindRowDeleteOverlay={unbindRowDeleteOverlay}
                         />

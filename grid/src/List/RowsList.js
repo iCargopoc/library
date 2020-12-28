@@ -35,7 +35,9 @@ const RowsList = ({
     reRenderListData,
     fixedRowHeight,
     isLoadMoreRequiredForNormalRow,
-    rowSelector
+    rowSelector,
+    rowActions,
+    expandableColumn
 }) => {
     const sizeMap = useRef({});
 
@@ -150,6 +152,8 @@ const RowsList = ({
                                 isLoadMoreRequiredForNormalRow
                             }
                             rowSelector={rowSelector}
+                            rowActions={rowActions}
+                            expandableColumn={expandableColumn}
                         />
                     );
                 },
@@ -189,7 +193,9 @@ RowsList.propTypes = {
     subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
     subComponentAdditionalColumn: PropTypes.object,
     isSubComponentGrid: PropTypes.bool,
-    rowSelector: PropTypes.bool
+    rowSelector: PropTypes.bool,
+    rowActions: PropTypes.any,
+    expandableColumn: PropTypes.bool
 };
 
 export default RowsList;
