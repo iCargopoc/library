@@ -20,6 +20,9 @@ const RowItem = ({
     subComponentAdditionalColumn,
     isSubComponentGrid
 }) => {
+    const { isExpanded, cells, original } = row;
+    const { subComponentData } = original;
+
     return (
         <Measure
             bounds
@@ -42,12 +45,12 @@ const RowItem = ({
                     <div
                         data-testid="gridrowWrap"
                         className={`neo-grid__row-wrap ${
-                            isRowExpandEnabled && row.isExpanded
+                            isRowExpandEnabled && isExpanded
                                 ? "neo-grid__row-wrap--expand"
                                 : ""
                         }`}
                     >
-                        {row.cells.map((cell) => {
+                        {cells.map((cell) => {
                             if (cell.column.display === true) {
                                 return (
                                     <div
@@ -64,7 +67,7 @@ const RowItem = ({
                     </div>
 
                     {/* Check if row eapand icon is clicked, and if yes, call function to bind content to the expanded region */}
-                    {isRowExpandEnabled && row.isExpanded ? (
+                    {isRowExpandEnabled && isExpanded ? (
                         <div
                             className="neo-grid__row-expand"
                             data-testid="rowExpandedRegion"
@@ -72,9 +75,12 @@ const RowItem = ({
                             {additionalColumn.Cell(row, additionalColumn)}
                         </div>
                     ) : null}
-                    {isSubComponentGrid ? (
+                    {isSubComponentGrid &&
+                    subComponentData !== null &&
+                    subComponentData !== undefined &&
+                    subComponentData.length > 0 ? (
                         <SubComponent
-                            subComponentData={row.original.subComponentData}
+                            subComponentData={subComponentData}
                             subComponentColumnns={subComponentColumnns}
                             subComponentAdditionalColumn={
                                 subComponentAdditionalColumn

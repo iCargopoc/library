@@ -1477,22 +1477,29 @@ const GridComponent = (props) => {
                                 const updatedData = [...data].map(
                                     (item, itemIndex) => {
                                         const updatedItem = { ...item };
-                                        const { travelId } = updatedItem;
-                                        let subCompData = subComponentData.filter(
-                                            (ite, ind) =>
-                                                ind >= itemIndex &&
-                                                ind <
-                                                    itemIndex +
-                                                        Math.floor(
-                                                            Math.random() * 11
-                                                        )
-                                        );
-                                        subCompData = subCompData.map((dat) => {
-                                            const updatedDat = { ...dat };
-                                            updatedDat.travelId = travelId;
-                                            return updatedDat;
-                                        });
-                                        updatedItem.subComponentData = subCompData;
+                                        if (itemIndex % 10 !== 0) {
+                                            const { travelId } = updatedItem;
+                                            let subCompData = subComponentData.filter(
+                                                (ite, ind) =>
+                                                    ind >= itemIndex &&
+                                                    ind <
+                                                        itemIndex +
+                                                            Math.floor(
+                                                                Math.random() *
+                                                                    11
+                                                            )
+                                            );
+                                            subCompData = subCompData.map(
+                                                (dat) => {
+                                                    const updatedDat = {
+                                                        ...dat
+                                                    };
+                                                    updatedDat.travelId = travelId;
+                                                    return updatedDat;
+                                                }
+                                            );
+                                            updatedItem.subComponentData = subCompData;
+                                        }
                                         return updatedItem;
                                     }
                                 );
@@ -1640,22 +1647,29 @@ const GridComponent = (props) => {
                                 const updatedData = [...data].map(
                                     (item, itemIndex) => {
                                         const updatedItem = { ...item };
-                                        const { travelId } = updatedItem;
-                                        let subCompData = subComponentData.filter(
-                                            (ite, ind) =>
-                                                ind >= itemIndex &&
-                                                ind <
-                                                    itemIndex +
-                                                        Math.floor(
-                                                            Math.random() * 11
-                                                        )
-                                        );
-                                        subCompData = subCompData.map((dat) => {
-                                            const updatedDat = { ...dat };
-                                            updatedDat.travelId = travelId;
-                                            return updatedDat;
-                                        });
-                                        updatedItem.subComponentData = subCompData;
+                                        if (itemIndex % 10 !== 0) {
+                                            const { travelId } = updatedItem;
+                                            let subCompData = subComponentData.filter(
+                                                (ite, ind) =>
+                                                    ind >= itemIndex &&
+                                                    ind <
+                                                        itemIndex +
+                                                            Math.floor(
+                                                                Math.random() *
+                                                                    11
+                                                            )
+                                            );
+                                            subCompData = subCompData.map(
+                                                (dat) => {
+                                                    const updatedDat = {
+                                                        ...dat
+                                                    };
+                                                    updatedDat.travelId = travelId;
+                                                    return updatedDat;
+                                                }
+                                            );
+                                            updatedItem.subComponentData = subCompData;
+                                        }
                                         return updatedItem;
                                     }
                                 );
