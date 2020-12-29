@@ -20,6 +20,9 @@ const ExportData = (props) => {
         rows,
         columns,
         additionalColumn,
+        isSubComponentGrid,
+        subComponentColumnns,
+        subComponentAdditionalColumn,
         fileName
     } = props;
 
@@ -32,15 +35,34 @@ const ExportData = (props) => {
         additionalColumn.innerCells &&
         additionalColumn.innerCells.length > 0;
 
+    // Check if sub component additional Column is present or not
+    const isSubComponentAdditionalColumnPresent =
+        isSubComponentGrid &&
+        subComponentAdditionalColumn !== null &&
+        subComponentAdditionalColumn !== undefined &&
+        Object.keys(subComponentAdditionalColumn).length > 0 &&
+        subComponentAdditionalColumn.innerCells &&
+        subComponentAdditionalColumn.innerCells.length > 0;
+
     // Set state variables for:
     // managedColumns - main columns displayed in colum setting region
     // managedAdditionalColumn - additional column displayed in colum setting region
+    // managedSubComponentColumns - sub component columns displayed in colum setting region
+    // managedSubComponentAdditionalColumn - sub component additional column displayed in colum setting region
     // downloadTypes - types of downloads user has selected
     // warning - error message to be displayed
     const [managedColumns, setManagedColumns] = useState([]);
     const [managedAdditionalColumn, setManagedAdditionalColumn] = useState(
         null
     );
+    const [
+        managedSubComponentColumns,
+        setManagedSubComponentColumns
+    ] = useState([]);
+    const [
+        managedSubComponentAdditionalColumn,
+        setManagedSubComponentAdditionalColumn
+    ] = useState(null);
     const [downloadTypes, setDownloadTypes] = useState([]);
     const [warning, setWarning] = useState("");
 
@@ -80,33 +102,65 @@ const ExportData = (props) => {
     };
 
     // Update display value of managedAdditionalColumn state with given value
-    const updatedDisplayOfAdditionalColumn = (flag) => {
-        setManagedAdditionalColumn(
-            update(managedAdditionalColumn, {
-                display: { $set: flag }
-            })
-        );
+    const updatedDisplayOfAdditionalColumn = (flag, isSubComponentColumn) => {
+        if (isSubComponentColumn) {
+            setManagedSubComponentAdditionalColumn(
+                update(managedSubComponentAdditionalColumn, {
+                    display: { $set: flag }
+                })
+            );
+        } else {
+            setManagedAdditionalColumn(
+                update(managedAdditionalColumn, {
+                    display: { $set: flag }
+                })
+            );
+        }
     };
 
     // update the display flag value of column or all columns in managedColumns and managedAdditionalColumn state, based on the selection
-    const updateColumns = (columnid, isadditionalcolumn, checked) => {
+    const updateColumns = (
+        columnid,
+        isadditionalcolumn,
+        checked,
+        isSubComponentColumn
+    ) => {
         if (
             columnid === "all" ||
             (isAdditionalColumnPresent && isadditionalcolumn === "true")
         ) {
             // Update additional column state if columnid is "all" or selected column has "isadditionalcolumn"
-            updatedDisplayOfAdditionalColumn(checked);
+            updatedDisplayOfAdditionalColumn(checked, isSubComponentColumn);
         }
         if (isadditionalcolumn !== "true") {
             // Update main columns state based on selection and columnid, if selected column doesn't have "isadditionalcolumn"
-            const updatedManagedColumns = [...managedColumns].map((column) => {
-                return updatedDisplayOfColumn(column, columnid, checked);
-            });
-            setManagedColumns(
-                update(managedColumns, {
-                    $set: updatedManagedColumns
-                })
-            );
+            if (isSubComponentColumn) {
+                const updatedManagedColumns = [
+                    ...managedSubComponentColumns
+                ].map((column) => {
+                    return updatedDisplayOfColumn(column, columnid, checked);
+                });
+                setManagedSubComponentColumns(
+                    update(managedSubComponentColumns, {
+                        $set: updatedManagedColumns
+                    })
+                );
+            } else {
+                const updatedManagedColumns = [...managedColumns].map(
+                    (column) => {
+                        return updatedDisplayOfColumn(
+                            column,
+                            columnid,
+                            checked
+                        );
+                    }
+                );
+                setManagedColumns(
+                    update(managedColumns, {
+                        $set: updatedManagedColumns
+                    })
+                );
+            }
         }
     };
 
@@ -197,6 +251,12 @@ const ExportData = (props) => {
         ).filter((column) => {
             return column.display === true;
         });
+
+        const filteredManagedSubComponentColumns = managedSubComponentColumns.filter(
+            (column) => {
+                return column.display === true;
+            }
+        );
 
         if (
             rows &&
@@ -346,13 +406,13 @@ const ExportData = (props) => {
             });
         } else if (!(rows && rows.length > 0)) {
             setWarning("No rows available to export");
-        } else if (
-            filteredManagedColumns.length === 0 &&
-            downloadTypes.length === 0
-        ) {
-            setWarning("Select at least one column and a file type");
         } else if (filteredManagedColumns.length === 0) {
             setWarning("Select at least one column");
+        } else if (
+            isSubComponentGrid &&
+            filteredManagedSubComponentColumns.length === 0
+        ) {
+            setWarning("Select at least one sub component column");
         } else {
             setWarning("Select at least one file type");
         }
@@ -373,7 +433,17 @@ const ExportData = (props) => {
 
     useEffect(() => {
         setManagedColumns([...columns]);
-        setManagedAdditionalColumn({ ...additionalColumn });
+        setManagedAdditionalColumn(
+            isAdditionalColumnPresent ? { ...additionalColumn } : null
+        );
+        if (isSubComponentGrid) {
+            setManagedSubComponentColumns([...subComponentColumnns]);
+            setManagedSubComponentAdditionalColumn(
+                isSubComponentAdditionalColumnPresent
+                    ? { ...subComponentAdditionalColumn }
+                    : null
+            );
+        }
     }, []);
 
     if (columns && columns.length > 0) {
@@ -392,6 +462,15 @@ const ExportData = (props) => {
                         additionalColumn={additionalColumn}
                         managedColumns={managedColumns}
                         managedAdditionalColumn={managedAdditionalColumn}
+                        isSubComponentGrid={isSubComponentGrid}
+                        subComponentColumnns={[...subComponentColumnns]}
+                        subComponentAdditionalColumn={
+                            subComponentAdditionalColumn
+                        }
+                        managedSubComponentColumns={managedSubComponentColumns}
+                        managedSubComponentAdditionalColumn={
+                            managedSubComponentAdditionalColumn
+                        }
                         updateColumns={updateColumns}
                     />
                 </div>
@@ -522,6 +601,9 @@ ExportData.propTypes = {
     rows: PropTypes.arrayOf(PropTypes.object),
     columns: PropTypes.arrayOf(PropTypes.object),
     additionalColumn: PropTypes.object,
+    isSubComponentGrid: PropTypes.bool,
+    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
+    subComponentAdditionalColumn: PropTypes.object,
     fileName: PropTypes.string
 };
 

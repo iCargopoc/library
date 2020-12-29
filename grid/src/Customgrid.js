@@ -1146,6 +1146,13 @@ const Customgrid = (props) => {
                                         rows={rows}
                                         columns={gridColumns}
                                         additionalColumn={additionalColumn}
+                                        isSubComponentGrid={isSubComponentGrid}
+                                        subComponentColumnns={
+                                            subComponentColumnns
+                                        }
+                                        subComponentAdditionalColumn={
+                                            subComponentAdditionalColumn
+                                        }
                                         fileName={fileName}
                                     />
                                 ) : null}
