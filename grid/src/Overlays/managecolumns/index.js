@@ -62,7 +62,7 @@ const ColumnReordering = (props) => {
     // managedAdditionalColumn - additional column displayed in colum setting region
     // managedSubComponentColumns - sub component columns displayed in colum setting region
     // managedSubComponentAdditionalColumn - sub component additional column displayed in colum setting region
-    // isErrorDisplayed - to see if error message has to be displayed or not
+    // warning - error message to be displayed
     const [managedColumns, setManagedColumns] = useState([]);
     const [managedAdditionalColumn, setManagedAdditionalColumn] = useState(
         null
@@ -75,7 +75,7 @@ const ColumnReordering = (props) => {
         managedSubComponentAdditionalColumn,
         setManagedSubComponentAdditionalColumn
     ] = useState(null);
-    const [isErrorDisplayed, setIsErrorDisplayed] = useState(false);
+    const [warning, setWarning] = useState("");
 
     // Update display value of column based on columnId
     const updatedDisplayOfColumn = (column, columnid, flag) => {
@@ -349,6 +349,7 @@ const ColumnReordering = (props) => {
     // #endregion
 
     const resetColumnUpdate = () => {
+        setWarning("");
         setManagedColumns(
             update(managedColumns, {
                 $set: originalColumns
@@ -380,7 +381,7 @@ const ColumnReordering = (props) => {
     };
 
     const onColumnChooserSave = () => {
-        setIsErrorDisplayed(false);
+        setWarning("");
         const filteredManagedColumns = managedColumns.filter((column) => {
             return column.display === true;
         });
@@ -390,7 +391,7 @@ const ColumnReordering = (props) => {
             }
         );
         if (!(filteredManagedColumns && filteredManagedColumns.length > 0)) {
-            setIsErrorDisplayed(true);
+            setWarning("Select at least one parent column");
         } else if (
             isSubComponentGrid &&
             !(
@@ -398,7 +399,7 @@ const ColumnReordering = (props) => {
                 filteredManagedSubComponentColumns.length > 0
             )
         ) {
-            setIsErrorDisplayed(true);
+            setWarning("Select at least one sub component column");
         } else {
             updateColumnStructure(
                 managedColumns,
@@ -494,16 +495,12 @@ const ColumnReordering = (props) => {
                     <div className="ng-popover__header">
                         <div>
                             <span>Column Settings</span>
-                            {isErrorDisplayed ? (
+                            {warning !== null ? (
                                 <strong
                                     className="ng-popover--column__warning"
                                     data-testid="column-chooser-error"
                                 >
-                                    Select at least one column
-                                    {isAdditionalColumnPresent
-                                        ? `(other than
-                                        ${additionalColumnHeader})`
-                                        : null}
+                                    {warning}
                                 </strong>
                             ) : null}
                         </div>

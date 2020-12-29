@@ -407,7 +407,7 @@ const ExportData = (props) => {
         } else if (!(rows && rows.length > 0)) {
             setWarning("No rows available to export");
         } else if (filteredManagedColumns.length === 0) {
-            setWarning("Select at least one column");
+            setWarning("Select at least one parent column");
         } else if (
             isSubComponentGrid &&
             filteredManagedSubComponentColumns.length === 0
@@ -565,11 +565,13 @@ const ExportData = (props) => {
                                 </div>
                             </label>
                         </div>
-                        <div className="ng-popover--exports__warning">
-                            <span>
-                                <strong>{warning}</strong>
-                            </span>
-                        </div>
+                        {warning !== null ? (
+                            <div className="ng-popover--exports__warning">
+                                <span>
+                                    <strong>{warning}</strong>
+                                </span>
+                            </div>
+                        ) : null}
                     </div>
                     <div className="ng-popover__footer">
                         <button
