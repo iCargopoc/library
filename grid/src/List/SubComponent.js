@@ -119,16 +119,20 @@ const SubComponent = (props) => {
                             className="neo-grid__tr"
                         >
                             {headerGroup.headers.map((column) => {
-                                return (
-                                    <div
-                                        {...column.getHeaderProps()}
-                                        className="neo-grid__th"
-                                    >
-                                        <div className="neo-grid__th-title">
-                                            {column.render("Header")}
+                                const { display } = column;
+                                if (display === true) {
+                                    return (
+                                        <div
+                                            {...column.getHeaderProps()}
+                                            className="neo-grid__th"
+                                        >
+                                            <div className="neo-grid__th-title">
+                                                {column.render("Header")}
+                                            </div>
                                         </div>
-                                    </div>
-                                );
+                                    );
+                                }
+                                return null;
                             })}
                         </div>
                     );

@@ -175,9 +175,20 @@ const Customgrid = (props) => {
         setManageColumnOpen(!isManageColumnOverlayOpen);
     };
     // Callback method from column manage overlay to update the column structure of the grid
-    const updateColumnStructure = (updatedColumns, updatedAdditionalColumn) => {
+    const updateColumnStructure = (
+        updatedColumns,
+        updatedAdditionalColumn,
+        updatedSubComponentColumns,
+        updatedSubComponentAdditionalColumn
+    ) => {
         setGridColumns([...updatedColumns]);
         setAdditionalColumn(updatedAdditionalColumn);
+        if (isSubComponentGrid) {
+            setSubComponentColumnns(updatedSubComponentColumns);
+            setSubComponentAdditionalColumn(
+                updatedSubComponentAdditionalColumn
+            );
+        }
     };
 
     // Local state value for hiding/unhiding export data overlay
@@ -1094,6 +1105,19 @@ const Customgrid = (props) => {
                                         additionalColumn={additionalColumn}
                                         originalAdditionalColumn={
                                             expandedRowData
+                                        }
+                                        isSubComponentGrid={isSubComponentGrid}
+                                        subComponentColumnns={
+                                            subComponentColumnns
+                                        }
+                                        originalSubComponentColumns={
+                                            managableSubComponentColumnns
+                                        }
+                                        subComponentAdditionalColumn={
+                                            subComponentAdditionalColumn
+                                        }
+                                        originalSubComponentAdditionalColumn={
+                                            managableSubComponentAdditionalColumn
                                         }
                                         updateColumnStructure={
                                             updateColumnStructure

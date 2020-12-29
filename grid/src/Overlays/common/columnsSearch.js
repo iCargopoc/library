@@ -8,9 +8,17 @@ const ColumnSearch = ({
     additionalColumn,
     managedColumns,
     managedAdditionalColumn,
+    isSubComponentGrid,
+    subComponentColumnns,
+    subComponentAdditionalColumn,
+    managedSubComponentColumns,
+    managedSubComponentAdditionalColumn,
     updateColumns
 }) => {
     const gridColumns = convertToIndividualColumns(columns);
+    const gridSubComponentColumns = convertToIndividualColumns(
+        subComponentColumnns
+    );
 
     // Returns a single array that contains main columns as well as the expanded columns
     const getAllColumns = (columnsList, additionalColumnItem) => {
@@ -30,12 +38,20 @@ const ColumnSearch = ({
     };
 
     const [searchableColumns, setSearchableColumns] = useState([]);
+    const [
+        searchableSubComponentColumns,
+        setSearchableSubComponentColumns
+    ] = useState([]);
 
     // Update searched columns state based on the searched value
     const onColumnSearch = (event) => {
         let { value } = event.target;
         value = value ? value.toLowerCase() : "";
         const allColumns = getAllColumns(gridColumns, additionalColumn);
+        const allSubComponentColumns = getAllColumns(
+            gridSubComponentColumns,
+            subComponentAdditionalColumn
+        );
         if (value !== "") {
             setSearchableColumns(
                 allColumns.filter((column) => {
@@ -45,8 +61,21 @@ const ColumnSearch = ({
                     return column.Header.toLowerCase().includes(value);
                 })
             );
+            if (isSubComponentGrid) {
+                setSearchableSubComponentColumns(
+                    allSubComponentColumns.filter((column) => {
+                        if (column.title) {
+                            return column.title.toLowerCase().includes(value);
+                        }
+                        return column.Header.toLowerCase().includes(value);
+                    })
+                );
+            }
         } else {
             setSearchableColumns(allColumns);
+            if (isSubComponentGrid) {
+                setSearchableSubComponentColumns(allSubComponentColumns);
+            }
         }
     };
 
@@ -69,12 +98,43 @@ const ColumnSearch = ({
         return selectedColumn !== null && selectedColumn !== undefined;
     };
 
+    // Check if the display value of sub component column or all columns in managedSubComponentColumns state is true/false
+    const isSearchableSubComponentColumnSelected = (columnId) => {
+        const allManagedColumns = getAllColumns(
+            convertToIndividualColumns(managedSubComponentColumns),
+            managedSubComponentAdditionalColumn
+        );
+        const filteredAllManagedColumns = allManagedColumns.filter((column) => {
+            return column.display === true;
+        });
+        if (columnId === "all") {
+            const allColumns = getAllColumns(
+                gridSubComponentColumns,
+                subComponentAdditionalColumn
+            );
+            return filteredAllManagedColumns.length === allColumns.length;
+        }
+        const selectedColumn = filteredAllManagedColumns.find((column) => {
+            return column.columnId === columnId;
+        });
+        return selectedColumn !== null && selectedColumn !== undefined;
+    };
+
     // update the display flag value of column or all columns in managedColumns state, based on the selection
     const onSearchableColumnChange = (event) => {
         const { checked, dataset } = event.currentTarget;
         if (dataset) {
             const { columnid, isadditionalcolumn } = dataset;
-            updateColumns(columnid, isadditionalcolumn, checked);
+            updateColumns(columnid, isadditionalcolumn, checked, false);
+        }
+    };
+
+    // update the display flag value of sub component column or all columns in managedSubComponentColumns state, based on the selection
+    const onSearchableSubComponentColumnChange = (event) => {
+        const { checked, dataset } = event.currentTarget;
+        if (dataset) {
+            const { columnid, isadditionalcolumn } = dataset;
+            updateColumns(columnid, isadditionalcolumn, checked, true);
         }
     };
 
@@ -84,10 +144,25 @@ const ColumnSearch = ({
                 $set: getAllColumns(gridColumns, additionalColumn)
             })
         );
+        if (isSubComponentGrid) {
+            setSearchableSubComponentColumns(
+                update(searchableSubComponentColumns, {
+                    $set: getAllColumns(
+                        gridSubComponentColumns,
+                        subComponentAdditionalColumn
+                    )
+                })
+            );
+        }
     }, []);
 
     const isSearchableColumnsAvailable =
         searchableColumns && searchableColumns.length > 0;
+
+    const isSearchableSubComponentColumnsAvailable =
+        isSubComponentGrid &&
+        searchableSubComponentColumns &&
+        searchableSubComponentColumns.length > 0;
 
     return (
         <div className="ng-chooser-body">
@@ -159,6 +234,72 @@ const ColumnSearch = ({
                       );
                   })
                 : null}
+
+            {isSearchableSubComponentColumnsAvailable ? (
+                <div className="ng-chooser-body__selectall">
+                    <div className="ng-chooser-body__checkbox">
+                        <div className="neo-form-check">
+                            <input
+                                type="checkbox"
+                                id="chk_selectAllSearchableSubComponentColumns"
+                                className="neo-checkbox form-check-input"
+                                data-testid="selectAllSearchableSubComponentColumns"
+                                data-columnid="all"
+                                checked={isSearchableSubComponentColumnSelected(
+                                    "all"
+                                )}
+                                onChange={onSearchableSubComponentColumnChange}
+                            />
+                            <label
+                                htmlFor="chk_selectAllSearchableSubComponentColumns"
+                                className="neo-form-check__label"
+                            >
+                                Select All
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            ) : null}
+            {isSearchableSubComponentColumnsAvailable
+                ? searchableSubComponentColumns.map((column) => {
+                      const {
+                          columnId,
+                          Header,
+                          title,
+                          isDisplayInExpandedRegion
+                      } = column;
+                      return (
+                          <div className="ng-chooser-body__wrap" key={columnId}>
+                              <div className="ng-chooser-body__checkwrap">
+                                  <div className="neo-form-check">
+                                      <input
+                                          type="checkbox"
+                                          id={`chk_selectSearchableSubComponentColumn_${columnId}`}
+                                          className="neo-checkbox form-check-input"
+                                          data-testid="selectSingleSearchableSubComponentColumn"
+                                          data-columnid={columnId}
+                                          data-isadditionalcolumn={
+                                              isDisplayInExpandedRegion
+                                          }
+                                          checked={isSearchableSubComponentColumnSelected(
+                                              columnId
+                                          )}
+                                          onChange={
+                                              onSearchableSubComponentColumnChange
+                                          }
+                                      />
+                                      <label
+                                          htmlFor={`chk_selectSearchableSubComponentColumn_${columnId}`}
+                                          className="neo-form-check__label"
+                                      >
+                                          {title || Header}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                      );
+                  })
+                : null}
         </div>
     );
 };
@@ -168,6 +309,11 @@ ColumnSearch.propTypes = {
     additionalColumn: PropTypes.object,
     managedColumns: PropTypes.arrayOf(PropTypes.object),
     managedAdditionalColumn: PropTypes.object,
+    isSubComponentGrid: PropTypes.bool,
+    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
+    subComponentAdditionalColumn: PropTypes.object,
+    managedSubComponentColumns: PropTypes.arrayOf(PropTypes.object),
+    managedSubComponentAdditionalColumn: PropTypes.object,
     updateColumns: PropTypes.func
 };
 

@@ -8,6 +8,7 @@ const groupedColumnItem = ({
     display,
     isadditionalcolumn,
     innerCells,
+    isSubComponentColumn,
     onInnerCellChange
 }) => {
     const isItemToBeDisplayed =
@@ -41,7 +42,12 @@ const groupedColumnItem = ({
                                               isadditionalcolumn
                                           }
                                           checked={cell.display}
-                                          onChange={onInnerCellChange}
+                                          onChange={(event) =>
+                                              onInnerCellChange(
+                                                  event,
+                                                  isSubComponentColumn
+                                              )
+                                          }
                                       />
                                       <label
                                           htmlFor={`chk_selectInnerCell_${cellId}`}
@@ -66,6 +72,7 @@ groupedColumnItem.propTypes = {
     display: PropTypes.bool,
     isadditionalcolumn: PropTypes.bool,
     innerCells: PropTypes.arrayOf(PropTypes.object),
+    isSubComponentColumn: PropTypes.bool,
     onInnerCellChange: PropTypes.func
 };
 

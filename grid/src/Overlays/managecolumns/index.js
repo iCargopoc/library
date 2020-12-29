@@ -17,6 +17,11 @@ const ColumnReordering = (props) => {
         originalColumns,
         additionalColumn,
         originalAdditionalColumn,
+        isSubComponentGrid,
+        subComponentColumnns,
+        originalSubComponentColumns,
+        subComponentAdditionalColumn,
+        originalSubComponentAdditionalColumn,
         updateColumnStructure
     } = props;
 
@@ -43,14 +48,33 @@ const ColumnReordering = (props) => {
         additionalColumn.innerCells &&
         additionalColumn.innerCells.length > 0;
 
+    // Check if sub component additional Column is present or not
+    const isSubComponentAdditionalColumnPresent =
+        isSubComponentGrid &&
+        subComponentAdditionalColumn !== null &&
+        subComponentAdditionalColumn !== undefined &&
+        Object.keys(subComponentAdditionalColumn).length > 0 &&
+        subComponentAdditionalColumn.innerCells &&
+        subComponentAdditionalColumn.innerCells.length > 0;
+
     // Set state variables for:
     // managedColumns - main columns displayed in colum setting region
     // managedAdditionalColumn - additional column displayed in colum setting region
+    // managedSubComponentColumns - sub component columns displayed in colum setting region
+    // managedSubComponentAdditionalColumn - sub component additional column displayed in colum setting region
     // isErrorDisplayed - to see if error message has to be displayed or not
     const [managedColumns, setManagedColumns] = useState([]);
     const [managedAdditionalColumn, setManagedAdditionalColumn] = useState(
         null
     );
+    const [
+        managedSubComponentColumns,
+        setManagedSubComponentColumns
+    ] = useState([]);
+    const [
+        managedSubComponentAdditionalColumn,
+        setManagedSubComponentAdditionalColumn
+    ] = useState(null);
     const [isErrorDisplayed, setIsErrorDisplayed] = useState(false);
 
     // Update display value of column based on columnId
@@ -101,46 +125,86 @@ const ColumnReordering = (props) => {
     };
 
     // Update display value of managedAdditionalColumn state with given value
-    const updatedDisplayOfAdditionalColumn = (flag) => {
-        setManagedAdditionalColumn(
-            update(managedAdditionalColumn, {
-                display: { $set: flag }
-            })
-        );
+    const updatedDisplayOfAdditionalColumn = (flag, isSubComponentColumn) => {
+        if (isSubComponentColumn) {
+            setManagedSubComponentAdditionalColumn(
+                update(managedSubComponentAdditionalColumn, {
+                    display: { $set: flag }
+                })
+            );
+        } else {
+            setManagedAdditionalColumn(
+                update(managedAdditionalColumn, {
+                    display: { $set: flag }
+                })
+            );
+        }
     };
 
     // #region - Column chooser region
     // update the display flag value of column or all columns in managedColumns and managedAdditionalColumn state, based on the selection
-    const updateColumns = (columnid, isadditionalcolumn, checked) => {
+    const updateColumns = (
+        columnid,
+        isadditionalcolumn,
+        checked,
+        isSubComponentColumn
+    ) => {
         if (
             isAdditionalColumnPresent &&
             (columnid === "all" || isadditionalcolumn === "true")
         ) {
             // Update additional column state if columnid is "all" or selected column has "isadditionalcolumn"
-            updatedDisplayOfAdditionalColumn(checked);
+            updatedDisplayOfAdditionalColumn(checked, isSubComponentColumn);
         }
         if (isadditionalcolumn !== "true") {
             // Update main columns state based on selection and columnid, if selected column doesn't have "isadditionalcolumn"
-            const updatedManagedColumns = [...managedColumns].map((column) => {
-                return updatedDisplayOfColumn(column, columnid, checked);
-            });
-            setManagedColumns(
-                update(managedColumns, {
-                    $set: updatedManagedColumns
-                })
-            );
+            if (isSubComponentColumn) {
+                const updatedManagedColumns = [
+                    ...managedSubComponentColumns
+                ].map((column) => {
+                    return updatedDisplayOfColumn(column, columnid, checked);
+                });
+                setManagedSubComponentColumns(
+                    update(managedSubComponentColumns, {
+                        $set: updatedManagedColumns
+                    })
+                );
+            } else {
+                const updatedManagedColumns = [...managedColumns].map(
+                    (column) => {
+                        return updatedDisplayOfColumn(
+                            column,
+                            columnid,
+                            checked
+                        );
+                    }
+                );
+                setManagedColumns(
+                    update(managedColumns, {
+                        $set: updatedManagedColumns
+                    })
+                );
+            }
         }
     };
     // #endregion
 
     // #region - Column settings region
     // Updates the order of columns in managedColumns state
-    const onColumnReorder = (reorderedColumns) => {
-        setManagedColumns(
-            update(managedColumns, {
-                $set: reorderedColumns
-            })
-        );
+    const onColumnReorder = (reorderedColumns, isSubComponentColumn) => {
+        if (isSubComponentColumn) {
+            setManagedSubComponentColumns(
+                update(managedSubComponentColumns, {
+                    $set: reorderedColumns
+                })
+            );
+        } else {
+            setManagedColumns(
+                update(managedColumns, {
+                    $set: reorderedColumns
+                })
+            );
+        }
     };
 
     // Updates the inner cell display value accordingly
@@ -158,10 +222,57 @@ const ColumnReordering = (props) => {
     };
 
     // Update the display flag value of inner cell in managedColumns state, based on the selection
-    const onInnerCellChange = (event) => {
+    const onInnerCellChange = (event, isSubComponentColumn) => {
         const { checked, dataset } = event.currentTarget;
         const { columnid, cellid, isadditionalcolumn } = dataset;
-        if (isadditionalcolumn === "false") {
+        if (isadditionalcolumn === "false" && isSubComponentColumn) {
+            setManagedSubComponentColumns(() => {
+                return [...managedSubComponentColumns].map((column) => {
+                    const updatedColumn = { ...column };
+                    const {
+                        columnId,
+                        innerCells,
+                        isGroupHeader
+                    } = updatedColumn;
+                    const groupedColumns = updatedColumn.columns;
+                    if (
+                        columnId === columnid &&
+                        innerCells &&
+                        innerCells.length > 0
+                    ) {
+                        updatedColumn.innerCells = updatedDisplayOfInnerCells(
+                            [...innerCells],
+                            cellid,
+                            checked
+                        );
+                    } else if (
+                        isGroupHeader === true &&
+                        groupedColumns &&
+                        groupedColumns.length > 0
+                    ) {
+                        const updatedColumns = [...groupedColumns].map(
+                            (col) => {
+                                const updatedCol = { ...col };
+                                if (
+                                    col.columnId === columnid &&
+                                    col.innerCells &&
+                                    col.innerCells.length > 0
+                                ) {
+                                    updatedCol.innerCells = updatedDisplayOfInnerCells(
+                                        [...col.innerCells],
+                                        cellid,
+                                        checked
+                                    );
+                                }
+                                return updatedCol;
+                            }
+                        );
+                        updatedColumn.columns = updatedColumns;
+                    }
+                    return updatedColumn;
+                });
+            });
+        } else if (isadditionalcolumn === "false" && !isSubComponentColumn) {
             setManagedColumns(() => {
                 return [...managedColumns].map((column) => {
                     const updatedColumn = { ...column };
@@ -208,6 +319,18 @@ const ColumnReordering = (props) => {
                     return updatedColumn;
                 });
             });
+        } else if (isSubComponentColumn) {
+            setManagedSubComponentAdditionalColumn(
+                update(managedSubComponentAdditionalColumn, {
+                    innerCells: {
+                        $set: changeInnerCellSelection(
+                            managedSubComponentAdditionalColumn.innerCells,
+                            cellid,
+                            checked
+                        )
+                    }
+                })
+            );
         } else {
             setManagedAdditionalColumn(
                 update(managedAdditionalColumn, {
@@ -236,7 +359,24 @@ const ColumnReordering = (props) => {
                 $set: originalAdditionalColumn
             })
         );
-        updateColumnStructure(originalColumns, originalAdditionalColumn);
+        if (isSubComponentGrid) {
+            setManagedSubComponentColumns(
+                update(managedSubComponentColumns, {
+                    $set: originalSubComponentColumns
+                })
+            );
+            setManagedSubComponentAdditionalColumn(
+                update(managedSubComponentAdditionalColumn, {
+                    $set: originalSubComponentAdditionalColumn
+                })
+            );
+        }
+        updateColumnStructure(
+            originalColumns,
+            originalAdditionalColumn,
+            originalSubComponentColumns,
+            originalSubComponentAdditionalColumn
+        );
     };
 
     const onColumnChooserSave = () => {
@@ -244,11 +384,29 @@ const ColumnReordering = (props) => {
         const filteredManagedColumns = managedColumns.filter((column) => {
             return column.display === true;
         });
-        if (filteredManagedColumns && filteredManagedColumns.length > 0) {
-            updateColumnStructure(managedColumns, managedAdditionalColumn);
-            toggleManageColumnsOverlay();
-        } else {
+        const filteredManagedSubComponentColumns = managedSubComponentColumns.filter(
+            (column) => {
+                return column.display === true;
+            }
+        );
+        if (!(filteredManagedColumns && filteredManagedColumns.length > 0)) {
             setIsErrorDisplayed(true);
+        } else if (
+            isSubComponentGrid &&
+            !(
+                filteredManagedSubComponentColumns &&
+                filteredManagedSubComponentColumns.length > 0
+            )
+        ) {
+            setIsErrorDisplayed(true);
+        } else {
+            updateColumnStructure(
+                managedColumns,
+                managedAdditionalColumn,
+                managedSubComponentColumns,
+                managedSubComponentAdditionalColumn
+            );
+            toggleManageColumnsOverlay();
         }
     };
 
@@ -257,6 +415,14 @@ const ColumnReordering = (props) => {
         setManagedAdditionalColumn(
             isAdditionalColumnPresent ? { ...additionalColumn } : null
         );
+        if (isSubComponentGrid) {
+            setManagedSubComponentColumns([...subComponentColumnns]);
+            setManagedSubComponentAdditionalColumn(
+                isSubComponentAdditionalColumnPresent
+                    ? { ...subComponentAdditionalColumn }
+                    : null
+            );
+        }
     }, []);
 
     if (managedColumns && managedColumns.length > 0) {
@@ -278,6 +444,25 @@ const ColumnReordering = (props) => {
             ? managedAdditionalColumn.isDisplayInExpandedRegion
             : "true";
 
+        const isSubComponentAdditionalColumnSelected =
+            isSubComponentGrid &&
+            managedSubComponentAdditionalColumn !== null &&
+            managedSubComponentAdditionalColumn.innerCells &&
+            managedSubComponentAdditionalColumn.innerCells.length > 0 &&
+            managedSubComponentAdditionalColumn.display === true;
+        const subComponentAdditionalColumnHeader = isSubComponentAdditionalColumnPresent
+            ? subComponentAdditionalColumn.Header
+            : "";
+        const managedSubComponentAdditionalColumnInnercells = isSubComponentAdditionalColumnSelected
+            ? managedSubComponentAdditionalColumn.innerCells
+            : [];
+        const managedSubComponentAdditionalColumnColumnId = isSubComponentAdditionalColumnSelected
+            ? managedSubComponentAdditionalColumn.columnId
+            : "";
+        const managedSubComponentAdditionalColumnDisplayType = isSubComponentAdditionalColumnSelected
+            ? managedSubComponentAdditionalColumn.isDisplayInExpandedRegion
+            : "true";
+
         return (
             <ClickAwayListener
                 onClickAway={toggleManageColumnsOverlay}
@@ -293,6 +478,15 @@ const ColumnReordering = (props) => {
                         additionalColumn={additionalColumn}
                         managedColumns={managedColumns}
                         managedAdditionalColumn={managedAdditionalColumn}
+                        isSubComponentGrid={isSubComponentGrid}
+                        subComponentColumnns={[...subComponentColumnns]}
+                        subComponentAdditionalColumn={
+                            subComponentAdditionalColumn
+                        }
+                        managedSubComponentColumns={managedSubComponentColumns}
+                        managedSubComponentAdditionalColumn={
+                            managedSubComponentAdditionalColumn
+                        }
                         updateColumns={updateColumns}
                     />
                 </div>
@@ -335,6 +529,7 @@ const ColumnReordering = (props) => {
                                 managedColumns={managedColumns}
                                 onColumnReorder={onColumnReorder}
                                 onInnerCellChange={onInnerCellChange}
+                                isSubComponentColumn={false}
                             />
                         </DndProvider>
                         {isAdditionalColumnSelected ? (
@@ -381,8 +576,13 @@ const ColumnReordering = (props) => {
                                                                     checked={
                                                                         display
                                                                     }
-                                                                    onChange={
-                                                                        onInnerCellChange
+                                                                    onChange={(
+                                                                        event
+                                                                    ) =>
+                                                                        onInnerCellChange(
+                                                                            event,
+                                                                            false
+                                                                        )
                                                                     }
                                                                 />
                                                                 <label
@@ -402,6 +602,93 @@ const ColumnReordering = (props) => {
                             </>
                         ) : null}
                     </div>
+                    {isSubComponentGrid ? (
+                        <div className="ng-popover--column__body">
+                            <div className="ng-popover--column__head">
+                                Child Column
+                            </div>
+                            <DndProvider
+                                backend={MultiBackend}
+                                options={HTML5toTouch}
+                            >
+                                <ColumnsList
+                                    managedColumns={managedSubComponentColumns}
+                                    onColumnReorder={onColumnReorder}
+                                    onInnerCellChange={onInnerCellChange}
+                                    isSubComponentColumn
+                                />
+                            </DndProvider>
+                            {isSubComponentAdditionalColumnSelected ? (
+                                <>
+                                    <div className="ng-popover--column__head">
+                                        Additional Data ( Expand View)
+                                    </div>
+                                    <div
+                                        className="ng-popover--column__reorder is-full-width"
+                                        data-testid="sub-component-additional-column-box"
+                                    >
+                                        <div className="ng-popover--column__reorder-head">
+                                            {subComponentAdditionalColumnHeader}
+                                        </div>
+                                        <div className="ng-popover--column__list">
+                                            {managedSubComponentAdditionalColumnInnercells.map(
+                                                (cell) => {
+                                                    const {
+                                                        cellId,
+                                                        Header,
+                                                        display
+                                                    } = cell;
+                                                    return (
+                                                        <div
+                                                            className="ng-popover--column__wrap"
+                                                            key={`${cellId}`}
+                                                        >
+                                                            <div className="ng-popover--column__check">
+                                                                <div className="neo-form-check">
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        id={`chk_selectSubComponentInnerCell_${cellId}`}
+                                                                        className="neo-checkbox form-check-input"
+                                                                        data-testid={`selectSubComponentInnerCell_${managedSubComponentAdditionalColumnColumnId}_${cellId}`}
+                                                                        data-columnid={
+                                                                            managedSubComponentAdditionalColumnColumnId
+                                                                        }
+                                                                        data-cellid={
+                                                                            cellId
+                                                                        }
+                                                                        data-isadditionalcolumn={
+                                                                            managedSubComponentAdditionalColumnDisplayType
+                                                                        }
+                                                                        checked={
+                                                                            display
+                                                                        }
+                                                                        onChange={(
+                                                                            event
+                                                                        ) =>
+                                                                            onInnerCellChange(
+                                                                                event,
+                                                                                true
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                    <label
+                                                                        htmlFor={`chk_selectSubComponentInnerCell_${cellId}`}
+                                                                        className="neo-form-check__label"
+                                                                    >
+                                                                        {Header}
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                            )}
+                                        </div>
+                                    </div>
+                                </>
+                            ) : null}
+                        </div>
+                    ) : null}
                     <div className="ng-popover__footer">
                         <button
                             type="button"
@@ -441,6 +728,11 @@ ColumnReordering.propTypes = {
     originalColumns: PropTypes.arrayOf(PropTypes.object),
     additionalColumn: PropTypes.object,
     originalAdditionalColumn: PropTypes.object,
+    isSubComponentGrid: PropTypes.bool,
+    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
+    originalSubComponentColumns: PropTypes.arrayOf(PropTypes.object),
+    subComponentAdditionalColumn: PropTypes.object,
+    originalSubComponentAdditionalColumn: PropTypes.object,
     updateColumnStructure: PropTypes.func
 };
 

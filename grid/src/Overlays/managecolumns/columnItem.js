@@ -15,6 +15,7 @@ const ColumnItem = ({
     isGroupHeader,
     columns,
     innerCells,
+    isSubComponentColumn,
     onInnerCellChange
 }) => {
     const originalIndex = findColumn(id).index;
@@ -83,6 +84,7 @@ const ColumnItem = ({
                                 display={display}
                                 isadditionalcolumn={isDisplayInExpandedRegion}
                                 innerCells={col.innerCells}
+                                isSubComponentColumn={isSubComponentColumn}
                                 onInnerCellChange={onInnerCellChange}
                             />
                         );
@@ -110,8 +112,11 @@ const ColumnItem = ({
                                                           isadditionalcolumn
                                                       }
                                                       checked={display}
-                                                      onChange={
-                                                          onInnerCellChange
+                                                      onChange={(event) =>
+                                                          onInnerCellChange(
+                                                              event,
+                                                              isSubComponentColumn
+                                                          )
                                                       }
                                                   />
                                                   <label
@@ -143,6 +148,7 @@ ColumnItem.propTypes = {
     isGroupHeader: PropTypes.bool,
     columns: PropTypes.arrayOf(PropTypes.object),
     innerCells: PropTypes.arrayOf(PropTypes.object),
+    isSubComponentColumn: PropTypes.bool,
     onInnerCellChange: PropTypes.func
 };
 

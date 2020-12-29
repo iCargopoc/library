@@ -6,7 +6,12 @@ import { ItemTypes } from "./ItemTypes";
 import ColumnItem from "./columnItem";
 
 const ColumnsList = (props) => {
-    const { onColumnReorder, managedColumns, onInnerCellChange } = props;
+    const {
+        onColumnReorder,
+        managedColumns,
+        onInnerCellChange,
+        isSubComponentColumn
+    } = props;
 
     const findColumn = (columnId) => {
         const column = managedColumns.filter(
@@ -26,7 +31,8 @@ const ColumnsList = (props) => {
                     [index, 1],
                     [atIndex, 0, column]
                 ]
-            })
+            }),
+            isSubComponentColumn
         );
     };
 
@@ -61,6 +67,7 @@ const ColumnsList = (props) => {
                             isGroupHeader={isGroupHeader}
                             columns={columns}
                             innerCells={innerCells}
+                            isSubComponentColumn={isSubComponentColumn}
                             onInnerCellChange={onInnerCellChange}
                         />
                     );
@@ -73,7 +80,8 @@ const ColumnsList = (props) => {
 ColumnsList.propTypes = {
     onColumnReorder: PropTypes.func,
     managedColumns: PropTypes.arrayOf(PropTypes.object),
-    onInnerCellChange: PropTypes.func
+    onInnerCellChange: PropTypes.func,
+    isSubComponentColumn: PropTypes.bool
 };
 
 export default ColumnsList;
