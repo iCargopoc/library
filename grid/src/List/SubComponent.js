@@ -87,7 +87,7 @@ const SubComponent = (props) => {
                                     {isRowExpandAvailable && isRowExpandable ? (
                                         <span
                                             className="ng-action__expander"
-                                            data-testid="rowExpanderIcon"
+                                            data-testid="subcontentrow_expandericon"
                                             {...row.getToggleRowExpandedProps()}
                                         >
                                             <i>
@@ -119,16 +119,12 @@ const SubComponent = (props) => {
                             className="neo-grid__tr"
                         >
                             {headerGroup.headers.map((column) => {
-                                // If header is group header only render header value and not sort/filter/resize
                                 return (
                                     <div
                                         {...column.getHeaderProps()}
                                         className="neo-grid__th"
                                     >
-                                        <div
-                                            className="neo-grid__th-title"
-                                            data-testid="column-header-sort"
-                                        >
+                                        <div className="neo-grid__th-title">
                                             {column.render("Header")}
                                         </div>
                                     </div>
@@ -138,68 +134,62 @@ const SubComponent = (props) => {
                     );
                 })}
             </div>
-            {rows && rows.length > 0 ? (
-                <div {...getTableBodyProps()} className="neo-grid__tbody">
-                    {rows.map((row) => {
-                        prepareRow(row);
+            <div {...getTableBodyProps()} className="neo-grid__tbody">
+                {rows.map((row) => {
+                    prepareRow(row);
 
-                        const { original, cells, isExpanded } = row;
-                        // Add classname passed by developer from getRowInfo prop to required rows
-                        let rowClassName = "";
-                        if (getRowInfo && typeof getRowInfo === "function") {
-                            const rowInfo = getRowInfo(original, true);
-                            if (rowInfo && rowInfo.className) {
-                                rowClassName = rowInfo.className;
-                            }
+                    const { original, cells, isExpanded } = row;
+                    // Add classname passed by developer from getRowInfo prop to required rows
+                    let rowClassName = "";
+                    if (getRowInfo && typeof getRowInfo === "function") {
+                        const rowInfo = getRowInfo(original, true);
+                        if (rowInfo && rowInfo.className) {
+                            rowClassName = rowInfo.className;
                         }
-                        return (
-                            <div
-                                {...row.getRowProps()}
-                                data-testid="gridrow"
-                                className={`neo-grid__tr ${rowClassName}`}
-                            >
-                                <div className="neo-grid__row-container">
-                                    <div
-                                        data-testid="gridrowWrap"
-                                        className="neo-grid__row-wrap"
-                                    >
-                                        {cells.map((cell) => {
-                                            if (cell.column.display === true) {
-                                                return (
-                                                    <div
-                                                        {...cell.getCellProps()}
-                                                        className="neo-grid__td"
-                                                        data-testid="gridrowcell"
-                                                    >
-                                                        {cell.render("Cell")}
-                                                    </div>
-                                                );
-                                            }
-                                            return null;
-                                        })}
-                                    </div>
-
-                                    {isExpanded ? (
-                                        <div
-                                            className="neo-grid__row-expand"
-                                            data-testid="rowExpandedRegion"
-                                        >
-                                            {subComponentAdditionalColumn.Cell(
-                                                row,
-                                                subComponentAdditionalColumn
-                                            )}
-                                        </div>
-                                    ) : null}
+                    }
+                    return (
+                        <div
+                            {...row.getRowProps()}
+                            data-testid="subcontentrow"
+                            className={`neo-grid__tr ${rowClassName}`}
+                        >
+                            <div className="neo-grid__row-container">
+                                <div
+                                    data-testid="subcontentrow_wrap"
+                                    className="neo-grid__row-wrap"
+                                >
+                                    {cells.map((cell) => {
+                                        if (cell.column.display === true) {
+                                            return (
+                                                <div
+                                                    {...cell.getCellProps()}
+                                                    className="neo-grid__td"
+                                                    data-testid="subcontentrow_cell"
+                                                >
+                                                    {cell.render("Cell")}
+                                                </div>
+                                            );
+                                        }
+                                        return null;
+                                    })}
                                 </div>
+
+                                {isExpanded ? (
+                                    <div
+                                        className="neo-grid__row-expand"
+                                        data-testid="subcontentrow_expandedregion"
+                                    >
+                                        {subComponentAdditionalColumn.Cell(
+                                            row,
+                                            subComponentAdditionalColumn
+                                        )}
+                                    </div>
+                                ) : null}
                             </div>
-                        );
-                    })}
-                </div>
-            ) : (
-                <h2 data-testid="nodataerror" className="ng-error">
-                    No Records Found
-                </h2>
-            )}
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 };
