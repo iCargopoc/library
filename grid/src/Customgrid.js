@@ -284,7 +284,7 @@ const Customgrid = (props) => {
             hooks.allColumns.push((hookColumns, instanceObj) => [
                 {
                     id: "expand_collapse",
-                    columnId: "column_custom_2",
+                    columnId: "column_custom_2", // *** Never change this id. It is used in other places ***
                     disableResizing: true,
                     disableFilters: true,
                     disableSortBy: true,
