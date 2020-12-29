@@ -123,12 +123,6 @@ const Customgrid = (props) => {
         setSubComponentAdditionalColumn
     ] = useState(null);
 
-    // Local state value for holding value if sub components are expanded from header
-    const [
-        isAllSubComponentsExpanded,
-        setIsAllSubComponentsExpanded
-    ] = useState(false);
-
     // Local state value for holding row ids that have sub components expanded
     const [
         rowsWithExpandedSubComponents,
@@ -271,7 +265,6 @@ const Customgrid = (props) => {
             data,
             defaultColumn,
             isSubComponentGrid,
-            isAllSubComponentsExpanded,
             rowsWithExpandedSubComponents,
             globalFilter: globalFilterLogic,
             autoResetFilters: false,
@@ -300,26 +293,33 @@ const Customgrid = (props) => {
                     minWidth: 35,
                     width: 35,
                     maxWidth: 35,
-                    Header: () => {
+                    Header: (headerSelectProps) => {
                         const { instance } = instanceObj;
+                        const expandedRowIds = [
+                            ...instance.rowsWithExpandedSubComponents
+                        ];
+                        const totalRowIds = findSelectedRowIdAttributes(
+                            headerSelectProps.data,
+                            idAttribute
+                        );
+                        const isAllRowsExpanded =
+                            expandedRowIds.length === totalRowIds.length;
                         return (
                             <i
                                 role="presentation"
                                 className="ng-accordion__icon"
                                 onClick={() => {
-                                    const isClickToCollapse =
-                                        instance.isAllSubComponentsExpanded ===
-                                        true;
-                                    if (isClickToCollapse) {
+                                    if (isAllRowsExpanded) {
                                         setRowsWithExpandedSubComponents([]);
+                                    } else {
+                                        setRowsWithExpandedSubComponents(
+                                            totalRowIds
+                                        );
                                     }
-                                    setIsAllSubComponentsExpanded(
-                                        !isClickToCollapse
-                                    );
                                 }}
                                 data-testid="subComponent-header-expand-collapse"
                             >
-                                {instance.isAllSubComponentsExpanded ? (
+                                {isAllRowsExpanded ? (
                                     <IconCollapse className="ng-icon" />
                                 ) : (
                                     <IconExpand className="ng-icon" />
@@ -1352,9 +1352,6 @@ const Customgrid = (props) => {
                                                         isSubComponentGrid={
                                                             isSubComponentGrid
                                                         }
-                                                        isAllSubComponentsExpanded={
-                                                            isAllSubComponentsExpanded
-                                                        }
                                                         rowsWithExpandedSubComponents={
                                                             rowsWithExpandedSubComponents
                                                         }
@@ -1441,9 +1438,6 @@ const Customgrid = (props) => {
                                                 }
                                                 isSubComponentGrid={
                                                     isSubComponentGrid
-                                                }
-                                                isAllSubComponentsExpanded={
-                                                    isAllSubComponentsExpanded
                                                 }
                                                 rowsWithExpandedSubComponents={
                                                     rowsWithExpandedSubComponents

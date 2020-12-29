@@ -20,7 +20,6 @@ const RowItem = ({
     subComponentColumnns,
     subComponentAdditionalColumn,
     isSubComponentGrid,
-    isAllSubComponentsExpanded,
     rowsWithExpandedSubComponents,
     getRowInfo,
     rowActions,
@@ -33,8 +32,7 @@ const RowItem = ({
         subComponentData !== null &&
         subComponentData !== undefined &&
         subComponentData.length > 0 &&
-        (rowsWithExpandedSubComponents.includes(original[idAttribute]) ||
-            isAllSubComponentsExpanded);
+        rowsWithExpandedSubComponents.includes(original[idAttribute]);
 
     return (
         <Measure
@@ -154,7 +152,6 @@ RowItem.propTypes = {
     subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
     subComponentAdditionalColumn: PropTypes.object,
     isSubComponentGrid: PropTypes.bool,
-    isAllSubComponentsExpanded: PropTypes.bool,
     rowsWithExpandedSubComponents: PropTypes.array,
     getRowInfo: PropTypes.func,
     rowActions: PropTypes.any,
