@@ -819,7 +819,7 @@ const GridComponent = (props) => {
     const originalSubComponentColumns = [
         {
             Header: "HAWB No",
-            width: 50,
+            width: 250,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawbId } = rowData;
                 if (hawbId !== null && hawbId !== undefined) {
@@ -836,7 +836,7 @@ const GridComponent = (props) => {
             Header: "AWB Details",
             accessor: "hawb",
             onlyInDesktop: true,
-            width: 400,
+            width: 800,
             innerCells: [
                 {
                     Header: "From",
@@ -1029,7 +1029,7 @@ const GridComponent = (props) => {
                     accessor: "status"
                 }
             ],
-            width: 100,
+            width: 200,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { scr } = rowData;
                 const { ack, num, status } = scr;
