@@ -12,6 +12,7 @@ const RowsList = ({
     height,
     theme,
     rows,
+    idAttribute,
     overScanCount,
     prepareRow,
     isParentGrid,
@@ -27,6 +28,7 @@ const RowsList = ({
     subComponentAdditionalColumn,
     isSubComponentGrid,
     isAllSubComponentsExpanded,
+    rowsWithExpandedSubComponents,
     isLoadMoreChildRowsRequiredForRow,
     loadMoreChildData,
     parentColumn,
@@ -123,6 +125,7 @@ const RowsList = ({
                     return (
                         <ListItem
                             row={row}
+                            idAttribute={idAttribute}
                             style={style}
                             theme={theme}
                             index={index}
@@ -150,6 +153,9 @@ const RowsList = ({
                             isAllSubComponentsExpanded={
                                 isAllSubComponentsExpanded
                             }
+                            rowsWithExpandedSubComponents={
+                                rowsWithExpandedSubComponents
+                            }
                             getRowInfo={getRowInfo}
                             fixedRowHeight={fixedRowHeight}
                             isLoadMoreRequiredForNormalRow={
@@ -174,6 +180,7 @@ RowsList.propTypes = {
     height: PropTypes.number,
     theme: PropTypes.string,
     rows: PropTypes.arrayOf(PropTypes.object),
+    idAttribute: PropTypes.string,
     overScanCount: PropTypes.number,
     prepareRow: PropTypes.func,
     isParentGrid: PropTypes.bool,
@@ -198,6 +205,7 @@ RowsList.propTypes = {
     subComponentAdditionalColumn: PropTypes.object,
     isSubComponentGrid: PropTypes.bool,
     isAllSubComponentsExpanded: PropTypes.bool,
+    rowsWithExpandedSubComponents: PropTypes.array,
     rowSelector: PropTypes.bool,
     rowActions: PropTypes.any,
     expandableColumn: PropTypes.bool

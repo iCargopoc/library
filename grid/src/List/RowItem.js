@@ -5,6 +5,7 @@ import SubComponent from "./SubComponent";
 
 const RowItem = ({
     row,
+    idAttribute,
     theme,
     index,
     setSize,
@@ -20,6 +21,7 @@ const RowItem = ({
     subComponentAdditionalColumn,
     isSubComponentGrid,
     isAllSubComponentsExpanded,
+    rowsWithExpandedSubComponents,
     getRowInfo,
     rowActions,
     expandableColumn
@@ -28,10 +30,11 @@ const RowItem = ({
     const { subComponentData } = original;
     const isSubComponentRowsPresent =
         isSubComponentGrid &&
-        isAllSubComponentsExpanded &&
         subComponentData !== null &&
         subComponentData !== undefined &&
-        subComponentData.length > 0;
+        subComponentData.length > 0 &&
+        (rowsWithExpandedSubComponents.includes(original[idAttribute]) ||
+            isAllSubComponentsExpanded);
 
     return (
         <Measure
@@ -61,7 +64,12 @@ const RowItem = ({
                         }`}
                     >
                         {cells.map((cell) => {
-                            if (cell.column.display === true) {
+                            if (
+                                (cell.column.columnId === "column_custom_2" &&
+                                    isSubComponentGrid) ||
+                                (cell.column.columnId !== "column_custom_2" &&
+                                    cell.column.display === true)
+                            ) {
                                 return (
                                     <div
                                         {...cell.getCellProps()}
@@ -130,6 +138,7 @@ const RowItem = ({
 
 RowItem.propTypes = {
     row: PropTypes.object,
+    idAttribute: PropTypes.string,
     theme: PropTypes.string,
     index: PropTypes.number,
     setSize: PropTypes.func,
@@ -146,6 +155,7 @@ RowItem.propTypes = {
     subComponentAdditionalColumn: PropTypes.object,
     isSubComponentGrid: PropTypes.bool,
     isAllSubComponentsExpanded: PropTypes.bool,
+    rowsWithExpandedSubComponents: PropTypes.array,
     getRowInfo: PropTypes.func,
     rowActions: PropTypes.any,
     expandableColumn: PropTypes.bool

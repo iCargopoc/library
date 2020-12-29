@@ -5,6 +5,7 @@ import RowItem from "./RowItem";
 
 const ListItem = ({
     row,
+    idAttribute,
     style,
     theme,
     index,
@@ -26,6 +27,7 @@ const ListItem = ({
     subComponentAdditionalColumn,
     isSubComponentGrid,
     isAllSubComponentsExpanded,
+    rowsWithExpandedSubComponents,
     getRowInfo,
     fixedRowHeight,
     isLoadMoreRequiredForNormalRow,
@@ -78,6 +80,7 @@ const ListItem = ({
         >
             <RowItem
                 row={row}
+                idAttribute={idAttribute}
                 theme={theme}
                 index={index}
                 setSize={setSize}
@@ -90,6 +93,7 @@ const ListItem = ({
                 subComponentAdditionalColumn={subComponentAdditionalColumn}
                 isSubComponentGrid={isSubComponentGrid}
                 isAllSubComponentsExpanded={isAllSubComponentsExpanded}
+                rowsWithExpandedSubComponents={rowsWithExpandedSubComponents}
                 lastPage={lastPage}
                 loadMoreChildData={loadMoreChildData}
                 isParentGrid={isParentGrid}
@@ -105,6 +109,7 @@ const ListItem = ({
 
 ListItem.propTypes = {
     row: PropTypes.object,
+    idAttribute: PropTypes.string,
     style: PropTypes.object,
     theme: PropTypes.string,
     index: PropTypes.number,
@@ -127,6 +132,7 @@ ListItem.propTypes = {
     subComponentAdditionalColumn: PropTypes.object,
     isSubComponentGrid: PropTypes.bool,
     isAllSubComponentsExpanded: PropTypes.bool,
+    rowsWithExpandedSubComponents: PropTypes.array,
     fixedRowHeight: PropTypes.bool,
     isLoadMoreRequiredForNormalRow: PropTypes.func,
     rowSelector: PropTypes.bool,

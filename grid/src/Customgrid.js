@@ -135,8 +135,6 @@ const Customgrid = (props) => {
         setRowsWithExpandedSubComponents
     ] = useState([]);
 
-    const updateRowsWithExpandedSubComponents = (row) => {};
-
     const isSubComponentGrid = subComponentColumnns.length > 0;
 
     // Variables used for handling infinite loading
@@ -274,6 +272,7 @@ const Customgrid = (props) => {
             defaultColumn,
             isSubComponentGrid,
             isAllSubComponentsExpanded,
+            rowsWithExpandedSubComponents,
             globalFilter: globalFilterLogic,
             autoResetFilters: false,
             autoResetGlobalFilter: false,
@@ -289,9 +288,101 @@ const Customgrid = (props) => {
         useFlexLayout,
         useResizeColumns,
         (hooks) => {
+            hooks.allColumns.push((hookColumns, instanceObj) => [
+                {
+                    id: "expand_collapse",
+                    columnId: "column_custom_2",
+                    disableResizing: true,
+                    disableFilters: true,
+                    disableSortBy: true,
+                    display: true,
+                    isGroupHeader: false,
+                    minWidth: 35,
+                    width: 35,
+                    maxWidth: 35,
+                    Header: () => {
+                        const { instance } = instanceObj;
+                        return (
+                            <i
+                                role="presentation"
+                                className="ng-accordion__icon"
+                                onClick={() => {
+                                    const isClickToCollapse =
+                                        instance.isAllSubComponentsExpanded ===
+                                        true;
+                                    if (isClickToCollapse) {
+                                        setRowsWithExpandedSubComponents([]);
+                                    }
+                                    setIsAllSubComponentsExpanded(
+                                        !isClickToCollapse
+                                    );
+                                }}
+                                data-testid="subComponent-header-expand-collapse"
+                            >
+                                {instance.isAllSubComponentsExpanded ? (
+                                    <IconCollapse className="ng-icon" />
+                                ) : (
+                                    <IconExpand className="ng-icon" />
+                                )}
+                            </i>
+                        );
+                    },
+                    Cell: (cellSelectProps) => {
+                        const { row } = cellSelectProps;
+                        const { original } = row;
+                        const { subComponentData } = original;
+                        const isSubComponentRowsPresent =
+                            subComponentData !== null &&
+                            subComponentData !== undefined &&
+                            subComponentData.length > 0;
+                        if (isSubComponentRowsPresent) {
+                            const { instance } = instanceObj;
+                            const rowIdAttr = original[idAttribute];
+                            const expandedRows =
+                                instance.rowsWithExpandedSubComponents;
+                            const isSubComponentsExpanded = expandedRows.includes(
+                                rowIdAttr
+                            );
+                            return (
+                                <i
+                                    role="presentation"
+                                    className="ng-accordion__icon"
+                                    onClick={() => {
+                                        let currentRowsWithExpandedSubComponents = [
+                                            ...expandedRows
+                                        ];
+                                        if (isSubComponentsExpanded) {
+                                            currentRowsWithExpandedSubComponents = currentRowsWithExpandedSubComponents.filter(
+                                                (rowId) => rowId !== rowIdAttr
+                                            );
+                                        } else {
+                                            currentRowsWithExpandedSubComponents.push(
+                                                rowIdAttr
+                                            );
+                                        }
+                                        setRowsWithExpandedSubComponents(
+                                            currentRowsWithExpandedSubComponents
+                                        );
+                                    }}
+                                    data-testid="subComponent-header-expand-collapse"
+                                >
+                                    {isSubComponentsExpanded ? (
+                                        <IconCollapse className="ng-icon" />
+                                    ) : (
+                                        <IconExpand className="ng-icon" />
+                                    )}
+                                </i>
+                            );
+                        }
+                        return null;
+                    }
+                },
+                ...hookColumns
+            ]);
+
             // Add checkbox for all rows in grid, with different properties for header row and body rows, only if required
             if (rowSelector !== false) {
-                hooks.allColumns.push((hookColumns, instanceObj) => [
+                hooks.allColumns.push((hookColumns) => [
                     {
                         id: "selection",
                         columnId: "column_custom_0",
@@ -307,55 +398,27 @@ const Customgrid = (props) => {
                             const {
                                 getToggleAllRowsSelectedProps
                             } = headerSelectProps;
-                            const { instance } = instanceObj;
+                            if (multiRowSelection === false) {
+                                return null;
+                            }
                             return (
-                                <div className="ng-accordion__block">
-                                    {multiRowSelection !== false ? (
-                                        <RowSelector
-                                            data-testid="rowSelector-allRows"
-                                            {...getToggleAllRowsSelectedProps({
-                                                onClick: (event) => {
-                                                    // Set state value to identify if checkbox has been selected or deselected
-                                                    const selectedType =
-                                                        event.currentTarget
-                                                            .checked === false
-                                                            ? "deselect"
-                                                            : "select";
-                                                    setIsRowSelectionCallbackNeeded(
-                                                        selectedType
-                                                    );
-                                                    toggleAllRowsSelected();
-                                                }
-                                            })}
-                                        />
-                                    ) : null}
-                                    {instance.isSubComponentGrid === true ? (
-                                        <i
-                                            role="presentation"
-                                            className="ng-accordion__icon"
-                                            onClick={() => {
-                                                const isClickToCollapse =
-                                                    instance.isAllSubComponentsExpanded ===
-                                                    true;
-                                                if (isClickToCollapse) {
-                                                    setRowsWithExpandedSubComponents(
-                                                        []
-                                                    );
-                                                }
-                                                setIsAllSubComponentsExpanded(
-                                                    !isClickToCollapse
-                                                );
-                                            }}
-                                            data-testid="subComponent-header-expand-collapse"
-                                        >
-                                            {instance.isAllSubComponentsExpanded ? (
-                                                <IconCollapse className="ng-icon" />
-                                            ) : (
-                                                <IconExpand className="ng-icon" />
-                                            )}
-                                        </i>
-                                    ) : null}
-                                </div>
+                                <RowSelector
+                                    data-testid="rowSelector-allRows"
+                                    {...getToggleAllRowsSelectedProps({
+                                        onClick: (event) => {
+                                            // Set state value to identify if checkbox has been selected or deselected
+                                            const selectedType =
+                                                event.currentTarget.checked ===
+                                                false
+                                                    ? "deselect"
+                                                    : "select";
+                                            setIsRowSelectionCallbackNeeded(
+                                                selectedType
+                                            );
+                                            toggleAllRowsSelected();
+                                        }
+                                    })}
+                                />
                             );
                         },
                         Cell: (cellSelectProps) => {
@@ -401,6 +464,7 @@ const Customgrid = (props) => {
                     ...hookColumns
                 ]);
             }
+
             // Add last column only if required
             const isRowActionsAvailable = !!(
                 rowActions && typeof rowActions === "function"
@@ -1116,12 +1180,29 @@ const Customgrid = (props) => {
                                                                     filter,
                                                                     canResize
                                                                 } = column;
+                                                                const isExpandCollapseDisabled =
+                                                                    (column.isGroupHeader ===
+                                                                        false &&
+                                                                        column.columnId ===
+                                                                            "column_custom_2" &&
+                                                                        isSubComponentGrid ===
+                                                                            false) ||
+                                                                    (column.isGroupHeader !==
+                                                                        false &&
+                                                                        column.placeholderOf &&
+                                                                        column
+                                                                            .placeholderOf
+                                                                            .columnId ===
+                                                                            "column_custom_2" &&
+                                                                        isSubComponentGrid ===
+                                                                            false);
                                                                 if (
-                                                                    checkdisplayOfGroupedColumns(
+                                                                    !isExpandCollapseDisabled &&
+                                                                    (checkdisplayOfGroupedColumns(
                                                                         column
                                                                     ) ||
-                                                                    display ===
-                                                                        true
+                                                                        display ===
+                                                                            true)
                                                                 ) {
                                                                     // If header is group header only render header value and not sort/filter/resize
                                                                     return (
@@ -1243,6 +1324,9 @@ const Customgrid = (props) => {
                                                         height={height}
                                                         theme={theme}
                                                         rows={rows}
+                                                        idAttribute={
+                                                            idAttribute
+                                                        }
                                                         overScanCount={
                                                             overScanCount
                                                         }
@@ -1270,6 +1354,9 @@ const Customgrid = (props) => {
                                                         }
                                                         isAllSubComponentsExpanded={
                                                             isAllSubComponentsExpanded
+                                                        }
+                                                        rowsWithExpandedSubComponents={
+                                                            rowsWithExpandedSubComponents
                                                         }
                                                         isParentRowSelected={
                                                             isParentRowSelected
@@ -1327,6 +1414,7 @@ const Customgrid = (props) => {
                                                 height={height}
                                                 theme={theme}
                                                 rows={rows}
+                                                idAttribute={idAttribute}
                                                 overScanCount={overScanCount}
                                                 prepareRow={prepareRow}
                                                 isParentGrid={isParentGrid}
@@ -1356,6 +1444,9 @@ const Customgrid = (props) => {
                                                 }
                                                 isAllSubComponentsExpanded={
                                                     isAllSubComponentsExpanded
+                                                }
+                                                rowsWithExpandedSubComponents={
+                                                    rowsWithExpandedSubComponents
                                                 }
                                                 toggleParentRowSelection={
                                                     toggleParentRowSelection
