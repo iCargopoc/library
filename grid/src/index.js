@@ -212,8 +212,6 @@ const Grid = (props) => {
         setGridSubComponentAdditionalColumn
     ] = useState(null);
 
-    let isSubComponentGrid = gridSubComponentColumns.length > 0;
-
     // #region - Group sorting logic
     // Function to return sorting logic based on the user selected order of sort
     const compareValues = (compareOrder, v1, v2) => {
@@ -455,10 +453,6 @@ const Grid = (props) => {
     }, [columns, columnToExpand]);
 
     useEffect(() => {
-        isSubComponentGrid =
-            subComponentColumnns !== null &&
-            subComponentColumnns !== undefined &&
-            subComponentColumnns.length > 0;
         setGridSubComponentColumns(
             extractColumns(
                 subComponentColumnns,
@@ -520,11 +514,10 @@ const Grid = (props) => {
                     parentIdAttribute={parentIdAttribute}
                     parentRowExpandable={parentRowExpandable}
                     parentRowsToExpand={parentRowsToExpand}
-                    subComponentColumnns={gridSubComponentColumns}
-                    subComponentAdditionalColumn={
+                    managableSubComponentColumnns={gridSubComponentColumns}
+                    managableSubComponentAdditionalColumn={
                         gridSubComponentAdditionalColumn
                     }
-                    isSubComponentGrid={isSubComponentGrid}
                     loadChildData={loadChildData}
                     isParentGrid={isParentGrid}
                     gridData={processedGridData}

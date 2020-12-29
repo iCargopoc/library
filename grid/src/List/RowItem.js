@@ -19,12 +19,19 @@ const RowItem = ({
     subComponentColumnns,
     subComponentAdditionalColumn,
     isSubComponentGrid,
+    isAllSubComponentsExpanded,
     getRowInfo,
     rowActions,
     expandableColumn
 }) => {
     const { isExpanded, cells, original } = row;
     const { subComponentData } = original;
+    const isSubComponentRowsPresent =
+        isSubComponentGrid &&
+        isAllSubComponentsExpanded &&
+        subComponentData !== null &&
+        subComponentData !== undefined &&
+        subComponentData.length > 0;
 
     return (
         <Measure
@@ -78,10 +85,7 @@ const RowItem = ({
                             {additionalColumn.Cell(row, additionalColumn)}
                         </div>
                     ) : null}
-                    {isSubComponentGrid &&
-                    subComponentData !== null &&
-                    subComponentData !== undefined &&
-                    subComponentData.length > 0 ? (
+                    {isSubComponentRowsPresent ? (
                         <SubComponent
                             subComponentData={subComponentData}
                             subComponentColumnns={subComponentColumnns}
@@ -141,6 +145,7 @@ RowItem.propTypes = {
     subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
     subComponentAdditionalColumn: PropTypes.object,
     isSubComponentGrid: PropTypes.bool,
+    isAllSubComponentsExpanded: PropTypes.bool,
     getRowInfo: PropTypes.func,
     rowActions: PropTypes.any,
     expandableColumn: PropTypes.bool

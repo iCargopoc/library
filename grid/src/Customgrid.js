@@ -33,7 +33,9 @@ import {
     IconShare,
     IconGroupSort,
     IconSort,
-    IconRefresh
+    IconRefresh,
+    IconExpand,
+    IconCollapse
 } from "./Utilities/SvgUtilities";
 import {
     findSelectedRows,
@@ -60,9 +62,8 @@ const Customgrid = (props) => {
         parentIdAttribute,
         parentRowExpandable,
         parentRowsToExpand,
-        subComponentColumnns,
-        subComponentAdditionalColumn,
-        isSubComponentGrid,
+        managableSubComponentColumnns,
+        managableSubComponentAdditionalColumn,
         loadChildData,
         isParentGrid,
         gridData,
@@ -112,6 +113,31 @@ const Customgrid = (props) => {
 
     // Local state value for holding the additional column configuration
     const [additionalColumn, setAdditionalColumn] = useState(null);
+
+    // Local state value for holding sub component columns
+    const [subComponentColumnns, setSubComponentColumnns] = useState([]);
+
+    // Local state value for holding the sub component additional column configuration
+    const [
+        subComponentAdditionalColumn,
+        setSubComponentAdditionalColumn
+    ] = useState(null);
+
+    // Local state value for holding value if sub components are expanded from header
+    const [
+        isAllSubComponentsExpanded,
+        setIsAllSubComponentsExpanded
+    ] = useState(false);
+
+    // Local state value for holding row ids that have sub components expanded
+    const [
+        rowsWithExpandedSubComponents,
+        setRowsWithExpandedSubComponents
+    ] = useState([]);
+
+    const updateRowsWithExpandedSubComponents = (row) => {};
+
+    const isSubComponentGrid = subComponentColumnns.length > 0;
 
     // Variables used for handling infinite loading
     const itemCount = hasNextPage ? gridData.length + 1 : gridData.length;
@@ -246,6 +272,8 @@ const Customgrid = (props) => {
             columns,
             data,
             defaultColumn,
+            isSubComponentGrid,
+            isAllSubComponentsExpanded,
             globalFilter: globalFilterLogic,
             autoResetFilters: false,
             autoResetGlobalFilter: false,
@@ -263,7 +291,7 @@ const Customgrid = (props) => {
         (hooks) => {
             // Add checkbox for all rows in grid, with different properties for header row and body rows, only if required
             if (rowSelector !== false) {
-                hooks.allColumns.push((hookColumns) => [
+                hooks.allColumns.push((hookColumns, instanceObj) => [
                     {
                         id: "selection",
                         columnId: "column_custom_0",
@@ -281,6 +309,54 @@ const Customgrid = (props) => {
                             } = headerSelectProps;
                             if (multiRowSelection === false) {
                                 return null;
+                            }
+                            const { instance } = instanceObj;
+                            if (instance.isSubComponentGrid === true) {
+                                return (
+                                    <div className="ng-accordion__block">
+                                        <RowSelector
+                                            data-testid="rowSelector-allRows"
+                                            {...getToggleAllRowsSelectedProps({
+                                                onClick: (event) => {
+                                                    // Set state value to identify if checkbox has been selected or deselected
+                                                    const selectedType =
+                                                        event.currentTarget
+                                                            .checked === false
+                                                            ? "deselect"
+                                                            : "select";
+                                                    setIsRowSelectionCallbackNeeded(
+                                                        selectedType
+                                                    );
+                                                    toggleAllRowsSelected();
+                                                }
+                                            })}
+                                        />
+                                        <i
+                                            role="presentation"
+                                            className="ng-accordion__icon"
+                                            onClick={() => {
+                                                const isClickToCollapse =
+                                                    instance.isAllSubComponentsExpanded ===
+                                                    true;
+                                                if (isClickToCollapse) {
+                                                    setRowsWithExpandedSubComponents(
+                                                        []
+                                                    );
+                                                }
+                                                setIsAllSubComponentsExpanded(
+                                                    !isClickToCollapse
+                                                );
+                                            }}
+                                            data-testid="subComponent-header-expand-collapse"
+                                        >
+                                            {instance.isAllSubComponentsExpanded ? (
+                                                <IconCollapse className="ng-icon" />
+                                            ) : (
+                                                <IconExpand className="ng-icon" />
+                                            )}
+                                        </i>
+                                    </div>
+                                );
                             }
                             return (
                                 <RowSelector
@@ -563,16 +639,24 @@ const Customgrid = (props) => {
     });
 
     // Update state, when user is updating columns configuration from outside Grid
-    // Recalculate the row height from index 0 as columns config has been changed
     useEffect(() => {
         setGridColumns(managableColumns);
     }, [managableColumns]);
 
     // Update state, when user is updating additional column configuration from outside Grid
-    // Recalculate the row height from index 0 as additional columns config has been changed
     useEffect(() => {
         setAdditionalColumn(expandedRowData);
     }, [expandedRowData]);
+
+    // Update state, when user is updating sub component columns configuration from outside Grid
+    useEffect(() => {
+        setSubComponentColumnns(managableSubComponentColumnns);
+    }, [managableSubComponentColumnns]);
+
+    // Update state, when user is updating sub component additional column configuration from outside Grid
+    useEffect(() => {
+        setSubComponentAdditionalColumn(managableSubComponentAdditionalColumn);
+    }, [managableSubComponentAdditionalColumn]);
 
     // Update the boolean value used to identify if this is the first time render of Grid
     useEffect(() => {
@@ -1204,6 +1288,9 @@ const Customgrid = (props) => {
                                                         isSubComponentGrid={
                                                             isSubComponentGrid
                                                         }
+                                                        isAllSubComponentsExpanded={
+                                                            isAllSubComponentsExpanded
+                                                        }
                                                         isParentRowSelected={
                                                             isParentRowSelected
                                                         }
@@ -1287,6 +1374,9 @@ const Customgrid = (props) => {
                                                 isSubComponentGrid={
                                                     isSubComponentGrid
                                                 }
+                                                isAllSubComponentsExpanded={
+                                                    isAllSubComponentsExpanded
+                                                }
                                                 toggleParentRowSelection={
                                                     toggleParentRowSelection
                                                 }
@@ -1352,9 +1442,8 @@ Customgrid.propTypes = {
     parentIdAttribute: PropTypes.string,
     parentRowExpandable: PropTypes.bool,
     parentRowsToExpand: PropTypes.array,
-    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
-    subComponentAdditionalColumn: PropTypes.object,
-    isSubComponentGrid: PropTypes.bool,
+    managableSubComponentColumnns: PropTypes.arrayOf(PropTypes.object),
+    managableSubComponentAdditionalColumn: PropTypes.object,
     loadChildData: PropTypes.func,
     isParentGrid: PropTypes.bool,
     gridData: PropTypes.arrayOf(PropTypes.object),
