@@ -307,29 +307,28 @@ const Customgrid = (props) => {
                             const {
                                 getToggleAllRowsSelectedProps
                             } = headerSelectProps;
-                            if (multiRowSelection === false) {
-                                return null;
-                            }
                             const { instance } = instanceObj;
                             return (
                                 <div className="ng-accordion__block">
-                                    <RowSelector
-                                        data-testid="rowSelector-allRows"
-                                        {...getToggleAllRowsSelectedProps({
-                                            onClick: (event) => {
-                                                // Set state value to identify if checkbox has been selected or deselected
-                                                const selectedType =
-                                                    event.currentTarget
-                                                        .checked === false
-                                                        ? "deselect"
-                                                        : "select";
-                                                setIsRowSelectionCallbackNeeded(
-                                                    selectedType
-                                                );
-                                                toggleAllRowsSelected();
-                                            }
-                                        })}
-                                    />
+                                    {multiRowSelection !== false ? (
+                                        <RowSelector
+                                            data-testid="rowSelector-allRows"
+                                            {...getToggleAllRowsSelectedProps({
+                                                onClick: (event) => {
+                                                    // Set state value to identify if checkbox has been selected or deselected
+                                                    const selectedType =
+                                                        event.currentTarget
+                                                            .checked === false
+                                                            ? "deselect"
+                                                            : "select";
+                                                    setIsRowSelectionCallbackNeeded(
+                                                        selectedType
+                                                    );
+                                                    toggleAllRowsSelected();
+                                                }
+                                            })}
+                                        />
+                                    ) : null}
                                     {instance.isSubComponentGrid === true ? (
                                         <i
                                             role="presentation"
