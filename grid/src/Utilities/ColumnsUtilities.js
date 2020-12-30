@@ -63,10 +63,7 @@ export const extractColumns = (
                     }
 
                     // Update isInnerCellSortable to true if any of the inner cells are sortable
-                    if (
-                        cellElem.isSortable === true &&
-                        isSubComponentColumns !== true
-                    ) {
+                    if (cellElem.isSortable === true) {
                         isInnerCellSortable = true;
                     }
 
@@ -74,8 +71,7 @@ export const extractColumns = (
                 });
 
                 // Update isSortable prop of column based on the value of isInnerCellSortable
-                elem.isSortable =
-                    isInnerCellSortable && isSubComponentColumns !== true;
+                elem.isSortable = isInnerCellSortable;
             }
 
             // Add an indentifier that this is a column not for expanded region
