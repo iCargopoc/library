@@ -18,6 +18,7 @@ import RowDelete from "./cells/RowDelete";
 const GridComponent = (props) => {
     const {
         allProps,
+        isSubComponentGrid,
         className,
         title,
         fixedRowHeight,
@@ -49,7 +50,6 @@ const GridComponent = (props) => {
         parentRowExpandable,
         parentRowsToExpand
     } = props;
-    const isSubComponentGrid = true;
 
     const idAttribute = "travelId";
     const parentIdAttribute = "titleId";
