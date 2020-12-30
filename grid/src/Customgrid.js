@@ -161,6 +161,7 @@ const Customgrid = (props) => {
     };
     // Call apply group sort function from parent
     const applyGroupSort = (sortOptions) => {
+        console.log("sortOptions", sortOptions);
         setGroupSortOptions(sortOptions);
         if (serverSideSorting && typeof serverSideSorting === "function") {
             serverSideSorting(sortOptions);
@@ -1078,6 +1079,9 @@ const Customgrid = (props) => {
                                         }
                                         groupSortOptions={groupSortOptions}
                                         gridColumns={managableColumns}
+                                        gridSubComponentColumns={
+                                            managableSubComponentColumnns
+                                        }
                                         applyGroupSort={applyGroupSort}
                                     />
                                 ) : null}

@@ -31,6 +31,9 @@ export const extractColumns = (
                     ? `subComponentColumn_${index}`
                     : `column_${index}`;
 
+            // Add flag to identify if this is subcomponent column
+            elem.isSubComponentColumn = isSubComponentColumns === true;
+
             // Set display flag to true if not present
             if (elem.display !== false) {
                 elem.display = true;
@@ -49,6 +52,10 @@ export const extractColumns = (
                         isSubComponentColumns === true
                             ? `subComponentColumn_${index}_cell_${cellIndex}`
                             : `column_${index}_cell_${cellIndex}`;
+
+                    // Add flag to identify if this is subcomponent column
+                    cellElem.isSubComponentColumn =
+                        isSubComponentColumns === true;
 
                     // Set the display flag to true if not present
                     if (cellElem.display !== false) {
@@ -201,6 +208,9 @@ export const extractAdditionalColumn = (
                 ? "subComponentRowExpand"
                 : `rowExpand`;
 
+        // Add flag to identify if this is subcomponent column
+        element.isSubComponentColumn = isSubComponentColumns === true;
+
         // Set display flag to true if not present
         if (element.display !== false) {
             element.display = true;
@@ -221,6 +231,9 @@ export const extractAdditionalColumn = (
 
                 // Add column Id
                 cellElem.cellId = `subComponentRowExpand_cell_${cellIndex}`;
+
+                // Add flag to identify if this is subcomponent column
+                cellElem.isSubComponentColumn = isSubComponentColumns === true;
 
                 // Set the display flag to true if not present
                 if (cellElem.display !== false) {

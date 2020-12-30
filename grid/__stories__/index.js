@@ -819,7 +819,9 @@ const GridComponent = (props) => {
     const originalSubComponentColumns = [
         {
             Header: "HAWB No",
+            accessor: "hawbId",
             width: 250,
+            isSortable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawbId } = rowData;
                 if (hawbId !== null && hawbId !== undefined) {
@@ -837,14 +839,17 @@ const GridComponent = (props) => {
             accessor: "hawb",
             onlyInDesktop: true,
             width: 800,
+            isSortable: true,
             innerCells: [
                 {
                     Header: "From",
-                    accessor: "from"
+                    accessor: "from",
+                    isSortable: true
                 },
                 {
                     Header: "To",
-                    accessor: "to"
+                    accessor: "to",
+                    isSortable: true
                 },
                 {
                     Header: "Goods Type",
@@ -1015,6 +1020,8 @@ const GridComponent = (props) => {
         {
             Header: "SCR Details",
             accessor: "scr",
+            width: 200,
+            isSortable: true,
             innerCells: [
                 {
                     Header: "ACK",
@@ -1022,14 +1029,14 @@ const GridComponent = (props) => {
                 },
                 {
                     Header: "NUM",
-                    accessor: "num"
+                    accessor: "num",
+                    isSortable: true
                 },
                 {
                     Header: "Status",
                     accessor: "status"
                 }
             ],
-            width: 200,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { scr } = rowData;
                 const { ack, num, status } = scr;

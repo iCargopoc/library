@@ -59,16 +59,24 @@ const SortItem = ({
         return [];
     };
 
+    const checkIfColumnIsSubComponent = (columnAccessor) => {
+        const origCol = columns.find((column) => {
+            return column.accessor === columnAccessor;
+        });
+        return origCol ? origCol.isSubComponentColumn : false;
+    };
+
     const changeSortByOptions = (event) => {
-        const newSortByValue = event.target.value;
-        const innerCellsList = getInncerCellsOfColumn(newSortByValue);
+        const { value } = event.currentTarget;
+        const innerCellsList = getInncerCellsOfColumn(value);
         updateSingleSortingOption(
             id,
-            newSortByValue,
+            value,
             innerCellsList && innerCellsList.length > 0
                 ? innerCellsList[0].accessor
                 : "value",
-            sortOption.order
+            sortOption.order,
+            checkIfColumnIsSubComponent(value)
         );
     };
 
@@ -78,7 +86,8 @@ const SortItem = ({
             id,
             sortOption.sortBy,
             newSortOnValue,
-            sortOption.order
+            sortOption.order,
+            sortOption.isSubComponentColumn
         );
     };
 
@@ -88,7 +97,8 @@ const SortItem = ({
             id,
             sortOption.sortBy,
             sortOption.sortOn,
-            newSortOrderValue
+            newSortOrderValue,
+            sortOption.isSubComponentColumn
         );
     };
 

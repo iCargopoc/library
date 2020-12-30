@@ -14,14 +14,20 @@ const GroupSort = (props) => {
         toggleGroupSortOverLay,
         applyGroupSort,
         groupSortOptions,
-        gridColumns
+        gridColumns,
+        gridSubComponentColumns
     } = props;
 
-    const columns = convertToIndividualColumns(gridColumns);
-    if (columns && columns.length > 0) {
+    const parentColumns = convertToIndividualColumns(gridColumns);
+    const subComponentColumns = convertToIndividualColumns(
+        gridSubComponentColumns
+    );
+    const columns = [...parentColumns, ...subComponentColumns];
+
+    if (parentColumns && parentColumns.length > 0) {
         const sortingOrders = ["Ascending", "Descending"];
         let defaultSortingOption = [];
-        const defaultSortBy = columns.find(
+        const defaultSortBy = parentColumns.find(
             (col) =>
                 col.isSortable &&
                 col.accessor !== null &&
@@ -44,7 +50,8 @@ const GroupSort = (props) => {
                 {
                     sortBy: defaultSortBy.accessor,
                     sortOn: defaultSortOn,
-                    order: sortingOrders[0]
+                    order: sortingOrders[0],
+                    isSubComponentColumn: defaultSortBy.isSubComponentColumn
                 }
             ];
         }
@@ -83,13 +90,15 @@ const GroupSort = (props) => {
             sortIndex,
             sortByValue,
             sortOnValue,
-            sortOrder
+            sortOrder,
+            isSubComponentColumn
         ) => {
             const newOptionsList = sortOptions.slice(0);
             const newSortingOption = {
                 sortBy: sortByValue,
                 sortOn: sortOnValue,
-                order: sortOrder
+                order: sortOrder,
+                isSubComponentColumn
             };
             const updatedSortOptions = newOptionsList.map((option, index) =>
                 index === sortIndex ? newSortingOption : option
@@ -113,12 +122,13 @@ const GroupSort = (props) => {
         const applySort = () => {
             let isError = false;
             sortOptions.map((option, index) => {
-                const { sortBy, sortOn } = option;
+                const { sortBy, sortOn, isSubComponentColumn } = option;
                 const optionIndex = index;
                 const duplicateSort = sortOptions.find((opt, optIndex) => {
                     return (
                         sortBy === opt.sortBy &&
                         sortOn === opt.sortOn &&
+                        isSubComponentColumn === opt.isSubComponentColumn &&
                         optionIndex !== optIndex
                     );
                 });
@@ -213,6 +223,7 @@ GroupSort.propTypes = {
     toggleGroupSortOverLay: PropTypes.func,
     groupSortOptions: PropTypes.arrayOf(PropTypes.object),
     gridColumns: PropTypes.arrayOf(PropTypes.object),
+    gridSubComponentColumns: PropTypes.arrayOf(PropTypes.object),
     applyGroupSort: PropTypes.func
 };
 
