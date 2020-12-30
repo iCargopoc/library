@@ -23,7 +23,9 @@ const RowItem = ({
     rowsWithExpandedSubComponents,
     getRowInfo,
     rowActions,
-    expandableColumn
+    expandableColumn,
+    rowSelector,
+    multiRowSelection
 }) => {
     const { isExpanded, cells, original } = row;
     const { subComponentData } = original;
@@ -101,6 +103,8 @@ const RowItem = ({
                             getRowInfo={getRowInfo}
                             rowActions={rowActions}
                             expandableColumn={expandableColumn}
+                            rowSelector={rowSelector}
+                            multiRowSelection={multiRowSelection}
                         />
                     ) : null}
                     {isLoadMoreRequiredForNormalRow(index) ? (
@@ -155,7 +159,9 @@ RowItem.propTypes = {
     rowsWithExpandedSubComponents: PropTypes.array,
     getRowInfo: PropTypes.func,
     rowActions: PropTypes.any,
-    expandableColumn: PropTypes.bool
+    expandableColumn: PropTypes.bool,
+    rowSelector: PropTypes.bool,
+    multiRowSelection: PropTypes.bool
 };
 
 export default RowItem;

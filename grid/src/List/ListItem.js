@@ -100,6 +100,8 @@ const ListItem = ({
                 getRowInfo={getRowInfo}
                 rowActions={rowActions}
                 expandableColumn={expandableColumn}
+                rowSelector={rowSelector}
+                multiRowSelection={multiRowSelection}
             />
         </div>
     );

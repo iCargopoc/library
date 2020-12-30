@@ -1,6 +1,12 @@
-import React, { useMemo } from "react";
-import { useTable, useFlexLayout, useExpanded } from "react-table";
+import React, { useMemo, useEffect } from "react";
+import {
+    useTable,
+    useFlexLayout,
+    useRowSelect,
+    useExpanded
+} from "react-table";
 import PropTypes from "prop-types";
+import RowSelector from "../Functions/RowSelector";
 import RowOptions from "../Functions/RowOptions";
 import { IconAngle } from "../Utilities/SvgUtilities";
 
@@ -11,7 +17,9 @@ const SubComponent = (props) => {
         subComponentAdditionalColumn,
         getRowInfo,
         rowActions,
-        expandableColumn
+        expandableColumn,
+        rowSelector,
+        multiRowSelection
     } = props;
 
     const isRowExpandEnabled = !!(
@@ -30,16 +38,78 @@ const SubComponent = (props) => {
         getTableBodyProps,
         headerGroups,
         rows,
+        state: { selectedRowIds },
         prepareRow
     } = useTable(
         {
             columns,
             data,
-            autoResetExpanded: false
+            autoResetExpanded: false,
+            autoResetSelectedRows: false
         },
-        useFlexLayout,
         useExpanded,
+        useRowSelect,
+        useFlexLayout,
         (hooks) => {
+            // Add checkbox for all rows in grid, with different properties for header row and body rows, only if required
+            if (rowSelector !== false) {
+                hooks.allColumns.push((hookColumns) => [
+                    {
+                        id: "subcomponent_selection",
+                        columnId: "subComponentColumn_custom_0",
+                        disableResizing: true,
+                        disableFilters: true,
+                        disableSortBy: true,
+                        display: true,
+                        isGroupHeader: false,
+                        minWidth: 35,
+                        width: 35,
+                        maxWidth: 35,
+                        Header: (headerSelectProps) => {
+                            const {
+                                getToggleAllRowsSelectedProps
+                            } = headerSelectProps;
+                            if (multiRowSelection === false) {
+                                return null;
+                            }
+                            return (
+                                <RowSelector
+                                    data-testid="subcomponent-rowSelector-allRows"
+                                    {...getToggleAllRowsSelectedProps()}
+                                />
+                            );
+                        },
+                        Cell: (cellSelectProps) => {
+                            const { row } = cellSelectProps;
+                            // Check if row selector is required for this row using the getRowInfo prop passed
+                            let isRowSelectable = true;
+                            if (
+                                getRowInfo &&
+                                typeof getRowInfo === "function"
+                            ) {
+                                const rowInfo = getRowInfo(row.original, true);
+                                if (
+                                    rowInfo &&
+                                    rowInfo.isRowSelectable === false
+                                ) {
+                                    isRowSelectable = false;
+                                }
+                            }
+                            if (isRowSelectable) {
+                                return (
+                                    <RowSelector
+                                        data-testid="subcomponent-rowSelector-singleRow"
+                                        {...row.getToggleRowSelectedProps()}
+                                    />
+                                );
+                            }
+                            return null;
+                        }
+                    },
+                    ...hookColumns
+                ]);
+            }
+
             // Add last column only if required
             const isRowActionsAvailable = !!(
                 rowActions && typeof rowActions === "function"
@@ -109,6 +179,11 @@ const SubComponent = (props) => {
             }
         }
     );
+
+    useEffect(() => {
+        console.log("Sub component selectedRowIds", selectedRowIds);
+    }, [selectedRowIds]);
+
     return (
         <div {...getTableProps()} className="neo-grid__content">
             <div className="neo-grid__thead">
@@ -206,5 +281,7 @@ SubComponent.propTypes = {
     subComponentAdditionalColumn: PropTypes.object,
     getRowInfo: PropTypes.func,
     rowActions: PropTypes.any,
-    expandableColumn: PropTypes.bool
+    expandableColumn: PropTypes.bool,
+    rowSelector: PropTypes.bool,
+    multiRowSelection: PropTypes.bool
 };
