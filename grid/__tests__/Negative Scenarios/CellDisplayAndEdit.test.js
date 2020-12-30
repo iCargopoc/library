@@ -164,9 +164,10 @@ describe("CellDisplayAndEdit unit test", () => {
             render(
                 <CellDisplayAndEdit
                     row={row}
-                    columns={columns}
-                    expandableColumn
                     updateRowInGrid={mockupdateRowInGrid}
+                    expandableColumn
+                    isDesktop={false}
+                    isSubComponentColumns={false}
                 />,
                 mockContainer
             );
@@ -188,8 +189,10 @@ describe("CellDisplayAndEdit unit test", () => {
         const { getByText } = render(
             <CellDisplayAndEdit
                 row={row}
-                columns={columns}
                 updateRowInGrid={mockupdateRowInGrid}
+                expandableColumn
+                isDesktop={false}
+                isSubComponentColumns={false}
             />
         );
         expect(getByText("31-Aug-2016")).toBeInTheDocument();
@@ -200,8 +203,10 @@ describe("CellDisplayAndEdit unit test", () => {
             component = render(
                 <CellDisplayAndEdit
                     row={row}
-                    columns={columns}
                     updateRowInGrid={mockupdateRowInGrid}
+                    expandableColumn
+                    isDesktop={false}
+                    isSubComponentColumns={false}
                 />,
                 mockContainer
             );
@@ -220,8 +225,10 @@ describe("CellDisplayAndEdit unit test", () => {
         const { getByTestId } = render(
             <CellDisplayAndEdit
                 row={row}
-                columns={columns}
                 updateRowInGrid={mockupdateRowInGrid}
+                expandableColumn
+                isDesktop
+                isSubComponentColumns={false}
             />,
             mockContainer
         );
@@ -247,8 +254,10 @@ describe("CellDisplayAndEdit unit test", () => {
             render(
                 <CellDisplayAndEdit
                     row={incorrectRowValue}
-                    columns={columns}
                     updateRowInGrid={mockupdateRowInGrid}
+                    expandableColumn
+                    isDesktop
+                    isSubComponentColumns={false}
                 />,
                 mockContainer
             );

@@ -226,7 +226,10 @@ export const extractAdditionalColumn = (
                 const cellElem = cell;
 
                 // Add column Id
-                cellElem.cellId = `subComponentRowExpand_cell_${cellIndex}`;
+                cellElem.cellId =
+                    isSubComponentColumns === true
+                        ? `subComponentRowExpand_cell_${cellIndex}`
+                        : `rowExpand_cell_${cellIndex}`;
 
                 // Add flag to identify if this is subcomponent column
                 cellElem.isSubComponentColumn = isSubComponentColumns === true;

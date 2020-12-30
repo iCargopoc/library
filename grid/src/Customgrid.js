@@ -695,7 +695,9 @@ const Customgrid = (props) => {
 
     // Update state, when user is updating columns configuration from outside Grid
     useEffect(() => {
-        setGridColumns(managableColumns);
+        if (managableColumns && managableColumns.length > 0) {
+            setGridColumns(managableColumns);
+        }
     }, [managableColumns]);
 
     // Update state, when user is updating additional column configuration from outside Grid
@@ -705,7 +707,12 @@ const Customgrid = (props) => {
 
     // Update state, when user is updating sub component columns configuration from outside Grid
     useEffect(() => {
-        setSubComponentColumnns(managableSubComponentColumnns);
+        if (
+            managableSubComponentColumnns &&
+            managableSubComponentColumnns.length > 0
+        ) {
+            setSubComponentColumnns(managableSubComponentColumnns);
+        }
     }, [managableSubComponentColumnns]);
 
     // Update state, when user is updating sub component additional column configuration from outside Grid

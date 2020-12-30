@@ -1135,9 +1135,7 @@ describe("Export data functionality test", () => {
         });
 
         // Check for error
-        let errorMessage = getAllByText(
-            "Select at least one column and a file type"
-        );
+        let errorMessage = getAllByText("Select at least one parent column");
         expect(errorMessage.length).toBe(1);
 
         // Select a file type
@@ -1161,7 +1159,7 @@ describe("Export data functionality test", () => {
         });
 
         // Check for error
-        errorMessage = getAllByText("Select at least one column");
+        errorMessage = getAllByText("Select at least one parent column");
         expect(errorMessage.length).toBe(1);
 
         // Deselect a file type

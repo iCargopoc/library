@@ -119,14 +119,16 @@ export const findDeSelectedRows = (
 
 export const convertToIndividualColumns = (managableColumns) => {
     let modifiedColumns = [];
-    managableColumns.forEach((item) => {
-        const { columns } = item;
-        if (columns && columns.length > 0) {
-            modifiedColumns = [...modifiedColumns, ...columns];
-        } else {
-            modifiedColumns.push(item);
-        }
-    });
+    if (managableColumns && managableColumns.length > 0) {
+        managableColumns.forEach((item) => {
+            const { columns } = item;
+            if (columns && columns.length > 0) {
+                modifiedColumns = [...modifiedColumns, ...columns];
+            } else {
+                modifiedColumns.push(item);
+            }
+        });
+    }
     return [...modifiedColumns];
 };
 
