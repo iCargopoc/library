@@ -82,6 +82,7 @@ const GroupSort = (props) => {
         };
 
         const clearSortingOptions = () => {
+            setIsErrorDisplayed(false);
             setSortOptions([]);
             applyGroupSort([]);
         };
