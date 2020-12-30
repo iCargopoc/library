@@ -1183,10 +1183,6 @@ const Customgrid = (props) => {
                     className={`neo-grid__table ${
                         isParentGrid === true ? "neo-grid__table--parent" : ""
                     }`}
-                    style={{
-                        overflowX: "auto",
-                        overflowY: "hidden"
-                    }}
                 >
                     <AutoSizer disableWidth className="neo-grid__autosizer">
                         {({ height }) => (

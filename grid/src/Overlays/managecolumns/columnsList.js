@@ -44,7 +44,7 @@ const ColumnsList = (props) => {
 
     return (
         <React.Fragment key="ColumnManageFragment">
-            <div ref={drop} style={{ display: "flex", flexWrap: "wrap" }}>
+            <div ref={drop} className="ng-popover--column__content">
                 {filteredManagedColumns.map((column) => {
                     const {
                         columnId,

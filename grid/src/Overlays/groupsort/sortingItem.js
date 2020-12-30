@@ -120,9 +120,9 @@ const SortItem = ({
         >
             <div className="ng-popover__reorder">
                 <div
+                    className="ng-popover__drag"
                     data-testid="sortItemDnd"
                     ref={(node) => drag(drop(node))}
-                    style={{ cursor: "move" }}
                 >
                     <i className="ng-icon-block">
                         <IconDragVertical className="ng-icon" />

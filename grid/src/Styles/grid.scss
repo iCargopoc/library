@@ -195,6 +195,8 @@
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        overflow: auto hidden;
+        position: relative;
         &--parent {
             .ng-accordion__icon {
                 margin: 0 rem(10);
