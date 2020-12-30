@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo } from "react";
 import {
     useTable,
     useFlexLayout,
@@ -38,7 +38,6 @@ const SubComponent = (props) => {
         getTableBodyProps,
         headerGroups,
         rows,
-        state: { selectedRowIds },
         prepareRow
     } = useTable(
         {
@@ -179,10 +178,6 @@ const SubComponent = (props) => {
             }
         }
     );
-
-    useEffect(() => {
-        console.log("Sub component selectedRowIds", selectedRowIds);
-    }, [selectedRowIds]);
 
     return (
         <div
