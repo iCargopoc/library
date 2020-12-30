@@ -598,94 +598,100 @@ const ColumnReordering = (props) => {
                                 </div>
                             </>
                         ) : null}
-                    </div>
-                    {isSubComponentGrid ? (
-                        <div className="ng-popover--column__body">
-                            <div className="ng-popover--column__head">
-                                Child Column
-                            </div>
-                            <DndProvider
-                                backend={MultiBackend}
-                                options={HTML5toTouch}
-                            >
-                                <ColumnsList
-                                    managedColumns={managedSubComponentColumns}
-                                    onColumnReorder={onColumnReorder}
-                                    onInnerCellChange={onInnerCellChange}
-                                    isSubComponentColumn
-                                />
-                            </DndProvider>
-                            {isSubComponentAdditionalColumnSelected ? (
-                                <>
-                                    <div className="ng-popover--column__head">
-                                        Additional Data ( Expand View)
-                                    </div>
-                                    <div
-                                        className="ng-popover--column__reorder is-full-width"
-                                        data-testid="sub-component-additional-column-box"
-                                    >
-                                        <div className="ng-popover--column__reorder-head">
-                                            {subComponentAdditionalColumnHeader}
+                        {isSubComponentGrid ? (
+                            <>
+                                <div className="ng-popover--column__head">
+                                    Child Column
+                                </div>
+                                <DndProvider
+                                    backend={MultiBackend}
+                                    options={HTML5toTouch}
+                                >
+                                    <ColumnsList
+                                        managedColumns={
+                                            managedSubComponentColumns
+                                        }
+                                        onColumnReorder={onColumnReorder}
+                                        onInnerCellChange={onInnerCellChange}
+                                        isSubComponentColumn
+                                    />
+                                </DndProvider>
+                                {isSubComponentAdditionalColumnSelected ? (
+                                    <>
+                                        <div className="ng-popover--column__head">
+                                            Additional Data ( Expand View)
                                         </div>
-                                        <div className="ng-popover--column__list">
-                                            {managedSubComponentAdditionalColumnInnercells.map(
-                                                (cell) => {
-                                                    const {
-                                                        cellId,
-                                                        Header,
-                                                        display
-                                                    } = cell;
-                                                    return (
-                                                        <div
-                                                            className="ng-popover--column__wrap"
-                                                            key={`${cellId}`}
-                                                        >
-                                                            <div className="ng-popover--column__check">
-                                                                <div className="neo-form-check">
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        id={`chk_selectSubComponentInnerCell_${cellId}`}
-                                                                        className="neo-checkbox form-check-input"
-                                                                        data-testid={`selectSubComponentInnerCell_${managedSubComponentAdditionalColumnColumnId}_${cellId}`}
-                                                                        data-columnid={
-                                                                            managedSubComponentAdditionalColumnColumnId
-                                                                        }
-                                                                        data-cellid={
-                                                                            cellId
-                                                                        }
-                                                                        data-isadditionalcolumn={
-                                                                            managedSubComponentAdditionalColumnDisplayType
-                                                                        }
-                                                                        checked={
-                                                                            display
-                                                                        }
-                                                                        onChange={(
-                                                                            event
-                                                                        ) =>
-                                                                            onInnerCellChange(
-                                                                                event,
-                                                                                true
-                                                                            )
-                                                                        }
-                                                                    />
-                                                                    <label
-                                                                        htmlFor={`chk_selectSubComponentInnerCell_${cellId}`}
-                                                                        className="neo-form-check__label"
-                                                                    >
-                                                                        {Header}
-                                                                    </label>
+                                        <div
+                                            className="ng-popover--column__reorder is-full-width"
+                                            data-testid="sub-component-additional-column-box"
+                                        >
+                                            <div className="ng-popover--column__reorder-head">
+                                                {
+                                                    subComponentAdditionalColumnHeader
+                                                }
+                                            </div>
+                                            <div className="ng-popover--column__list">
+                                                {managedSubComponentAdditionalColumnInnercells.map(
+                                                    (cell) => {
+                                                        const {
+                                                            cellId,
+                                                            Header,
+                                                            display
+                                                        } = cell;
+                                                        return (
+                                                            <div
+                                                                className="ng-popover--column__wrap"
+                                                                key={`${cellId}`}
+                                                            >
+                                                                <div className="ng-popover--column__check">
+                                                                    <div className="neo-form-check">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id={`chk_selectSubComponentInnerCell_${cellId}`}
+                                                                            className="neo-checkbox form-check-input"
+                                                                            data-testid={`selectSubComponentInnerCell_${managedSubComponentAdditionalColumnColumnId}_${cellId}`}
+                                                                            data-columnid={
+                                                                                managedSubComponentAdditionalColumnColumnId
+                                                                            }
+                                                                            data-cellid={
+                                                                                cellId
+                                                                            }
+                                                                            data-isadditionalcolumn={
+                                                                                managedSubComponentAdditionalColumnDisplayType
+                                                                            }
+                                                                            checked={
+                                                                                display
+                                                                            }
+                                                                            onChange={(
+                                                                                event
+                                                                            ) =>
+                                                                                onInnerCellChange(
+                                                                                    event,
+                                                                                    true
+                                                                                )
+                                                                            }
+                                                                        />
+                                                                        <label
+                                                                            htmlFor={`chk_selectSubComponentInnerCell_${cellId}`}
+                                                                            className="neo-form-check__label"
+                                                                        >
+                                                                            {
+                                                                                Header
+                                                                            }
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    );
-                                                }
-                                            )}
+                                                        );
+                                                    }
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                </>
-                            ) : null}
-                        </div>
-                    ) : null}
+                                    </>
+                                ) : null}
+                            </>
+                        ) : null}
+                    </div>
                     <div className="ng-popover__footer">
                         <button
                             type="button"

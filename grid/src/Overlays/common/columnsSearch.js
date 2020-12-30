@@ -175,24 +175,23 @@ const ColumnSearch = ({
             />
             {isSearchableColumnsAvailable ? (
                 <div className="ng-chooser-body__selectall">
-                    <div className="ng-chooser-body__checkbox">
-                        <div className="neo-form-check">
-                            <input
-                                type="checkbox"
-                                id="chk_selectAllSearchableColumns"
-                                className="neo-checkbox form-check-input"
-                                data-testid="selectAllSearchableColumns"
-                                data-columnid="all"
-                                checked={isSearchableColumnSelected("all")}
-                                onChange={onSearchableColumnChange}
-                            />
-                            <label
-                                htmlFor="chk_selectAllSearchableColumns"
-                                className="neo-form-check__label"
-                            >
-                                Select All
-                            </label>
-                        </div>
+                    <span className="ng-chooser-body__head">Parent Column</span>
+                    <div className="neo-form-check">
+                        <input
+                            type="checkbox"
+                            id="chk_selectAllSearchableColumns"
+                            className="neo-checkbox form-check-input"
+                            data-testid="selectAllSearchableColumns"
+                            data-columnid="all"
+                            checked={isSearchableColumnSelected("all")}
+                            onChange={onSearchableColumnChange}
+                        />
+                        <label
+                            htmlFor="chk_selectAllSearchableColumns"
+                            className="neo-form-check__label"
+                        >
+                            Select All
+                        </label>
                     </div>
                 </div>
             ) : null}
@@ -237,26 +236,25 @@ const ColumnSearch = ({
 
             {isSearchableSubComponentColumnsAvailable ? (
                 <div className="ng-chooser-body__selectall">
-                    <div className="ng-chooser-body__checkbox">
-                        <div className="neo-form-check">
-                            <input
-                                type="checkbox"
-                                id="chk_selectAllSearchableSubComponentColumns"
-                                className="neo-checkbox form-check-input"
-                                data-testid="selectAllSearchableSubComponentColumns"
-                                data-columnid="all"
-                                checked={isSearchableSubComponentColumnSelected(
-                                    "all"
-                                )}
-                                onChange={onSearchableSubComponentColumnChange}
-                            />
-                            <label
-                                htmlFor="chk_selectAllSearchableSubComponentColumns"
-                                className="neo-form-check__label"
-                            >
-                                Select All
-                            </label>
-                        </div>
+                    <span className="ng-chooser-body__head">Child Column</span>
+                    <div className="neo-form-check">
+                        <input
+                            type="checkbox"
+                            id="chk_selectAllSearchableSubComponentColumns"
+                            className="neo-checkbox form-check-input"
+                            data-testid="selectAllSearchableSubComponentColumns"
+                            data-columnid="all"
+                            checked={isSearchableSubComponentColumnSelected(
+                                "all"
+                            )}
+                            onChange={onSearchableSubComponentColumnChange}
+                        />
+                        <label
+                            htmlFor="chk_selectAllSearchableSubComponentColumns"
+                            className="neo-form-check__label"
+                        >
+                            Select All
+                        </label>
                     </div>
                 </div>
             ) : null}

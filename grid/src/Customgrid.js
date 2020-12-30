@@ -1180,7 +1180,9 @@ const Customgrid = (props) => {
                 </div>
 
                 <div
-                    className="neo-grid__table"
+                    className={`neo-grid__table ${
+                        isParentGrid === true ? "neo-grid__table--parent" : ""
+                    }`}
                     style={{
                         overflowX: "auto",
                         overflowY: "hidden"

@@ -6,6 +6,40 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    .ng-accordion {
+        display: flex;
+        border-bottom: rem(1) solid var(--border-default);
+        &__container {
+            width: 100%;
+            display: table;
+        }
+        &__session {
+            width: 100%;
+            display: flex;
+        }
+        &__block {
+            display: flex;
+            align-items: center;
+            padding: 0 rem(4);
+        }
+        &__icon {
+            width: rem(20);
+            height: rem(20);
+            margin: rem(8) 0;
+            border: var(--border-light) solid rem(1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            .ng-icon {
+                fill: var(--primary);
+            }
+        }
+        &__content {
+            width: 100%;
+        }
+    }
     &__thead {
         font-size: rem(12);
         background: var(--light-grey);
@@ -22,6 +56,9 @@
                     visibility: hidden;
                 }
             }
+        }
+        .ng-accordion__icon {
+            margin: 0;
         }
     }
     &__th {
@@ -136,40 +173,6 @@
             border-bottom: rem(1) solid var(--light-grey);
             flex-wrap: wrap;
         }
-        .ng-accordion {
-            display: flex;
-            border-bottom: rem(1) solid var(--border-default);
-            &__container {
-                width: 100%;
-                display: table;
-            }
-            &__session {
-                width: 100%;
-                display: flex;
-            }
-            &__block {
-                display: flex;
-                align-items: center;
-                padding: 0 rem(4);
-            }
-            &__icon {
-                width: rem(20);
-                height: rem(20);
-                margin: 0 rem(10);
-                border: var(--border-light) solid rem(1);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 50%;
-                cursor: pointer;
-                .ng-icon {
-                    fill: var(--primary);
-                }
-            }
-            &__content {
-                width: 100%;
-            }
-        }
         .ng-loadmore {
             width: 100%;
             text-align: center;
@@ -192,9 +195,31 @@
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        &--parent {
+            .ng-accordion__icon {
+                margin: 0 rem(10);
+            }
+        }
         .neo-grid__content {
             display: table;
             width: 100%;
+            &--sub {
+                .neo-grid__thead {
+                    background: var(--light-grey);
+                    .neo-grid__row-selector {
+                        padding: 0;
+                    }
+                }
+                .neo-grid__tbody {
+                    .neo-grid__tr {
+                        background: var(--white);
+                    }
+                }
+                .ng-action {
+                    padding-top: rem(4);
+                    padding-bottom: rem(2);
+                }
+            }
         }
         .neo-grid__row-container {
             width: 100%;

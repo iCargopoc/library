@@ -62,9 +62,9 @@ const SubComponent = (props) => {
                         disableSortBy: true,
                         display: true,
                         isGroupHeader: false,
-                        minWidth: 35,
-                        width: 35,
-                        maxWidth: 35,
+                        minWidth: 62,
+                        width: 62,
+                        maxWidth: 62,
                         Header: (headerSelectProps) => {
                             const {
                                 getToggleAllRowsSelectedProps
@@ -185,7 +185,10 @@ const SubComponent = (props) => {
     }, [selectedRowIds]);
 
     return (
-        <div {...getTableProps()} className="neo-grid__content">
+        <div
+            {...getTableProps()}
+            className="neo-grid__content neo-grid__content--sub"
+        >
             <div className="neo-grid__thead">
                 {headerGroups.map((headerGroup) => {
                     return (
