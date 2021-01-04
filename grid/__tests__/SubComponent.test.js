@@ -445,6 +445,7 @@ describe("render Index file ", () => {
 
     const subComponentColumns = [
         {
+            groupHeader: "Other Details",
             Header: "HAWB No",
             accessor: "hawbId",
             width: 250,
@@ -462,6 +463,7 @@ describe("render Index file ", () => {
             }
         },
         {
+            groupHeader: "Other Details",
             Header: "AWB Details",
             accessor: "hawb",
             width: 800,
@@ -555,6 +557,7 @@ describe("render Index file ", () => {
         },
         {
             Header: "SCR Details",
+            title: "SCR Details",
             accessor: "scr",
             width: 200,
             isSearchable: true,
@@ -1013,6 +1016,11 @@ describe("render Index file ", () => {
     });
 
     it("test manage columns overlay grid with sub component data and sub component row wxpand", () => {
+        const createBubbledEvent = (type, props = {}) => {
+            const event = new Event(type, { bubbles: true });
+            Object.assign(event, props);
+            return event;
+        };
         mockOffsetSize(600, 600);
         const { container, getAllByTestId, getByTestId } = render(
             <Grid
@@ -1037,7 +1045,7 @@ describe("render Index file ", () => {
         expect(gridContainer).toBeInTheDocument();
 
         // Open Column chooser overlay
-        const columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        let columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
         act(() => {
             columnChooserIcon.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
@@ -1085,7 +1093,7 @@ describe("render Index file ", () => {
         expect(subComponentColumn[3].checked).toBeFalsy();
 
         // Save changes
-        const saveButton = getByTestId("save_columnsManage");
+        let saveButton = getByTestId("save_columnsManage");
         act(() => {
             saveButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
@@ -1128,5 +1136,176 @@ describe("render Index file ", () => {
             "[data-testid='subcomponent-content']"
         );
         expect(subComponentContent.length).toBe(0);
+
+        // Open overlay again
+        columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
+            .length;
+        expect(columnChooserOverlayCount).toBe(1);
+
+        // Reset current changes
+        let resetButton = getByTestId("reset_columnsManage");
+        act(() => {
+            resetButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Hide sub component column Inner cell with group header
+        const subComponentInnerCell = getAllByTestId(
+            "selectInnerCell_subComponentColumn_1_subComponentColumn_1_cell_0"
+        );
+        expect(subComponentInnerCell.length).toBeGreaterThan(0);
+        expect(subComponentInnerCell[0].checked).toBeTruthy();
+        fireEvent.click(subComponentInnerCell[0]);
+        expect(subComponentInnerCell[0].checked).toBeFalsy();
+
+        // Hide sub component column Inner cell with group header
+        const subComponentInnerCell2 = getAllByTestId(
+            "selectInnerCell_subComponentColumn_2_subComponentColumn_2_cell_0"
+        );
+        expect(subComponentInnerCell2[0].checked).toBeTruthy();
+        fireEvent.click(subComponentInnerCell2[0]);
+        expect(subComponentInnerCell2[0].checked).toBeFalsy();
+
+        // Hide sub component column Inner cell
+        const subComponentAdditionalColumnInnerCell = getAllByTestId(
+            "selectSubComponentInnerCell_rowExpand_rowExpand_cell_0"
+        );
+        expect(subComponentAdditionalColumnInnerCell.length).toBeGreaterThan(0);
+        expect(subComponentAdditionalColumnInnerCell[0].checked).toBeTruthy();
+        fireEvent.click(subComponentAdditionalColumnInnerCell[0]);
+        expect(subComponentAdditionalColumnInnerCell[0].checked).toBeFalsy();
+
+        // Drag and Drop boxes
+        const columnDnds = getAllByTestId("subcomponentcolumnItemDnd");
+        expect(columnDnds).toHaveLength(2);
+        const firstNode = columnDnds[0];
+        const lastNode = columnDnds[1];
+
+        // Do drag and drop from 0 to 1
+        act(() => {
+            firstNode.dispatchEvent(
+                createBubbledEvent("dragstart", { clientX: 0, clientY: 0 })
+            );
+        });
+        act(() => {
+            lastNode.dispatchEvent(
+                createBubbledEvent("drop", { clientX: 50, clientY: 50 })
+            );
+        });
+
+        // Save changes
+        saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is closed
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
+            "[data-testid='managecolumnoverlay']"
+        ).length;
+        expect(columnChooserOverlayCount).toBe(0);
+
+        // Open overlay again
+        columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
+            .length;
+        expect(columnChooserOverlayCount).toBe(1);
+
+        // Reset current changes
+        resetButton = getByTestId("reset_columnsManage");
+        act(() => {
+            resetButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Un select all sub component checkboxes
+        const chkAllSubComponentColumn = getAllByTestId(
+            "selectAllSearchableSubComponentColumns"
+        );
+        expect(chkAllSubComponentColumn.length).toBeGreaterThan(0);
+        expect(chkAllSubComponentColumn[0].checked).toBeTruthy();
+        fireEvent.click(chkAllSubComponentColumn[0]);
+        expect(chkAllSubComponentColumn[0].checked).toBeFalsy();
+
+        // Save changes
+        saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if error message is present
+        const errorMessages = getAllByTestId("column-chooser-error");
+        expect(errorMessages.length).toBe(1);
+
+        // Reset current changes
+        resetButton = getByTestId("reset_columnsManage");
+        act(() => {
+            resetButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check count of sub component columns
+        let subComponentColumnsCheckboxes = getAllByTestId(
+            "selectSingleSearchableSubComponentColumn"
+        );
+        expect(subComponentColumnsCheckboxes.length).toBe(4);
+
+        // Filter columns
+        const filterList = getByTestId("filterColumnsList");
+        expect(filterList.value).toBe("");
+        fireEvent.change(filterList, { target: { value: "de" } });
+        expect(filterList.value).toBe("de");
+
+        // Check count of sub component columns
+        subComponentColumnsCheckboxes = getAllByTestId(
+            "selectSingleSearchableSubComponentColumn"
+        );
+        expect(subComponentColumnsCheckboxes.length).toBe(2);
+
+        // Remove searched value
+        fireEvent.change(filterList, { target: { value: "" } });
+        expect(filterList.value).toBe("");
+
+        // Check count of sub component columns
+        subComponentColumnsCheckboxes = getAllByTestId(
+            "selectSingleSearchableSubComponentColumn"
+        );
+        expect(subComponentColumnsCheckboxes.length).toBe(4);
+
+        // Close overlay
+        const closeButton = getByTestId("cancel_columnsManage");
+        act(() => {
+            closeButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is closed
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
+            "[data-testid='managecolumnoverlay']"
+        ).length;
+        expect(columnChooserOverlayCount).toBe(0);
     });
 });
