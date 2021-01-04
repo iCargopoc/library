@@ -23,7 +23,7 @@ describe("render Index file ", () => {
         });
     }
 
-    const mockGridData = [
+    let mockGridData = [
         {
             travelId: 60,
             flight: {
@@ -297,6 +297,13 @@ describe("render Index file ", () => {
             ]
         });
     }
+    mockGridData = mockGridData.map((data, index) => {
+        const updatedData = { ...data };
+        if (index !== 0 && index % 4 === 0) {
+            delete updatedData.subComponentData;
+        }
+        return updatedData;
+    });
 
     const mockDisplayCell = jest.fn(() => {
         return (
