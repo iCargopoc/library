@@ -123,19 +123,15 @@ const ColumnSearch = ({
     // update the display flag value of column or all columns in managedColumns state, based on the selection
     const onSearchableColumnChange = (event) => {
         const { checked, dataset } = event.currentTarget;
-        if (dataset) {
-            const { columnid, isadditionalcolumn } = dataset;
-            updateColumns(columnid, isadditionalcolumn, checked, false);
-        }
+        const { columnid, isadditionalcolumn } = dataset;
+        updateColumns(columnid, isadditionalcolumn, checked, false);
     };
 
     // update the display flag value of sub component column or all columns in managedSubComponentColumns state, based on the selection
     const onSearchableSubComponentColumnChange = (event) => {
         const { checked, dataset } = event.currentTarget;
-        if (dataset) {
-            const { columnid, isadditionalcolumn } = dataset;
-            updateColumns(columnid, isadditionalcolumn, checked, true);
-        }
+        const { columnid, isadditionalcolumn } = dataset;
+        updateColumns(columnid, isadditionalcolumn, checked, true);
     };
 
     useEffect(() => {
