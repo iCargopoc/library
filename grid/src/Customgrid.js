@@ -239,10 +239,32 @@ const Customgrid = (props) => {
                             searchColumn(column, original, searchText);
                     }
                 );
+                // If grid has sub component feature and row has sub component values check in that too
+                if (isSubComponentGrid) {
+                    const { subComponentData } = original;
+                    if (subComponentData && subComponentData.length > 0) {
+                        // Loop through all sub component rows
+                        subComponentData.forEach((subComponentRow) => {
+                            // Loop through all sub component column values for each row
+                            convertToIndividualColumns([
+                                ...managableSubComponentColumnns
+                            ]).forEach((column) => {
+                                // Do search for each column
+                                returnValue =
+                                    returnValue ||
+                                    searchColumn(
+                                        column,
+                                        subComponentRow,
+                                        searchText
+                                    );
+                            });
+                        });
+                    }
+                }
                 return returnValue;
             });
         },
-        [managableColumns]
+        [managableColumns, managableSubComponentColumnns]
     );
 
     const isRowExpandEnabled = !!(

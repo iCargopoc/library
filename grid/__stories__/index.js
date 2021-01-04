@@ -949,7 +949,6 @@ const GridComponent = (props) => {
                 }
             ],
             disableSortBy: true,
-            isSearchable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawb } = rowData;
                 const {
@@ -1093,6 +1092,7 @@ const GridComponent = (props) => {
             Header: "SCR Details",
             accessor: "scr",
             width: 200,
+            isSearchable: true,
             isSortable: true,
             innerCells: [
                 {
@@ -1102,6 +1102,7 @@ const GridComponent = (props) => {
                 {
                     Header: "NUM",
                     accessor: "num",
+                    isSearchable: true,
                     isSortable: true
                 },
                 {
