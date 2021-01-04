@@ -1,6 +1,6 @@
+// @flow
 import React, { useState } from "react";
 import ClickAwayListener from "react-click-away-listener";
-import PropTypes from "prop-types";
 import CellDisplayAndEditTag from "./CellDisplayAndEditTag";
 import { CellDisplayAndEditContext } from "../Utilities/TagsContext";
 import { IconPencil, IconTick, IconCancel } from "../Utilities/SvgUtilities";
@@ -11,7 +11,13 @@ const CellDisplayAndEdit = ({
     expandableColumn,
     isDesktop,
     isSubComponentColumns
-}) => {
+}: {
+    row: Object,
+    updateRowInGrid: Function,
+    expandableColumn: boolean,
+    isDesktop: boolean,
+    isSubComponentColumns: boolean
+}): ?React$Element<*> => {
     const { column, columns } = row;
     if (column && row.row) {
         const { original, isExpanded } = row.row;
@@ -28,7 +34,7 @@ const CellDisplayAndEdit = ({
             setIsEditOpen(true);
         };
 
-        const getUpdatedRowValue = (value) => {
+        const getUpdatedRowValue = (value: string) => {
             if (value) {
                 setEditedRowValue(value);
             }
@@ -116,14 +122,6 @@ const CellDisplayAndEdit = ({
         );
     }
     return null;
-};
-
-CellDisplayAndEdit.propTypes = {
-    row: PropTypes.object,
-    updateRowInGrid: PropTypes.func,
-    expandableColumn: PropTypes.bool,
-    isDesktop: PropTypes.bool,
-    isSubComponentColumns: PropTypes.bool
 };
 
 export default CellDisplayAndEdit;

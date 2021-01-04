@@ -1,9 +1,17 @@
+// @flow
 import React, { useState } from "react";
 import ClickAwayListener from "react-click-away-listener";
-import PropTypes from "prop-types";
 import { IconCancel, IconKebab } from "../Utilities/SvgUtilities";
 
-const RowOptions = ({ row, rowActions, isSubComponentRow }) => {
+const RowOptions = ({
+    row,
+    rowActions,
+    isSubComponentRow
+}: {
+    row: Object,
+    rowActions: Function,
+    isSubComponentRow: boolean
+}): React$Element<*> => {
     const { original } = row;
 
     const [isRowOptionsOpen, setRowOptionsOpen] = useState(false);
@@ -53,11 +61,6 @@ const RowOptions = ({ row, rowActions, isSubComponentRow }) => {
             ) : null}
         </div>
     );
-};
-RowOptions.propTypes = {
-    row: PropTypes.object,
-    rowActions: PropTypes.any,
-    isSubComponentRow: PropTypes.bool
 };
 
 export default RowOptions;
