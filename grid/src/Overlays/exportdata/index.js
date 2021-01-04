@@ -565,7 +565,7 @@ const ExportData = (props) => {
                                 </div>
                             </label>
                         </div>
-                        {warning !== null ? (
+                        {warning !== "" ? (
                             <div className="ng-popover--exports__warning">
                                 <span>
                                     <strong>{warning}</strong>

@@ -882,6 +882,32 @@ describe("render Index file ", () => {
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
 
+        // Open export overlay
+        const exportDataIcon = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            exportDataIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        let exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        expect(exportDataOverlayCount).toBe(1);
+
+        // Close overlay
+        const closeExportButton = getByTestId("cancel_button");
+        act(() => {
+            closeExportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is closed
+        exportDataOverlayCount = gridContainer.querySelectorAll(
+            "[data-testid='exportoverlay']"
+        ).length;
+        expect(exportDataOverlayCount).toBe(0);
+
         // Check if expand/collapse icons are present
         let subComponentExpandCollpase = getAllByTestId(
             "subComponent-header-expand-collapse"
