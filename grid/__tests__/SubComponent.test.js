@@ -844,7 +844,6 @@ describe("render Index file ", () => {
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
                 subComponentColumnns={subComponentColumns}
-                getRowInfo={mockGetRowInfo}
                 rowActions={mockRowActions}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
@@ -1477,11 +1476,8 @@ describe("render Index file ", () => {
                 paginationType="index"
                 loadMoreData={mockLoadMoreData}
                 columns={gridColumns}
-                columnToExpand={mockAdditionalColumn}
                 subComponentColumnns={subComponentColumns}
-                subComponentColumnToExpand={mockSubComponentAdditionalColumn}
                 getRowInfo={mockGetRowInfo}
-                rowActions={mockRowActions}
                 onRowUpdate={mockUpdateRowData}
             />
         );
@@ -1489,6 +1485,37 @@ describe("render Index file ", () => {
 
         // Check if Grid id rendered.
         expect(gridContainer).toBeInTheDocument();
+
+        // Check if expand/collapse icons are present
+        let subComponentExpandCollpase = getAllByTestId(
+            "subComponent-header-expand-collapse"
+        );
+        expect(subComponentExpandCollpase.length).toBeGreaterThan(0);
+
+        // Open 1 subComponent
+        act(() => {
+            subComponentExpandCollpase[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if subComponent section is opened
+        let subComponentContent = getAllByTestId("subcomponent-content");
+        expect(subComponentContent.length).toBe(1);
+
+        // Close that sub component
+        subComponentExpandCollpase = getAllByTestId(
+            "subComponent-header-expand-collapse"
+        );
+        act(() => {
+            subComponentExpandCollpase[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if that subComponent section is closed
+        subComponentContent = gridContainer.querySelectorAll(
+            "[data-testid='subcomponent-content']"
+        );
+        expect(subComponentContent.length).toBe(0);
 
         // Check Group sort Icon
         const groupSortIcon = getAllByTestId("toggleGroupSortOverLay");
@@ -1565,7 +1592,6 @@ describe("render Index file ", () => {
                 subComponentColumnns={subComponentColumns}
                 subComponentColumnToExpand={mockSubComponentAdditionalColumn}
                 getRowInfo={mockGetRowInfo}
-                rowActions={mockRowActions}
                 onRowUpdate={mockUpdateRowData}
             />
         );
@@ -1573,6 +1599,37 @@ describe("render Index file ", () => {
 
         // Check if Grid id rendered.
         expect(gridContainer).toBeInTheDocument();
+
+        // Check if expand/collapse icons are present
+        let subComponentExpandCollpase = getAllByTestId(
+            "subComponent-header-expand-collapse"
+        );
+        expect(subComponentExpandCollpase.length).toBeGreaterThan(0);
+
+        // Open 1 subComponent
+        act(() => {
+            subComponentExpandCollpase[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if subComponent section is opened
+        let subComponentContent = getAllByTestId("subcomponent-content");
+        expect(subComponentContent.length).toBe(1);
+
+        // Close that sub component
+        subComponentExpandCollpase = getAllByTestId(
+            "subComponent-header-expand-collapse"
+        );
+        act(() => {
+            subComponentExpandCollpase[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if that subComponent section is closed
+        subComponentContent = gridContainer.querySelectorAll(
+            "[data-testid='subcomponent-content']"
+        );
+        expect(subComponentContent.length).toBe(0);
 
         // Check total rows count
         expect(getAllByTestId("gridrow").length).toBeGreaterThan(1);
