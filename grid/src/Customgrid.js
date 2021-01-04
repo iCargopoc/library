@@ -350,7 +350,7 @@ const Customgrid = (props) => {
                                         );
                                     }
                                 }}
-                                data-testid="subComponent-header-expand-collapse"
+                                data-testid="subComponent-header-expand-collapse-all"
                             >
                                 {isAllRowsExpanded ? (
                                     <IconCollapse className="ng-icon" />
@@ -576,7 +576,8 @@ const Customgrid = (props) => {
             const rowsSelectedByUser = findSelectedRows(
                 rowsInGrid,
                 selectedRowIdsInGrid,
-                getRowInfo
+                getRowInfo,
+                false
             );
             const rowIdentifiers = findSelectedRowIdAttributes(
                 rowsSelectedByUser,
