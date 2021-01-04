@@ -25,15 +25,17 @@ const ColumnsList = (props) => {
 
     const moveColumn = (columnId, atIndex) => {
         const { column, index } = findColumn(columnId);
-        onColumnReorder(
-            update(managedColumns, {
-                $splice: [
-                    [index, 1],
-                    [atIndex, 0, column]
-                ]
-            }),
-            isSubComponentColumn
-        );
+        if (index >= 0) {
+            onColumnReorder(
+                update(managedColumns, {
+                    $splice: [
+                        [index, 1],
+                        [atIndex, 0, column]
+                    ]
+                }),
+                isSubComponentColumn
+            );
+        }
     };
 
     const [, drop] = useDrop({ accept: ItemTypes.COLUMN });
