@@ -495,7 +495,7 @@ const ColumnReordering = (props) => {
                     <div className="ng-popover__header">
                         <div>
                             <span>Column Settings</span>
-                            {warning !== null ? (
+                            {warning !== "" ? (
                                 <strong
                                     className="ng-popover--column__warning"
                                     data-testid="column-chooser-error"

@@ -855,6 +855,33 @@ describe("render Index file ", () => {
         // Check if Grid id rendered.
         expect(gridContainer).toBeInTheDocument();
 
+        // Open Column chooser overlay
+        const columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        let columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
+            .length;
+        expect(columnChooserOverlayCount).toBe(1);
+
+        // Close overlay
+        const closeButton = getByTestId("cancel_columnsManage");
+        act(() => {
+            closeButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is closed
+        columnChooserOverlayCount = gridContainer.querySelectorAll(
+            "[data-testid='managecolumnoverlay']"
+        ).length;
+        expect(columnChooserOverlayCount).toBe(0);
+
         // Check if expand/collapse icons are present
         let subComponentExpandCollpase = getAllByTestId(
             "subComponent-header-expand-collapse"
