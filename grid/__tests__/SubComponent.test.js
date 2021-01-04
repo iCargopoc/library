@@ -1402,4 +1402,88 @@ describe("render Index file ", () => {
         );
         expect(errorMessage.length).toBe(1);
     });
+
+    it("test group sort overlay grid with sub component data and sub component row expand", () => {
+        mockOffsetSize(600, 600);
+        const { container, getAllByTestId, getByTestId, getAllByText } = render(
+            <Grid
+                title={mockTitle}
+                gridWidth={mockGridWidth}
+                gridData={mockGridData}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                subComponentColumnns={subComponentColumns}
+                subComponentColumnToExpand={mockSubComponentAdditionalColumn}
+                getRowInfo={mockGetRowInfo}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Check Group sort Icon
+        const groupSortIcon = getAllByTestId("toggleGroupSortOverLay");
+        expect(groupSortIcon.length).toBe(1);
+
+        // Open Group sort Icon
+        act(() => {
+            groupSortIcon[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Add sort option
+        let addSortLink = getByTestId("addSort");
+        act(() => {
+            addSortLink.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Change sortby option to the first sort option
+        const sortBySelect = getAllByTestId("groupSort-sortBy")[0];
+        fireEvent.change(sortBySelect, {
+            target: { value: "hawbId" }
+        });
+
+        // Change sort order
+        const sortOrderSelect = getAllByTestId("groupSort-order")[0];
+        fireEvent.change(sortOrderSelect, {
+            target: { value: "Descending" }
+        });
+
+        // Add one more sort option
+        addSortLink = getByTestId("addSort");
+        act(() => {
+            addSortLink.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Change sortby option to the first sort option
+        const newSortBySelect = getAllByTestId("groupSort-sortBy")[1];
+        fireEvent.change(newSortBySelect, {
+            target: { value: "scr" }
+        });
+
+        // Apply sort
+        const applySortButton = getByTestId("saveSort");
+        act(() => {
+            applySortButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Sort overlay should have been closed
+        const groupSortOverlay = gridContainer.querySelectorAll(
+            "[data-testid='groupsortoverlay']"
+        );
+        expect(groupSortOverlay.length).toBe(0);
+    });
 });
