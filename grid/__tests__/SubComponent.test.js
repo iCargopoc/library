@@ -1015,7 +1015,7 @@ describe("render Index file ", () => {
         expect(subComponentContent.length).toBe(0);
     });
 
-    it("test manage columns overlay grid with sub component data and sub component row wxpand", () => {
+    it("test manage columns overlay grid with sub component data and sub component row expand", () => {
         const createBubbledEvent = (type, props = {}) => {
             const event = new Event(type, { bubbles: true });
             Object.assign(event, props);
@@ -1307,5 +1307,99 @@ describe("render Index file ", () => {
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
+    });
+
+    it("test export overlay grid with sub component data and sub component row expand", () => {
+        mockOffsetSize(600, 600);
+        const { container, getAllByTestId, getByTestId, getAllByText } = render(
+            <Grid
+                title={mockTitle}
+                gridWidth={mockGridWidth}
+                gridData={mockGridData}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                subComponentColumnns={subComponentColumns}
+                subComponentColumnToExpand={mockSubComponentAdditionalColumn}
+                getRowInfo={mockGetRowInfo}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open export overlay
+        const exportDataIcon = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            exportDataIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        const exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        expect(exportDataOverlayCount).toBe(1);
+
+        // Check if child column check boxes are present
+        const childColumnCheckboxes = getAllByTestId(
+            "selectSingleSearchableSubComponentColumn"
+        );
+        const childColumnCheckboxesLength = childColumnCheckboxes.length;
+        expect(childColumnCheckboxesLength).toBe(4);
+
+        // Un-check first column
+        expect(childColumnCheckboxes[0].checked).toBeTruthy();
+        fireEvent.click(childColumnCheckboxes[0]);
+        expect(childColumnCheckboxes[0].checked).toBeFalsy();
+
+        // Un-check last column
+        expect(
+            childColumnCheckboxes[childColumnCheckboxesLength - 1].checked
+        ).toBeTruthy();
+        fireEvent.click(childColumnCheckboxes[childColumnCheckboxesLength - 1]);
+        expect(
+            childColumnCheckboxes[childColumnCheckboxesLength - 1].checked
+        ).toBeFalsy();
+
+        // Re-check first column
+        expect(childColumnCheckboxes[0].checked).toBeFalsy();
+        fireEvent.click(childColumnCheckboxes[0]);
+        expect(childColumnCheckboxes[0].checked).toBeTruthy();
+
+        // Re-check last column
+        expect(
+            childColumnCheckboxes[childColumnCheckboxesLength - 1].checked
+        ).toBeFalsy();
+        fireEvent.click(childColumnCheckboxes[childColumnCheckboxesLength - 1]);
+        expect(
+            childColumnCheckboxes[childColumnCheckboxesLength - 1].checked
+        ).toBeTruthy();
+
+        // Un-check all sub component columns
+        const allSubComponentColumns = getAllByTestId(
+            "selectAllSearchableSubComponentColumns"
+        );
+        expect(allSubComponentColumns[0].checked).toBeTruthy();
+        fireEvent.click(allSubComponentColumns[0]);
+        expect(allSubComponentColumns[0].checked).toBeFalsy();
+
+        // Try to export data
+        const exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check for error
+        const errorMessage = getAllByText(
+            "Select at least one sub component column"
+        );
+        expect(errorMessage.length).toBe(1);
     });
 });
