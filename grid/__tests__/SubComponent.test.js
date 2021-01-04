@@ -1,8 +1,10 @@
 /* eslint-disable no-undef */
 import React from "react";
-import { render, cleanup, fireEvent } from "@testing-library/react";
+import { render, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
+/* eslint-disable no-unused-vars */
+import regeneratorRuntime from "regenerator-runtime";
 import Grid from "../src/index";
 
 describe("render Index file ", () => {
@@ -81,7 +83,7 @@ describe("render Index file ", () => {
             remarks: "Enim aute magna.",
             subComponentData: [
                 {
-                    hawbId: 601,
+                    hawbId: 6001,
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -106,7 +108,7 @@ describe("render Index file ", () => {
                         "Laboris enim non do esse aliquip adipisicing eiusmod officia quis commodo sit. Voluptate ullamco occaecat incididunt amet ad dolor nisi ad consectetur. Laboris nulla esse do occaecat tempor cupidatat labore."
                 },
                 {
-                    hawbId: 602,
+                    hawbId: 6002,
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -131,7 +133,7 @@ describe("render Index file ", () => {
                         "Laboris enim non do esse aliquip adipisicing eiusmod officia quis commodo sit. Voluptate ullamco occaecat incididunt amet ad dolor nisi ad consectetur. Laboris nulla esse do occaecat tempor cupidatat labore."
                 },
                 {
-                    hawbId: 603,
+                    hawbId: 6003,
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -450,6 +452,7 @@ describe("render Index file ", () => {
             accessor: "hawbId",
             width: 250,
             isSortable: true,
+            isSearchable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawbId } = rowData;
                 if (hawbId !== null && hawbId !== undefined) {
@@ -1405,7 +1408,7 @@ describe("render Index file ", () => {
 
     it("test group sort overlay grid with sub component data and sub component row expand", () => {
         mockOffsetSize(600, 600);
-        const { container, getAllByTestId, getByTestId, getAllByText } = render(
+        const { container, getAllByTestId, getByTestId } = render(
             <Grid
                 title={mockTitle}
                 gridWidth={mockGridWidth}
@@ -1485,5 +1488,53 @@ describe("render Index file ", () => {
             "[data-testid='groupsortoverlay']"
         );
         expect(groupSortOverlay.length).toBe(0);
+    });
+
+    it("test global filter in Grid with sub component data and sub component row expand", async () => {
+        mockOffsetSize(600, 600);
+        const { container, getAllByTestId, getByTestId } = render(
+            <Grid
+                title={mockTitle}
+                gridWidth={mockGridWidth}
+                gridData={mockGridData}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                subComponentColumnns={subComponentColumns}
+                subComponentColumnToExpand={mockSubComponentAdditionalColumn}
+                getRowInfo={mockGetRowInfo}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Check total rows count
+        expect(getAllByTestId("gridrow").length).toBeGreaterThan(1);
+
+        // Global Filter Search with invalid value "60"
+        let input = getByTestId("globalFilter-textbox");
+        expect(input.value).toBe("");
+        fireEvent.change(input, { target: { value: "6001" } });
+        expect(input.value).toBe("6001");
+
+        // There should not be any records
+        await waitFor(() => expect(getAllByTestId("gridrow").length).toBe(1));
+
+        // Clear filter value "asd"
+        input = getByTestId("globalFilter-textbox");
+        expect(input.value).toBe("6001");
+        fireEvent.change(input, { target: { value: "" } });
+        expect(input.value).toBe("");
+
+        // Rows should be present
+        await waitFor(() =>
+            expect(getAllByTestId("gridrow").length).toBeGreaterThan(1)
+        );
     });
 });

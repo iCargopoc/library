@@ -117,6 +117,9 @@ const Customgrid = (props) => {
     // Local state value for holding sub component columns
     const [subComponentColumnns, setSubComponentColumnns] = useState([]);
 
+    // Local state value for holding whether grid has sub component structure
+    const [isSubComponentGrid, setIsSubComponentGrid] = useState(false);
+
     // Local state value for holding the sub component additional column configuration
     const [
         subComponentAdditionalColumn,
@@ -128,8 +131,6 @@ const Customgrid = (props) => {
         rowsWithExpandedSubComponents,
         setRowsWithExpandedSubComponents
     ] = useState([]);
-
-    const isSubComponentGrid = subComponentColumnns.length > 0;
 
     // Variables used for handling infinite loading
     const itemCount = hasNextPage ? gridData.length + 1 : gridData.length;
@@ -264,7 +265,7 @@ const Customgrid = (props) => {
                 return returnValue;
             });
         },
-        [managableColumns, managableSubComponentColumnns]
+        [managableColumns, managableSubComponentColumnns, isSubComponentGrid]
     );
 
     const isRowExpandEnabled = !!(
@@ -734,6 +735,7 @@ const Customgrid = (props) => {
             managableSubComponentColumnns &&
             managableSubComponentColumnns.length > 0
         ) {
+            setIsSubComponentGrid(true);
             setSubComponentColumnns(managableSubComponentColumnns);
         }
     }, [managableSubComponentColumnns]);
