@@ -907,47 +907,41 @@ const Customgrid = (props) => {
                 let isAtleastOneChildUnselected = false;
                 let isChildRowsAvailable = false;
                 preFilteredRows.forEach((gridRow) => {
-                    if (gridRow) {
-                        const gridRowOriginal = gridRow.original;
+                    const gridRowOriginal = gridRow.original;
+                    if (gridRowOriginal && gridRowOriginal.isParent !== true) {
+                        const parentIdOfChildRow =
+                            gridRowOriginal[parentIdAttribute];
                         if (
-                            gridRowOriginal &&
-                            gridRowOriginal.isParent !== true
+                            parentIdOfChildRow !== null &&
+                            parentIdOfChildRow !== undefined &&
+                            rowParentIdAttribute === parentIdOfChildRow
                         ) {
-                            const parentIdOfChildRow =
-                                gridRowOriginal[parentIdAttribute];
+                            isChildRowsAvailable = true;
+                            const rowIdAttribute = gridRowOriginal[idAttribute];
+                            let isRowSelectable = true;
                             if (
-                                parentIdOfChildRow !== null &&
-                                parentIdOfChildRow !== undefined &&
-                                rowParentIdAttribute === parentIdOfChildRow
+                                getRowInfo &&
+                                typeof getRowInfo === "function"
                             ) {
-                                isChildRowsAvailable = true;
-                                const rowIdAttribute =
-                                    gridRowOriginal[idAttribute];
-                                let isRowSelectable = true;
+                                const rowInfo = getRowInfo(
+                                    gridRowOriginal,
+                                    false
+                                );
                                 if (
-                                    getRowInfo &&
-                                    typeof getRowInfo === "function"
+                                    rowInfo &&
+                                    rowInfo.isRowSelectable === false
                                 ) {
-                                    const rowInfo = getRowInfo(
-                                        gridRowOriginal,
-                                        false
-                                    );
-                                    if (
-                                        rowInfo &&
-                                        rowInfo.isRowSelectable === false
-                                    ) {
-                                        isRowSelectable = false;
-                                    }
+                                    isRowSelectable = false;
                                 }
+                            }
 
-                                if (
-                                    isRowSelectable &&
-                                    !userSelectedRowIdentifiers.includes(
-                                        rowIdAttribute
-                                    )
-                                ) {
-                                    isAtleastOneChildUnselected = true;
-                                }
+                            if (
+                                isRowSelectable &&
+                                !userSelectedRowIdentifiers.includes(
+                                    rowIdAttribute
+                                )
+                            ) {
+                                isAtleastOneChildUnselected = true;
                             }
                         }
                     }
@@ -975,22 +969,20 @@ const Customgrid = (props) => {
                     rowParentIdAttribute !== undefined
                 ) {
                     preFilteredRows.forEach((gridRow) => {
-                        if (gridRow) {
-                            const gridRowOriginal = gridRow.original;
+                        const gridRowOriginal = gridRow.original;
+                        if (
+                            gridRowOriginal &&
+                            gridRowOriginal.isParent !== true
+                        ) {
                             if (
-                                gridRowOriginal &&
-                                gridRowOriginal.isParent !== true
+                                gridRowOriginal[parentIdAttribute] ===
+                                rowParentIdAttribute
                             ) {
-                                if (
-                                    gridRowOriginal[parentIdAttribute] ===
-                                    rowParentIdAttribute
-                                ) {
-                                    const { id } = gridRow;
-                                    setIsRowSelectionCallbackNeeded(
-                                        selectionType ? "select" : "deselect"
-                                    );
-                                    toggleRowSelected(id, selectionType);
-                                }
+                                const { id } = gridRow;
+                                setIsRowSelectionCallbackNeeded(
+                                    selectionType ? "select" : "deselect"
+                                );
+                                toggleRowSelected(id, selectionType);
                             }
                         }
                     });

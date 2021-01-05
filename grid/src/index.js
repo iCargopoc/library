@@ -428,41 +428,39 @@ const Grid = (props) => {
     // #endregion
 
     const loadChildData = (row) => {
-        if (row && parentIdAttribute) {
-            const { lastPage, pageNum, pageSize, endCursor } = row;
-            const isIntialLoad =
-                lastPage === undefined &&
-                pageNum === undefined &&
-                pageSize === undefined &&
-                endCursor === undefined;
-            const parentId = row[parentIdAttribute];
-            if (
-                (lastPage === false || isIntialLoad) &&
-                parentId !== null &&
-                parentId !== undefined
-            ) {
-                let pageInfoObj = null;
-                if (paginationType === "cursor") {
-                    if (endCursor !== null && endCursor !== undefined) {
-                        pageInfoObj = {
-                            endCursor,
-                            pageSize
-                        };
-                    }
-                    loadMoreData(pageInfoObj, parentId);
-                } else {
-                    if (
-                        pageNum !== null &&
-                        pageNum !== undefined &&
-                        typeof pageNum === "number"
-                    ) {
-                        pageInfoObj = {
-                            pageNum: pageNum + 1,
-                            pageSize
-                        };
-                    }
-                    loadMoreData(pageInfoObj, parentId);
+        const { lastPage, pageNum, pageSize, endCursor } = row;
+        const isIntialLoad =
+            lastPage === undefined &&
+            pageNum === undefined &&
+            pageSize === undefined &&
+            endCursor === undefined;
+        const parentId = row[parentIdAttribute];
+        if (
+            (lastPage === false || isIntialLoad) &&
+            parentId !== null &&
+            parentId !== undefined
+        ) {
+            let pageInfoObj = null;
+            if (paginationType === "cursor") {
+                if (endCursor !== null && endCursor !== undefined) {
+                    pageInfoObj = {
+                        endCursor,
+                        pageSize
+                    };
                 }
+                loadMoreData(pageInfoObj, parentId);
+            } else {
+                if (
+                    pageNum !== null &&
+                    pageNum !== undefined &&
+                    typeof pageNum === "number"
+                ) {
+                    pageInfoObj = {
+                        pageNum: pageNum + 1,
+                        pageSize
+                    };
+                }
+                loadMoreData(pageInfoObj, parentId);
             }
         }
     };
@@ -470,22 +468,18 @@ const Grid = (props) => {
     // Gets called when page scroll reaches the bottom of the grid.
     // Trigger call back and get the grid data updated.
     const loadNextPage = () => {
-        if (pageInfo) {
-            const { lastPage, pageNum, pageSize, endCursor } = pageInfo;
-            if (lastPage === false) {
-                setIsNextPageLoading(true);
-                if (paginationType === "cursor") {
-                    loadMoreData({
-                        endCursor,
-                        pageSize
-                    });
-                } else {
-                    loadMoreData({
-                        pageNum: pageNum + 1,
-                        pageSize
-                    });
-                }
-            }
+        const { pageNum, pageSize, endCursor } = pageInfo;
+        setIsNextPageLoading(true);
+        if (paginationType === "cursor") {
+            loadMoreData({
+                endCursor,
+                pageSize
+            });
+        } else {
+            loadMoreData({
+                pageNum: pageNum + 1,
+                pageSize
+            });
         }
     };
 
@@ -589,6 +583,7 @@ const Grid = (props) => {
                     isPaginationNeeded={
                         pageInfo !== undefined &&
                         pageInfo !== null &&
+                        pageInfo.lastPage !== true &&
                         !isParentGrid
                     }
                     totalRecordsCount={pageInfo ? pageInfo.total : 0}
