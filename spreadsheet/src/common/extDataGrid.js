@@ -1,8 +1,9 @@
-import ReactDataGrid from "react-data-grid";
+import DataGrid from "react-data-grid";
 
 let clicks = [];
 let timeout;
-class ExtDataGrid extends ReactDataGrid {
+console.log(DataGrid);
+class ExtDataGrid extends DataGrid {
     componentDidMount() {
         this._mounted = true;
         [this.dataGridComponent] = document.getElementsByClassName(

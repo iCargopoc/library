@@ -388,7 +388,9 @@ let props = {
     isColumnChooser: true,
     isExportData: true,
     isSelectAll: true,
-    isHeader: true
+    isHeader: true,
+    isAddRow: true,
+    isDeleteRow: true
 };
 
 test("Spreadsheet - onGridRowsUpdated  cell update addition", () => {

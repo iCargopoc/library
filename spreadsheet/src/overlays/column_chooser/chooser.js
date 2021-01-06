@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
@@ -22,7 +22,7 @@ const HTML5toTouch = {
     ]
 };
 
-class ColumnReordering extends React.Component {
+class ColumnReordering extends Component {
     constructor(props) {
         super(props);
         const {
@@ -40,6 +40,11 @@ class ColumnReordering extends React.Component {
         };
 
         this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick() {
+        const { closeColumnReOrdering } = this.props;
+        closeColumnReOrdering();
     }
 
     /**
@@ -246,11 +251,6 @@ class ColumnReordering extends React.Component {
         const { handleheaderNameList } = this.props;
         handleheaderNameList(reordered);
     };
-
-    handleClick() {
-        const { closeColumnReOrdering } = this.props;
-        closeColumnReOrdering();
-    }
 
     render() {
         const {

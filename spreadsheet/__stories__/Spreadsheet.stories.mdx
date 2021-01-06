@@ -38,7 +38,6 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     maxLeftPinnedColumn={maxLeftPinnedColumn}
     updatedRows={updatedRows}
     isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
     isGroupSort={isGroupSort}
     isColumnChooser={isColumnChooser}
     isExportData={isExportData}
@@ -53,12 +52,13 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     <GridComponent
         isTitle={true}
         isGlobalSearch={false}
-        isColumnFilter={false}
         isGroupSort={false}
         isColumnChooser={false}
         isExportData={false}
         isSelectAll={false}
         isHeader={true}
+        isAddRow={false}
+        isDeleteRow={false}
     />
 </Story>
 
@@ -75,28 +75,20 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     maxLeftPinnedColumn={maxLeftPinnedColumn}
     updatedRows={updatedRows}
     isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
     isGroupSort={isGroupSort}
     isColumnChooser={isColumnChooser}
     isExportData={isExportData}
     isSelectAll={isSelectAll}
     isHeader={isHeader}
+    isAddRow={isAddRow}
+    isDeleteRow={isDeleteRow}
 />
 ```
 
 #### With custom height
 
 <Story name="With custom height">
-    <GridComponent
-        isTitle={false}
-        gridHeight={500}
-        isGlobalSearch={false}
-        isColumnFilter={false}
-        isGroupSort={false}
-        isColumnChooser={false}
-        isExportData={false}
-        isSelectAll={false}
-    />
+    <GridComponent gridHeight={500} isSelectAll={false} />
 </Story>
 
 ```jsx
@@ -111,12 +103,6 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     selectBulkData={selectBulkData}
     maxLeftPinnedColumn={maxLeftPinnedColumn}
     updatedRows={updatedRows}
-    isTitle={isTitle}
-    isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
-    isGroupSort={isGroupSort}
-    isColumnChooser={isColumnChooser}
-    isExportData={isExportData}
     isSelectAll={isSelectAll}
 />
 ```
@@ -127,12 +113,13 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     <GridComponent
         isTitle={false}
         isGlobalSearch={true}
-        isColumnFilter={false}
         isGroupSort={false}
         isColumnChooser={false}
         isExportData={false}
         isSelectAll={false}
         isHeader={true}
+        isAddRow={false}
+        isDeleteRow={false}
     />
 </Story>
 
@@ -149,51 +136,13 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     updatedRows={updatedRows}
     isTitle={isTitle}
     isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
     isGroupSort={isGroupSort}
     isColumnChooser={isColumnChooser}
     isExportData={isExportData}
     isSelectAll={isSelectAll}
     isHeader={isHeader}
-/>
-```
-
-#### With column filter
-
-<Story name="With column filter">
-    <GridComponent
-        isTitle={false}
-        isGlobalSearch={false}
-        isColumnFilter={true}
-        columnFilterStyle={"txt-wrap-single"}
-        isGroupSort={false}
-        isColumnChooser={false}
-        isExportData={false}
-        isSelectAll={false}
-        isHeader={true}
-    />
-</Story>
-
-```jsx
-<Spreadsheet
-    rows={data.slice(0, pageSize)}
-    dataSet={data}
-    pageSize={pageSize}
-    count={pageSize}
-    columns={columns}
-    updateCellData={updateCellData}
-    selectBulkData={selectBulkData}
-    maxLeftPinnedColumn={maxLeftPinnedColumn}
-    updatedRows={updatedRows}
-    isTitle={isTitle}
-    isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
-    columnFilterStyle={"columnFilterStyle"}
-    isGroupSort={isGroupSort}
-    isColumnChooser={isColumnChooser}
-    isExportData={isExportData}
-    isSelectAll={isSelectAll}
-    isHeader={isHeader}
+    isAddRow={isAddRow}
+    isDeleteRow={isDeleteRow}
 />
 ```
 
@@ -203,12 +152,13 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     <GridComponent
         isTitle={false}
         isGlobalSearch={false}
-        isColumnFilter={false}
         isGroupSort={true}
         isColumnChooser={false}
         isExportData={false}
         isSelectAll={false}
         isHeader={true}
+        isAddRow={false}
+        isDeleteRow={false}
     />
 </Story>
 
@@ -225,12 +175,13 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     updatedRows={updatedRows}
     isTitle={isTitle}
     isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
     isGroupSort={isGroupSort}
     isColumnChooser={isColumnChooser}
     isExportData={isExportData}
     isSelectAll={isSelectAll}
     isHeader={isHeader}
+    isAddRow={isAddRow}
+    isDeleteRow={isDeleteRow}
 />
 ```
 
@@ -240,12 +191,13 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     <GridComponent
         isTitle={false}
         isGlobalSearch={false}
-        isColumnFilter={false}
         isGroupSort={false}
         isColumnChooser={true}
         isExportData={false}
         isSelectAll={false}
         isHeader={true}
+        isAddRow={false}
+        isDeleteRow={false}
     />
 </Story>
 
@@ -262,12 +214,13 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     updatedRows={updatedRows}
     isTitle={isTitle}
     isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
     isGroupSort={isGroupSort}
     isColumnChooser={isColumnChooser}
     isExportData={isExportData}
     isSelectAll={isSelectAll}
     isHeader={isHeader}
+    isAddRow={isAddRow}
+    isDeleteRow={isDeleteRow}
 />
 ```
 
@@ -277,12 +230,13 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     <GridComponent
         isTitle={false}
         isGlobalSearch={false}
-        isColumnFilter={false}
         isGroupSort={false}
         isColumnChooser={false}
         isExportData={true}
         isSelectAll={false}
         isHeader={true}
+        isAddRow={false}
+        isDeleteRow={false}
     />
 </Story>
 
@@ -299,27 +253,20 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     updatedRows={updatedRows}
     isTitle={isTitle}
     isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
     isGroupSort={isGroupSort}
     isColumnChooser={isColumnChooser}
     isExportData={isExportData}
     isSelectAll={isSelectAll}
     isHeader={isHeader}
+    isAddRow={isAddRow}
+    isDeleteRow={isDeleteRow}
 />
 ```
 
 #### With select all
 
 <Story name="With select all">
-    <GridComponent
-        isTitle={false}
-        isGlobalSearch={false}
-        isColumnFilter={false}
-        isGroupSort={false}
-        isColumnChooser={false}
-        isExportData={false}
-        isSelectAll={true}
-    />
+    <GridComponent isSelectAll={true} />
 </Story>
 
 ```jsx
@@ -333,12 +280,6 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     selectBulkData={selectBulkData}
     maxLeftPinnedColumn={maxLeftPinnedColumn}
     updatedRows={updatedRows}
-    isTitle={isTitle}
-    isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
-    isGroupSort={isGroupSort}
-    isColumnChooser={isColumnChooser}
-    isExportData={isExportData}
     isSelectAll={isSelectAll}
 />
 ```
@@ -346,16 +287,7 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
 #### Without header
 
 <Story name="Without header">
-    <GridComponent
-        isTitle={false}
-        isGlobalSearch={false}
-        isColumnFilter={false}
-        isGroupSort={false}
-        isColumnChooser={false}
-        isExportData={false}
-        isSelectAll={false}
-        isHeader={false}
-    />
+    <GridComponent isSelectAll={false} isHeader={false} />
 </Story>
 
 ```jsx
@@ -369,12 +301,6 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     selectBulkData={selectBulkData}
     maxLeftPinnedColumn={maxLeftPinnedColumn}
     updatedRows={updatedRows}
-    isTitle={isTitle}
-    isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
-    isGroupSort={isGroupSort}
-    isColumnChooser={isColumnChooser}
-    isExportData={isExportData}
     isSelectAll={isSelectAll}
     isHeader={isHeader}
 />
@@ -386,13 +312,14 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     <GridComponent
         isTitle={false}
         isGlobalSearch={false}
-        isColumnFilter={false}
         isGroupSort={false}
         isColumnChooser={false}
         isExportData={false}
         isSelectAll={false}
         isHeader={false}
         noBorderClassName={"grid-no-border"}
+        isAddRow={false}
+        isDeleteRow={false}
     />
 </Story>
 
@@ -409,13 +336,92 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     updatedRows={updatedRows}
     isTitle={isTitle}
     isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
     isGroupSort={isGroupSort}
     isColumnChooser={isColumnChooser}
     isExportData={isExportData}
     isSelectAll={isSelectAll}
     isHeader={isHeader}
     noBorderClassName={noBorderClassName}
+    isAddRow={isAddRow}
+    isDeleteRow={isDeleteRow}
+/>
+```
+
+#### With add row
+
+<Story name="With add row">
+    <GridComponent
+        isTitle={false}
+        isGlobalSearch={false}
+        isGroupSort={false}
+        isColumnChooser={false}
+        isExportData={false}
+        isSelectAll={false}
+        isHeader={true}
+        isAddRow={true}
+        isDeleteRow={false}
+    />
+</Story>
+
+```jsx
+<Spreadsheet
+    rows={data.slice(0, pageSize)}
+    dataSet={data}
+    pageSize={pageSize}
+    count={pageSize}
+    columns={columns}
+    updateCellData={updateCellData}
+    selectBulkData={selectBulkData}
+    maxLeftPinnedColumn={maxLeftPinnedColumn}
+    updatedRows={updatedRows}
+    isTitle={isTitle}
+    isGlobalSearch={isGlobalSearch}
+    isGroupSort={isGroupSort}
+    isColumnChooser={isColumnChooser}
+    isExportData={isExportData}
+    isSelectAll={isSelectAll}
+    isHeader={isHeader}
+    isAddRow={isAddRow}
+    isDeleteRow={isDeleteRow}
+/>
+```
+
+#### With delete row
+
+<Story name="With delete row">
+    <GridComponent
+        isTitle={false}
+        isGlobalSearch={false}
+        isGroupSort={false}
+        isColumnChooser={false}
+        isExportData={false}
+        isSelectAll={false}
+        isHeader={true}
+        isAddRow={false}
+        isDeleteRow={true}
+    />
+</Story>
+
+```jsx
+<Spreadsheet
+    rows={data.slice(0, pageSize)}
+    dataSet={data}
+    pageSize={pageSize}
+    count={pageSize}
+    columns={columns}
+    updateCellData={updateCellData}
+    selectBulkData={selectBulkData}
+    maxLeftPinnedColumn={maxLeftPinnedColumn}
+    updatedRows={updatedRows}
+    isTitle={isTitle}
+    isGlobalSearch={isGlobalSearch}
+    isGroupSort={isGroupSort}
+    isColumnChooser={isColumnChooser}
+    isExportData={isExportData}
+    isSelectAll={isSelectAll}
+    isHeader={isHeader}
+    isAddRow={isAddRow}
+    isDeleteRow={isDeleteRow}
 />
 ```
 
@@ -427,7 +433,6 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
         isTitle={true}
         gridHeight={460}
         isGlobalSearch={true}
-        isColumnFilter={true}
         columnFilterStyle={"txt-wrap"}
         isGroupSort={true}
         isColumnChooser={true}
@@ -435,6 +440,8 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
         isSelectAll={true}
         isHeader={true}
         noBorderClassName={"grid-no-border"}
+        isAddRow={true}
+        isDeleteRow={true}
     />
 </Story>
 
@@ -452,7 +459,6 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     maxLeftPinnedColumn={maxLeftPinnedColumn}
     updatedRows={updatedRows}
     isGlobalSearch={isGlobalSearch}
-    isColumnFilter={isColumnFilter}
     columnFilterStyle={"columnFilterStyle"}
     isGroupSort={isGroupSort}
     isColumnChooser={isColumnChooser}
@@ -460,5 +466,7 @@ import { Spreadsheet } from "@neo-ui/spreadsheet";
     isSelectAll={isSelectAll}
     isHeader={isHeader}
     noBorderClassName={noBorderClassName}
+    isAddRow={isAddRow}
+    isDeleteRow={isDeleteRow}
 />
 ```

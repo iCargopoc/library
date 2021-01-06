@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import JsPdf from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
@@ -11,7 +11,7 @@ import {
     IconPdf
 } from "../../utilities/svgUtilities";
 
-class ExportData extends React.Component {
+class ExportData extends Component {
     constructor(props) {
         super(props);
         const { columnsList } = this.props;
@@ -26,6 +26,11 @@ class ExportData extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.selectDownLoadType = this.selectDownLoadType.bind(this);
         this.exportValidation = this.exportValidation.bind(this);
+    }
+
+    handleClick() {
+        const { closeExport } = this.props;
+        closeExport();
     }
 
     resetColumnExportList = () => {
@@ -214,11 +219,6 @@ class ExportData extends React.Component {
             this.setState({ clickTag: "" });
         }
     };
-
-    handleClick() {
-        const { closeExport } = this.props;
-        closeExport();
-    }
 
     render() {
         const {
