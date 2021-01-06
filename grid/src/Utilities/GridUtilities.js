@@ -1,4 +1,29 @@
-export const findSelectedRows = (rows, selectedRowIds) => {
+export const updatedActionsHeaderClass = (isDesktop) => {
+    if (isDesktop) {
+        const tableContainerList = document.getElementsByClassName(
+            "neo-grid__tbody-list"
+        );
+        if (tableContainerList && tableContainerList.length > 0) {
+            const tableContainer = tableContainerList[0];
+            const tableHeaders = document.getElementsByClassName(
+                "neo-grid__thead"
+            );
+            const tableHeader = tableHeaders[0];
+            if (tableContainer.offsetHeight < tableContainer.scrollHeight) {
+                tableHeader.classList.add("withScroll");
+            } else {
+                tableHeader.classList.remove("withScroll");
+            }
+        }
+    }
+};
+
+export const findSelectedRows = (
+    rows,
+    selectedRowIds,
+    getRowInfo,
+    isSubComponentRow
+) => {
     const rowsSelectedByUser = [];
     if (rows && rows.length > 0 && selectedRowIds) {
         Object.entries(selectedRowIds).forEach((objEntry) => {
@@ -7,11 +32,25 @@ export const findSelectedRows = (rows, selectedRowIds) => {
                 const isSelected = objEntry[1];
                 if (isSelected) {
                     const selectedRow = rows.find((flatRow) => {
-                        return flatRow.id === rowId;
+                        const { id } = flatRow;
+                        if (getRowInfo && typeof getRowInfo === "function") {
+                            const { original } = flatRow;
+                            const rowInfo = getRowInfo(
+                                original,
+                                isSubComponentRow
+                            );
+                            return (
+                                !(
+                                    rowInfo && rowInfo.isRowSelectable === false
+                                ) && id === rowId
+                            );
+                        }
+                        return id === rowId;
                     });
                     if (selectedRow) {
                         const { original } = selectedRow;
-                        if (original) {
+                        const { isParent } = original;
+                        if (isParent !== true) {
                             rowsSelectedByUser.push(original);
                         }
                     }
@@ -26,8 +65,118 @@ export const findSelectedRowIdAttributes = (selectedRows, idAttribute) => {
     const rowIdentifiers = [];
     if (selectedRows && selectedRows.length > 0 && idAttribute) {
         selectedRows.forEach((row) => {
-            rowIdentifiers.push(row[idAttribute]);
+            const rowIdValue = row[idAttribute];
+            if (rowIdValue !== null && rowIdValue !== undefined) {
+                rowIdentifiers.push(rowIdValue);
+            }
         });
     }
     return rowIdentifiers;
+};
+
+export const findSelectedRowIdFromIdAttribute = (
+    selectedRows,
+    idAttribute,
+    userSelectedRowIdentifiers
+) => {
+    if (
+        selectedRows &&
+        selectedRows.length > 0 &&
+        userSelectedRowIdentifiers &&
+        userSelectedRowIdentifiers.length > 0 &&
+        idAttribute
+    ) {
+        const idAttributeValue = userSelectedRowIdentifiers[0];
+        const selectedRow = selectedRows.find((row) => {
+            return row.original[idAttribute] === idAttributeValue;
+        });
+        if (selectedRow) {
+            return selectedRow.id;
+        }
+    }
+    return null;
+};
+
+export const findDeSelectedRows = (
+    selectedRows,
+    oldUserSelectedRowIdentifiers,
+    currentUserSelectedRowIdentifiers,
+    idAttribute
+) => {
+    const deSelectedRows = [];
+    if (
+        selectedRows &&
+        selectedRows.length > 0 &&
+        oldUserSelectedRowIdentifiers &&
+        oldUserSelectedRowIdentifiers.length > 0 &&
+        idAttribute
+    ) {
+        oldUserSelectedRowIdentifiers.forEach((oldAttr) => {
+            if (!currentUserSelectedRowIdentifiers.includes(oldAttr)) {
+                const deSelectedRow = selectedRows.find((row) => {
+                    return row.original[idAttribute] === oldAttr;
+                });
+                if (deSelectedRow && deSelectedRow.original) {
+                    deSelectedRows.push(deSelectedRow.original);
+                }
+            }
+        });
+    }
+    return deSelectedRows;
+};
+
+export const convertToIndividualColumns = (managableColumns) => {
+    let modifiedColumns = [];
+    if (managableColumns && managableColumns.length > 0) {
+        managableColumns.forEach((item) => {
+            const { columns } = item;
+            if (columns && columns.length > 0) {
+                modifiedColumns = [...modifiedColumns, ...columns];
+            } else {
+                modifiedColumns.push(item);
+            }
+        });
+    }
+    return [...modifiedColumns];
+};
+
+export const checkdisplayOfGroupedColumns = (groupedColumn) => {
+    if (groupedColumn) {
+        const { headers } = groupedColumn;
+        if (headers && headers.length > 0) {
+            const headerToDisplay = headers.find((header) => {
+                return header.display === true;
+            });
+            if (headerToDisplay) {
+                return true;
+            }
+        }
+    }
+    return false;
+};
+
+export const checkIfGroupsortIsApplicable = (columns) => {
+    const individualColumns = convertToIndividualColumns(columns);
+    const sortableColumn = individualColumns.find(
+        (col) => col.isSortable === true
+    );
+    if (sortableColumn) {
+        return true;
+    }
+    return false;
+};
+
+export const findAllChildRows = (allRows) => {
+    if (allRows && allRows.length > 0) {
+        return allRows.filter((row) => {
+            let returnValue = false;
+            if (row) {
+                const { original } = row;
+                const { isParent } = original;
+                returnValue = isParent !== true;
+            }
+            return returnValue;
+        });
+    }
+    return [];
 };

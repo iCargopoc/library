@@ -8,7 +8,9 @@ export const extractColumns = (
     searchColumn,
     isDesktop,
     updateRowInGrid,
-    expandableColumn
+    expandableColumn,
+    isParentGrid,
+    isSubComponentColumns
 ) => {
     if (columns && columns.length > 0) {
         // Remove iPad only columns from desktop and vice-versa
@@ -24,7 +26,13 @@ export const extractColumns = (
             const elem = column;
 
             // Add column Id
-            elem.columnId = `column_${index}`;
+            elem.columnId =
+                isSubComponentColumns === true
+                    ? `subComponentColumn_${index}`
+                    : `column_${index}`;
+
+            // Add flag to identify if this is subcomponent column
+            elem.isSubComponentColumn = isSubComponentColumns === true;
 
             // Set display flag to true if not present
             if (elem.display !== false) {
@@ -33,18 +41,37 @@ export const extractColumns = (
 
             // Loop through inner cells and set flag and Id
             if (isInnerCellsPresent) {
+                // Set isSortable for column as false if that column is having innercells and none are sortable
+                let isInnerCellSortable = false;
+
                 innerCells.map((cell, cellIndex) => {
                     const cellElem = cell;
 
                     // Add column Id
-                    cellElem.cellId = `column_${index}_cell_${cellIndex}`;
+                    cellElem.cellId =
+                        isSubComponentColumns === true
+                            ? `subComponentColumn_${index}_cell_${cellIndex}`
+                            : `column_${index}_cell_${cellIndex}`;
+
+                    // Add flag to identify if this is subcomponent column
+                    cellElem.isSubComponentColumn =
+                        isSubComponentColumns === true;
 
                     // Set the display flag to true if not present
                     if (cellElem.display !== false) {
                         cellElem.display = true;
                     }
+
+                    // Update isInnerCellSortable to true if any of the inner cells are sortable
+                    if (cellElem.isSortable === true) {
+                        isInnerCellSortable = true;
+                    }
+
                     return cellElem;
                 });
+
+                // Update isSortable prop of column based on the value of isInnerCellSortable
+                elem.isSortable = isInnerCellSortable;
             }
 
             // Add an indentifier that this is a column not for expanded region
@@ -62,21 +89,41 @@ export const extractColumns = (
                             updateRowInGrid={updateRowInGrid}
                             expandableColumn={expandableColumn}
                             isDesktop={isDesktop}
+                            isSubComponentColumns={isSubComponentColumns}
                         />
                     );
                 };
             }
 
             // Add logic to sort column if sort is not disabled
-            if (!elem.disableSortBy) {
+            if (
+                !elem.disableSortBy &&
+                isParentGrid !== true &&
+                isSubComponentColumns !== true
+            ) {
                 if (isInnerCellsPresent) {
                     // If there are inner cells and a sort value specified, do sort on that value
                     if (sortValue) {
                         elem.sortType = (rowA, rowB) => {
-                            return rowA.original[accessor][sortValue] >
-                                rowB.original[accessor][sortValue]
-                                ? -1
-                                : 1;
+                            let rowAValue = null;
+                            if (
+                                rowA &&
+                                rowA.original &&
+                                rowA.original[accessor] !== null &&
+                                rowA.original[accessor] !== undefined
+                            ) {
+                                rowAValue = rowA.original[accessor][sortValue];
+                            }
+                            let rowBValue = null;
+                            if (
+                                rowB &&
+                                rowB.original &&
+                                rowB.original[accessor] !== null &&
+                                rowB.original[accessor] !== undefined
+                            ) {
+                                rowBValue = rowB.original[accessor][sortValue];
+                            }
+                            return rowAValue > rowBValue ? -1 : 1;
                         };
                     } else {
                         elem.disableSortBy = true;
@@ -84,15 +131,17 @@ export const extractColumns = (
                 } else {
                     // If no inner cells are there, just do sort on column value
                     elem.sortType = (rowA, rowB) => {
-                        return rowA.original[accessor] > rowB.original[accessor]
-                            ? -1
-                            : 1;
+                        const rowAValue = rowA.original[accessor] || null;
+                        const rowBValue = rowB.original[accessor] || null;
+                        return rowAValue > rowBValue ? -1 : 1;
                     };
                 }
+            } else {
+                elem.disableSortBy = true;
             }
 
             // Add logic to filter column if column filter is not disabled
-            if (!elem.disableFilters) {
+            if (!elem.disableFilters && isSubComponentColumns !== true) {
                 elem.filter = (rows, id, filterValue) => {
                     const searchText = filterValue
                         ? filterValue.toLowerCase()
@@ -108,19 +157,55 @@ export const extractColumns = (
 
             modifiedColumns.push(elem);
         });
-        return modifiedColumns;
+
+        const updatedColumnStructure = [];
+        modifiedColumns.forEach((modifiedColumn, index) => {
+            if (!modifiedColumn.groupHeader) {
+                updatedColumnStructure.push(modifiedColumn);
+            } else {
+                const existingGroupHeaderColumn = updatedColumnStructure.find(
+                    (colStructure) => {
+                        return (
+                            colStructure.Header === modifiedColumn.groupHeader
+                        );
+                    }
+                );
+                if (!existingGroupHeaderColumn) {
+                    updatedColumnStructure.push({
+                        Header: modifiedColumn.groupHeader,
+                        columnId: `groupedColumn_${index}`,
+                        isGroupHeader: true,
+                        display: true,
+                        columns: [modifiedColumn]
+                    });
+                } else {
+                    existingGroupHeaderColumn.columns.push(modifiedColumn);
+                }
+            }
+        });
+        return updatedColumnStructure;
     }
     return [];
 };
 
-export const extractAdditionalColumn = (additionalColumn, isDesktop) => {
+export const extractAdditionalColumn = (
+    additionalColumn,
+    isDesktop,
+    isSubComponentColumns
+) => {
     if (additionalColumn) {
         const { innerCells } = additionalColumn;
         const isInnerCellsPresent = innerCells && innerCells.length > 0;
         const element = additionalColumn;
 
         // Add column Id
-        element.columnId = `rowExpand`;
+        element.columnId =
+            isSubComponentColumns === true
+                ? "subComponentRowExpand"
+                : `rowExpand`;
+
+        // Add flag to identify if this is subcomponent column
+        element.isSubComponentColumn = isSubComponentColumns === true;
 
         // Set display flag to true if not present
         if (element.display !== false) {
@@ -141,7 +226,13 @@ export const extractAdditionalColumn = (additionalColumn, isDesktop) => {
                 const cellElem = cell;
 
                 // Add column Id
-                cellElem.cellId = `rowExpand_cell_${cellIndex}`;
+                cellElem.cellId =
+                    isSubComponentColumns === true
+                        ? `subComponentRowExpand_cell_${cellIndex}`
+                        : `rowExpand_cell_${cellIndex}`;
+
+                // Add flag to identify if this is subcomponent column
+                cellElem.isSubComponentColumn = isSubComponentColumns === true;
 
                 // Set the display flag to true if not present
                 if (cellElem.display !== false) {

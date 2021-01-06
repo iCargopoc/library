@@ -5,10 +5,7 @@ import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
 import Grid from "../src/index";
 
-describe("Reference test cases", () => {
-    // Grid will load only required data based on the screen size.
-    // This function is to mock a ascreen size.
-    // This has to be called in each of the test cases
+describe("render Index file ", () => {
     function mockOffsetSize(width, height) {
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,
@@ -20,7 +17,15 @@ describe("Reference test cases", () => {
         });
     }
 
-    // Mocked columns structure for Grid
+    const mockDisplayCell = jest.fn(() => {
+        return (
+            <div className="flight-details">
+                <strong>XX2225</strong>
+                <span>31-Aug-2016</span>
+            </div>
+        );
+    });
+
     const gridColumns = [
         {
             Header: "Id",
@@ -29,10 +34,7 @@ describe("Reference test cases", () => {
             disableFilters: true
         },
         {
-            Header: () => {
-                return <span className="flightHeader">Flight</span>;
-            },
-            title: "Flight",
+            Header: "Flight",
             accessor: "flight",
             width: 100,
             innerCells: [
@@ -47,18 +49,9 @@ describe("Reference test cases", () => {
                     isSearchable: true
                 }
             ],
-            sortValue: "flightno",
             isSearchable: true,
-            displayCell: (rowData, DisplayTag) => {
-                const { flightno } = rowData.flight;
-                return (
-                    <div className="flight-details">
-                        <DisplayTag columnKey="flight" cellKey="flightno">
-                            <strong>{flightno}</strong>
-                        </DisplayTag>
-                    </div>
-                );
-            }
+            sortValue: "flightno",
+            Cell: mockDisplayCell
         },
         {
             Header: "SR",
@@ -83,7 +76,6 @@ describe("Reference test cases", () => {
                 }
             ],
             disableSortBy: true,
-            isSearchable: true,
             displayCell: (rowData, DisplayTag) => {
                 const { uldPositions } = rowData;
                 return (
@@ -110,32 +102,15 @@ describe("Reference test cases", () => {
                         </ul>
                     </div>
                 );
-            }
+            },
+            columnId: "column_3",
+            isSearchable: true
         }
     ];
 
-    // Mocked column structure that has to be displayed in the row expanded region
-    const mockAdditionalColumn = {
-        Header: "Remarks",
-        innerCells: [{ Header: "Remarks", accessor: "remarks" }],
-        displayCell: (rowData, DisplayTag) => {
-            const { remarks } = rowData;
-            return (
-                <div className="details-wrap">
-                    <DisplayTag columnKey="remarks" cellKey="remarks">
-                        <ul>
-                            <li>{remarks}</li>
-                        </ul>
-                    </DisplayTag>
-                </div>
-            );
-        }
-    };
-
-    // Mock sample data structure for Grid
     const data = [
         {
-            travelId: 10,
+            travelId: 0,
             flight: {
                 flightno: "XX2225",
                 date: "31-Aug-2016"
@@ -193,25 +168,7 @@ describe("Reference test cases", () => {
             remarks: "Enim aute magna."
         }
     ];
-    const pageInfo = {
-        pageNum: 1,
-        pageSize: 300,
-        total: 20000,
-        lastPage: true
-    };
-
-    // Keep a data structure with only 1 row.
-    // This is used to test the load more function (which is used to load next page)
-    const smallData = [...data];
-    const smallPageInfo = {
-        pageNum: 1,
-        pageSize: 1,
-        total: 20000,
-        lastPage: false
-    };
-
-    // Add more items to the Grid data structure
-    for (let i = 0; i < 50; i++) {
+    for (let i = 1; i < 50; i++) {
         data.push({
             travelId: i,
             flight: {
@@ -271,11 +228,10 @@ describe("Reference test cases", () => {
             remarks: "Labore irure."
         });
     }
-    const mockOnRowUpdate = jest.fn();
-    const mockOnRowSelect = jest.fn();
-    const mockLoadMoreData = jest.fn();
 
-    // Initialize contianer and functions for test
+    const mockUpdateRowData = jest.fn();
+    const mockSelectBulkData = jest.fn();
+
     let mockContainer;
     beforeEach(() => {
         mockContainer = document.createElement("div");
@@ -283,88 +239,61 @@ describe("Reference test cases", () => {
     });
     afterEach(cleanup);
 
-    // Set screen size before starting the tests.
-    // Grid will be loaded based on this screen size.
-    mockOffsetSize(600, 600);
-    it("load Grid with small data and next page as true. This will trigger the load next page function", () => {
-        const { container } = render(
-            <Grid
-                gridData={smallData}
-                idAttribute="travelId"
-                paginationType="index"
-                pageInfo={smallPageInfo}
-                loadMoreData={mockLoadMoreData}
-                columns={gridColumns}
-                onRowUpdate={mockOnRowUpdate}
-                onRowSelect={mockOnRowSelect}
-            />
-        );
-        const gridContainer = container;
-        expect(gridContainer).toBeInTheDocument();
-        // Check if loadmoredata function has been called
-        expect(mockLoadMoreData).toBeCalled();
-    });
-
-    it("load Grid with large data and test row expansion", () => {
-        const { container, getAllByTestId } = render(
-            <Grid
-                gridData={data}
-                rowsToOverscan={20}
-                idAttribute="travelId"
-                paginationType="index"
-                pageInfo={pageInfo}
-                columns={gridColumns}
-                columnToExpand={mockAdditionalColumn}
-                onRowUpdate={mockOnRowUpdate}
-                onRowSelect={mockOnRowSelect}
-            />
-        );
-        const gridContainer = container;
-        expect(gridContainer).toBeInTheDocument();
-
-        // Find and click expand icon and check if row rerender is triggered
-        // If row is rerendered function to calculate row height will be called for each rows
-        const rowExpandIcon = getAllByTestId("rowExpanderIcon");
-        act(() => {
-            rowExpandIcon[0].dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        const rowExpandedRegion = getAllByTestId("rowExpandedRegion");
-        expect(rowExpandedRegion.length).toBe(1);
-    });
-
-    it("test row selections", () => {
-        const { container, getAllByTestId, getByTestId } = render(
+    it("test grid without header", () => {
+        mockOffsetSize(600, 600);
+        const { container, getByTestId, getAllByTestId } = render(
             <Grid
                 gridData={data}
                 idAttribute="travelId"
-                paginationType="index"
-                pageInfo={pageInfo}
                 columns={gridColumns}
-                onRowUpdate={mockOnRowUpdate}
-                onRowSelect={mockOnRowSelect}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                gridHeader={false}
             />
         );
         const gridContainer = container;
+        // Check if grid has been loaded
         expect(gridContainer).toBeInTheDocument();
 
-        // Test select all checkbox
-        const selectAllRowsCheckbox = getByTestId("rowSelector-allRows");
-        act(() => {
-            selectAllRowsCheckbox.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        expect(mockOnRowSelect).toBeCalled();
+        // Find checked checkboxes
+        let checkedCheckboxes = gridContainer.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+        // Checked checkbox count should be 0
+        expect(checkedCheckboxes.length).toBe(0);
 
-        // Test single row checkbox
-        const selectRowCheckbox = getAllByTestId("rowSelector-singleRow");
+        // Find and make checked checkbox in the grid header title part
+        let checkBoxInHeaderTitle = getByTestId(
+            "rowSelector-allRows-fromHeaderTitle"
+        );
         act(() => {
-            selectRowCheckbox[0].dispatchEvent(
+            checkBoxInHeaderTitle.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
-        expect(mockOnRowSelect).toBeCalled();
+        // Find checked checkboxes
+        checkedCheckboxes = gridContainer.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+        // Find all row level checkboxes
+        const rowLevelCheckboxes = getAllByTestId("rowSelector-singleRow");
+        // Total number of checked checkboxes should be all row level checkboxes + 1 checkbox in the grid header title part
+        expect(checkedCheckboxes.length).toBe(rowLevelCheckboxes.length + 1);
+
+        // Find and make un-checked checkbox in the grid header title part
+        checkBoxInHeaderTitle = getByTestId(
+            "rowSelector-allRows-fromHeaderTitle"
+        );
+        act(() => {
+            checkBoxInHeaderTitle.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Find checked checkboxes
+        checkedCheckboxes = gridContainer.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+        // Checked checkbox count should be 0
+        expect(checkedCheckboxes.length).toBe(0);
     });
 });

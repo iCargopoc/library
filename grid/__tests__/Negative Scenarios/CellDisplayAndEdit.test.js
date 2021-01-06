@@ -30,7 +30,7 @@ describe("CellDisplayAndEdit unit test", () => {
                         className="flight-no-input"
                         type="text"
                         value={flightno}
-                        onChange={() => rowUpdateCallBack("nothing")}
+                        onChange={() => rowUpdateCallBack(null)}
                     />
                 </DisplayTag>
                 <DisplayTag columnKey="flight" cellKey="date">
@@ -159,46 +159,40 @@ describe("CellDisplayAndEdit unit test", () => {
     });
     afterEach(cleanup);
     const mockupdateRowInGrid = jest.fn();
-    it("should render component", () => {
-        const { container } = render(
-            <CellDisplayAndEdit
-                row={row}
-                columns={columns}
-                updateRowInGrid={mockupdateRowInGrid}
-            />
-        );
-        const div = container.getElementsByClassName(
-            "table-cell--content table-cell--content__flight"
-        );
-        expect(div).toBeDefined();
-    });
     it("should display edit option on clicking edit button", () => {
         act(() => {
             render(
                 <CellDisplayAndEdit
                     row={row}
-                    columns={columns}
                     updateRowInGrid={mockupdateRowInGrid}
+                    expandableColumn
+                    isDesktop={false}
+                    isSubComponentColumns={false}
                 />,
                 mockContainer
             );
         });
-        const component = document.querySelector("[class=cell-edit]")
-            .firstChild;
+        const cellEditIcon = document.querySelectorAll(
+            "[data-testid='cell-edit-icon']"
+        )[0];
         act(() => {
-            component.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+            cellEditIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
         });
-        const editDiv = document.getElementsByClassName(
-            "table-cell--content-edit"
+        const cellEditOverlay = document.querySelector(
+            "[data-testid='cell-edit-overlay']"
         );
-        expect(editDiv).toBeDefined();
+        expect(cellEditOverlay).toBeDefined();
     });
     it("should display data passed to component", () => {
         const { getByText } = render(
             <CellDisplayAndEdit
                 row={row}
-                columns={columns}
                 updateRowInGrid={mockupdateRowInGrid}
+                expandableColumn
+                isDesktop={false}
+                isSubComponentColumns={false}
             />
         );
         expect(getByText("31-Aug-2016")).toBeInTheDocument();
@@ -209,16 +203,19 @@ describe("CellDisplayAndEdit unit test", () => {
             component = render(
                 <CellDisplayAndEdit
                     row={row}
-                    columns={columns}
                     updateRowInGrid={mockupdateRowInGrid}
+                    expandableColumn
+                    isDesktop={false}
+                    isSubComponentColumns={false}
                 />,
                 mockContainer
             );
         });
-        const editButton = document.querySelector("[class=cell-edit]")
-            .firstChild;
+        const cellEditIcon = document.querySelectorAll(
+            "[data-testid='cell-edit-icon']"
+        )[0];
         act(() => {
-            editButton.dispatchEvent(
+            cellEditIcon.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
@@ -228,15 +225,18 @@ describe("CellDisplayAndEdit unit test", () => {
         const { getByTestId } = render(
             <CellDisplayAndEdit
                 row={row}
-                columns={columns}
                 updateRowInGrid={mockupdateRowInGrid}
+                expandableColumn
+                isDesktop
+                isSubComponentColumns={false}
             />,
             mockContainer
         );
-        const editButton = document.querySelector("[class=cell-edit]")
-            .firstChild;
+        const cellEditIcon = document.querySelectorAll(
+            "[data-testid='cell-edit-icon']"
+        )[0];
         act(() => {
-            editButton.dispatchEvent(
+            cellEditIcon.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
@@ -254,13 +254,17 @@ describe("CellDisplayAndEdit unit test", () => {
             render(
                 <CellDisplayAndEdit
                     row={incorrectRowValue}
-                    columns={columns}
                     updateRowInGrid={mockupdateRowInGrid}
+                    expandableColumn
+                    isDesktop
+                    isSubComponentColumns={false}
                 />,
                 mockContainer
             );
         });
-        const editButton = document.querySelector("[class=cell-edit]");
-        expect(editButton).toBe(null);
+        const cellEditIcon = document.querySelectorAll(
+            "[data-testid='cell-edit-icon']"
+        );
+        expect(cellEditIcon.length).toBe(0);
     });
 });

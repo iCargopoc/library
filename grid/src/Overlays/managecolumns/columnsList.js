@@ -6,7 +6,12 @@ import { ItemTypes } from "./ItemTypes";
 import ColumnItem from "./columnItem";
 
 const ColumnsList = (props) => {
-    const { onColumnReorder, managedColumns, onInnerCellChange } = props;
+    const {
+        onColumnReorder,
+        managedColumns,
+        onInnerCellChange,
+        isSubComponentColumn
+    } = props;
 
     const findColumn = (columnId) => {
         const column = managedColumns.filter(
@@ -20,14 +25,17 @@ const ColumnsList = (props) => {
 
     const moveColumn = (columnId, atIndex) => {
         const { column, index } = findColumn(columnId);
-        onColumnReorder(
-            update(managedColumns, {
-                $splice: [
-                    [index, 1],
-                    [atIndex, 0, column]
-                ]
-            })
-        );
+        if (index >= 0) {
+            onColumnReorder(
+                update(managedColumns, {
+                    $splice: [
+                        [index, 1],
+                        [atIndex, 0, column]
+                    ]
+                }),
+                isSubComponentColumn
+            );
+        }
     };
 
     const [, drop] = useDrop({ accept: ItemTypes.COLUMN });
@@ -38,13 +46,24 @@ const ColumnsList = (props) => {
 
     return (
         <React.Fragment key="ColumnManageFragment">
-            <div ref={drop} style={{ display: "flex", flexWrap: "wrap" }}>
+            <div
+                ref={drop}
+                className="ng-popover--column__content"
+                data-testid={
+                    isSubComponentColumn
+                        ? "sub-component-columns-list-box"
+                        : "columns-list-box"
+                }
+            >
                 {filteredManagedColumns.map((column) => {
                     const {
                         columnId,
                         Header,
+                        title,
                         isDisplayInExpandedRegion,
-                        innerCells
+                        innerCells,
+                        isGroupHeader,
+                        columns
                     } = column;
                     return (
                         <ColumnItem
@@ -53,8 +72,12 @@ const ColumnsList = (props) => {
                             moveColumn={moveColumn}
                             findColumn={findColumn}
                             columnHeader={Header}
+                            columnTitle={title}
                             isadditionalcolumn={isDisplayInExpandedRegion}
+                            isGroupHeader={isGroupHeader}
+                            columns={columns}
                             innerCells={innerCells}
+                            isSubComponentColumn={isSubComponentColumn}
                             onInnerCellChange={onInnerCellChange}
                         />
                     );
@@ -67,7 +90,8 @@ const ColumnsList = (props) => {
 ColumnsList.propTypes = {
     onColumnReorder: PropTypes.func,
     managedColumns: PropTypes.arrayOf(PropTypes.object),
-    onInnerCellChange: PropTypes.func
+    onInnerCellChange: PropTypes.func,
+    isSubComponentColumn: PropTypes.bool
 };
 
 export default ColumnsList;

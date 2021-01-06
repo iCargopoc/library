@@ -9,7 +9,8 @@ const CellDisplayAndEdit = ({
     row,
     updateRowInGrid,
     expandableColumn,
-    isDesktop
+    isDesktop,
+    isSubComponentColumns
 }) => {
     const { column, columns } = row;
     if (column && row.row) {
@@ -35,7 +36,11 @@ const CellDisplayAndEdit = ({
 
         const saveEdit = () => {
             if (editedRowValue) {
-                updateRowInGrid(original, editedRowValue);
+                updateRowInGrid(
+                    original,
+                    editedRowValue,
+                    isSubComponentColumns
+                );
             }
             closeEdit();
         };
@@ -65,22 +70,26 @@ const CellDisplayAndEdit = ({
             >
                 <ClickAwayListener
                     onClickAway={closeEdit}
-                    className={`table-cell--content table-cell--content__${id}`}
+                    className={`neo-grid__cell-content neo-grid__cell-content--${id}`}
                 >
                     {cellEditContent ? (
                         <div
-                            className="cell-edit"
+                            className="neo-grid__cell-edit"
+                            data-testid="cell-edit-icon"
                             role="presentation"
                             onClick={openEdit}
                         >
                             <i>
-                                <IconPencil />
+                                <IconPencil className="ng-icon" />
                             </i>
                         </div>
                     ) : null}
                     {cellDisplayContent}
                     {isEditOpen ? (
-                        <div className="table-cell--content-edit">
+                        <div
+                            className="neo-grid__content-edit"
+                            data-testid="cell-edit-overlay"
+                        >
                             {cellEditContent}
                             <button
                                 type="button"
@@ -89,7 +98,7 @@ const CellDisplayAndEdit = ({
                                 data-testid="cell-edit-save"
                                 onClick={saveEdit}
                             >
-                                <IconTick />
+                                <IconTick className="ng-icon ng-icon--tick" />
                             </button>
                             <button
                                 type="button"
@@ -98,7 +107,7 @@ const CellDisplayAndEdit = ({
                                 data-testid="cell-edit-cancel"
                                 onClick={closeEdit}
                             >
-                                <IconCancel />
+                                <IconCancel className="ng-icon" />
                             </button>
                         </div>
                     ) : null}
@@ -112,7 +121,9 @@ const CellDisplayAndEdit = ({
 CellDisplayAndEdit.propTypes = {
     row: PropTypes.object,
     updateRowInGrid: PropTypes.func,
-    expandableColumn: PropTypes.bool
+    expandableColumn: PropTypes.bool,
+    isDesktop: PropTypes.bool,
+    isSubComponentColumns: PropTypes.bool
 };
 
 export default CellDisplayAndEdit;

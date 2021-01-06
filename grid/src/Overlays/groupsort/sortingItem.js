@@ -3,12 +3,17 @@ import { useDrag, useDrop } from "react-dnd";
 import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
 
-import { IconNav, SortCopy, SortDelete } from "../../Utilities/SvgUtilities";
+import {
+    IconDragVertical,
+    SortCopy,
+    SortDelete
+} from "../../Utilities/SvgUtilities";
 
 const SortItem = ({
     id,
     sortOption,
     columns,
+    sortingOrders,
     moveSort,
     findSort,
     updateSingleSortingOption,
@@ -49,21 +54,29 @@ const SortItem = ({
             return column.accessor === columnAccessor;
         });
         if (origCol && origCol.innerCells) {
-            return origCol.innerCells;
+            return origCol.innerCells.filter((cell) => cell.isSortable);
         }
         return [];
     };
 
+    const checkIfColumnIsSubComponent = (columnAccessor) => {
+        const origCol = columns.find((column) => {
+            return column.accessor === columnAccessor;
+        });
+        return origCol ? origCol.isSubComponentColumn : false;
+    };
+
     const changeSortByOptions = (event) => {
-        const newSortByValue = event.target.value;
-        const innerCellsList = getInncerCellsOfColumn(newSortByValue);
+        const { value } = event.currentTarget;
+        const innerCellsList = getInncerCellsOfColumn(value);
         updateSingleSortingOption(
             id,
-            newSortByValue,
+            value,
             innerCellsList && innerCellsList.length > 0
                 ? innerCellsList[0].accessor
                 : "value",
-            sortOption.order
+            sortOption.order,
+            checkIfColumnIsSubComponent(value)
         );
     };
 
@@ -73,7 +86,8 @@ const SortItem = ({
             id,
             sortOption.sortBy,
             newSortOnValue,
-            sortOption.order
+            sortOption.order,
+            sortOption.isSubComponentColumn
         );
     };
 
@@ -83,7 +97,8 @@ const SortItem = ({
             id,
             sortOption.sortBy,
             sortOption.sortOn,
-            newSortOrderValue
+            newSortOrderValue,
+            sortOption.isSubComponentColumn
         );
     };
 
@@ -98,41 +113,53 @@ const SortItem = ({
     const opacity = isDragging ? 0.5 : 1;
 
     return (
-        <div className="sort__bodyContent" style={{ opacity }}>
-            <div className="sort__reorder">
+        <div
+            className="ng-popover--sort__items"
+            data-testid="sortItem"
+            style={{ opacity }}
+        >
+            <div className="ng-popover__reorder">
                 <div
-                    data-testid="sortItem"
+                    className="ng-popover__drag"
+                    data-testid="sortItemDnd"
                     ref={(node) => drag(drop(node))}
-                    style={{ cursor: "move" }}
                 >
-                    <i>
-                        <IconNav />
+                    <i className="ng-icon-block">
+                        <IconDragVertical className="ng-icon" />
                     </i>
                 </div>
             </div>
 
-            <div className="sort__reorder">
-                <div className="sort__file">
+            <div className="ng-popover--sort__reorder">
+                <div>
                     <select
-                        className="custom__ctrl"
+                        data-testid="groupSort-sortBy"
+                        className="ng-popover--sort__select"
                         onChange={changeSortByOptions}
                         value={sortOption.sortBy}
                     >
-                        {columns.map((orgItem) => (
-                            <option
-                                key={orgItem.columnId}
-                                value={orgItem.accessor}
-                            >
-                                {orgItem.Header}
-                            </option>
-                        ))}
+                        {columns.map((orgItem) => {
+                            if (orgItem.isSortable) {
+                                return (
+                                    <option
+                                        data-testid="groupSort-sortBy-Option"
+                                        key={orgItem.columnId}
+                                        value={orgItem.accessor}
+                                    >
+                                        {orgItem.title || orgItem.Header}
+                                    </option>
+                                );
+                            }
+                            return null;
+                        })}
                     </select>
                 </div>
             </div>
-            <div className="sort__reorder">
-                <div className="sort__file">
+            <div className="ng-popover--sort__reorder">
+                <div>
                     <select
-                        className="custom__ctrl"
+                        data-testid="groupSort-sortOn"
+                        className="ng-popover--sort__select"
                         onChange={changeSortOnOptions}
                         value={sortOption.sortOn}
                     >
@@ -141,7 +168,8 @@ const SortItem = ({
                             getInncerCellsOfColumn(sortOption.sortBy).map(
                                 (innerCellItem) => (
                                     <option
-                                        key={`${innerCellItem.Header}_${innerCellItem.accessor}`}
+                                        data-testid="groupSort-sortOn-Option"
+                                        key={innerCellItem.cellId}
                                         value={innerCellItem.accessor}
                                     >
                                         {innerCellItem.Header}
@@ -149,44 +177,57 @@ const SortItem = ({
                                 )
                             )
                         ) : (
-                            <option key={0} value="value">
+                            <option
+                                data-testid="groupSort-sortOn-Option"
+                                key={0}
+                                value="value"
+                            >
                                 Value
                             </option>
                         )}
                     </select>
                 </div>
             </div>
-            <div className="sort__reorder">
-                <div className="sort__file">
+            <div className="ng-popover--sort__reorder">
+                <div>
                     <select
-                        className="custom__ctrl"
+                        data-testid="groupSort-order"
+                        className="ng-popover--sort__select"
                         value={sortOption.order}
                         onChange={changeSortOrderOptions}
                     >
-                        <option>Ascending</option>
-                        <option>Descending</option>
+                        {sortingOrders.map((order) => (
+                            <option
+                                data-testid="groupSort-order-Option"
+                                key={order}
+                            >
+                                {order}
+                            </option>
+                        ))}
                     </select>
                 </div>
             </div>
-            <div className="sort__reorder">
+            <div className="ng-popover--sort__reorder">
                 <div
-                    className="sort__icon"
+                    className="ng-popover--sort__icon"
                     role="presentation"
+                    data-testid="sort-copy-icon"
                     onClick={copySort}
                 >
                     <i>
-                        <SortCopy />
+                        <SortCopy className="ng-icon" />
                     </i>
                 </div>
             </div>
-            <div className="sort__reorder">
+            <div className="ng-popover--sort__reorder">
                 <div
-                    className="sort__icon"
+                    className="ng-popover--sort__icon"
                     role="presentation"
+                    data-testid="sort-delete-icon"
                     onClick={deleteSort}
                 >
                     <i>
-                        <SortDelete />
+                        <SortDelete className="ng-icon" />
                     </i>
                 </div>
             </div>
@@ -198,6 +239,7 @@ SortItem.propTypes = {
     id: PropTypes.number,
     sortOption: PropTypes.object,
     columns: PropTypes.arrayOf(PropTypes.object),
+    sortingOrders: PropTypes.array,
     moveSort: PropTypes.func,
     findSort: PropTypes.func,
     updateSingleSortingOption: PropTypes.func,

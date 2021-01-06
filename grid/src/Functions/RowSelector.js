@@ -8,12 +8,13 @@ const RowSelector = forwardRef(({ indeterminate, ...rest }, ref) => {
     useEffect(() => {
         resolvedRef.current.indeterminate = indeterminate;
     }, [resolvedRef, indeterminate]);
+
     return (
-        <div className="row-selector-cell-container">
-            <div className="form-check">
+        <div className="neo-grid__row-selector">
+            <div className="neo-form-check">
                 <input
                     type="checkbox"
-                    className="form-check-input custom-checkbox form-check-input"
+                    className="neo-checkbox form-check-input"
                     ref={resolvedRef}
                     {...rest}
                 />

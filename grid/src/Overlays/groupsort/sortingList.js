@@ -6,7 +6,7 @@ import { ItemTypes } from "./ItemTypes";
 import SortItem from "./sortingItem";
 
 const SortingList = (props) => {
-    const { updateSortingOptions, sortOptions, columns } = props;
+    const { updateSortingOptions, sortingOrders, sortOptions, columns } = props;
 
     const findSort = (sortId) => {
         const sort = sortOptions.filter((c, index) => index === sortId)[0];
@@ -32,12 +32,12 @@ const SortingList = (props) => {
 
     return (
         <React.Fragment key="SortingListFragment">
-            <div ref={drop} style={{ display: "flex", flexWrap: "wrap" }}>
+            <div className="ng-popover--sort__content" ref={drop}>
                 {sortOptions && sortOptions.length > 0 ? (
-                    <ul>
-                        <li>Sort By</li>
-                        <li>Sort On</li>
-                        <li>Order</li>
+                    <ul className="ng-popover--sort__items-title">
+                        <li className="ng-popover--sort__item-text">Sort By</li>
+                        <li className="ng-popover--sort__item-text">Sort On</li>
+                        <li className="ng-popover--sort__item-text">Order</li>
                     </ul>
                 ) : null}
                 {sortOptions.map((sortOption, index) => {
@@ -46,6 +46,7 @@ const SortingList = (props) => {
                             id={index}
                             key={index}
                             sortOption={sortOption}
+                            sortingOrders={sortingOrders}
                             columns={columns}
                             moveSort={moveSort}
                             findSort={findSort}
@@ -64,6 +65,7 @@ const SortingList = (props) => {
 
 SortingList.propTypes = {
     updateSortingOptions: PropTypes.func,
+    sortingOrders: PropTypes.array,
     sortOptions: PropTypes.array,
     columns: PropTypes.arrayOf(PropTypes.object),
     copySortOption: PropTypes.func,

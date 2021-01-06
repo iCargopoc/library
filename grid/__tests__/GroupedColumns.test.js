@@ -5,14 +5,15 @@ import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
 import Grid from "../src/index";
 
-describe("Reference test cases", () => {
-    // Grid will load only required data based on the screen size.
-    // This function is to mock a ascreen size.
-    // This has to be called in each of the test cases
+describe("render Index file ", () => {
     function mockOffsetSize(width, height) {
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,
             value: height
+        });
+        Object.defineProperty(HTMLElement.prototype, "scrollHeight", {
+            configurable: true,
+            value: height - 100
         });
         Object.defineProperty(HTMLElement.prototype, "offsetWidth", {
             configurable: true,
@@ -20,7 +21,6 @@ describe("Reference test cases", () => {
         });
     }
 
-    // Mocked columns structure for Grid
     const gridColumns = [
         {
             Header: "Id",
@@ -29,6 +29,7 @@ describe("Reference test cases", () => {
             disableFilters: true
         },
         {
+            groupHeader: "Flight & Segment",
             Header: () => {
                 return <span className="flightHeader">Flight</span>;
             },
@@ -47,14 +48,60 @@ describe("Reference test cases", () => {
                     isSearchable: true
                 }
             ],
-            sortValue: "flightno",
             isSearchable: true,
-            displayCell: (rowData, DisplayTag) => {
-                const { flightno } = rowData.flight;
+            sortValue: "flightno",
+            displayCell: (
+                rowData,
+                DisplayTag,
+                isDesktop,
+                isExpandableColumn
+            ) => {
+                const { flightno, date } = rowData.flight;
                 return (
                     <div className="flight-details">
                         <DisplayTag columnKey="flight" cellKey="flightno">
                             <strong>{flightno}</strong>
+                        </DisplayTag>
+                        <DisplayTag columnKey="flight" cellKey="date">
+                            <span className="flight-date">{date}</span>
+                        </DisplayTag>
+                    </div>
+                );
+            }
+        },
+        {
+            groupHeader: "Flight & Segment",
+            Header: "Segment",
+            accessor: "segment",
+            width: 100,
+            innerCells: [
+                {
+                    Header: "From",
+                    accessor: "from",
+                    isSearchable: true
+                },
+                {
+                    Header: "To",
+                    accessor: "to",
+                    isSearchable: true
+                }
+            ],
+            disableSortBy: true,
+            isSearchable: false,
+            displayCell: (
+                rowData,
+                DisplayTag,
+                isDesktop,
+                isExpandableColumn
+            ) => {
+                const { from, to } = rowData.segment;
+                return (
+                    <div className="segment-details">
+                        <DisplayTag columnKey="segment" cellKey="from">
+                            <span>{from}</span>
+                        </DisplayTag>
+                        <DisplayTag columnKey="segment" cellKey="to">
+                            <span>{to}</span>
                         </DisplayTag>
                     </div>
                 );
@@ -83,7 +130,6 @@ describe("Reference test cases", () => {
                 }
             ],
             disableSortBy: true,
-            isSearchable: true,
             displayCell: (rowData, DisplayTag) => {
                 const { uldPositions } = rowData;
                 return (
@@ -110,14 +156,20 @@ describe("Reference test cases", () => {
                         </ul>
                     </div>
                 );
-            }
+            },
+            columnId: "column_3",
+            isSearchable: true
         }
     ];
 
-    // Mocked column structure that has to be displayed in the row expanded region
     const mockAdditionalColumn = {
         Header: "Remarks",
-        innerCells: [{ Header: "Remarks", accessor: "remarks" }],
+        innerCells: [
+            {
+                Header: "Remarks",
+                accessor: "remarks"
+            }
+        ],
         displayCell: (rowData, DisplayTag) => {
             const { remarks } = rowData;
             return (
@@ -132,7 +184,6 @@ describe("Reference test cases", () => {
         }
     };
 
-    // Mock sample data structure for Grid
     const data = [
         {
             travelId: 10,
@@ -193,6 +244,7 @@ describe("Reference test cases", () => {
             remarks: "Enim aute magna."
         }
     ];
+
     const pageInfo = {
         pageNum: 1,
         pageSize: 300,
@@ -200,17 +252,6 @@ describe("Reference test cases", () => {
         lastPage: true
     };
 
-    // Keep a data structure with only 1 row.
-    // This is used to test the load more function (which is used to load next page)
-    const smallData = [...data];
-    const smallPageInfo = {
-        pageNum: 1,
-        pageSize: 1,
-        total: 20000,
-        lastPage: false
-    };
-
-    // Add more items to the Grid data structure
     for (let i = 0; i < 50; i++) {
         data.push({
             travelId: i,
@@ -271,100 +312,159 @@ describe("Reference test cases", () => {
             remarks: "Labore irure."
         });
     }
-    const mockOnRowUpdate = jest.fn();
-    const mockOnRowSelect = jest.fn();
-    const mockLoadMoreData = jest.fn();
 
-    // Initialize contianer and functions for test
+    const mockGridWidth = "100%";
+    const mockTitle = "AWBs";
+
+    const mockRowsToDeselect = [1, 2];
+    const mockRowActions = jest.fn();
+    const mockUpdateRowData = jest.fn();
+    const mockSelectBulkData = jest.fn();
+    const mockLoadMoreData = jest.fn();
     let mockContainer;
     beforeEach(() => {
         mockContainer = document.createElement("div");
         document.body.appendChild(mockContainer);
     });
     afterEach(cleanup);
-
-    // Set screen size before starting the tests.
-    // Grid will be loaded based on this screen size.
-    mockOffsetSize(600, 600);
-    it("load Grid with small data and next page as true. This will trigger the load next page function", () => {
-        const { container } = render(
+    it("test column manage overlay", () => {
+        mockOffsetSize(600, 600);
+        const { container, getByTestId, getAllByTestId } = render(
             <Grid
-                gridData={smallData}
+                title={mockTitle}
+                gridWidth={mockGridWidth}
+                gridData={data}
                 idAttribute="travelId"
                 paginationType="index"
-                pageInfo={smallPageInfo}
+                pageInfo={pageInfo}
                 loadMoreData={mockLoadMoreData}
                 columns={gridColumns}
-                onRowUpdate={mockOnRowUpdate}
-                onRowSelect={mockOnRowSelect}
+                columnToExpand={mockAdditionalColumn}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                rowsToDeselect={mockRowsToDeselect}
             />
         );
         const gridContainer = container;
         expect(gridContainer).toBeInTheDocument();
-        // Check if loadmoredata function has been called
-        expect(mockLoadMoreData).toBeCalled();
+
+        // Check if group header is present or not
+        let groupHeader = getAllByTestId("grid-group-header");
+        expect(groupHeader.length).toBe(6); // 1 row selector + 1 row option + 3 normal columns + 1 grouped collumn (inside that 2 normal columns)
+        // Check total number of original columns
+        let gridHeader = getAllByTestId("grid-header");
+        expect(gridHeader.length).toBe(7); // 1 row selector + 1 row option + 5 normal columns (including 2 columns that comes under group header)
+        // Check if flight date is displayed
+        let flightDateElem = gridContainer.getElementsByClassName(
+            "flight-date"
+        );
+        expect(flightDateElem.length).toBeGreaterThan(0);
+
+        // Open Manage Columns Overlay
+        let manageColumnsIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            manageColumnsIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // UnSelect the Segment Coloumn From Column Chooser
+        const segmentColumCheckBox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[2];
+        act(() => {
+            segmentColumCheckBox.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Unselect ineer cell of Flight column
+        const flightInnerCellCheckBox = getByTestId(
+            "selectInnerCell_column_1_column_1_cell_1"
+        );
+        act(() => {
+            flightInnerCellCheckBox.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // triggering Save button Click
+        const saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if group header is still present or not
+        groupHeader = getAllByTestId("grid-group-header");
+        expect(groupHeader.length).toBe(6); // 1 row selector + 1 row option + 3 normal columns + 1 grouped collumn (inside that 1 normal column and 1 hidden column)
+        // Check total number of original columns
+        gridHeader = getAllByTestId("grid-header");
+        expect(gridHeader.length).toBe(6); // 1 row selector + 1 row option + 4 normal columns (including 2 columns that comes under group header and excluding hidden column)
+        // Check if flight data has been hidden
+        flightDateElem = gridContainer.getElementsByClassName("flight-date");
+        expect(flightDateElem.length).toBe(0);
+
+        // Open Manage Columns Overlay to reset changes
+        manageColumnsIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            manageColumnsIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // triggering Reset button Click
+        const resetButton = getByTestId("reset_columnsManage");
+        act(() => {
+            resetButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if group header is still present or not
+        groupHeader = getAllByTestId("grid-group-header");
+        expect(groupHeader.length).toBe(6); // 1 row selector + 1 row option + 3 normal columns + 1 grouped collumn (inside that 2 normal columns)
+        // Check total number of original columns
+        gridHeader = getAllByTestId("grid-header");
+        expect(gridHeader.length).toBe(7); // 1 row selector + 1 row option + 5 normal columns (including 2 columns that comes under group header)
+        // Check if flight data has been displayed again
+        flightDateElem = gridContainer.getElementsByClassName("flight-date");
+        expect(flightDateElem.length).toBeGreaterThan(0);
     });
 
-    it("load Grid with large data and test row expansion", () => {
-        const { container, getAllByTestId } = render(
+    it("test export data overlay", () => {
+        mockOffsetSize(600, 600);
+        const { container, getByTestId, getAllByTestId } = render(
             <Grid
+                title={mockTitle}
+                gridWidth={mockGridWidth}
                 gridData={data}
-                rowsToOverscan={20}
                 idAttribute="travelId"
                 paginationType="index"
                 pageInfo={pageInfo}
+                loadMoreData={mockLoadMoreData}
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
-                onRowUpdate={mockOnRowUpdate}
-                onRowSelect={mockOnRowSelect}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                rowsToDeselect={mockRowsToDeselect}
             />
         );
         const gridContainer = container;
         expect(gridContainer).toBeInTheDocument();
 
-        // Find and click expand icon and check if row rerender is triggered
-        // If row is rerendered function to calculate row height will be called for each rows
-        const rowExpandIcon = getAllByTestId("rowExpanderIcon");
+        // Open Manage Columns Overlay
+        const exportColumnsIcon = getByTestId("toggleExportDataOverlay");
         act(() => {
-            rowExpandIcon[0].dispatchEvent(
+            exportColumnsIcon.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
-        const rowExpandedRegion = getAllByTestId("rowExpandedRegion");
-        expect(rowExpandedRegion.length).toBe(1);
-    });
-
-    it("test row selections", () => {
-        const { container, getAllByTestId, getByTestId } = render(
-            <Grid
-                gridData={data}
-                idAttribute="travelId"
-                paginationType="index"
-                pageInfo={pageInfo}
-                columns={gridColumns}
-                onRowUpdate={mockOnRowUpdate}
-                onRowSelect={mockOnRowSelect}
-            />
-        );
-        const gridContainer = container;
-        expect(gridContainer).toBeInTheDocument();
-
-        // Test select all checkbox
-        const selectAllRowsCheckbox = getByTestId("rowSelector-allRows");
+        // UnSelect the Segment Coloumn From Column Chooser
+        const segmentColumCheckBox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[2];
         act(() => {
-            selectAllRowsCheckbox.dispatchEvent(
+            segmentColumCheckBox.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
-        expect(mockOnRowSelect).toBeCalled();
-
-        // Test single row checkbox
-        const selectRowCheckbox = getAllByTestId("rowSelector-singleRow");
-        act(() => {
-            selectRowCheckbox[0].dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        expect(mockOnRowSelect).toBeCalled();
     });
 });

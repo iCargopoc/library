@@ -2,15 +2,20 @@ import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
-import { IconJustify } from "../../Utilities/SvgUtilities";
+import { IconDragHorizontal } from "../../Utilities/SvgUtilities";
+import GroupedColumnItem from "./groupedColumnItem";
 
 const ColumnItem = ({
     id,
     columnHeader,
+    columnTitle,
     moveColumn,
     findColumn,
     isadditionalcolumn,
+    isGroupHeader,
+    columns,
     innerCells,
+    isSubComponentColumn,
     onInnerCellChange
 }) => {
     const originalIndex = findColumn(id).index;
@@ -46,52 +51,91 @@ const ColumnItem = ({
 
     return (
         <div style={{ opacity }}>
-            <div className="column__reorder">
+            <div
+                className="ng-popover--column__reorder"
+                data-testid="column-box"
+            >
                 <div
-                    data-testid="columnItem"
+                    className="ng-popover--column__drag"
+                    data-testid={
+                        isSubComponentColumn
+                            ? "subcomponentcolumnItemDnd"
+                            : "columnItemDnd"
+                    }
                     ref={(node) => drag(drop(node))}
-                    style={{ cursor: "move" }}
-                    className="column_drag"
                 >
                     <i>
-                        <IconJustify />
+                        <IconDragHorizontal className="ng-icon" />
                     </i>
                 </div>
-                <div className="columnItem__Header">{columnHeader}</div>
-                <div className="column__innerCells__wrap">
-                    {innerCells && innerCells.length > 0
-                        ? innerCells.map((cell) => {
-                              const { cellId, Header, display } = cell;
-                              return (
-                                  <div className="column__wrap" key={cellId}>
-                                      <div className="column__checkbox">
-                                          <div className="form-check">
-                                              <input
-                                                  type="checkbox"
-                                                  id={`chk_selectInnerCell_${cellId}`}
-                                                  className="form-check-input custom-checkbox form-check-input"
-                                                  data-testid={`selectInnerCell_${id}_${cellId}`}
-                                                  data-columnid={id}
-                                                  data-cellid={cellId}
-                                                  data-isadditionalcolumn={
-                                                      isadditionalcolumn
-                                                  }
-                                                  checked={display}
-                                                  onChange={onInnerCellChange}
-                                              />
-                                              <label
-                                                  htmlFor={`chk_selectInnerCell_${cellId}`}
-                                                  className="form-check-label"
-                                              >
-                                                  {Header}
-                                              </label>
+                <span>{columnTitle || columnHeader}</span>
+                {isGroupHeader === true && columns && columns.length > 0 ? (
+                    columns.map((col) => {
+                        const {
+                            columnId,
+                            Header,
+                            title,
+                            display,
+                            isDisplayInExpandedRegion
+                        } = col;
+                        return (
+                            <GroupedColumnItem
+                                key={columnId}
+                                id={columnId}
+                                Header={Header}
+                                title={title}
+                                display={display}
+                                isadditionalcolumn={isDisplayInExpandedRegion}
+                                innerCells={col.innerCells}
+                                isSubComponentColumn={isSubComponentColumn}
+                                onInnerCellChange={onInnerCellChange}
+                            />
+                        );
+                    })
+                ) : (
+                    <div className="ng-popover--column__list">
+                        {innerCells && innerCells.length > 0
+                            ? innerCells.map((cell) => {
+                                  const { cellId, Header, display } = cell;
+                                  return (
+                                      <div
+                                          className="ng-popover--column__wrap"
+                                          key={cellId}
+                                      >
+                                          <div className="ng-popover--column__check">
+                                              <div className="neo-form-check">
+                                                  <input
+                                                      type="checkbox"
+                                                      id={`chk_selectInnerCell_${cellId}`}
+                                                      className="neo-checkbox form-check-input"
+                                                      data-testid={`selectInnerCell_${id}_${cellId}`}
+                                                      data-columnid={id}
+                                                      data-cellid={cellId}
+                                                      data-isadditionalcolumn={
+                                                          isadditionalcolumn
+                                                      }
+                                                      checked={display}
+                                                      onChange={(event) =>
+                                                          onInnerCellChange(
+                                                              event,
+                                                              isSubComponentColumn
+                                                          )
+                                                      }
+                                                  />
+                                                  <label
+                                                      htmlFor={`chk_selectInnerCell_${cellId}`}
+                                                      className="neo-form-check__label"
+                                                  >
+                                                      {Header}
+                                                  </label>
+                                              </div>
                                           </div>
                                       </div>
-                                  </div>
-                              );
-                          })
-                        : null}
-                </div>
+                                  );
+                              })
+                            : null}
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -99,11 +143,15 @@ const ColumnItem = ({
 
 ColumnItem.propTypes = {
     id: PropTypes.string,
-    columnHeader: PropTypes.string,
+    columnHeader: PropTypes.any,
+    columnTitle: PropTypes.string,
     moveColumn: PropTypes.func,
     findColumn: PropTypes.func,
     isadditionalcolumn: PropTypes.bool,
+    isGroupHeader: PropTypes.bool,
+    columns: PropTypes.arrayOf(PropTypes.object),
     innerCells: PropTypes.arrayOf(PropTypes.object),
+    isSubComponentColumn: PropTypes.bool,
     onInnerCellChange: PropTypes.func
 };
 
