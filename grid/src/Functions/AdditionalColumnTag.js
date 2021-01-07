@@ -1,9 +1,9 @@
+// @flow
 import React, { useContext } from "react";
-import PropTypes from "prop-types";
 import { AdditionalColumnContext } from "../Utilities/TagsContext";
 import { checkInnerCells } from "../Utilities/TagUtilities";
 
-const AdditionalColumnTag = (props) => {
+const AdditionalColumnTag = (props: Object): ?React$Element<*> => {
     const contextVallues = useContext(AdditionalColumnContext);
     const { additionalColumn } = contextVallues;
     const { cellKey } = props;
@@ -18,11 +18,6 @@ const AdditionalColumnTag = (props) => {
         }
     }
     return null;
-};
-
-AdditionalColumnTag.propTypes = {
-    cellKey: PropTypes.string,
-    children: PropTypes.any
 };
 
 export default AdditionalColumnTag;

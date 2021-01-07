@@ -1,9 +1,9 @@
+// @flow
 import React, { useContext } from "react";
-import PropTypes from "prop-types";
 import { CellDisplayAndEditContext } from "../Utilities/TagsContext";
 import { findSelectedColumn, checkInnerCells } from "../Utilities/TagUtilities";
 
-const CellDisplayAndEditTag = (props) => {
+const CellDisplayAndEditTag = (props: Object): ?React$Element<*> => {
     const contextVallues = useContext(CellDisplayAndEditContext);
     const { column, columns } = contextVallues;
     const { cellKey, columnKey } = props;
@@ -27,12 +27,6 @@ const CellDisplayAndEditTag = (props) => {
         }
     }
     return null;
-};
-
-CellDisplayAndEditTag.propTypes = {
-    cellKey: PropTypes.string,
-    columnKey: PropTypes.string,
-    children: PropTypes.any
 };
 
 export default CellDisplayAndEditTag;
