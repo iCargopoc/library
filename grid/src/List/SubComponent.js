@@ -183,6 +183,7 @@ const SubComponent = (props) => {
         <div
             {...getTableProps()}
             className="neo-grid__content neo-grid__content--sub"
+            data-testid="subcomponent-content"
         >
             <div className="neo-grid__thead">
                 {headerGroups.map((headerGroup) => {

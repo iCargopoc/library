@@ -1,0 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap");
+* {
+    font-family: var(--font) !important;
+}
+:root {
+    --default: #004164;
+    --default_hover: #28465b;
+    --primary: #00b4b4;
+    --primary-light: #e5f7f7;
+    --tertiary: #4ccaca;
+    --border-green: #99e1e1;
+    --titlecolor: #004164;
+    --light-grey: #e5ecef;
+    --border-light: #d9e3e8;
+    --box-shadow: #d9e3e8;
+    --border: #bfcfd8;
+    --border-grey: #b2c6d0;
+    --border-default: #99b3c1;
+    --reserved: #7fa0b1;
+    --dark-grey: #4c7a92;
+    --text-light: #40718b;
+    --placeholder: #195473;
+    --textcolor: #195473;
+    --icon-primary: #8f9eab;
+    --icon-secondary: #9bb1bf;
+    --primary_hover: #06808d;
+    --secondary: #f7fafc;
+    --linkcolor: #00b4b4;
+    --info: #11cdef;
+    --text-dark: #212529;
+    --danger: #dc3545;
+    --danger_hover: #c82333;
+    --danger_border: #bd2130;
+    --success: #2dce89;
+    --success_hover: #218838;
+    --success_border: #1e7e34;
+    --grey: #76728c;
+    --white: #fff;
+    --orange: #ff6400;
+    --warning: #ffc107;
+    --warning_hover: #e0a800;
+    --warning_border: #d39e00;
+    --danger_light: #f9eaea;
+    --success_light: #eafaf3;
+    --warning_light: #fef9ea;
+    --focus: #199ed8;
+    --form-label: #59839a;
+    --font: "Roboto", sans-serif;
+    --em-base: 16;
+}

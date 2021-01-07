@@ -18,7 +18,12 @@ export const updatedActionsHeaderClass = (isDesktop) => {
     }
 };
 
-export const findSelectedRows = (rows, selectedRowIds, getRowInfo) => {
+export const findSelectedRows = (
+    rows,
+    selectedRowIds,
+    getRowInfo,
+    isSubComponentRow
+) => {
     const rowsSelectedByUser = [];
     if (rows && rows.length > 0 && selectedRowIds) {
         Object.entries(selectedRowIds).forEach((objEntry) => {
@@ -30,7 +35,10 @@ export const findSelectedRows = (rows, selectedRowIds, getRowInfo) => {
                         const { id } = flatRow;
                         if (getRowInfo && typeof getRowInfo === "function") {
                             const { original } = flatRow;
-                            const rowInfo = getRowInfo(original);
+                            const rowInfo = getRowInfo(
+                                original,
+                                isSubComponentRow
+                            );
                             return (
                                 !(
                                     rowInfo && rowInfo.isRowSelectable === false

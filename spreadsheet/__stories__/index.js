@@ -4,20 +4,23 @@ import React, { useState, useEffect } from "react";
 import Spreadsheet from "../src/index";
 import CargoData from "./data.json";
 import "./example.css";
+import "./variables.css";
 
 const GridComponent = (props) => {
     const {
         isTitle,
         gridHeight,
         isGlobalSearch,
-        isColumnFilter,
+        // isColumnFilter,
         columnFilterStyle,
         isGroupSort,
         isColumnChooser,
         isExportData,
         isSelectAll,
         isHeader,
-        noBorderClassName
+        noBorderClassName,
+        isAddRow,
+        isDeleteRow
     } = props;
     const rows = CargoData;
     const pageSize = 500;
@@ -46,7 +49,7 @@ const GridComponent = (props) => {
             editor: "Checkbox",
             formulaApplicable: false,
             sortable: true,
-            resizable: true,
+            resizable: false,
             filterable: true,
             width: 150
         },
@@ -57,7 +60,7 @@ const GridComponent = (props) => {
             editor: "Checkbox",
             formulaApplicable: false,
             sortable: true,
-            resizable: true,
+            resizable: false,
             filterable: true,
             width: 150
         },
@@ -514,6 +517,15 @@ const GridComponent = (props) => {
         "CCC"
     ];
 
+    const addNewRow = (updatedRowsList) => {
+        setData(updatedRowsList);
+    };
+
+    const deleteRow = (updatedRowsList, selectedIndexes) => {
+        console.log(selectedIndexes);
+        setData(updatedRowsList);
+    };
+
     const updateCellData = (fromRow, toRow, value, updateType) => {
         if (updateType === "CELL_UPDATE") {
             console.log(
@@ -605,14 +617,18 @@ const GridComponent = (props) => {
                 maxLeftPinnedColumn={maxLeftPinnedColumn}
                 updatedRows={updatedRows}
                 isGlobalSearch={isGlobalSearch}
-                isColumnFilter={isColumnFilter}
+                // isColumnFilter={isColumnFilter}
                 columnFilterStyle={columnFilterStyle}
                 isGroupSort={isGroupSort}
                 isColumnChooser={isColumnChooser}
                 isExportData={isExportData}
                 isSelectAll={isSelectAll}
                 isHeader={isHeader}
+                isAddRow={isAddRow}
+                isDeleteRow={isDeleteRow}
                 noBorderClassName={noBorderClassName}
+                addNewRows={addNewRow}
+                deleteRows={deleteRow}
             />
         );
     }

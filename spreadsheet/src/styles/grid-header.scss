@@ -2,70 +2,72 @@
     $remSize: $size / $em-base;
     @return #{$remSize}rem;
 }
-.neo-grid-header {
-    background-color: var(--secondary);
-    display: flex;
-    padding: 20px 15px;
-    justify-content: space-between;
-    min-height: 76px;
-    &__results {
+.neo-grid {
+    &__header {
+        font-size: rem(12);
+        background-color: var(--light_hover);
         display: flex;
-        font-size: rem(14);
-        color: var(--titlecolor);
-        font-weight: $font-weight-bold;
-        span {
-            margin-left: 5px;
-            display: inline-block;
+        padding: rem(8) rem(4);
+        justify-content: space-between;
+        .ng-header-results {
+            display: flex;
+            font-size: rem(14);
+            color: var(--textcolor);
+            align-items: center;
+            min-width: rem(90);
+            &__check {
+                padding-right: rem(4);
+            }
+            &__title {
+                margin-left: rem(4);
+                display: inline-block;
+            }
         }
-        .showing {
-            margin-left: 5px;
-            padding-left: 5px;
-            position: relative;
-            &:before {
-                content: "";
-                position: absolute;
-                height: 15px;
-                width: 1px;
-                left: 0;
-                top: 3px;
-                background: var(--default);
+        .ng-header-utils {
+            display: flex;
+            align-items: center;
+            .ng-txt-wrap {
+                position: relative;
+                .ng-txt {
+                    padding: rem(1) 0 0 rem(24);
+                }
+                &__icon {
+                    position: absolute;
+                    left: rem(7);
+                    top: 0;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    .ng-icon {
+                        height: rem(15);
+                        width: rem(15);
+                    }
+                }
+            }
+            &__items {
+                position: relative;
+                .ng-icon--refresh {
+                    zoom: 1.4;
+                }
+            }
+            &__icons {
+                margin-left: rem(8);
+                border: var(--border) solid rem(1);
+                border-radius: rem(3);
+                cursor: pointer;
+                line-height: rem(1);
+                height: rem(32);
+                width: rem(32);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--white);
             }
         }
     }
-    &__utilities {
-        display: flex;
+
+    &__customPanel {
+        flex-grow: 1;
         align-items: center;
-        .txt-wrap {
-            position: relative;
-            right: 31px;
-            .txt {
-                padding: 1px 0 0 23px;
-                margin-right: 7px;
-            }
-            i {
-                position: absolute;
-                left: 7px;
-                top: 0;
-                height: 100%;
-                display: flex;
-                align-items: center;
-            }
-        }
-        .txt-wrap-single {
-            position: relative;
-            right: 144px;
-            top: 0px;
-        }
-        .utilities-icon {
-            margin-left: 10px;
-            border: var(--border-grey) solid 1px;
-            padding: 0 8px;
-            border-radius: 3px;
-            cursor: pointer;
-            line-height: 1px;
-            height: 25px;
-            display: flex;
-            align-items: center;
-        }
     }
 }

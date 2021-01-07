@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { Toolbar, Data, Filters, Editors } from "react-data-grid-addons";
 import PropTypes from "prop-types";
 import { range } from "lodash";
-import ExtDataGrid from "./common/extDataGrid";
+// import ExtDataGrid from "./common/extDataGrid";
+import DataGrid from "react-data-grid";
 import DatePicker from "./functions/datePicker";
 import CheckboxEditor from "./functions/checkboxEditor";
 import ErrorMessage from "./common/errorMessage";
@@ -14,10 +15,14 @@ import {
     IconShare,
     IconGroupSort,
     IconSearch,
-    IconFilter
+    IconFilter,
+    IconPlus,
+    RowDelete
 } from "./utilities/svgUtilities";
 import FormulaProcessor from "./functions/formulaProcessor";
-// eslint-disable-next-line import/no-unresolved
+// lazy styles inclusion via styleloader
+// import __cmpStyles from "./styles/main.scss";
+import "react-data-grid/dist/react-data-grid.css";
 import "!style-loader!css-loader!sass-loader!./styles/main.scss";
 
 const defaultParsePaste = (str) =>
@@ -111,10 +116,12 @@ class Spreadsheet extends Component {
             rows,
             columns,
             isGlobalSearch,
-            isColumnFilter,
+            // isColumnFilter,
             isGroupSort,
             isColumnChooser,
             isExportData,
+            isAddRow,
+            isDeleteRow,
             isSelectAll,
             gridHeight,
             isTitle,
@@ -123,6 +130,7 @@ class Spreadsheet extends Component {
             noBorderClassName
         } = this.props;
         const dataSetVar = JSON.parse(JSON.stringify(dataSet));
+        console.log(dataSetVar);
         dataSetVar.forEach((e, index) => {
             const el = e;
             el.index = index;
@@ -131,11 +139,13 @@ class Spreadsheet extends Component {
         this.state = {
             isTitle,
             isGlobalSearch,
-            isColumnFilter,
+            // isColumnFilter,
             columnFilterStyle,
             isGroupSort,
             isColumnChooser,
             isExportData,
+            isAddRow,
+            isDeleteRow,
             isSelectAll,
             isHeader,
             noBorderClassName,
@@ -148,7 +158,7 @@ class Spreadsheet extends Component {
             pageIndex: 1,
             dataSet: dataSetVar,
             subDataSet: [],
-            rows: dataSetVar ? dataSetVar.slice(0, 500) : [],
+            rows: dataSetVar,
             selectedIndexes: [],
             junk: {},
             columnReorderingComponent: null,
@@ -201,6 +211,12 @@ class Spreadsheet extends Component {
         });
     }
 
+    // componentDidMount() {
+    //     if (__cmpStyles.use) {
+    //         __cmpStyles.use();
+    //     }
+    // }
+
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(props) {
         this.setState({
@@ -216,6 +232,12 @@ class Spreadsheet extends Component {
         resizeEvent.initEvent("resize", true, false);
         window.dispatchEvent(resizeEvent);
     }
+
+    // componentWillUnmount() {
+    //     if (__cmpStyles.unuse) {
+    //         __cmpStyles.unuse();
+    //     }
+    // }
 
     /**
      * Method To render the filter values for filtering rows
@@ -380,12 +402,38 @@ class Spreadsheet extends Component {
                 columns
                     .slice(topLeft.colIdx - 1, topLeft.colIdx - 1 + row.length)
                     .forEach((col, j) => {
-                        rowData[col.key] = row[j];
+                        // Inorder to fix the copy paste boolean issue
+                        if (row[j] === "TRUE" || row[j] === "true") {
+                            rowData[col.key] = true;
+                        } else if (row[j] === "FALSE" || row[j] === "false") {
+                            rowData[col.key] = false;
+                        } else {
+                            rowData[col.key] = row[j];
+                        }
                     });
                 newRows.push(rowData);
             }
         });
         this.updateRows(topLeft.rowIdx, newRows);
+    };
+
+    addRow = () => {
+        const { rows, selectedIndexes } = this.state;
+        const { addNewRows } = this.props;
+
+        rows.splice(selectedIndexes[selectedIndexes.length - 1] + 1, 0, {
+            addnew: ""
+        });
+        addNewRows(rows);
+    };
+
+    deleteRow = () => {
+        const { rows, selectedIndexes } = this.state;
+        const { deleteRows } = this.props;
+        const row = rows.filter((value, index) => {
+            return selectedIndexes.indexOf(index) === -1;
+        });
+        deleteRows(row, selectedIndexes);
     };
 
     setSelection = (args) => {
@@ -1589,18 +1637,21 @@ class Spreadsheet extends Component {
             selectedIndexes,
             isTitle,
             isGlobalSearch,
-            isColumnFilter,
+            // isColumnFilter,
             columnFilterStyle,
             isGroupSort,
             isColumnChooser,
             isExportData,
+            isAddRow,
+            isDeleteRow,
             isSelectAll,
             isHeader,
             noBorderClassName
         } = this.state;
+        console.log(rows);
         return (
             <div
-                onScroll={this.handleScroll}
+                // onScroll={this.handleScroll}
                 className={`iCargo__custom ${noBorderClassName || ""}`}
             >
                 {isHeader ? (
@@ -1608,11 +1659,13 @@ class Spreadsheet extends Component {
                         <div className="neo-grid-header__results">
                             {isTitle !== false ? (
                                 <>
-                                    Showing &nbsp;<strong> {count} </strong>
+                                    Showing &nbsp;
+                                    <strong> {rows.length} </strong>
                                     &nbsp;records
                                 </>
                             ) : null}
                         </div>
+
                         <div className="neo-grid-header__utilities">
                             {isGlobalSearch !== false ? (
                                 <div className="txt-wrap">
@@ -1637,13 +1690,13 @@ class Spreadsheet extends Component {
                                     </i>
                                 </div>
                             ) : null}
-                            {isColumnFilter !== false ? (
+                            {/* {isColumnFilter !== false ? (
                                 <div className={columnFilterStyle}>
                                     <i>
                                         <IconFilter />
                                     </i>
                                 </div>
-                            ) : null}
+                            ) : null} */}
                             {isGroupSort !== false ? (
                                 <>
                                     <div
@@ -1681,6 +1734,28 @@ class Spreadsheet extends Component {
                                     {exportComponent}
                                 </>
                             ) : null}
+                            {isAddRow !== false ? (
+                                <>
+                                    <div
+                                        role="presentation"
+                                        className="filterIcons"
+                                        onClick={this.addRow}
+                                    >
+                                        <IconPlus />
+                                    </div>
+                                </>
+                            ) : null}
+                            {isDeleteRow !== false ? (
+                                <>
+                                    <div
+                                        role="presentation"
+                                        className="filterIcons"
+                                        onClick={this.deleteRow}
+                                    >
+                                        <RowDelete />
+                                    </div>
+                                </>
+                            ) : null}
                         </div>
                     </div>
                 ) : (
@@ -1694,13 +1769,14 @@ class Spreadsheet extends Component {
                     }}
                     clearSearchValue={this.clearSearchValue}
                 />
-                <ExtDataGrid
-                    toolbar={isColumnFilter ? <Toolbar enableFilter /> : ""}
+                <DataGrid
+                    toolbar={<Toolbar enableFilter />}
                     getValidFilterValues={(columnKey) =>
                         this.getValidFilterValues(filteringRows, columnKey)
                     }
                     minHeight={height}
                     columns={columns}
+                    rows={rows}
                     rowGetter={(i) => rows[i]}
                     rowsCount={rows.length}
                     onGridRowsUpdated={this.onGridRowsUpdated}
@@ -1758,7 +1834,7 @@ Spreadsheet.propTypes = {
     saveRows: PropTypes.arrayOf(PropTypes.object),
     isTitle: PropTypes.bool,
     isGlobalSearch: PropTypes.bool,
-    isColumnFilter: PropTypes.bool,
+    // isColumnFilter: PropTypes.bool,
     columnFilterStyle: PropTypes.string,
     isGroupSort: PropTypes.bool,
     isColumnChooser: PropTypes.bool,
@@ -1766,7 +1842,11 @@ Spreadsheet.propTypes = {
     isSelectAll: PropTypes.bool,
     gridHeight: PropTypes.number,
     isHeader: PropTypes.bool,
-    noBorderClassName: PropTypes.string
+    noBorderClassName: PropTypes.string,
+    addNewRows: PropTypes.func,
+    deleteRows: PropTypes.func,
+    isAddRow: PropTypes.bool,
+    isDeleteRow: PropTypes.bool
 };
 
 export default Spreadsheet;

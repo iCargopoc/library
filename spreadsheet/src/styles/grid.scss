@@ -280,7 +280,7 @@ input.editor-checkbox {
     .react-grid-Toolbar {
         padding: 0;
         border: none;
-        right: 133px;
+        right: 207px;
         top: 27px;
         background-color: transparent;
         .btn {
@@ -338,4 +338,11 @@ input.editor-checkbox {
 }
 .react-grid-Canvas {
     overflow: auto !important;
+}
+.react-grid-HeaderCell {
+    background: #f9f9f9;
+    padding: 0px;
+    font-weight: 700;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }

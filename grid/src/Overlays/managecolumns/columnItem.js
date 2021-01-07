@@ -57,7 +57,11 @@ const ColumnItem = ({
             >
                 <div
                     className="ng-popover--column__drag"
-                    data-testid="columnItemDnd"
+                    data-testid={
+                        isSubComponentColumn
+                            ? "subcomponentcolumnItemDnd"
+                            : "columnItemDnd"
+                    }
                     ref={(node) => drag(drop(node))}
                 >
                     <i>

@@ -46,7 +46,15 @@ const ColumnsList = (props) => {
 
     return (
         <React.Fragment key="ColumnManageFragment">
-            <div ref={drop} className="ng-popover--column__content">
+            <div
+                ref={drop}
+                className="ng-popover--column__content"
+                data-testid={
+                    isSubComponentColumn
+                        ? "sub-component-columns-list-box"
+                        : "columns-list-box"
+                }
+            >
                 {filteredManagedColumns.map((column) => {
                     const {
                         columnId,

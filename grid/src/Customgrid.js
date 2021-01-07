@@ -117,6 +117,9 @@ const Customgrid = (props) => {
     // Local state value for holding sub component columns
     const [subComponentColumnns, setSubComponentColumnns] = useState([]);
 
+    // Local state value for holding whether grid has sub component structure
+    const [isSubComponentGrid, setIsSubComponentGrid] = useState(false);
+
     // Local state value for holding the sub component additional column configuration
     const [
         subComponentAdditionalColumn,
@@ -128,8 +131,6 @@ const Customgrid = (props) => {
         rowsWithExpandedSubComponents,
         setRowsWithExpandedSubComponents
     ] = useState([]);
-
-    const isSubComponentGrid = subComponentColumnns.length > 0;
 
     // Variables used for handling infinite loading
     const itemCount = hasNextPage ? gridData.length + 1 : gridData.length;
@@ -264,7 +265,7 @@ const Customgrid = (props) => {
                 return returnValue;
             });
         },
-        [managableColumns, managableSubComponentColumnns]
+        [managableColumns, managableSubComponentColumnns, isSubComponentGrid]
     );
 
     const isRowExpandEnabled = !!(
@@ -350,7 +351,7 @@ const Customgrid = (props) => {
                                         );
                                     }
                                 }}
-                                data-testid="subComponent-header-expand-collapse"
+                                data-testid="subComponent-header-expand-collapse-all"
                             >
                                 {isAllRowsExpanded ? (
                                     <IconCollapse className="ng-icon" />
@@ -576,7 +577,8 @@ const Customgrid = (props) => {
             const rowsSelectedByUser = findSelectedRows(
                 rowsInGrid,
                 selectedRowIdsInGrid,
-                getRowInfo
+                getRowInfo,
+                false
             );
             const rowIdentifiers = findSelectedRowIdAttributes(
                 rowsSelectedByUser,
@@ -733,6 +735,7 @@ const Customgrid = (props) => {
             managableSubComponentColumnns &&
             managableSubComponentColumnns.length > 0
         ) {
+            setIsSubComponentGrid(true);
             setSubComponentColumnns(managableSubComponentColumnns);
         }
     }, [managableSubComponentColumnns]);
@@ -904,47 +907,41 @@ const Customgrid = (props) => {
                 let isAtleastOneChildUnselected = false;
                 let isChildRowsAvailable = false;
                 preFilteredRows.forEach((gridRow) => {
-                    if (gridRow) {
-                        const gridRowOriginal = gridRow.original;
+                    const gridRowOriginal = gridRow.original;
+                    if (gridRowOriginal && gridRowOriginal.isParent !== true) {
+                        const parentIdOfChildRow =
+                            gridRowOriginal[parentIdAttribute];
                         if (
-                            gridRowOriginal &&
-                            gridRowOriginal.isParent !== true
+                            parentIdOfChildRow !== null &&
+                            parentIdOfChildRow !== undefined &&
+                            rowParentIdAttribute === parentIdOfChildRow
                         ) {
-                            const parentIdOfChildRow =
-                                gridRowOriginal[parentIdAttribute];
+                            isChildRowsAvailable = true;
+                            const rowIdAttribute = gridRowOriginal[idAttribute];
+                            let isRowSelectable = true;
                             if (
-                                parentIdOfChildRow !== null &&
-                                parentIdOfChildRow !== undefined &&
-                                rowParentIdAttribute === parentIdOfChildRow
+                                getRowInfo &&
+                                typeof getRowInfo === "function"
                             ) {
-                                isChildRowsAvailable = true;
-                                const rowIdAttribute =
-                                    gridRowOriginal[idAttribute];
-                                let isRowSelectable = true;
+                                const rowInfo = getRowInfo(
+                                    gridRowOriginal,
+                                    false
+                                );
                                 if (
-                                    getRowInfo &&
-                                    typeof getRowInfo === "function"
+                                    rowInfo &&
+                                    rowInfo.isRowSelectable === false
                                 ) {
-                                    const rowInfo = getRowInfo(
-                                        gridRowOriginal,
-                                        false
-                                    );
-                                    if (
-                                        rowInfo &&
-                                        rowInfo.isRowSelectable === false
-                                    ) {
-                                        isRowSelectable = false;
-                                    }
+                                    isRowSelectable = false;
                                 }
+                            }
 
-                                if (
-                                    isRowSelectable &&
-                                    !userSelectedRowIdentifiers.includes(
-                                        rowIdAttribute
-                                    )
-                                ) {
-                                    isAtleastOneChildUnselected = true;
-                                }
+                            if (
+                                isRowSelectable &&
+                                !userSelectedRowIdentifiers.includes(
+                                    rowIdAttribute
+                                )
+                            ) {
+                                isAtleastOneChildUnselected = true;
                             }
                         }
                     }
@@ -972,22 +969,20 @@ const Customgrid = (props) => {
                     rowParentIdAttribute !== undefined
                 ) {
                     preFilteredRows.forEach((gridRow) => {
-                        if (gridRow) {
-                            const gridRowOriginal = gridRow.original;
+                        const gridRowOriginal = gridRow.original;
+                        if (
+                            gridRowOriginal &&
+                            gridRowOriginal.isParent !== true
+                        ) {
                             if (
-                                gridRowOriginal &&
-                                gridRowOriginal.isParent !== true
+                                gridRowOriginal[parentIdAttribute] ===
+                                rowParentIdAttribute
                             ) {
-                                if (
-                                    gridRowOriginal[parentIdAttribute] ===
-                                    rowParentIdAttribute
-                                ) {
-                                    const { id } = gridRow;
-                                    setIsRowSelectionCallbackNeeded(
-                                        selectionType ? "select" : "deselect"
-                                    );
-                                    toggleRowSelected(id, selectionType);
-                                }
+                                const { id } = gridRow;
+                                setIsRowSelectionCallbackNeeded(
+                                    selectionType ? "select" : "deselect"
+                                );
+                                toggleRowSelected(id, selectionType);
                             }
                         }
                     });

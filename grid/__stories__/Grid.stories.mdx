@@ -101,6 +101,19 @@ const GridComponent = () => {
     // JSON Data
     const gridData = [{...}, {...}];
 
+    // JSON Data with sub components
+    const gridData =
+    [
+        {
+            ...,
+            subComponentData: [{...}, {...}]
+        },
+        {
+            ...,
+            subComponentData: [{...}, {...}]
+        }
+    ];
+
     // The column configuration for grid based on gridData
     const columns = [
         {
@@ -255,11 +268,17 @@ const GridComponent = () => {
         }
     };
 
-    const getRowInfo = (rowData) => {
+    // The column configuration and columnToExpand configuration for sub components are exactly same as above (columns & columnToExpand)
+    const subComponentColumnns = [{...}, {...}];
+    const subComponentColumnToExpand = {...};
+
+    const getRowInfo = (rowData, isSubComponentRow) => {
         // Grid calls this function for each row, to check:
         // 1) If expand icon is required for that row.
         // 2) If row selector checkbox is required for that row.
         // 3) If any className has to be given for that row data container div.
+        // First parameter is rowData for which this function will be called.
+        // Second parameter is a boolean value that identifies if the row is sub component row or parent row.
         const { travelId } = rowData;
         return {
             isRowExpandable: travelId % 2 === 0, // Pass true/false based on which expand icon will be displayed.
@@ -269,18 +288,20 @@ const GridComponent = () => {
     };
 
     // Call back made by Grid for each row, to display the row actions in Kebab overlay in Grid.
-    const rowActions = (rowData, closeOverlay) => {
+    const rowActions = (rowData, closeOverlay, isSubComponentRow) => {
         // Grid will call this function for all rows while binding data on to Grid.
         // Corresponding 'rowData' is passed as one of the parameters.
-        // Another parameter is the 'closeOverlay', which is a method that can be called to close the Kebab overlay.
+        // Second parameter is the 'closeOverlay', which is a method that can be called to close the Kebab overlay.
+        // Third parameter is a boolean value that identifies if the row is sub component row or parent row.
         // Return a JSX from this function, which will be bound to the row actions Kebab overlay.
         // All functionalities of the row actions should be handelled outside the Grid.
         return <RowAction />
     };
 
-    const onRowUpdate = (originalRow, updatedRow) => {
+    const onRowUpdate = (originalRow, updatedRow, isSubComponentRow) => {
         // Grid will call this function whenever user edits a cell or a row.
         // Row data before editing and the updated row data after editing will be passed as parameters.
+        // Third parameter is a boolean value that identifies if the editted row is sub component row or parent row.
         // Using these data, update the data source and rerender the Grid.
     };
 

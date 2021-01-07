@@ -492,30 +492,27 @@ const Grid = (props: Object): ?React$Element<*> => {
                         };
                     }
                     loadMoreData(pageInfoObj, parentId);
+
                 }
-            }
+           }
         }
     };
 
     // Gets called when page scroll reaches the bottom of the grid.
     // Trigger call back and get the grid data updated.
     const loadNextPage = () => {
-        if (pageInfo) {
-            const { lastPage, pageNum, pageSize, endCursor } = pageInfo;
-            if (lastPage === false) {
-                setIsNextPageLoading(true);
-                if (paginationType === "cursor") {
-                    loadMoreData({
-                        endCursor,
-                        pageSize
-                    });
-                } else {
-                    loadMoreData({
-                        pageNum: pageNum + 1,
-                        pageSize
-                    });
-                }
-            }
+        const { pageNum, pageSize, endCursor } = pageInfo;
+        setIsNextPageLoading(true);
+        if (paginationType === "cursor") {
+            loadMoreData({
+                endCursor,
+                pageSize
+            });
+        } else {
+            loadMoreData({
+                pageNum: pageNum + 1,
+                pageSize
+            });
         }
     };
 
@@ -619,6 +616,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     isPaginationNeeded={
                         pageInfo !== undefined &&
                         pageInfo !== null &&
+                        pageInfo.lastPage !== true &&
                         !isParentGrid
                     }
                     totalRecordsCount={pageInfo ? pageInfo.total : 0}
