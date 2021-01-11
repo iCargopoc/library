@@ -11,6 +11,7 @@ const RowsList = ({
     listRef,
     height,
     theme,
+    isGroupedColumnsGrid,
     rows,
     idAttribute,
     overScanCount,
@@ -109,7 +110,7 @@ const RowsList = ({
             style={{
                 overflowX: "hidden"
             }}
-            height={height}
+            height={isGroupedColumnsGrid ? height - 55 : height - 34}
             itemCount={rows.length}
             itemSize={getSize}
             onItemsRendered={onItemsRendered}
@@ -175,6 +176,7 @@ RowsList.propTypes = {
     listRef: PropTypes.any,
     height: PropTypes.number,
     theme: PropTypes.string,
+    isGroupedColumnsGrid: PropTypes.bool,
     rows: PropTypes.arrayOf(PropTypes.object),
     idAttribute: PropTypes.string,
     overScanCount: PropTypes.number,

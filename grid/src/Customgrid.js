@@ -46,7 +46,8 @@ import {
     convertToIndividualColumns,
     checkdisplayOfGroupedColumns,
     checkIfGroupsortIsApplicable,
-    findAllChildRows
+    findAllChildRows,
+    checkIfGridHasGroupedColumns
 } from "./Utilities/GridUtilities";
 
 const listRef = createRef(null);
@@ -1379,6 +1380,9 @@ const Customgrid = (props) => {
                                                         listRef={listRef}
                                                         height={height}
                                                         theme={theme}
+                                                        isGroupedColumnsGrid={checkIfGridHasGroupedColumns(
+                                                            gridColumns
+                                                        )}
                                                         rows={rows}
                                                         idAttribute={
                                                             idAttribute
@@ -1466,6 +1470,9 @@ const Customgrid = (props) => {
                                                 listRef={listRef}
                                                 height={height}
                                                 theme={theme}
+                                                isGroupedColumnsGrid={checkIfGridHasGroupedColumns(
+                                                    gridColumns
+                                                )}
                                                 rows={rows}
                                                 idAttribute={idAttribute}
                                                 overScanCount={overScanCount}

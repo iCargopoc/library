@@ -180,3 +180,13 @@ export const findAllChildRows = (allRows) => {
     }
     return [];
 };
+
+export const checkIfGridHasGroupedColumns = (gridColumns) => {
+    let isGroupedColumns = false;
+    gridColumns.forEach((col) => {
+        if (col && col.isGroupHeader === true) {
+            isGroupedColumns = true;
+        }
+    });
+    return isGroupedColumns;
+};
