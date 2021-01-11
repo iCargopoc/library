@@ -141,15 +141,13 @@ export const convertToIndividualColumns = (managableColumns) => {
 };
 
 export const checkdisplayOfGroupedColumns = (groupedColumn) => {
-    if (groupedColumn) {
-        const { headers } = groupedColumn;
-        if (headers && headers.length > 0) {
-            const headerToDisplay = headers.find((header) => {
-                return header.display === true;
-            });
-            if (headerToDisplay) {
-                return true;
-            }
+    const { headers } = groupedColumn;
+    if (headers && headers.length > 0) {
+        const headerToDisplay = headers.find((header) => {
+            return header.display === true;
+        });
+        if (headerToDisplay) {
+            return true;
         }
     }
     return false;
@@ -170,11 +168,9 @@ export const findAllChildRows = (allRows) => {
     if (allRows && allRows.length > 0) {
         return allRows.filter((row) => {
             let returnValue = false;
-            if (row) {
-                const { original } = row;
-                const { isParent } = original;
-                returnValue = isParent !== true;
-            }
+            const { original } = row;
+            const { isParent } = original;
+            returnValue = isParent !== true;
             return returnValue;
         });
     }
