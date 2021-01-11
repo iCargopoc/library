@@ -392,7 +392,7 @@ describe("render Customgrid", () => {
         );
         // Test number of rows
         const rowsCount = getAllByTestId("gridrow").length;
-        expect(rowsCount).toBe(16);
+        expect(rowsCount).toBe(17);
     });
     it("test grid with scroll height greater than window height", () => {
         mockOffsetSize(600, 600, 800);
@@ -420,6 +420,6 @@ describe("render Customgrid", () => {
         );
         // Test number of rows
         const rowsCount = getAllByTestId("gridrow").length;
-        expect(rowsCount).toBe(16);
+        expect(rowsCount).toBe(17);
     });
 });
