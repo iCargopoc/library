@@ -109,7 +109,7 @@ const RowsList = ({
             style={{
                 overflowX: "hidden"
             }}
-            height={height - 60}
+            height={height}
             itemCount={rows.length}
             itemSize={getSize}
             onItemsRendered={onItemsRendered}
