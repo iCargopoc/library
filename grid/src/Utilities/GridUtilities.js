@@ -27,32 +27,26 @@ export const findSelectedRows = (
     const rowsSelectedByUser = [];
     if (rows && rows.length > 0 && selectedRowIds) {
         Object.entries(selectedRowIds).forEach((objEntry) => {
-            if (objEntry && objEntry.length > 0) {
-                const rowId = objEntry[0];
-                const isSelected = objEntry[1];
-                if (isSelected) {
-                    const selectedRow = rows.find((flatRow) => {
-                        const { id } = flatRow;
-                        if (getRowInfo && typeof getRowInfo === "function") {
-                            const { original } = flatRow;
-                            const rowInfo = getRowInfo(
-                                original,
-                                isSubComponentRow
-                            );
-                            return (
-                                !(
-                                    rowInfo && rowInfo.isRowSelectable === false
-                                ) && id === rowId
-                            );
-                        }
-                        return id === rowId;
-                    });
-                    if (selectedRow) {
-                        const { original } = selectedRow;
-                        const { isParent } = original;
-                        if (isParent !== true) {
-                            rowsSelectedByUser.push(original);
-                        }
+            const rowId = objEntry[0];
+            const isSelected = objEntry[1];
+            if (isSelected) {
+                const selectedRow = rows.find((flatRow) => {
+                    const { id } = flatRow;
+                    if (getRowInfo && typeof getRowInfo === "function") {
+                        const { original } = flatRow;
+                        const rowInfo = getRowInfo(original, isSubComponentRow);
+                        return (
+                            !(rowInfo && rowInfo.isRowSelectable === false) &&
+                            id === rowId
+                        );
+                    }
+                    return id === rowId;
+                });
+                if (selectedRow) {
+                    const { original } = selectedRow;
+                    const { isParent } = original;
+                    if (isParent !== true) {
+                        rowsSelectedByUser.push(original);
                     }
                 }
             }
