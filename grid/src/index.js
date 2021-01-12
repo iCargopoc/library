@@ -532,12 +532,7 @@ const Grid = (props: Object): ?React$Element<*> => {
             )
         );
         setAdditionalColumn(
-            extractAdditionalColumn(
-                columnToExpand,
-                isDesktop,
-                updateRowInGrid,
-                false
-            )
+            extractAdditionalColumn(columnToExpand, isDesktop, false)
         );
     }, [columns, columnToExpand]);
 
@@ -554,12 +549,7 @@ const Grid = (props: Object): ?React$Element<*> => {
             )
         );
         setGridSubComponentAdditionalColumn(
-            extractAdditionalColumn(
-                subComponentColumnToExpand,
-                isDesktop,
-                updateRowInGrid,
-                true
-            )
+            extractAdditionalColumn(subComponentColumnToExpand, isDesktop, true)
         );
     }, [subComponentColumnns, subComponentColumnToExpand]);
 
