@@ -1,5 +1,5 @@
+// @flow
 import React from "react";
-import PropTypes from "prop-types";
 import Measure from "react-measure";
 import SubComponent from "./SubComponent";
 
@@ -26,7 +26,7 @@ const RowItem = ({
     expandableColumn,
     rowSelector,
     multiRowSelection
-}) => {
+}: Object): React$Element<*> => {
     const { isExpanded, cells, original } = row;
     const { subComponentData } = original;
     const isSubComponentRowsPresent =
@@ -39,7 +39,7 @@ const RowItem = ({
     return (
         <Measure
             bounds
-            onResize={(contentRect) => {
+            onResize={(contentRect: Object) => {
                 if (
                     fixedRowHeight !== true || // Calcualte if not fixedRowHeight
                     (!isParentGrid && index === 0) || // calculate if fixedRowHeight and index is 0 of normal Grid
@@ -53,7 +53,7 @@ const RowItem = ({
                 }
             }}
         >
-            {({ measureRef }) => (
+            {({ measureRef }: Object): Object => (
                 <div ref={measureRef} className="neo-grid__row-container">
                     <div
                         data-testid="gridrowWrap"
@@ -63,7 +63,7 @@ const RowItem = ({
                                 : ""
                         }`}
                     >
-                        {cells.map((cell) => {
+                        {cells.map((cell: Object): Object => {
                             if (
                                 (cell.column.columnId === "column_custom_2" &&
                                     isSubComponentGrid) ||
@@ -126,7 +126,7 @@ const RowItem = ({
                                 type="button"
                                 className="neo-btn neo-btn-default btn btn-secondary"
                                 data-testid="load-more-childdata"
-                                onClick={() => loadMoreChildData(row)}
+                                onClick={(): Object => loadMoreChildData(row)}
                             >
                                 Load more....
                             </button>
@@ -137,31 +137,4 @@ const RowItem = ({
         </Measure>
     );
 };
-
-RowItem.propTypes = {
-    row: PropTypes.object,
-    idAttribute: PropTypes.string,
-    theme: PropTypes.string,
-    index: PropTypes.number,
-    setSize: PropTypes.func,
-    isRowExpandEnabled: PropTypes.bool,
-    additionalColumn: PropTypes.object,
-    isLoadMoreChildRowsRequiredForRow: PropTypes.func,
-    lastPage: PropTypes.bool,
-    loadMoreChildData: PropTypes.func,
-    isParentGrid: PropTypes.bool,
-    fixedRowHeight: PropTypes.bool,
-    isNextPageLoading: PropTypes.bool,
-    isLoadMoreRequiredForNormalRow: PropTypes.func,
-    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
-    subComponentAdditionalColumn: PropTypes.object,
-    isSubComponentGrid: PropTypes.bool,
-    rowsWithExpandedSubComponents: PropTypes.array,
-    getRowInfo: PropTypes.func,
-    rowActions: PropTypes.any,
-    expandableColumn: PropTypes.bool,
-    rowSelector: PropTypes.bool,
-    multiRowSelection: PropTypes.bool
-};
-
 export default RowItem;

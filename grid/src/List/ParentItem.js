@@ -1,5 +1,5 @@
+// @flow
 import React from "react";
-import PropTypes from "prop-types";
 import Measure from "react-measure";
 import { IconExpand, IconCollapse } from "../Utilities/SvgUtilities";
 
@@ -15,16 +15,16 @@ const ParentItem = ({
     isParentRowOpen,
     parentColumn,
     rowSelector
-}) => {
+}: Object): React$Element<*> => {
     const { original } = row;
     return (
         <Measure
             bounds
-            onResize={(contentRect) => {
+            onResize={(contentRect: Object) => {
                 setSize(index, contentRect.bounds.height);
             }}
         >
-            {({ measureRef }) => (
+            {({ measureRef }: Object): Object => (
                 <div ref={measureRef} className="ng-accordion__container">
                     <div className="ng-accordion__session">
                         <div className="ng-accordion__block">
@@ -36,7 +36,7 @@ const ParentItem = ({
                                         data-testid="rowSelector-parentRow"
                                         className="neo-checkbox form-check-input"
                                         checked={isParentRowSelected(row)}
-                                        onChange={(event) =>
+                                        onChange={(event: String): Object =>
                                             toggleParentRowSelection(event, row)
                                         }
                                     />
@@ -46,7 +46,9 @@ const ParentItem = ({
                                 <i
                                     role="presentation"
                                     className="ng-accordion__icon"
-                                    onClick={() => toggleParentRow(row, index)}
+                                    onClick={(): void =>
+                                        toggleParentRow(row, index)
+                                    }
                                     data-testid="acccordion-expand-collapse"
                                 >
                                     {isParentRowOpen(row) ? (
@@ -69,19 +71,4 @@ const ParentItem = ({
         </Measure>
     );
 };
-
-ParentItem.propTypes = {
-    row: PropTypes.object,
-    index: PropTypes.number,
-    setSize: PropTypes.func,
-    multiRowSelection: PropTypes.bool,
-    parentRowExpandable: PropTypes.bool,
-    isParentRowSelected: PropTypes.func,
-    toggleParentRowSelection: PropTypes.func,
-    toggleParentRow: PropTypes.func,
-    isParentRowOpen: PropTypes.func,
-    parentColumn: PropTypes.object,
-    rowSelector: PropTypes.bool
-};
-
 export default ParentItem;
