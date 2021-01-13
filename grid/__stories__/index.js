@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./example.css";
 import Grid from "../src/index";
 import FlightIcon from "./images/FlightIcon.png";
@@ -54,7 +54,7 @@ const GridComponent = (props) => {
     const idAttribute = "travelId";
     const parentIdAttribute = "titleId";
     const subComponentIdAttribute = "hawbId";
-    const gridPageSize = 300;
+    const gridPageSize = 50;
     const paginationType = "index"; // or - "cursor" - if Gris is tree view and parentRowExpandable is false, then paginationType should be "index"
     // State for holding index page info
     const [indexPageInfo, setIndexPageInfo] = useState({
@@ -65,11 +65,13 @@ const GridComponent = (props) => {
     });
     // State for holding cursor page info
     const [cursorPageInfo, setCursorPageInfo] = useState({
-        endCursor: 299,
+        endCursor: gridPageSize - 1,
         pageSize: gridPageSize,
         total: 20000,
         lastPage: false
     });
+    // Ref to keep store of pages that are reloaded based on total records count.
+    const reloadedPages = useRef([]);
     // State for holding grid data
     const [gridData, setGridData] = useState([]);
     // State for holding Original grid data, to be used while clearing group sort
@@ -1660,14 +1662,58 @@ const GridComponent = (props) => {
                         );
                         setOriginalGridData(originalGridData.concat(data));
                         if (paginationType === "index") {
+                            const isReloadRequired =
+                                !(
+                                    reloadedPages &&
+                                    reloadedPages.current &&
+                                    reloadedPages.current.includes(
+                                        updatedPageInfo.pageNum
+                                    )
+                                ) && updatedPageInfo.pageNum % 3 === 0;
+                            if (
+                                isReloadRequired &&
+                                reloadedPages &&
+                                reloadedPages.current
+                            ) {
+                                reloadedPages.current = [
+                                    ...reloadedPages.current,
+                                    updatedPageInfo.pageNum
+                                ];
+                            }
                             setIndexPageInfo({
                                 ...indexPageInfo,
-                                pageNum: updatedPageInfo.pageNum
+                                pageNum: updatedPageInfo.pageNum,
+                                total: isReloadRequired
+                                    ? indexPageInfo.total + 1
+                                    : indexPageInfo.total
                             });
                         } else {
+                            const cursorPageNum =
+                                (info.endCursor + 1) / gridPageSize;
+                            const isReloadRequired =
+                                !(
+                                    reloadedPages &&
+                                    reloadedPages.current &&
+                                    reloadedPages.current.includes(
+                                        cursorPageNum
+                                    )
+                                ) && cursorPageNum % 3 === 0;
+                            if (
+                                isReloadRequired &&
+                                reloadedPages &&
+                                reloadedPages.current
+                            ) {
+                                reloadedPages.current = [
+                                    ...reloadedPages.current,
+                                    cursorPageNum
+                                ];
+                            }
                             setCursorPageInfo({
                                 ...cursorPageInfo,
-                                endCursor: info.endCursor
+                                endCursor: info.endCursor,
+                                total: isReloadRequired
+                                    ? cursorPageInfo.total + 1
+                                    : cursorPageInfo.total
                             });
                         }
                     }

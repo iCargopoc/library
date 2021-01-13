@@ -115,6 +115,9 @@ const Grid = (props: Object): ?React$Element<*> => {
     // To check if useEffect Call is completed or not
     const [isLoaded, setIsLoaded] = useState(false);
 
+    // To check if total records count has been changed
+    const [totalRecordsCount, setTotalRecordsCount] = useState(0);
+
     // Logic for searching in each column
     const searchColumn = (
         column: Object,
@@ -499,24 +502,32 @@ const Grid = (props: Object): ?React$Element<*> => {
 
     // Gets called when page scroll reaches the bottom of the grid.
     // Trigger call back and get the grid data updated.
-    const loadNextPage = () => {
-        const { pageNum, pageSize, endCursor } = pageInfo;
-        setIsNextPageLoading(true);
-        if (paginationType === "cursor") {
-            loadMoreData({
-                endCursor,
-                pageSize
-            });
-        } else {
-            loadMoreData({
-                pageNum: pageNum + 1,
-                pageSize
-            });
+    const loadNextPage = (returnedPageNum: Number): Function => {
+        if (returnedPageNum === -1) {
+            const { pageNum, pageSize, endCursor } = pageInfo;
+            setIsNextPageLoading(true);
+            if (paginationType === "cursor") {
+                loadMoreData({
+                    endCursor,
+                    pageSize
+                });
+            } else {
+                loadMoreData({
+                    pageNum: pageNum + 1,
+                    pageSize
+                });
+            }
         }
     };
 
     useEffect(() => {
         setIsNextPageLoading(false);
+        if (pageInfo) {
+            const { total } = pageInfo;
+            if (typeof total === "number" && total !== totalRecordsCount) {
+                setTotalRecordsCount(total);
+            }
+        }
     }, [gridData, pageInfo]);
 
     useEffect(() => {
@@ -602,20 +613,14 @@ const Grid = (props: Object): ?React$Element<*> => {
                     gridData={processedGridData}
                     rowsToOverscan={rowsToOverscan}
                     idAttribute={idAttribute}
-                    isPaginationNeeded={
-                        pageInfo !== undefined &&
-                        pageInfo !== null &&
-                        pageInfo.lastPage !== true &&
-                        !isParentGrid
-                    }
-                    totalRecordsCount={pageInfo ? pageInfo.total : 0}
+                    pageInfo={pageInfo}
+                    totalRecordsCount={totalRecordsCount}
                     updateRowInGrid={updateRowInGrid}
                     searchColumn={searchColumn}
                     onRowSelect={onRowSelect}
                     getRowInfo={getRowInfo}
                     expandableColumn={expandableColumn}
                     rowActions={rowActions}
-                    hasNextPage={pageInfo ? !pageInfo.lastPage : false}
                     isNextPageLoading={isNextPageLoading}
                     loadNextPage={loadNextPage}
                     serverSideSorting={serverSideSorting}

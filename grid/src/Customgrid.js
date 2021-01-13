@@ -1,6 +1,7 @@
 import React, {
     useCallback,
     useState,
+    useRef,
     useEffect,
     createRef,
     useMemo
@@ -70,14 +71,13 @@ const Customgrid = (props) => {
         gridData,
         rowsToOverscan,
         idAttribute,
-        isPaginationNeeded,
+        pageInfo,
         totalRecordsCount,
         searchColumn,
         onRowSelect,
         getRowInfo,
         expandableColumn,
         rowActions,
-        hasNextPage,
         isNextPageLoading,
         loadNextPage,
         serverSideSorting,
@@ -133,12 +133,63 @@ const Customgrid = (props) => {
         setRowsWithExpandedSubComponents
     ] = useState([]);
 
+    const gridDataLength = gridData.length;
+
     // Variables used for handling infinite loading
-    const itemCount = hasNextPage ? gridData.length + 1 : gridData.length;
-    const loadMoreItems = isNextPageLoading
-        ? () => {}
-        : loadNextPage || (() => {});
-    const isItemLoaded = (index) => !hasNextPage || index < gridData.length;
+    const invalidPages = useRef([]);
+    const pageToReload = useRef(-1);
+    const isPaginationNeeded =
+        pageInfo !== undefined &&
+        pageInfo !== null &&
+        pageInfo.lastPage === false;
+    const itemCount = gridDataLength + 1;
+    const loadMoreItems = () => {
+        if (isNextPageLoading) {
+            return {};
+        }
+        if (loadNextPage && typeof loadNextPage === "function") {
+            const pageNumToReturn = pageToReload ? pageToReload.current : null;
+            if (
+                pageNumToReturn !== null &&
+                pageNumToReturn !== undefined &&
+                pageNumToReturn > -1
+            ) {
+                console.log("Reloading page", pageNumToReturn);
+                console.log("Invalid pages", invalidPages.current);
+                pageToReload.current = -1;
+            }
+            return loadNextPage(pageNumToReturn);
+        }
+        return {};
+    };
+    const isItemLoaded = (index) => {
+        let isReloadRequired = false;
+        const invalidPagesArray =
+            invalidPages && invalidPages.current ? invalidPages.current : [];
+        if (invalidPagesArray.length > 0) {
+            const { pageSize } = pageInfo;
+            invalidPagesArray.forEach((page) => {
+                const pageIndex = page * pageSize;
+                if (
+                    index === pageIndex + overScanCount ||
+                    index === pageIndex - overScanCount
+                ) {
+                    isReloadRequired = true;
+                    invalidPages.current = invalidPagesArray.filter(
+                        (val) => val !== page
+                    );
+                    if (
+                        pageToReload &&
+                        pageToReload.current !== null &&
+                        pageToReload.current !== undefined
+                    ) {
+                        pageToReload.current = page;
+                    }
+                }
+            });
+        }
+        return isReloadRequired === false && index < gridDataLength;
+    };
 
     // Local state value for checking if column filter is open/closed
     const [isFilterOpen, setFilterOpen] = useState(false);
@@ -827,6 +878,25 @@ const Customgrid = (props) => {
     }, [gridData, groupSortOptions]);
 
     useEffect(() => {
+        if (!isFirstRendering) {
+            if (invalidPages && invalidPages.current) {
+                const { pageNum, endCursor, pageSize } = pageInfo;
+                const currentPage =
+                    typeof pageNum === "number" && pageNum > 0
+                        ? pageNum
+                        : (endCursor + 1) / pageSize;
+                if (currentPage > 1) {
+                    const pagesArray = [];
+                    for (let i = 1; i < currentPage; i++) {
+                        pagesArray.push(i);
+                    }
+                    invalidPages.current = pagesArray;
+                }
+            }
+        }
+    }, [totalRecordsCount]);
+
+    useEffect(() => {
         if (parentRowsToExpand && parentRowsToExpand.length > 0) {
             setExpandedParentRows(parentRowsToExpand);
         }
@@ -1050,7 +1120,7 @@ const Customgrid = (props) => {
                         ) : null}
                         <span className="ng-header-results__count">
                             {totalRecordsCount > 0 &&
-                            rows.length === gridData.length
+                            rows.length === gridDataLength
                                 ? totalRecordsCount
                                 : findAllChildRows(rows).length}
                         </span>
@@ -1365,7 +1435,7 @@ const Customgrid = (props) => {
                                                 : ""
                                         }`}
                                     >
-                                        {isPaginationNeeded ? (
+                                        {isPaginationNeeded && !isParentGrid ? (
                                             <InfiniteLoader
                                                 isItemLoaded={isItemLoaded}
                                                 itemCount={itemCount}
@@ -1577,14 +1647,13 @@ Customgrid.propTypes = {
     gridData: PropTypes.arrayOf(PropTypes.object),
     rowsToOverscan: PropTypes.number,
     idAttribute: PropTypes.string,
-    isPaginationNeeded: PropTypes.bool,
+    pageInfo: PropTypes.object,
     totalRecordsCount: PropTypes.number,
     searchColumn: PropTypes.func,
     onRowSelect: PropTypes.func,
     getRowInfo: PropTypes.func,
     expandableColumn: PropTypes.bool,
     isExpandContentAvailable: PropTypes.bool,
-    hasNextPage: PropTypes.bool,
     isNextPageLoading: PropTypes.bool,
     loadNextPage: PropTypes.func,
     serverSideSorting: PropTypes.func,
