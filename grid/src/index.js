@@ -502,7 +502,7 @@ const Grid = (props: Object): ?React$Element<*> => {
 
     // Gets called when page scroll reaches the bottom of the grid.
     // Trigger call back and get the grid data updated.
-    const loadNextPage = (returnedPageNum: Number): Function => {
+    const loadNextPage = (returnedPageNum: Object): Function => {
         if (returnedPageNum === -1) {
             const { pageNum, pageSize, endCursor } = pageInfo;
             setIsNextPageLoading(true);

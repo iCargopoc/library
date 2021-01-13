@@ -17,7 +17,7 @@ const CellDisplayAndEdit = ({
     expandableColumn: boolean,
     isDesktop: boolean,
     isSubComponentColumns: boolean
-}): ?React$Element<*> => {
+}): any => {
     const { column, columns } = row;
     if (column && row.row) {
         const { original, isExpanded } = row.row;
