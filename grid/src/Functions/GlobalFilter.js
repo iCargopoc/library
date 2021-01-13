@@ -1,12 +1,15 @@
+// @flow
 import React, { useState } from "react";
 import { useAsyncDebounce } from "react-table";
-import PropTypes from "prop-types";
 import { IconSearch } from "../Utilities/SvgUtilities";
 
-const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
+const GlobalFilter = ({
+    globalFilter,
+    setGlobalFilter
+}: Object): React$Element<*> => {
     const [value, setValue] = useState(globalFilter);
 
-    const onChange = useAsyncDebounce((changedValue) => {
+    const onChange = useAsyncDebounce((changedValue: String) => {
         setGlobalFilter(changedValue || undefined);
     }, 200);
 
@@ -16,7 +19,7 @@ const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
                 type="text"
                 data-testid="globalFilter-textbox"
                 value={value || ""}
-                onChange={(e) => {
+                onChange={(e: Object) => {
                     setValue(e.target.value);
                     onChange(e.target.value);
                 }}
@@ -28,11 +31,6 @@ const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
             </i>
         </div>
     );
-};
-
-GlobalFilter.propTypes = {
-    globalFilter: PropTypes.string,
-    setGlobalFilter: PropTypes.func
 };
 
 export default GlobalFilter;

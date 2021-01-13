@@ -27,32 +27,26 @@ export const findSelectedRows = (
     const rowsSelectedByUser = [];
     if (rows && rows.length > 0 && selectedRowIds) {
         Object.entries(selectedRowIds).forEach((objEntry) => {
-            if (objEntry && objEntry.length > 0) {
-                const rowId = objEntry[0];
-                const isSelected = objEntry[1];
-                if (isSelected) {
-                    const selectedRow = rows.find((flatRow) => {
-                        const { id } = flatRow;
-                        if (getRowInfo && typeof getRowInfo === "function") {
-                            const { original } = flatRow;
-                            const rowInfo = getRowInfo(
-                                original,
-                                isSubComponentRow
-                            );
-                            return (
-                                !(
-                                    rowInfo && rowInfo.isRowSelectable === false
-                                ) && id === rowId
-                            );
-                        }
-                        return id === rowId;
-                    });
-                    if (selectedRow) {
-                        const { original } = selectedRow;
-                        const { isParent } = original;
-                        if (isParent !== true) {
-                            rowsSelectedByUser.push(original);
-                        }
+            const rowId = objEntry[0];
+            const isSelected = objEntry[1];
+            if (isSelected) {
+                const selectedRow = rows.find((flatRow) => {
+                    const { id } = flatRow;
+                    if (getRowInfo && typeof getRowInfo === "function") {
+                        const { original } = flatRow;
+                        const rowInfo = getRowInfo(original, isSubComponentRow);
+                        return (
+                            !(rowInfo && rowInfo.isRowSelectable === false) &&
+                            id === rowId
+                        );
+                    }
+                    return id === rowId;
+                });
+                if (selectedRow) {
+                    const { original } = selectedRow;
+                    const { isParent } = original;
+                    if (isParent !== true) {
+                        rowsSelectedByUser.push(original);
                     }
                 }
             }
@@ -141,15 +135,13 @@ export const convertToIndividualColumns = (managableColumns) => {
 };
 
 export const checkdisplayOfGroupedColumns = (groupedColumn) => {
-    if (groupedColumn) {
-        const { headers } = groupedColumn;
-        if (headers && headers.length > 0) {
-            const headerToDisplay = headers.find((header) => {
-                return header.display === true;
-            });
-            if (headerToDisplay) {
-                return true;
-            }
+    const { headers } = groupedColumn;
+    if (headers && headers.length > 0) {
+        const headerToDisplay = headers.find((header) => {
+            return header.display === true;
+        });
+        if (headerToDisplay) {
+            return true;
         }
     }
     return false;
@@ -170,13 +162,21 @@ export const findAllChildRows = (allRows) => {
     if (allRows && allRows.length > 0) {
         return allRows.filter((row) => {
             let returnValue = false;
-            if (row) {
-                const { original } = row;
-                const { isParent } = original;
-                returnValue = isParent !== true;
-            }
+            const { original } = row;
+            const { isParent } = original;
+            returnValue = isParent !== true;
             return returnValue;
         });
     }
     return [];
+};
+
+export const checkIfGridHasGroupedColumns = (gridColumns) => {
+    let isGroupedColumns = false;
+    gridColumns.forEach((col) => {
+        if (col && col.isGroupHeader === true) {
+            isGroupedColumns = true;
+        }
+    });
+    return isGroupedColumns;
 };

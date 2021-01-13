@@ -1239,7 +1239,7 @@ describe("render Index file ", () => {
 
         // Hide sub component column Inner cell
         const subComponentAdditionalColumnInnerCell = getAllByTestId(
-            "selectSubComponentInnerCell_rowExpand_rowExpand_cell_0"
+            "selectSubComponentInnerCell_subComponentRowExpand_subComponentRowExpand_cell_0"
         );
         expect(subComponentAdditionalColumnInnerCell.length).toBeGreaterThan(0);
         expect(subComponentAdditionalColumnInnerCell[0].checked).toBeTruthy();
