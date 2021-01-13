@@ -1,5 +1,6 @@
 module.exports = {
     moduleNameMapper: {
-        "\\.(css|scss|less|svg)$": "<rootDir>/__mocks__/styleMock.js"
+        "\\.(css|scss)$": "@neo/style-proxy-loader/lib/styleMock.js",
+        "\\@neo-ui/images$": "<rootDir>/__mocks__/imageMock.js"
     }
 };

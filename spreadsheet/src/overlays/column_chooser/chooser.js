@@ -175,39 +175,52 @@ class ColumnReordering extends Component {
             return {
                 id: item,
                 text: (
-                    <div className="column__reorder" key={item}>
-                        <div style={{ cursor: "move" }} className="column_drag">
+                    <div className="ng-popover--column__reorder" key={item}>
+                        <div
+                            style={{ cursor: "move" }}
+                            className="ng-popover--column__drag"
+                        >
                             <i>
-                                <IconJustify />
+                                <IconJustify className="ng-icon" />
                             </i>
                         </div>
-                        <div className="column__reorder__name">{item}</div>
-                        <div className="column__innerCells__wrap">
-                            <div className="column__wrap">
-                                <div className="column__checkbox">
-                                    <input
-                                        data-testid="reArrangeLeftPin"
-                                        role="button"
-                                        type="checkbox"
-                                        id={`checkBoxToPinLeft_${item}`}
-                                        checked={leftPinnedColumList.includes(
-                                            item
-                                        )}
-                                        disabled={
-                                            maxLeftPinnedColumns -
-                                                leftPinnedColumList.length <=
-                                            0
-                                                ? !leftPinnedColumList.includes(
-                                                      item
-                                                  )
-                                                : false
-                                        }
-                                        onChange={() =>
-                                            this.reArrangeLeftPinnedColumn(item)
-                                        }
-                                    />
+                        <span>{item}</span>
+                        <div className="ng-popover--column__list">
+                            <div className="ng-popover--column__wrap">
+                                <div className="ng-popover--column__check">
+                                    <div className="neo-form-check">
+                                        <input
+                                            data-testid="reArrangeLeftPin"
+                                            className="neo-checkbox form-check-input"
+                                            role="button"
+                                            type="checkbox"
+                                            id={`checkBoxToPinLeft_${item}`}
+                                            checked={leftPinnedColumList.includes(
+                                                item
+                                            )}
+                                            disabled={
+                                                maxLeftPinnedColumns -
+                                                    leftPinnedColumList.length <=
+                                                0
+                                                    ? !leftPinnedColumList.includes(
+                                                          item
+                                                      )
+                                                    : false
+                                            }
+                                            onChange={() =>
+                                                this.reArrangeLeftPinnedColumn(
+                                                    item
+                                                )
+                                            }
+                                        />
+                                        <label
+                                            htmlFor={`checkBoxToPinLeft_${item}`}
+                                            className="neo-form-check__label"
+                                        >
+                                            Pin Left
+                                        </label>
+                                    </div>
                                 </div>
-                                <div className="column__txt">Pin Left</div>
                             </div>
                         </div>
                     </div>
@@ -265,161 +278,157 @@ class ColumnReordering extends Component {
             updateTableAsPerRowChooser
         } = this.props;
         return (
-            <ClickAwayListener onClickAway={this.handleClick}>
-                <div className="neo-spreadsheet-popover neo-spreadsheet-popover--column columns--grid">
-                    <div className="neo-spreadsheet-popover__column column__grid">
-                        <div className="column__chooser">
-                            <div className="column__header">
-                                <div className="">
-                                    <strong>Column Chooser</strong>
-                                </div>
-                            </div>
-                            <div className="column__body">
-                                <div>
-                                    <input
-                                        type="text"
-                                        placeholder="Search column"
-                                        className="custom__ctrl"
-                                        onChange={this.filterColumnReorderList}
-                                    />
-                                </div>
-                                <div className="column__selectAll">
-                                    <div className="column__checkbox">
-                                        <input
-                                            type="checkbox"
-                                            data-testid="selectAllCheckBox"
-                                            id="selectallcolumncheckbox"
-                                            onChange={() =>
-                                                this.selectAllToColumnReOrderList()
-                                            }
-                                            checked={
-                                                columnReorderEntityList.length ===
-                                                columns.length
-                                            }
-                                        />
-                                    </div>
-                                    <div className="column__txt">
-                                        Select all
-                                    </div>
-                                </div>
-                                {columnSelectList.map((item) => {
-                                    return (
-                                        <div
-                                            className="column__wrap"
-                                            key={item}
-                                        >
-                                            <div className="column__checkbox">
-                                                <input
-                                                    data-testid="addToColumnReorderEntityList"
-                                                    type="checkbox"
-                                                    id={`checkboxtoselectreorder_${item}`}
-                                                    checked={columnReorderEntityList.includes(
-                                                        item
-                                                    )}
-                                                    onChange={() =>
-                                                        this.addToColumnReorderEntityList(
-                                                            item
-                                                        )
-                                                    }
-                                                />
-                                            </div>
-                                            <div className="column__txt">
-                                                {item}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+            <ClickAwayListener
+                onClickAway={this.handleClick}
+                className="ng-popover ng-popover--column"
+                data-testid="managecolumnoverlay"
+            >
+                <div className="ng-popover__chooser">
+                    <div className="ng-popover__header">
+                        <span>Column Chooser</span>
+                    </div>
+                    <div className="ng-chooser-body">
+                        <input
+                            type="text"
+                            placeholder="Search column"
+                            className="ng-chooser-body__txt"
+                            data-testid="filterColumnsList"
+                            onChange={this.filterColumnReorderList}
+                        />
+                        <div className="ng-chooser-body__selectall">
+                            <div className="neo-form-check">
+                                <input
+                                    type="checkbox"
+                                    data-testid="selectAllCheckBox"
+                                    className="neo-checkbox form-check-input"
+                                    id="selectallcolumncheckbox"
+                                    onChange={() =>
+                                        this.selectAllToColumnReOrderList()
+                                    }
+                                    checked={
+                                        columnReorderEntityList.length ===
+                                        columns.length
+                                    }
+                                />
+                                <label
+                                    htmlFor="chk_selectAllSearchableColumns"
+                                    className="neo-form-check__label"
+                                >
+                                    Select All
+                                </label>
                             </div>
                         </div>
-                        <div className="column__settings">
-                            <div className="column__header">
-                                <div className="column__headerTxt">
-                                    <strong>Column Settings</strong>
-                                </div>
+                        {columnSelectList.map((item) => {
+                            return (
                                 <div
-                                    role="presentation"
-                                    data-testid="closeColumnReordering"
-                                    className="column__close"
-                                    onClick={() => closeColumnReOrdering()}
+                                    className="ng-chooser-body__wrap"
+                                    key={item}
                                 >
-                                    <i>
-                                        <IconClose />
-                                    </i>
+                                    <div className="ng-chooser-body__checkwrap">
+                                        <div className="neo-form-check">
+                                            <input
+                                                data-testid="addToColumnReorderEntityList"
+                                                type="checkbox"
+                                                className="neo-checkbox form-check-input"
+                                                id={`checkboxtoselectreorder_${item}`}
+                                                checked={columnReorderEntityList.includes(
+                                                    item
+                                                )}
+                                                onChange={() =>
+                                                    this.addToColumnReorderEntityList(
+                                                        item
+                                                    )
+                                                }
+                                            />
+                                            <label
+                                                htmlFor={`chk_selectSearchableColumn_${item}`}
+                                                className="neo-form-check__label"
+                                            >
+                                                {item}
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div className="column__body">
-                                <div className="column__info">
-                                    <strong>
-                                        &nbsp; &nbsp; Selected Column Count :{" "}
-                                        {columnReorderEntityList.length}
-                                    </strong>
-                                    {maxLeftPinnedColumns -
-                                        leftPinnedColumList.length >
-                                    0 ? (
-                                        <strong>
-                                            &nbsp; &nbsp; Left Pinned Column
-                                            Count Remaining :{" "}
-                                            {maxLeftPinnedColumns -
-                                                leftPinnedColumList.length}
-                                        </strong>
-                                    ) : (
-                                        <strong style={{ color: "red" }}>
-                                            &nbsp; &nbsp; Maximum Count Of Left
-                                            Pin Columns REACHED
-                                        </strong>
-                                    )}
-                                </div>
-                                <DndProvider
-                                    backend={MultiBackend}
-                                    options={HTML5toTouch}
-                                >
-                                    <ColumnsList
-                                        columnsArray={this.createColumnsArrayFromProps(
-                                            columnReorderEntityList
-                                        )}
-                                        handleReorderList={
-                                            this.handleReorderList
-                                        }
-                                    />
-                                </DndProvider>
-                            </div>
-                            <div className="column__footer">
-                                <div className="column__btns">
-                                    <button
-                                        data-testid="resetButton"
-                                        type="button"
-                                        className="btns"
-                                        onClick={() =>
-                                            this.resetColumnReorderList()
-                                        }
-                                    >
-                                        Reset
-                                    </button>
-                                    <button
-                                        data-testid="cancelButton"
-                                        type="button"
-                                        className="btns"
-                                        onClick={() => closeColumnReOrdering()}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        data-testid="saveButton"
-                                        type="button"
-                                        className="btns btns__save"
-                                        onClick={() =>
-                                            updateTableAsPerRowChooser(
-                                                columnReorderEntityList,
-                                                leftPinnedColumList
-                                            )
-                                        }
-                                    >
-                                        Save
-                                    </button>
-                                </div>
-                            </div>
+                            );
+                        })}
+                    </div>
+                </div>
+                <div className="ng-popover__settings">
+                    <div className="ng-popover__header">
+                        <span>Column Settings</span>
+                        <div
+                            role="presentation"
+                            data-testid="closeColumnReordering"
+                            className="ng-popover--column__close"
+                            onClick={() => closeColumnReOrdering()}
+                        >
+                            <i>
+                                <IconClose className="ng-icon" />
+                            </i>
                         </div>
+                    </div>
+                    <div className="ng-popover--column__body">
+                        <strong>
+                            &nbsp; &nbsp; Selected Column Count :{" "}
+                            {columnReorderEntityList.length}
+                        </strong>
+                        {maxLeftPinnedColumns - leftPinnedColumList.length >
+                        0 ? (
+                            <strong>
+                                &nbsp; &nbsp; Left Pinned Column Count Remaining
+                                :{" "}
+                                {maxLeftPinnedColumns -
+                                    leftPinnedColumList.length}
+                            </strong>
+                        ) : (
+                            <strong style={{ color: "red" }}>
+                                &nbsp; &nbsp; Maximum Count Of Left Pin Columns
+                                REACHED
+                            </strong>
+                        )}
+
+                        <DndProvider
+                            backend={MultiBackend}
+                            options={HTML5toTouch}
+                        >
+                            <ColumnsList
+                                columnsArray={this.createColumnsArrayFromProps(
+                                    columnReorderEntityList
+                                )}
+                                handleReorderList={this.handleReorderList}
+                            />
+                        </DndProvider>
+                    </div>
+                    <div className="ng-popover__footer">
+                        <button
+                            data-testid="resetButton"
+                            type="button"
+                            className="neo-btn neo-btn-default btn btn-secondary"
+                            onClick={() => this.resetColumnReorderList()}
+                        >
+                            Reset
+                        </button>
+                        <button
+                            data-testid="cancelButton"
+                            type="button"
+                            className="neo-btn neo-btn-default btn btn-secondary"
+                            onClick={() => closeColumnReOrdering()}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            data-testid="saveButton"
+                            type="button"
+                            className="neo-btn neo-btn-primary btn btn-secondary"
+                            onClick={() =>
+                                updateTableAsPerRowChooser(
+                                    columnReorderEntityList,
+                                    leftPinnedColumList
+                                )
+                            }
+                        >
+                            Save
+                        </button>
                     </div>
                 </div>
             </ClickAwayListener>

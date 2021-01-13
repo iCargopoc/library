@@ -8,5 +8,34 @@
     "options2": [
         { "label": "One", "value": "1" },
         { "label": "Two", "value": "2" }
+    ],
+    "masterOptions1": [
+        {
+            "label": "Airport",
+            "value": "airports",
+            "schema": {
+                "query": "airports",
+                "label": "airport_name",
+                "value": "airport_code"
+            }
+        },
+        {
+            "label": "Commodities",
+            "value": "commodities",
+            "schema": {
+                "query": "commodities",
+                "label": "commodityDescription",
+                "value": "commodityCode"
+            }
+        },
+        {
+            "label": "Products",
+            "value": "products",
+            "schema": {
+                "query": "products",
+                "label": "productName",
+                "value": "productCode"
+            }
+        }
     ]
 }

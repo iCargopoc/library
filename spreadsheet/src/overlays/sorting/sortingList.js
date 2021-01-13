@@ -49,7 +49,12 @@ const SortingList = (props) => {
     }, [sortsArray]);
 
     return (
-        <div ref={drop} style={{ display: "flex", flexWrap: "wrap" }}>
+        <div ref={drop} className="ng-popover--sort__content">
+            <ul className="ng-popover--sort__items-title">
+                <li className="ng-popover--sort__item-text">Sort By</li>
+                <li className="ng-popover--sort__item-text">Sort On</li>
+                <li className="ng-popover--sort__item-text">Order</li>
+            </ul>
             {cards.map((card) => (
                 <Card
                     key={card.id}

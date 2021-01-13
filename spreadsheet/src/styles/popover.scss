@@ -66,6 +66,8 @@
                 overflow-x: hidden;
                 &__selectall {
                     display: flex;
+                    justify-content: space-between;
+                    align-items: center;
                     padding: 0 rem(10);
                 }
                 &__txt {
@@ -82,7 +84,6 @@
                     border: rem(1) solid var(--border);
                     border-radius: rem(3);
                     padding: 0 rem(10);
-                    border-bottom: none;
                     height: rem(32);
                     &:last-child {
                         border-bottom: rem(1) solid var(--border);
@@ -110,8 +111,24 @@
         }
         &--sort {
             width: rem(498);
+            &__content {
+                display: flex;
+                flex-wrap: wrap;
+            }
             &__items {
                 display: flex;
+                .ng-popover__reorder {
+                    .ng-icon-block {
+                        display: flex;
+                        margin-top: rem(8);
+                        .ng-icon {
+                            zoom: 1;
+                        }
+                    }
+                }
+                .ng-popover__drag {
+                    cursor: move;
+                }
                 .ng-icon {
                     height: rem(15);
                     width: rem(15);
@@ -187,20 +204,26 @@
             }
             &__body {
                 display: flex;
+                flex-direction: row;
                 padding: rem(10);
                 flex-wrap: wrap;
                 overflow-y: scroll;
                 height: rem(380);
                 width: rem(672);
-                padding-bottom: rem(60);
+                padding-bottom: rem(30);
                 @media only screen and (max-width: 991px) {
                     width: 100%;
                 }
             }
             &__head {
+                width: 100%;
                 font-size: rem(12);
                 line-height: 1;
                 margin: rem(20) 0 0 rem(8);
+            }
+            &__content {
+                display: flex;
+                flex-wrap: wrap;
             }
             &__reorder {
                 border: rem(1) solid var(--border);
@@ -238,6 +261,7 @@
             }
             &__drag {
                 margin-bottom: rem(10);
+                cursor: move;
             }
             &__wrap {
                 display: flex;
@@ -278,16 +302,29 @@
                 border-radius: rem(5);
                 height: rem(86);
                 margin: 0 rem(4);
-                padding: rem(8) rem(10);
+                padding: rem(2) rem(8);
                 width: rem(86);
                 line-height: normal;
             }
             &__file {
                 text-align: center;
+                .ng-icon {
+                    zoom: 2.7;
+                    &--pdf {
+                        fill: var(--danger);
+                    }
+                    &--excel {
+                        fill: var(--success);
+                    }
+                    &--csv {
+                        fill: var(--default);
+                    }
+                }
                 .ng-popover--exports__file-type {
                     display: block;
-                    font-size: rem(14);
+                    font-size: rem(12);
                     line-height: normal;
+                    margin-top: rem(4);
                 }
             }
             &__warning {

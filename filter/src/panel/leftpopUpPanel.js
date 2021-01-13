@@ -1,10 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-    IconUnSaved,
-    IconSelected,
-    IconSaved
-} from "../utilities/svgUtilities";
+import sprite from "@neo-ui/images";
 
 let listViewDiv = "";
 let savedFiltersDiv = "";
@@ -14,42 +10,52 @@ const LeftPopUpPanel = (props) => {
         listView,
         handlelistViewClick,
         savedFilters,
-        handleSavedFilterClick,
         listViewName,
-        savedFilterName
+        savedFilterName,
+        theme
     } = props;
 
     if (listView) {
         listViewDiv = listView.predefinedFilters.map((list) => {
             return (
-                <li data-testid="listViewList">
-                    <div className="filter--saved__content">
+                <li className="nf-saved__list-item" data-testId="listViewList">
+                    <div className="nf-saved__content">
                         {list.name === listViewName && !savedFilterName && (
-                            <IconSelected />
+                            <svg className="icon-tick">
+                                <use href={`${sprite}#tick-sm`} />
+                            </svg>
                         )}
                         <span
                             className={
                                 list.name === listViewName && !savedFilterName
-                                    ? "selected"
-                                    : ""
+                                    ? "nf-saved__content-text nf-selected"
+                                    : "nf-saved__content-text"
                             }
                             role="button"
-                            data-testid={list.name}
+                            data-testId={list.name}
                             key={list.name}
                             tabIndex={0}
                             onKeyPress={() => {
-                                handlelistViewClick(list);
+                                handlelistViewClick(list, "listView");
                             }}
                             onClick={() => {
-                                handlelistViewClick(list);
+                                handlelistViewClick(list, "listView");
                             }}
                         >
                             {list.name}
                         </span>
                     </div>
-                    <div className="filter--saved__favourite">
-                        {!list.default && <IconUnSaved />}
-                        {list.default && <IconSaved />}
+                    <div className="nf-saved__favourite">
+                        {!list.default && (
+                            <svg className="icon-star">
+                                <use href={`${sprite}#star-inactive`} />
+                            </svg>
+                        )}
+                        {list.default && (
+                            <svg className="icon-star">
+                                <use href={`${sprite}#star-active`} />
+                            </svg>
+                        )}
                     </div>
                 </li>
             );
@@ -59,32 +65,44 @@ const LeftPopUpPanel = (props) => {
     if (savedFilters) {
         savedFiltersDiv = savedFilters.savedFilters.map((list) => {
             return (
-                <li>
-                    <div className="filter--saved__content">
-                        {list.name === savedFilterName && !listViewName && (
-                            <IconSelected />
+                <li className="nf-saved__list-item">
+                    <div className="nf-saved__content">
+                        {list.name === savedFilterName && (
+                            <svg className="icon-tick">
+                                <use href={`${sprite}#tick-sm`} />
+                            </svg>
                         )}
                         <span
                             className={
-                                list.name === savedFilterName && !listViewName
-                                    ? "selected"
-                                    : ""
+                                list.name === savedFilterName
+                                    ? "nf-saved__content-text nf-selected"
+                                    : "nf-saved__content-text"
                             }
                             role="button"
-                            data-testid={list.name}
+                            data-testId={list.name}
                             key={list.name}
                             tabIndex={0}
-                            onKeyPress={() => handleSavedFilterClick(list)}
+                            onKeyPress={() =>
+                                handlelistViewClick(list, "savedFilter")
+                            }
                             onClick={() => {
-                                handleSavedFilterClick(list);
+                                handlelistViewClick(list, "savedFilter");
                             }}
                         >
                             {list.name}
                         </span>
                     </div>
-                    <div className="filter--saved__favourite">
-                        {!list.default && <IconUnSaved />}
-                        {list.default && <IconSaved />}
+                    <div className="nf-saved__favourite">
+                        {!list.default && (
+                            <svg className="icon-star">
+                                <use href={`${sprite}#star-inactive`} />
+                            </svg>
+                        )}
+                        {list.default && (
+                            <svg className="icon-star">
+                                <use href={`${sprite}#star-active`} />
+                            </svg>
+                        )}
                     </div>
                 </li>
             );
@@ -93,11 +111,11 @@ const LeftPopUpPanel = (props) => {
 
     if (leftPopUpShow) {
         return (
-            <div className="filter--saved">
-                <h2>LIST VIEW</h2>
-                <ul>{listViewDiv}</ul>
-                <h2>SAVED FILTERS</h2>
-                <ul>{savedFiltersDiv}</ul>
+            <div className={theme ? `nf-saved ${theme}` : "nf-saved"}>
+                <h2 className="nf-saved__title">LIST VIEW</h2>
+                <ul className="nf-saved__list">{listViewDiv}</ul>
+                <h2 className="nf-saved__title">SAVED FILTERS</h2>
+                <ul className="nf-saved__list">{savedFiltersDiv}</ul>
             </div>
         );
     }
@@ -109,9 +127,9 @@ LeftPopUpPanel.propTypes = {
     listView: PropTypes.any,
     handlelistViewClick: PropTypes.any,
     savedFilters: PropTypes.any,
-    handleSavedFilterClick: PropTypes.any,
     listViewName: PropTypes.any,
-    savedFilterName: PropTypes.any
+    savedFilterName: PropTypes.any,
+    theme: PropTypes.any
 };
 
 export default LeftPopUpPanel;

@@ -2,7 +2,6 @@
 * ------------------------------------------------------ */
 button:focus {
     outline: none;
-    border: 0;
 }
 
 .dropbtn {
@@ -66,4 +65,17 @@ button:focus {
 }
 .dropdown:hover .dropbtn {
     background-color: white;
+}
+.fs14.font-weight-500 {
+    font-weight: 500;
+}
+.controls.multiple-types {
+    display: flex;
+    flex-direction: column;
+}
+.pointer {
+    cursor: pointer;
+}
+.nf-header {
+    position: relative;
 }

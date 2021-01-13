@@ -3,7 +3,7 @@
         {
             "name": "Flights under 2500 kg capacity",
             "default": false,
-            "category": "FlightCapacity",
+            "category": "BK",
             "filters": {
                 "yield": "Vokeyy",
                 "flightNo": {
@@ -20,7 +20,7 @@
         {
             "name": "Flight under 10000kg booking",
             "default": false,
-            "category": "FlightBooking",
+            "category": "BK",
             "filters": {
                 "yield": "rerwe",
                 "flightNo": {
@@ -37,13 +37,13 @@
         {
             "name": "Flight have revenue under 20%",
             "default": false,
-            "category": "FlightRevenue",
+            "category": "BK",
             "filters": {
                 "yield": "rerwe",
                 "flightNo": {
                     "carrierCode": "dfd",
                     "flightNumber": "00123",
-                    "flightDate": "2020-09-22"
+                    "flightDate": "2020-09-23"
                 },
                 "bookingProfile": {
                     "value": "test",
@@ -54,18 +54,19 @@
         {
             "name": "Flight above 10000kg capacity",
             "default": false,
-            "category": "FlightCapacity",
+            "category": "BK",
             "filters": {
                 "yield": "rerwe",
                 "flightNo": {
                     "carrierCode": "dfd",
                     "flightNumber": "00123",
-                    "flightDate": "2020-09-22"
+                    "flightDate": "2020-09-24"
                 },
                 "bookingProfile": {
                     "value": "test",
                     "condition": "greater than"
-                }
+                },
+                "airport": "TRV"
             }
         }
     ]

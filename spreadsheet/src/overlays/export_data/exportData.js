@@ -232,49 +232,58 @@ class ExportData extends Component {
         return (
             <ClickAwayListener
                 onClickAway={this.handleClick}
-                className="neo-spreadsheet-popover neo-spreadsheet-popover--exports exports--grid"
+                className="ng-popover ng-popover--exports"
+                data-testid="exportoverlay"
             >
-                <div className="neo-spreadsheet-popover__export export__grid">
-                    <div className="export__chooser">
-                        <div className="export__header">
-                            <div className="">
-                                <strong>Export Data</strong>
+                <div className="ng-popover__chooser">
+                    <div className="ng-popover__header">
+                        <div className="">
+                            <strong>Export Data</strong>
+                        </div>
+                    </div>
+                    <div className="ng-chooser-body">
+                        <div>
+                            <input
+                                data-testid="searchExport"
+                                type="text"
+                                placeholder="Search export"
+                                className="ng-chooser-body__txt"
+                                onChange={this.columnSearchLogic}
+                            />
+                        </div>
+                        <div className="ng-chooser-body__selectall">
+                            <div className="neo-form-check">
+                                <input
+                                    id="chk_selectAllSearchableColumns"
+                                    data-testid="selectColumns"
+                                    className="neo-checkbox form-check-input"
+                                    type="checkbox"
+                                    onChange={() =>
+                                        this.selectAllToColumnList()
+                                    }
+                                    checked={isAllSelected}
+                                />
+                                <label
+                                    htmlFor="chk_selectAllSearchableColumns"
+                                    className="neo-form-check__label"
+                                >
+                                    Select All
+                                </label>
                             </div>
                         </div>
-                        <div className="export__body">
-                            <div>
-                                <input
-                                    data-testid="searchExport"
-                                    type="text"
-                                    placeholder="Search export"
-                                    className="custom__ctrl"
-                                    onChange={this.columnSearchLogic}
-                                />
-                            </div>
-                            <div className="export__wrap export__headertxt">
-                                <div className="export__checkbox">
-                                    <input
-                                        data-testid="selectColumns"
-                                        className="selectColumn"
-                                        type="checkbox"
-                                        onChange={() =>
-                                            this.selectAllToColumnList()
-                                        }
-                                        checked={isAllSelected}
-                                    />
-                                </div>
-                                <div className="export__txt">Select All</div>
-                            </div>
-                            {columnValueList && columnValueList.length > 0
-                                ? columnValueList.map((column) => {
-                                      return (
-                                          <div
-                                              className="export__wrap"
-                                              key={column.key}
-                                          >
-                                              <div className="export__checkbox">
+                        {columnValueList && columnValueList.length > 0
+                            ? columnValueList.map((column) => {
+                                  return (
+                                      <div
+                                          className="ng-chooser-body__wrap"
+                                          key={column.key}
+                                      >
+                                          <div className="ng-chooser-body__checkwrap">
+                                              <div className="neo-form-check">
                                                   <input
+                                                      id={`chk_selectSearchableColumn_${column.key}`}
                                                       data-testid="addToColumn"
+                                                      className="neo-checkbox form-check-input"
                                                       type="checkbox"
                                                       checked={columnEntityList.includes(
                                                           column
@@ -285,107 +294,132 @@ class ExportData extends Component {
                                                           )
                                                       }
                                                   />
-                                              </div>
-                                              <div className="export__txt">
-                                                  {column.name}
+                                                  <label
+                                                      htmlFor={`chk_selectSearchableColumn_${column.key}`}
+                                                      className="neo-form-check__label"
+                                                  >
+                                                      {column.name}
+                                                  </label>
                                               </div>
                                           </div>
-                                      );
-                                  })
-                                : ""}
+                                      </div>
+                                  );
+                              })
+                            : ""}
+                    </div>
+                </div>
+                <div className="ng-popover__settings">
+                    <div className="ng-popover__header">
+                        <div className="ng-popover--exports__close">
+                            <i role="presentation" onClick={closeExport}>
+                                <IconClose className="ng-icon" />
+                            </i>
                         </div>
                     </div>
-                    <div className="export__settings">
-                        <div className="export__header">
-                            <div className="export__headerTxt" />
-                            <div className="export__close">
-                                <i role="presentation" onClick={closeExport}>
-                                    <IconClose />
-                                </i>
+                    <div className="ng-popover--exports__title">Export as</div>
+                    <div className="ng-popover--exports__body">
+                        <div className="ng-popover--exports__reorder">
+                            <div className="neo-form-check">
+                                <input
+                                    data-testid="addpdfDownloadType"
+                                    type="checkbox"
+                                    name="pdf"
+                                    value="pdf"
+                                    className="neo-checkbox form-check-input"
+                                    onChange={this.selectDownLoadType}
+                                />
                             </div>
-                        </div>
-                        <div className="export__as">Export as</div>
-                        <div className="export__body">
-                            <div className="export__reorder">
-                                <div className="check-wrap">
-                                    <input
-                                        data-testid="addpdfDownloadType"
-                                        type="checkbox"
-                                        name="pdf"
-                                        value="pdf"
-                                        onChange={this.selectDownLoadType}
-                                    />
-                                </div>
-                                <div className="export__file">
+                            <label
+                                htmlFor="chk_pdf"
+                                className="neo-form-check__label"
+                            >
+                                <div className="ng-popover--exports__file">
                                     <i>
-                                        <IconPdf />
+                                        <IconPdf className="ng-icon ng-icon--pdf" />
                                     </i>
-                                    <strong>PDF</strong>
+                                    <span className="ng-popover--exports__file-type">
+                                        PDF
+                                    </span>
                                 </div>
-                            </div>
-                            <div className="export__reorder">
-                                <div className="check-wrap">
-                                    <input
-                                        type="checkbox"
-                                        name="excel"
-                                        value="excel"
-                                        onChange={this.selectDownLoadType}
-                                    />
-                                </div>
-                                <div className="export__file">
-                                    <i>
-                                        <IconExcel />
-                                    </i>
-                                    <strong>Excel</strong>
-                                </div>
-                            </div>
-                            <div className="export__reorder">
-                                <div className="check-wrap">
-                                    <input
-                                        type="checkbox"
-                                        name="csv"
-                                        value="csv"
-                                        onChange={this.selectDownLoadType}
-                                    />
-                                </div>
-                                <div className="export__file">
-                                    <i>
-                                        <IconCsv />
-                                    </i>
-
-                                    <strong>CSV</strong>
-                                </div>
-                            </div>
-                            <div className="exportWarning">
-                                <span style={{ display: clickTag }}>
-                                    <strong>
-                                        Select at least one {warning}
-                                    </strong>
-                                </span>
-                            </div>
+                            </label>
                         </div>
-                        <div className="export__footer">
-                            <div className="export__btns">
-                                <button
-                                    data-testid="closeExport"
-                                    type="button"
-                                    className="btns"
-                                    onClick={() => closeExport()}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    data-testid="exportValidationClick"
-                                    type="button"
-                                    className="btns btns__save"
-                                    onClick={() => {
-                                        this.exportValidation();
-                                    }}
-                                >
-                                    Export
-                                </button>
+                        <div className="ng-popover--exports__reorder">
+                            <div className="neo-form-check">
+                                <input
+                                    type="checkbox"
+                                    name="excel"
+                                    value="excel"
+                                    onChange={this.selectDownLoadType}
+                                    className="neo-checkbox form-check-input"
+                                    id="chk_excel"
+                                    data-testid="chk_excel_test"
+                                />
                             </div>
+                            <label
+                                htmlFor="chk_excel"
+                                className="neo-form-check__label"
+                            >
+                                <div className="ng-popover--exports__file">
+                                    <i>
+                                        <IconExcel className="ng-icon ng-icon--excel" />
+                                    </i>
+                                    <span className="ng-popover--exports__file-type">
+                                        Excel
+                                    </span>
+                                </div>
+                            </label>
                         </div>
+                        <div className="ng-popover--exports__reorder">
+                            <div className="neo-form-check">
+                                <input
+                                    type="checkbox"
+                                    name="csv"
+                                    value="csv"
+                                    onChange={this.selectDownLoadType}
+                                    className="neo-checkbox form-check-input"
+                                    id="chk_csv"
+                                    data-testid="chk_csv_test"
+                                />
+                            </div>
+                            <label
+                                htmlFor="chk_csv"
+                                className="neo-form-check__label"
+                            >
+                                <div className="ng-popover--exports__file">
+                                    <i>
+                                        <IconCsv className="ng-icon ng-icon--csv" />
+                                    </i>
+                                    <span className="ng-popover--exports__file-type">
+                                        CSV
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+                        <div className="ng-popover--exports__warning">
+                            <span style={{ display: clickTag }}>
+                                <strong>Select at least one {warning}</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="ng-popover__footer">
+                        <button
+                            data-testid="closeExport"
+                            type="button"
+                            className="neo-btn neo-btn-primary btn btn-secondary"
+                            onClick={() => closeExport()}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            data-testid="exportValidationClick"
+                            type="button"
+                            className="neo-btn neo-btn-default btn btn-secondary"
+                            onClick={() => {
+                                this.exportValidation();
+                            }}
+                        >
+                            Export
+                        </button>
                     </div>
                 </div>
             </ClickAwayListener>

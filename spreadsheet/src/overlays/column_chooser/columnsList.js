@@ -47,7 +47,11 @@ const ColumnsList = (props) => {
         setColumns(props.columnsArray);
     }, [columnsArray]);
     return (
-        <div ref={drop} style={{ display: "flex", flexWrap: "wrap" }}>
+        <div
+            ref={drop}
+            className="ng-popover--column__content"
+            style={{ display: "flex", flexWrap: "wrap" }}
+        >
             {columns.map((column) => (
                 <ColumnItem
                     key={column.id}

@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { IButton } from "@neo/button";
 import OutsideClickHandler from "react-outside-click-handler";
-import { IconLeftAlign } from "../utilities/svgUtilities";
+import sprite from "@neo-ui/images";
 import LeftPopUpPanel from "./leftpopUpPanel";
 
 let chips;
-let chipCount;
 const MainFilterPanel = (props) => {
     const [chipArray, setChipArray] = useState({});
-    const [countShow, setCountShow] = useState("none");
     const {
         applyFilterChip,
         showDrawer,
@@ -20,22 +18,17 @@ const MainFilterPanel = (props) => {
         openLeftPopUp,
         closeLeftPopUp,
         savedFilters,
-        handleSavedFilterClick,
         listViewName,
-        savedFilterName
+        savedFilterName,
+        resetFilter,
+        theme
     } = props;
 
     useEffect(() => {
         setChipArray(applyFilterChip);
-        if (Object.keys(applyFilterChip).length > 0) {
-            setCountShow("");
-        } else {
-            setCountShow("none");
-        }
     }, [applyFilterChip]);
 
     if (chipArray) {
-        chipCount = 0;
         chips = Object.entries(chipArray).map(([key, values]) => {
             if (
                 !values.condition &&
@@ -46,18 +39,17 @@ const MainFilterPanel = (props) => {
                         Object.keys(values).length > 0) ||
                     (typeof values === "boolean" && !key.includes(",check")))
             ) {
-                chipCount += 1;
                 return (
                     <div
                         role="presentation"
-                        className="listContent"
-                        data-testid={key}
+                        className="nf-header__tags-list"
+                        data-testId={key}
                         key={key}
                         onClick={() => {
                             props.showDrawer();
                         }}
                     >
-                        <span key={key}>{key}</span>
+                        <span key={key}>{key}:</span>
                         {(typeof values === "string" ||
                             typeof values === "boolean") && (
                             <div key={values}>
@@ -71,7 +63,7 @@ const MainFilterPanel = (props) => {
                                 return (
                                     <div key={item}>
                                         &nbsp;&nbsp;
-                                        {item}
+                                        {String(item)}
                                         &nbsp;&nbsp;
                                     </div>
                                 );
@@ -82,7 +74,7 @@ const MainFilterPanel = (props) => {
                                 return (
                                     <div key={keys}>
                                         &nbsp;&nbsp;
-                                        {keys}:{item}
+                                        {item}
                                         &nbsp;&nbsp;
                                     </div>
                                 );
@@ -112,140 +104,131 @@ const MainFilterPanel = (props) => {
                             Object.keys(values.value).length > 0) ||
                         (typeof values.value === "boolean" &&
                             !key.includes(",check")))
-                ) {
-                    chipCount += 1;
-                }
-
-                return (
-                    <div
-                        role="presentation"
-                        className="listContent"
-                        data-testid={key}
-                        key={key}
-                        onClick={() => {
-                            props.showDrawer();
-                        }}
-                    >
-                        <span key={key}>{key}</span>
-                        {values.condition && (
-                            <div key={values.condition}>
-                                {values.condition}
-                                &nbsp;&nbsp;
-                            </div>
-                        )}
-                        {(typeof values.value === "string" ||
-                            typeof values.value === "boolean") && (
-                            <div key={values.value}>
-                                {values.value.toString()}
-                            </div>
-                        )}
-                        {Array.isArray(values.value) &&
-                            values.value.map((item) => {
-                                return (
-                                    <div key={item}>
-                                        &nbsp;&nbsp;
-                                        {item}
-                                        &nbsp;&nbsp;
-                                    </div>
-                                );
-                            })}
-                        {typeof values.value === "object" &&
-                            !Array.isArray(values.value) &&
-                            Object.keys(values.value).map((item) => {
-                                return (
-                                    <div key={item}>
-                                        &nbsp;&nbsp;
-                                        {item}:{values.value[item]}
-                                        &nbsp;&nbsp;
-                                    </div>
-                                );
-                            })}
-                    </div>
-                );
+                )
+                    return (
+                        <div
+                            role="presentation"
+                            className="nf-header__tags-list"
+                            data-testId={key}
+                            key={key}
+                            onClick={() => {
+                                props.showDrawer();
+                            }}
+                        >
+                            <span className="nf-header__tags-text" key={key}>
+                                {key}:
+                            </span>
+                            {values.condition && (
+                                <div key={values.condition}>
+                                    {values.condition}
+                                    &nbsp;&nbsp;
+                                </div>
+                            )}
+                            {(typeof values.value === "string" ||
+                                typeof values.value === "boolean") && (
+                                <div key={values.value}>
+                                    {values.value.toString()}
+                                </div>
+                            )}
+                            {Array.isArray(values.value) &&
+                                values.value.map((item) => {
+                                    return (
+                                        <div key={item}>
+                                            &nbsp;&nbsp;
+                                            {item}
+                                            &nbsp;&nbsp;
+                                        </div>
+                                    );
+                                })}
+                            {typeof values.value === "object" &&
+                                !Array.isArray(values.value) &&
+                                Object.keys(values.value).map((item) => {
+                                    return (
+                                        <div key={item}>
+                                            &nbsp;&nbsp;
+                                            {values.value[item]}
+                                            &nbsp;&nbsp;
+                                        </div>
+                                    );
+                                })}
+                        </div>
+                    );
             }
             return <div />;
         });
     }
     return (
-        <div className="neo-header">
-            <div className="header__filter">
-                <div className="displayFlex">
-                    <div className="alignLeft">
-                        <div
-                            style={{
-                                cursor: "pointer"
-                            }}
-                            role="presentation"
-                            className="iconLeft"
-                            data-testid="handleListFilterCheck"
-                            onClick={openLeftPopUp}
-                        >
-                            <IconLeftAlign />
-                            <OutsideClickHandler
-                                onOutsideClick={closeLeftPopUp}
-                            >
-                                <LeftPopUpPanel
-                                    leftPopUpShow={leftPopUpShow}
-                                    listView={listView}
-                                    handlelistViewClick={handlelistViewClick}
-                                    savedFilters={savedFilters}
-                                    handleSavedFilterClick={
-                                        handleSavedFilterClick
-                                    }
-                                    listViewName={listViewName}
-                                    savedFilterName={savedFilterName}
-                                />
-                            </OutsideClickHandler>
-                        </div>
-                        <div className="leftSpace">
-                            {listViewName && listViewName.length > 0
-                                ? listViewName
-                                : savedFilterName}
-                        </div>
+        <>
+            <OutsideClickHandler onOutsideClick={closeLeftPopUp}>
+                <LeftPopUpPanel
+                    leftPopUpShow={leftPopUpShow}
+                    listView={listView}
+                    handlelistViewClick={handlelistViewClick}
+                    savedFilters={savedFilters}
+                    listViewName={listViewName}
+                    savedFilterName={savedFilterName}
+                    theme={theme}
+                />
+            </OutsideClickHandler>
+            <div className="nf-header__wrap">
+                <div className="nf-header__block">
+                    <div
+                        style={{
+                            cursor: "pointer"
+                        }}
+                        role="presentation"
+                        className="nf-header__hamburger"
+                        data-testId="handleListFilterCheck"
+                        onClick={openLeftPopUp}
+                    >
+                        <svg className="icon-list">
+                            <use href={`${sprite}#list`} />
+                        </svg>
                     </div>
+                    <div className="nf-header__text">
+                        {listViewName &&
+                        listViewName.length > 0 &&
+                        !(savedFilterName && savedFilterName.length > 0)
+                            ? listViewName
+                            : savedFilterName}
+                    </div>
+                    <div
+                        role="presentation"
+                        className="nf-header__refresh pointer"
+                        onClick={() => {
+                            resetFilter();
+                        }}
+                        data-testId="resetFilters"
+                    >
+                        <svg className="icon-refresh" role="button">
+                            <use href={`${sprite}#refresh`} />
+                        </svg>
+                    </div>
+
                     {CustomPanel && (
-                        <div className="header__custompanel">
+                        <div className="nf-header__custompanel">
                             <CustomPanel />
                         </div>
                     )}
                 </div>
-                <div className="secondList">
-                    <div className="displayFlex">
-                        <div className="filter__tags">
-                            {chipCount > 0 && (
-                                <span
-                                    style={{
-                                        display: countShow
-                                    }}
-                                    className="listContent"
-                                >
-                                    count:
-                                    {chipCount}
-                                </span>
-                            )}
-                            {chips}
-                        </div>
-                        <div>
-                            <IButton
-                                color="link"
-                                size="sm"
-                                style={{
-                                    cursor: "pointer"
-                                }}
-                                role="presentation"
-                                data-testid="showDrawer-check"
-                                onClick={() => {
-                                    showDrawer();
-                                }}
-                                className="addFilter"
-                            >
-                                + Add Filter
-                            </IButton>
-                        </div>
-                    </div>
+                <div className="nf-header__tags">
+                    {chips}
+                    <IButton
+                        role="presentation"
+                        dataTestId="addFilter"
+                        onClick={() => {
+                            showDrawer();
+                        }}
+                        className="neo-btn-link pointer"
+                    >
+                        <svg className="icon-plus">
+                            <use href={`${sprite}#plus`} />
+                        </svg>
+                        Add Filter
+                    </IButton>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
@@ -259,9 +242,10 @@ MainFilterPanel.propTypes = {
     leftPopUpShow: PropTypes.any,
     openLeftPopUp: PropTypes.any,
     closeLeftPopUp: PropTypes.any,
-    handleSavedFilterClick: PropTypes.any,
     listViewName: PropTypes.any,
-    savedFilterName: PropTypes.any
+    savedFilterName: PropTypes.any,
+    resetFilter: PropTypes.any,
+    theme: PropTypes.any
 };
 
 export default MainFilterPanel;

@@ -1,8 +1,8 @@
 {
     "predefinedFilters": [
         {
-            "name": "All Flights",
-            "category": "AF",
+            "name": "Flights",
+            "category": "FL",
             "default": false,
             "filters": {
                 "yield": "rerwe",
@@ -15,12 +15,16 @@
                     "value": "test",
                     "condition": "greater than"
                 },
-                "masterSelect": ["GEN", "PIG", "VAL"]
+                "masterSelect": ["GEN", "PIG", "VAL"],
+                "dateRangeSuggestion": {
+                    "valueString": "next-2-weeks",
+                    "value": ["2021-01-03", "2021-01-16"]
+                }
             }
         },
         {
-            "name": "Recently Viewed",
-            "category": "RW",
+            "name": "Bookings",
+            "category": "BK",
             "default": true,
             "filters": {
                 "yield": "rerwe",
@@ -38,17 +42,51 @@
                 },
                 "masterSelect": ["LTF", "LOB"],
                 "airport": "TRV",
-                "country": { "value": "KRL", "condition": "greater than" },
+                "country": {
+                    "value": "KRL",
+                    "condition": "greater than"
+                },
                 "fromDatePort": "2020-09-22",
                 "toDatePort": "2020-10-22",
-                "fromDate": "2022-10-22",
-                "toDate": "12:00",
-                "iSelect": "2"
+
+                "iSelect": "Two",
+                "iSelectTerminal": "One",
+                "custom1": { "text": "jkl", "date": "2022-10-23" },
+                "custom2": { "text": "jkl", "date": "2022-10-24" },
+                "custom1Port": {
+                    "text": "jkl",
+                    "date": "2022-10-25"
+                },
+                "custom2Port": {
+                    "text": "jkl",
+                    "date": "2022-10-26"
+                },
+                "createSelect": {
+                    "value": ["1", "2"],
+                    "condition": "greater than"
+                },
+                "iSelectPort": "Two",
+                "dateRangeSuggestion": {
+                    "valueString": "next-2-weeks",
+                    "value": ["2021-01-03", "2021-01-16"]
+                },
+                "masterTypeSelectField": {
+                    "condition": "greater than",
+                    "value": { "type": "airports", "value": "ICN" }
+                },
+                "iSelectCustoms": "One",
+                "masterTypeSelect": {
+                    "condition": "greater than",
+                    "value": { "type": "airports", "value": "ICN" }
+                },
+
+                "toDate": "2022-10-23",
+                "fromDate": "2022-10-23"
             }
         },
         {
-            "name": "To be cancelled Flights",
-            "category": "TCF",
+            "name": "Cancellings",
+            "category": "CG",
             "default": false,
             "filters": {
                 "yield": "rerwe",
@@ -87,6 +125,11 @@
                 },
                 "masterSelect": ["LTF", "LOB"]
             }
+        },
+        {
+            "name": "Default",
+            "category": "default",
+            "filters": { "itoggle": false }
         }
     ]
 }

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Toolbar, Data, Filters, Editors } from "react-data-grid-addons";
 import PropTypes from "prop-types";
 import { range } from "lodash";
-// import ExtDataGrid from "./common/extDataGrid";
 import DataGrid from "react-data-grid";
 import DatePicker from "./functions/datePicker";
 import CheckboxEditor from "./functions/checkboxEditor";
@@ -15,15 +14,13 @@ import {
     IconShare,
     IconGroupSort,
     IconSearch,
-    IconFilter,
     IconPlus,
     RowDelete
 } from "./utilities/svgUtilities";
 import FormulaProcessor from "./functions/formulaProcessor";
 // lazy styles inclusion via styleloader
-// import __cmpStyles from "./styles/main.scss";
+import __cmpStyles from "./styles/main.scss";
 import "react-data-grid/dist/react-data-grid.css";
-import "!style-loader!css-loader!sass-loader!./styles/main.scss";
 
 const defaultParsePaste = (str) =>
     str.split(/\r\n|\n|\r/).map((row) => row.split("\t"));
@@ -116,7 +113,6 @@ class Spreadsheet extends Component {
             rows,
             columns,
             isGlobalSearch,
-            // isColumnFilter,
             isGroupSort,
             isColumnChooser,
             isExportData,
@@ -125,12 +121,10 @@ class Spreadsheet extends Component {
             isSelectAll,
             gridHeight,
             isTitle,
-            columnFilterStyle,
             isHeader,
             noBorderClassName
         } = this.props;
         const dataSetVar = JSON.parse(JSON.stringify(dataSet));
-        console.log(dataSetVar);
         dataSetVar.forEach((e, index) => {
             const el = e;
             el.index = index;
@@ -139,8 +133,6 @@ class Spreadsheet extends Component {
         this.state = {
             isTitle,
             isGlobalSearch,
-            // isColumnFilter,
-            columnFilterStyle,
             isGroupSort,
             isColumnChooser,
             isExportData,
@@ -211,11 +203,11 @@ class Spreadsheet extends Component {
         });
     }
 
-    // componentDidMount() {
-    //     if (__cmpStyles.use) {
-    //         __cmpStyles.use();
-    //     }
-    // }
+    componentDidMount() {
+        if (__cmpStyles.use) {
+            __cmpStyles.use();
+        }
+    }
 
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(props) {
@@ -233,11 +225,11 @@ class Spreadsheet extends Component {
         window.dispatchEvent(resizeEvent);
     }
 
-    // componentWillUnmount() {
-    //     if (__cmpStyles.unuse) {
-    //         __cmpStyles.unuse();
-    //     }
-    // }
+    componentWillUnmount() {
+        if (__cmpStyles.unuse) {
+            __cmpStyles.unuse();
+        }
+    }
 
     /**
      * Method To render the filter values for filtering rows
@@ -1624,6 +1616,7 @@ class Spreadsheet extends Component {
 
     render() {
         const {
+            // eslint-disable-next-line no-unused-vars
             count,
             searchValue,
             sortingPanelComponent,
@@ -1637,8 +1630,6 @@ class Spreadsheet extends Component {
             selectedIndexes,
             isTitle,
             isGlobalSearch,
-            // isColumnFilter,
-            columnFilterStyle,
             isGroupSort,
             isColumnChooser,
             isExportData,
@@ -1648,119 +1639,126 @@ class Spreadsheet extends Component {
             isHeader,
             noBorderClassName
         } = this.state;
-        console.log(rows);
         return (
-            <div
-                // onScroll={this.handleScroll}
-                className={`iCargo__custom ${noBorderClassName || ""}`}
-            >
-                {isHeader ? (
-                    <div className="neo-grid-header">
-                        <div className="neo-grid-header__results">
-                            {isTitle !== false ? (
-                                <>
-                                    Showing &nbsp;
-                                    <strong> {rows.length} </strong>
-                                    &nbsp;records
-                                </>
-                            ) : null}
+            <div className={`neo-grid ${noBorderClassName || ""}`}>
+                <div className="neo-grid__wrapper">
+                    {isHeader ? (
+                        <div className="neo-grid__header">
+                            <div className="ng-header-results">
+                                {isTitle !== false ? (
+                                    <>
+                                        Showing &nbsp;
+                                        <strong> {rows.length} </strong>
+                                        &nbsp;records
+                                    </>
+                                ) : null}
+                            </div>
+                            <div className="ng-header-utils">
+                                {isGlobalSearch !== false ? (
+                                    <div className="ng-txt-wrap ng-header__globalFilter">
+                                        <input
+                                            data-testid="globalSearch"
+                                            type="text"
+                                            onChange={(e) => {
+                                                this.handleSearchValue(
+                                                    e.target.value
+                                                );
+                                                const srchRows = this.getSearchRecords(
+                                                    e
+                                                );
+                                                this.globalSearchLogic(
+                                                    e,
+                                                    srchRows
+                                                );
+                                            }}
+                                            value={searchValue}
+                                            className="ng-txt"
+                                            placeholder="Search"
+                                        />
+                                        <i className="ng-txt-wrap__icon">
+                                            <IconSearch className="ng-icon" />
+                                        </i>
+                                    </div>
+                                ) : null}
+                                {isGroupSort !== false ? (
+                                    <div className="ng-header-utils__items group-sort-container">
+                                        <div
+                                            role="presentation"
+                                            id="openSorting"
+                                            className="ng-header-utils__icons group-sort"
+                                            onClick={this.sortingPanel}
+                                        >
+                                            <i className="ng-icon-block">
+                                                <IconGroupSort className="ng-icon" />
+                                            </i>
+                                        </div>
+                                        {sortingPanelComponent}
+                                    </div>
+                                ) : null}
+                                {isColumnChooser !== false ? (
+                                    <div className="ng-header-utils__items">
+                                        <div
+                                            role="presentation"
+                                            className="ng-header-utils__icons"
+                                            data-testid="toggleManageColumnsOverlay"
+                                            onClick={
+                                                this.columnReorderingPannel
+                                            }
+                                        >
+                                            <i className="ng-icon-block">
+                                                <IconColumns className="ng-icon" />
+                                            </i>
+                                        </div>
+                                        {columnReorderingComponent}
+                                    </div>
+                                ) : null}
+                                {isExportData !== false ? (
+                                    <div className="ng-header-utils__items">
+                                        <div
+                                            role="presentation"
+                                            data-testid="toggleExportDataOverlay"
+                                            className="ng-header-utils__icons export-data"
+                                            onClick={this.exportColumnData}
+                                        >
+                                            <i className="ng-icon-block">
+                                                <IconShare className="ng-icon" />
+                                            </i>
+                                        </div>
+                                        {exportComponent}
+                                    </div>
+                                ) : null}
+                                {isAddRow !== false ? (
+                                    <div className="ng-header-utils__items">
+                                        <div
+                                            role="presentation"
+                                            className="ng-header-utils__icons export-data"
+                                            onClick={this.addRow}
+                                        >
+                                            <i className="ng-icon-block">
+                                                <IconPlus className="ng-icon" />
+                                            </i>
+                                        </div>
+                                    </div>
+                                ) : null}
+                                {isDeleteRow !== false ? (
+                                    <div className="ng-header-utils__items">
+                                        <div
+                                            role="presentation"
+                                            className="ng-header-utils__icons export-data"
+                                            onClick={this.deleteRow}
+                                        >
+                                            <i className="ng-icon-block">
+                                                <RowDelete className="ng-icon" />
+                                            </i>
+                                        </div>
+                                    </div>
+                                ) : null}
+                            </div>
                         </div>
-
-                        <div className="neo-grid-header__utilities">
-                            {isGlobalSearch !== false ? (
-                                <div className="txt-wrap">
-                                    <input
-                                        data-testid="globalSearch"
-                                        type="text"
-                                        onChange={(e) => {
-                                            this.handleSearchValue(
-                                                e.target.value
-                                            );
-                                            const srchRows = this.getSearchRecords(
-                                                e
-                                            );
-                                            this.globalSearchLogic(e, srchRows);
-                                        }}
-                                        value={searchValue}
-                                        className="txt"
-                                        placeholder="Search"
-                                    />
-                                    <i>
-                                        <IconSearch />
-                                    </i>
-                                </div>
-                            ) : null}
-                            {/* {isColumnFilter !== false ? (
-                                <div className={columnFilterStyle}>
-                                    <i>
-                                        <IconFilter />
-                                    </i>
-                                </div>
-                            ) : null} */}
-                            {isGroupSort !== false ? (
-                                <>
-                                    <div
-                                        role="presentation"
-                                        id="openSorting"
-                                        className="filterIcons"
-                                        onClick={this.sortingPanel}
-                                    >
-                                        <IconGroupSort />
-                                    </div>
-                                    {sortingPanelComponent}
-                                </>
-                            ) : null}
-                            {isColumnChooser !== false ? (
-                                <>
-                                    <div
-                                        role="presentation"
-                                        className="filterIcons"
-                                        onClick={this.columnReorderingPannel}
-                                    >
-                                        <IconColumns />
-                                    </div>
-                                    {columnReorderingComponent}
-                                </>
-                            ) : null}
-                            {isExportData !== false ? (
-                                <>
-                                    <div
-                                        role="presentation"
-                                        className="filterIcons"
-                                        onClick={this.exportColumnData}
-                                    >
-                                        <IconShare />
-                                    </div>
-                                    {exportComponent}
-                                </>
-                            ) : null}
-                            {isAddRow !== false ? (
-                                <>
-                                    <div
-                                        role="presentation"
-                                        className="filterIcons"
-                                        onClick={this.addRow}
-                                    >
-                                        <IconPlus />
-                                    </div>
-                                </>
-                            ) : null}
-                            {isDeleteRow !== false ? (
-                                <>
-                                    <div
-                                        role="presentation"
-                                        className="filterIcons"
-                                        onClick={this.deleteRow}
-                                    >
-                                        <RowDelete />
-                                    </div>
-                                </>
-                            ) : null}
-                        </div>
-                    </div>
-                ) : (
-                    ""
-                )}
+                    ) : (
+                        ""
+                    )}
+                </div>
                 <ErrorMessage
                     className="errorDiv"
                     status={warningStatus}
@@ -1834,8 +1832,6 @@ Spreadsheet.propTypes = {
     saveRows: PropTypes.arrayOf(PropTypes.object),
     isTitle: PropTypes.bool,
     isGlobalSearch: PropTypes.bool,
-    // isColumnFilter: PropTypes.bool,
-    columnFilterStyle: PropTypes.string,
     isGroupSort: PropTypes.bool,
     isColumnChooser: PropTypes.bool,
     isExportData: PropTypes.bool,

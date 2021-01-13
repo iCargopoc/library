@@ -36,60 +36,71 @@ export default function LeftDrawer(props) {
     const filterList = leftDrawData.map((item, index) => {
         if (item.isSubFilter) {
             return (
-                <div key={`${item.label}+${index}`} className="accordion__list">
-                    <IAccordion className="accordion-no-border">
-                        <IAccordionItem>
-                            <IAccordionItemTitle>
-                                {item.label}
-                            </IAccordionItemTitle>
-                            <IAccordionItemBody>
-                                {item.subFilters &&
-                                    item.subFilters.map((type) => {
-                                        return (
-                                            <div
-                                                className="accordion__item"
-                                                role="presentation"
-                                                style={{
-                                                    fontWeight: type.weight,
-                                                    cursor: "pointer"
-                                                }}
-                                                data-testid={`${type.label}:${item.label}`}
-                                                onClick={() => {
-                                                    if (type.isGroupFilter) {
-                                                        props.groupFiltersFromLeftToRight(
-                                                            type
-                                                        );
-                                                    } else {
-                                                        props.accordionFiltersFromLeftToRight(
-                                                            item.label,
-                                                            item.isSubFilter,
-                                                            type.label,
-                                                            type.dataType,
-                                                            type.condition,
-                                                            type.isRequired,
-                                                            type.name,
-                                                            type.initialValue,
-                                                            type.props,
-                                                            type.oneTimeCode
-                                                        );
-                                                    }
-                                                }}
-                                                key={`${type.label}:${item.label}`}
-                                            >
-                                                {type.label}
-                                            </div>
-                                        );
-                                    })}
-                            </IAccordionItemBody>
-                        </IAccordionItem>
-                    </IAccordion>
+                <div className="nf-filter__list-item">
+                    <div
+                        key={`${item.label}+${index}`}
+                        className="accordion__list nf-filter__accordion-list"
+                    >
+                        <IAccordion className="accordion-no-border">
+                            <IAccordionItem>
+                                <IAccordionItemTitle>
+                                    {item.label}
+                                </IAccordionItemTitle>
+                                <IAccordionItemBody>
+                                    {item.subFilters &&
+                                        item.subFilters.map((type) => {
+                                            return (
+                                                <div
+                                                    className="accordion__item nf-filter__accordion-item"
+                                                    role="presentation"
+                                                    style={{
+                                                        fontWeight: type.weight,
+                                                        cursor: "pointer"
+                                                    }}
+                                                    data-testid={`${type.label}:${item.label}`}
+                                                    onClick={() => {
+                                                        if (
+                                                            type.isGroupFilter
+                                                        ) {
+                                                            props.groupFiltersFromLeftToRight(
+                                                                type
+                                                            );
+                                                        } else {
+                                                            props.accordionFiltersFromLeftToRight(
+                                                                item.label,
+                                                                item.isSubFilter,
+                                                                type.label,
+                                                                type.dataType,
+                                                                type.condition,
+                                                                type.isRequired,
+                                                                type.name,
+                                                                type.initialValue,
+                                                                type.props,
+                                                                type.oneTimeCode,
+                                                                type.labelOnSelect
+                                                            );
+                                                        }
+                                                    }}
+                                                    key={`${type.label}:${item.label}`}
+                                                >
+                                                    {type.label}
+                                                </div>
+                                            );
+                                        })}
+                                </IAccordionItemBody>
+                            </IAccordionItem>
+                        </IAccordion>
+                    </div>
                 </div>
             );
         }
         if (!item.isSubFilter) {
             return (
-                <div className="fieldHeads" key={`${item.label},${index}`}>
-                    <li
+                <div
+                    className="nf-filter__list-item"
+                    key={`${item.label},${index}`}
+                >
+                    <span
                         key={`${item.label}_${index}`}
                         role="presentation"
                         style={{ fontWeight: item.weight }}
@@ -107,33 +118,32 @@ export default function LeftDrawer(props) {
                                     item.name,
                                     item.initialValue,
                                     item.props,
-                                    item.oneTimeCode
+                                    item.oneTimeCode,
+                                    item.labelOnSelect
                                 );
                             }
                         }}
                     >
                         {item.label}
-                    </li>
+                    </span>
                 </div>
             );
         }
         return <div />;
     });
     return (
-        <div>
+        <>
             <input
                 required
                 type="text"
                 placeholder="Search a Filter"
                 defaultValue=""
-                className="customControl"
+                className="customControl nf-customControl"
                 data-testid="searchFilterHandler-input"
                 onChange={searchFilterHandler}
             />
-            <div className="leftDrawer">
-                <div>{filterList}</div>
-            </div>
-        </div>
+            <div className="nf-filter__list-content">{filterList}</div>
+        </>
     );
 }
 

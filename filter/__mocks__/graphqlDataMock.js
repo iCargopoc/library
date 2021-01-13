@@ -1,4 +1,5 @@
 import { gql } from "apollo-boost";
+import { filterQuery } from "../src/gql/filterQuery";
 
 const getAirportsQuery = gql`
     query getAirports($cursor: ID, $search: String) {
@@ -14,6 +15,19 @@ const getAirportsQuery = gql`
                     }
                 }
                 cursor
+            }
+        }
+    }
+`;
+
+const getSccsQuery = gql`
+    query getSccs($cursor: ID, $search: String) {
+        sccs(first: 20, cursor: $cursor, search: $search) {
+            edges {
+                node {
+                    label: scc_description
+                    value: scc_code
+                }
             }
         }
     }
@@ -80,7 +94,135 @@ const getMastersQuery = (query, label, value) => gql`
         }
     `;
 
+const getAgentsQuery = gql`
+    query getAgents($cursor: ID, $search: String) {
+        listAgents(
+            first: 20
+            cursor: $cursor
+            search: $search
+            customerModel: { customer_type: "AG", customer_status: "A" }
+        ) {
+            edges {
+                node {
+                    value: customer_code
+                    label: customer_name
+                }
+            }
+        }
+    }
+`;
+
 export const mockData = [
+    {
+        request: {
+            query: filterQuery
+        },
+        result: {
+            data: {
+                findFilterConfig: {
+                    filterConfigs: [
+                        {
+                            name: "Delayed Flights",
+                            category: "FOA",
+                            autoLoadFilters: false,
+                            filter: [
+                                {
+                                    label: "Date",
+                                    isSubFilter: false,
+                                    isGroupFilter: false,
+                                    dataType: "IDatePicker",
+                                    isRequired: false,
+                                    name: "date",
+                                    initialValue: "",
+                                    condition: [],
+                                    initialValue: ""
+                                },
+                                {
+                                    label: "Toggle Field",
+                                    isSubFilter: false,
+                                    isGroupFilter: false,
+                                    dataType: "IToggle",
+                                    isRequired: true,
+                                    name: "itoggle",
+                                    condition: [],
+                                    initialValue: ""
+                                },
+                                {
+                                    label: "Flight No",
+                                    isSubFilter: false,
+                                    isGroupFilter: false,
+                                    dataType: "IFlightNumber",
+                                    condition: [
+                                        {
+                                            label: "equal to",
+                                            value: "equal to"
+                                        },
+                                        {
+                                            label: "greater than",
+                                            value: "greater than"
+                                        },
+                                        {
+                                            label: "less than",
+                                            value: "less than"
+                                        }
+                                    ],
+                                    isRequired: true,
+                                    name: "flightNo",
+                                    initialValue: ""
+                                },
+                                {
+                                    label: "Flight Status",
+                                    isSubFilter: false,
+                                    isGroupFilter: false,
+                                    dataType: "ITextField",
+                                    condition: [
+                                        {
+                                            label: "equal to",
+                                            value: "equal to"
+                                        },
+                                        {
+                                            label: "greater than",
+                                            value: "greater than"
+                                        },
+                                        {
+                                            label: "less than",
+                                            value: "less than"
+                                        }
+                                    ],
+                                    isRequired: true,
+                                    name: "flightStatus",
+                                    initialValue: ""
+                                },
+                                {
+                                    label: "Segment Status",
+                                    isSubFilter: false,
+                                    isGroupFilter: false,
+                                    dataType: "ITextField",
+                                    condition: [
+                                        {
+                                            label: "equal to",
+                                            value: "equal to"
+                                        },
+                                        {
+                                            label: "greater than",
+                                            value: "greater than"
+                                        },
+                                        {
+                                            label: "less than",
+                                            value: "less than"
+                                        }
+                                    ],
+                                    isRequired: false,
+                                    name: "segmentStatus",
+                                    initialValue: ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    },
     {
         request: {
             query: getAirportsQuery
@@ -1637,6 +1779,441 @@ export const mockData = [
                             cursor: null
                         }
                     ]
+                }
+            }
+        }
+    },
+    {
+        request: {
+            query: getAgentsQuery
+        },
+        result: {
+            data: {
+                listAgents: {
+                    edges: [
+                        {
+                            node: {
+                                value: "TESTAGENT",
+                                label: "TESTAGENT"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "AMPAR00001",
+                                label: "TEST"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "CCLHR",
+                                label: "CCLHR"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "INPAR00001",
+                                label: "TEST"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "TEST",
+                                label: "TEST"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "AIEDXB",
+                                label: "AIR EXPRESS INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "DHLCDG001",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "125463",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "12995468",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "USDFW000013",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "INDFW000005",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "INDFW000006",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "INDFW000007",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "INDFW000008",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "INDFW000009",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "INDFW000010",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "INDFW000019",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "USDFW000020",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "USDFW000010",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "USDFW000011",
+                                label: "DHL WORLDWIDE INTERNATIONAL"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        request: {
+            query: getAgentsQuery,
+            variables: { search: "ag" }
+        },
+        result: {
+            data: {
+                listAgents: {
+                    edges: [
+                        {
+                            node: {
+                                value: "TESTAGENT",
+                                label: "TESTAGENT"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "BEYAGENT2",
+                                label: "AGENT 2"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "LONCUST",
+                                label: "LONDON AGENT"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "MEAAGT",
+                                label: "MEAAGT"
+                            }
+                        },
+                        {
+                            node: {
+                                value: "UCBAGENT",
+                                label: "COURIER AGENT"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        request: {
+            query: getAgentsQuery,
+            variables: { search: "jj" }
+        },
+        result: {
+            data: {
+                listAgents: {
+                    edges: []
+                }
+            }
+        }
+    },
+    {
+        request: {
+            query: getSccsQuery
+        },
+        result: {
+            data: {
+                sccs: {
+                    edges: [
+                        {
+                            node: {
+                                label: "AAA",
+                                value: "AAA"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "AAE CARGO",
+                                value: "AAE"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "ABC",
+                                value: "ABC"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "ACA",
+                                value: "ACA"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "PRIO",
+                                value: "ACE"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "ACTIVE TEMPERATURE CONTROL",
+                                value: "ACT"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "CFX USE ADELANCE",
+                                value: "ADL"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "ADPSP",
+                                value: "ADP"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "AIR MAIL",
+                                value: "AIR"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "CFX USE AISHIN",
+                                value: "AIS"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "AJV",
+                                value: "AJV"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "ALLEX CARGO",
+                                value: "ALX"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "AMT",
+                                value: "AMT"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "ANA",
+                                value: "ANA"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "ANS",
+                                value: "ANS"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "AIRCRAFT ON GROUND",
+                                value: "AOG"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "AOR ALT CGO",
+                                value: "AOR"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "ARM",
+                                value: "ARM"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "PRIO ART",
+                                value: "ART"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "ATA",
+                                value: "ATA"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        request: {
+            query: getSccsQuery,
+            variables: { search: "as" }
+        },
+        result: {
+            data: {
+                sccs: {
+                    edges: [
+                        {
+                            node: {
+                                label: "CFX USE ASTELLAS",
+                                value: "FJS"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "PAFPAYAS",
+                                value: "FPA"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "CFX USE HAYADASHI",
+                                value: "HHH"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "CFX USE IHARASUISAN",
+                                value: "IHA"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "LAST PART OF BALANCE",
+                                value: "LPS"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "BY PASS SHIPMENT",
+                                value: "PAS"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "DANGEROUS GOODS FLAMMABLE GAS",
+                                value: "RFG"
+                            }
+                        },
+                        {
+                            node: {
+                                label:
+                                    "DANGEROUS GOODS NON FLAMMABLE NON TOXIC GAS",
+                                value: "RNG"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "DANGEROUS GOODS TOXIC GAS",
+                                value: "RPG"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "CFX USE SOUTHERN FLASH",
+                                value: "SFL"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "CFX USE TAS",
+                                value: "TDS"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "TEXAS INSTRUMENT",
+                                value: "TEX"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "ASPARAGUS",
+                                value: "VAS"
+                            }
+                        },
+                        {
+                            node: {
+                                label: "WEAPONS ANS AMMUNITION",
+                                value: "WAS"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    {
+        request: {
+            query: getSccsQuery,
+            variables: { search: "jj" }
+        },
+        result: {
+            data: {
+                sccs: {
+                    edges: []
                 }
             }
         }

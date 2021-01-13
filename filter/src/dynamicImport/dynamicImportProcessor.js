@@ -1,11 +1,11 @@
 import { lazy } from "react";
-import Config from "./config.json";
+import config from "./config";
 
 const components = {};
-for (let i = 0; i < Config.config.length; i++) {
-    components[Config.config[i].name] = lazy(() =>
-        import(`${Config.config[i].path}`).then((module) => ({
-            default: module[Config.config[i].name]
+for (let i = 0; i < config.length; i++) {
+    components[config[i].name] = lazy(() =>
+        import(`${config[i].path}`).then((module) => ({
+            default: module[config[i].name]
         }))
     );
 }

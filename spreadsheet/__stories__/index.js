@@ -11,7 +11,6 @@ const GridComponent = (props) => {
         isTitle,
         gridHeight,
         isGlobalSearch,
-        // isColumnFilter,
         columnFilterStyle,
         isGroupSort,
         isColumnChooser,
@@ -617,7 +616,6 @@ const GridComponent = (props) => {
                 maxLeftPinnedColumn={maxLeftPinnedColumn}
                 updatedRows={updatedRows}
                 isGlobalSearch={isGlobalSearch}
-                // isColumnFilter={isColumnFilter}
                 columnFilterStyle={columnFilterStyle}
                 isGroupSort={isGroupSort}
                 isColumnChooser={isColumnChooser}

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { withFormik, useFormikContext } from "formik";
 import { IButton } from "@neo/button";
-import { SaveLogo } from "../utilities/svgUtilities";
 import "react-datepicker/dist/react-datepicker.css";
+import { ITooltip } from "@neo/tooltip";
 import FilterForm from "../component/filterForm";
 
+let recentFiltersDiv = "";
 const RightDrawer = (props) => {
-    const { handleSubmit } = props;
+    const { handleSubmit, components } = props;
     const { values, setFieldValue } = useFormikContext();
     const [applyFilterWarning, setApplyFilterWarning] = useState("");
     const [
@@ -16,7 +17,6 @@ const RightDrawer = (props) => {
     ] = useState("");
     const [recentFilterShow, setRecentFilterShow] = useState("none");
     const [filterShow, setFilterShow] = useState("");
-    const [showSavePopup, setShowSavePopup] = useState("none");
     const {
         emptyFilterWarning,
         emptyFilterClassName,
@@ -27,7 +27,7 @@ const RightDrawer = (props) => {
         closeField,
         conditionHandler,
         applyValidator,
-        resetDrawer,
+        clearDrawer,
         groupFilterCloseField,
         groupFilterConditionHandler,
         listViewClick,
@@ -35,7 +35,18 @@ const RightDrawer = (props) => {
         listViewName,
         savedFilters,
         savedFilterName,
-        savedFilterClick
+        savedFilterClick,
+        showSavePopup,
+        closeSavePopUp,
+        openSavePopup,
+        handleSaveFilterName,
+        saveFilter,
+        toSaveFilterName,
+        recentFilter,
+        autoLoad,
+        saveFilterWarning,
+        handlelistViewClick,
+        theme
     } = props;
     useEffect(() => {
         setApplyFilterWarning(emptyFilterWarning);
@@ -45,7 +56,10 @@ const RightDrawer = (props) => {
     useEffect(() => {
         if (listViewClick) {
             listView.predefinedFilters.forEach((list) => {
-                if (list.name === listViewName) {
+                if (
+                    list.name === listViewName &&
+                    listViewName !== "Custom Filter"
+                ) {
                     Object.entries(list.filters).forEach(
                         ([filterKeys, filterValues]) => {
                             setFieldValue(filterKeys, filterValues);
@@ -76,7 +90,10 @@ const RightDrawer = (props) => {
     useEffect(() => {
         if (savedFilterClick) {
             savedFilters.savedFilters.forEach((list) => {
-                if (list.name === savedFilterName) {
+                if (
+                    list.name === savedFilterName &&
+                    listViewName !== "Custom Filter"
+                ) {
                     Object.entries(list.filters).forEach(
                         ([filterKeys, filterValues]) => {
                             setFieldValue(filterKeys, filterValues);
@@ -109,19 +126,131 @@ const RightDrawer = (props) => {
         setFilterShow(filterShowProp);
     }, [recentFilterShowProp, filterShowProp]);
 
-    /**
-     * Method To open the save filter element from rightDrawer
-     */
-    const openSavePopup = () => {
-        setShowSavePopup("");
-    };
-
-    /**
-     * Method To close the save filter element from rightDrawer
-     */
-    const closeSavePopUp = () => {
-        setShowSavePopup("none");
-    };
+    if (recentFilter) {
+        recentFiltersDiv = recentFilter.map((item, keyspect) => {
+            return (
+                <div
+                    className="nf-recentsearch__list"
+                    role="presentation"
+                    onClick={() => {
+                        handlelistViewClick(item, "listView");
+                    }}
+                >
+                    <span
+                        className="neo-btn-link pointer"
+                        id={`tooltip-target${keyspect}`}
+                    >
+                        {Object.entries(item.filters).map(([key, value]) => {
+                            if (
+                                typeof value === "string" ||
+                                value.constructor === Object ||
+                                Array.isArray(value) ||
+                                typeof value === "boolean"
+                            ) {
+                                return (
+                                    <>
+                                        <span className="nf-recentsearch__label">
+                                            {key}:
+                                        </span>
+                                        {(typeof value === "string" ||
+                                            typeof value === "boolean") && (
+                                            <span className="nf-recentsearch__value">
+                                                {String(value)}
+                                            </span>
+                                        )}
+                                        {value.constructor === Object &&
+                                            Object.entries(value).map(
+                                                ([keysItem, valuesItem]) => {
+                                                    return (
+                                                        <span
+                                                            key={keysItem}
+                                                            className="nf-recentsearch__value"
+                                                        >
+                                                            {valuesItem}
+                                                        </span>
+                                                    );
+                                                }
+                                            )}
+                                        {Array.isArray(value) &&
+                                            value.map((valueItem) => {
+                                                return (
+                                                    <span className="nf-recentsearch__value">
+                                                        {valueItem}
+                                                    </span>
+                                                );
+                                            })}
+                                        ;
+                                    </>
+                                );
+                            }
+                            return "";
+                        })}
+                    </span>
+                    <ITooltip
+                        target={`tooltip-target${keyspect}`}
+                        placement="left"
+                        className="toolTipBody"
+                    >
+                        <span className="nf-recentsearch__tooltip">
+                            {Object.entries(item.filters).map(
+                                ([key, value]) => {
+                                    if (
+                                        typeof value === "string" ||
+                                        value.constructor === Object ||
+                                        Array.isArray(value) ||
+                                        typeof value === "boolean"
+                                    ) {
+                                        return (
+                                            <>
+                                                <span className="nf-recentsearch__tooltip-label">
+                                                    {key}:
+                                                </span>
+                                                {(typeof value === "string" ||
+                                                    typeof value ===
+                                                        "boolean") && (
+                                                    <span className="nf-recentsearch__tooltip-value">
+                                                        {String(value)}
+                                                    </span>
+                                                )}
+                                                {value.constructor === Object &&
+                                                    Object.entries(value).map(
+                                                        ([
+                                                            keysItem,
+                                                            valuesItem
+                                                        ]) => {
+                                                            return (
+                                                                <span
+                                                                    key={
+                                                                        keysItem
+                                                                    }
+                                                                    className="nf-recentsearch__tooltip-value"
+                                                                >
+                                                                    {valuesItem}
+                                                                </span>
+                                                            );
+                                                        }
+                                                    )}
+                                                {Array.isArray(value) &&
+                                                    value.map((valueItem) => {
+                                                        return (
+                                                            <span className="nf-recentsearch__tooltip-value">
+                                                                {valueItem}
+                                                            </span>
+                                                        );
+                                                    })}
+                                                <br />
+                                            </>
+                                        );
+                                    }
+                                    return "";
+                                }
+                            )}
+                        </span>
+                    </ITooltip>
+                </div>
+            );
+        });
+    }
     return (
         <div>
             <form onSubmit={handleSubmit}>
@@ -129,23 +258,39 @@ const RightDrawer = (props) => {
                     style={{
                         display: recentFilterShow
                     }}
-                    className="filter__content"
+                    className="nf-recentsearch"
                 >
-                    <div className="filter__recentFilterTitle">
-                        Recent Filters
+                    <div className="nf-recentsearch__title">Recent Filters</div>
+                    <div className="nf-recentsearch__content">
+                        {recentFiltersDiv}
                     </div>
                 </div>
 
                 <div
+                    className="nf-form"
                     style={{
                         display: filterShow
                     }}
                 >
-                    <div className="filter__title">
+                    <div className="nf-form__title">
                         Selected Filters
-                        <span className="filter-count">{filterCount}</span>
+                        <span className="nf-form__count">{filterCount}</span>
                     </div>
-                    <div className="filter__content">
+                    <div
+                        className={
+                            filterShow === "" && recentFilterShow === "none"
+                                ? "nf-form__content is-clear"
+                                : "nf-form__content"
+                        }
+                        style={
+                            (theme === undefined &&
+                                (filterShow === "" &&
+                                recentFilterShow === "none"
+                                    ? { height: `calc(100vh - 65px)` }
+                                    : { height: `calc(100vh - 280px)` })) ||
+                            (!!theme && { height: `calc(65vh - 50px)` })
+                        }
+                    >
                         <FilterForm
                             filters={filters}
                             closeField={closeField}
@@ -154,11 +299,13 @@ const RightDrawer = (props) => {
                             groupFilterConditionHandler={
                                 groupFilterConditionHandler
                             }
+                            customComponents={components}
+                            autoLoad={autoLoad}
                         />
-                        <div className="filter__warning">
+                        <div className="nf-form__warning">
                             <span
                                 id="fieldWarning"
-                                className="text-danger"
+                                className="nf-form__danger"
                                 style={{
                                     display: applyValidator
                                 }}
@@ -167,36 +314,36 @@ const RightDrawer = (props) => {
                             </span>
                         </div>
                     </div>
-                    <div className="filter__btn">
-                        <div className="filter__save">
+                    <div className="nf-form__btn-block">
+                        <div className="nf-form__btn-save">
                             <IButton
                                 type="button"
-                                className="button-save"
+                                className="neo-btn-link pointer"
                                 onClick={openSavePopup}
+                                data-testId="savePopUp"
                             >
-                                <SaveLogo />
-                                <span>SAVE</span>
+                                Save
                             </IButton>
                         </div>
-                        <div className="btn-wrap">
+                        <div className="nf-form__btn-wrap">
                             <span className={applyfilterWarningClassName}>
                                 {applyFilterWarning}
                             </span>
                             <IButton
+                                style={{ display: autoLoad }}
                                 type="button"
-                                data-testid="resetClick"
-                                className="reset"
+                                dataTestId="reset"
+                                className="neo-btn-link pointer"
                                 onClick={() => {
-                                    resetDrawer(values, setFieldValue);
+                                    clearDrawer(values, setFieldValue);
                                 }}
                             >
-                                Reset
+                                Clear
                             </IButton>
                             <IButton
-                                color="info"
                                 type="submit"
-                                className="applyFilter"
-                                data-testid="applyFilter-button"
+                                className="neo-btn-primary pointer"
+                                data-testId="applyFilter"
                             >
                                 Apply Filter
                             </IButton>
@@ -205,39 +352,52 @@ const RightDrawer = (props) => {
                             style={{
                                 display: showSavePopup
                             }}
-                            className="popup--save"
+                            className="nf-popover"
                         >
-                            <h5>Save the Filter</h5>
-                            <label htmlFor="saveFilterName">
+                            <h5 className="nf-popover__title">
+                                Save the Filter
+                            </h5>
+                            <label
+                                className="neo-form-control-label"
+                                htmlFor="saveFilterName"
+                            >
                                 Save Filter Name
                                 <input
                                     id="saveFilterName"
-                                    className="txt"
-                                    data-testid="registersaveFilterName-input"
-                                    onChange={() => {}}
+                                    className="nf-txt"
+                                    data-testId="registersaveFilterName-input"
+                                    value={toSaveFilterName}
+                                    onChange={(e) => {
+                                        handleSaveFilterName(e.target.value);
+                                    }}
                                 />
                             </label>
-                            <div className="btn-wrap">
-                                <button
+                            {saveFilterWarning.length > 0 && (
+                                <label className="neo-form-control-label nf-form__danger">
+                                    {saveFilterWarning}
+                                </label>
+                            )}
+                            <div className="nf-popover__btn-wrap">
+                                <IButton
                                     type="button"
-                                    className="button"
-                                    data-testid="cancelSavePopup-button"
+                                    className="neo-btn-primary pointer"
+                                    data-testId="cancelSavePopup-button"
                                     onClick={() => {
                                         closeSavePopUp();
                                     }}
                                 >
                                     Cancel
-                                </button>
-                                <button
+                                </IButton>
+                                <IButton
                                     type="button"
-                                    className="button"
-                                    data-testid="saveFilter-button"
+                                    className="neo-btn-primary pointer"
+                                    data-testId="saveFilter-button"
                                     onClick={() => {
-                                        closeSavePopUp();
+                                        saveFilter(values);
                                     }}
                                 >
                                     Save
-                                </button>
+                                </IButton>
                             </div>
                         </div>
                     </div>
@@ -253,7 +413,7 @@ RightDrawer.propTypes = {
     recentFilterShowProp: PropTypes.any,
     filterShowProp: PropTypes.any,
     filterCount: PropTypes.any,
-    resetDrawer: PropTypes.any,
+    clearDrawer: PropTypes.any,
     filters: PropTypes.any,
     closeField: PropTypes.any,
     conditionHandler: PropTypes.any,
@@ -266,10 +426,23 @@ RightDrawer.propTypes = {
     listViewName: PropTypes.any,
     savedFilters: PropTypes.any,
     savedFilterName: PropTypes.any,
-    savedFilterClick: PropTypes.any
+    savedFilterClick: PropTypes.any,
+    components: PropTypes.any,
+    showSavePopup: PropTypes.any,
+    closeSavePopUp: PropTypes.any,
+    openSavePopup: PropTypes.any,
+    handleSaveFilterName: PropTypes.any,
+    saveFilter: PropTypes.any,
+    toSaveFilterName: PropTypes.any,
+    recentFilter: PropTypes.any,
+    autoLoad: PropTypes.any,
+    saveFilterWarning: PropTypes.any,
+    handlelistViewClick: PropTypes.any,
+    theme: PropTypes.any
 };
 
 export default withFormik({
+    enableReinitialize: true,
     displayName: "BasicForm",
     mapPropsToValues: (props) => props.initialValuesObject,
     validateOnBlur: false,

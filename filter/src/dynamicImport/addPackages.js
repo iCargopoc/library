@@ -1,5 +1,5 @@
 import { IAirport } from "@neo-ui/airport";
-import { IDatePicker } from "@neo-ui/date";
+import { IDatePicker, DateRange, IDateTimePicker } from "@neo-ui/date";
 import { ITextField } from "@neo-ui/textfield";
 import { IFlightNumber } from "@neo-ui/flightnumber";
 import { IProducts } from "@neo-ui/products";
@@ -10,6 +10,8 @@ import { ICommodities } from "@neo-ui/commodities";
 import { ITimePicker } from "@neo-ui/time";
 import { CreateSelect, ISelect } from "@neo-ui/select";
 import { IToggle } from "@neo-ui/toggle";
+import { IAgents } from "@neo-ui/agents";
+import { IScc } from "@neo-ui/sccs";
 
 export {
     IAirport,
@@ -24,5 +26,9 @@ export {
     ITimePicker,
     CreateSelect,
     ISelect,
-    IToggle
+    IToggle,
+    IAgents,
+    DateRange,
+    IScc,
+    IDateTimePicker
 };

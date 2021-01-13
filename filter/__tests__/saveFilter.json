@@ -30,7 +30,7 @@
         },
         {
             "name": "Flight under 10000kg booking",
-            "default": true,
+            "default": false,
             "category": "FlightBooking",
             "filters": {
                 "yield": "rerwe",

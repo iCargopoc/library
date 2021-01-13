@@ -90,28 +90,26 @@ class App extends React.Component {
             return {
                 id: index,
                 text: (
-                    <div className="sort__bodyContent" key={row}>
-                        <div className="sort__reorder">
-                            <div className="">
-                                <div>&nbsp;</div>
-                            </div>
-
-                            <div className="sort__icon">
-                                <i>
-                                    <IconNav />
+                    <div
+                        className="ng-popover--sort__items"
+                        data-testid="sortItem"
+                        key={row}
+                    >
+                        <div className="ng-popover__reorder">
+                            <div
+                                className="ng-popover__drag"
+                                data-testid="sortItemDnd"
+                            >
+                                <i className="ng-icon-block">
+                                    <IconNav className="ng-icon" />
                                 </i>
                             </div>
                         </div>
-
-                        <div className="sort__reorder">
-                            <div className="">
-                                <div>Sort by</div>
-                            </div>
-
-                            <div className="sort__file">
+                        <div className="ng-popover--sort__reorder">
+                            <div>
                                 <select
                                     data-testid="selectSortingField"
-                                    className="custom__ctrl"
+                                    className="ng-popover--sort__select"
                                     name="sortBy"
                                     onChange={(e) =>
                                         this.captureSortingFeildValues(
@@ -128,15 +126,10 @@ class App extends React.Component {
                                 </select>
                             </div>
                         </div>
-
-                        <div className="sort__reorder">
-                            <div className="">
-                                <div>Sort on</div>
-                            </div>
-
-                            <div className="sort__file">
+                        <div className="ng-popover--sort__reorder">
+                            <div>
                                 <select
-                                    className="custom__ctrl"
+                                    className="ng-popover--sort__select"
                                     name="sortOn"
                                     data-testid="selectingValue"
                                     onChange={(e) =>
@@ -152,16 +145,11 @@ class App extends React.Component {
                                 </select>
                             </div>
                         </div>
-
-                        <div className="sort__reorder">
-                            <div className="">
-                                <div>Order</div>
-                            </div>
-
-                            <div className="sort__file">
+                        <div className="ng-popover--sort__reorder">
+                            <div>
                                 <select
                                     data-testid="selectOrder"
-                                    className="custom__ctrl"
+                                    className="ng-popover--sort__select"
                                     name="order"
                                     onChange={(e) =>
                                         this.captureSortingFeildValues(
@@ -177,34 +165,28 @@ class App extends React.Component {
                                 </select>
                             </div>
                         </div>
-
-                        <div className="sort__reorder">
-                            <div className="">
-                                <div>&nbsp;</div>
-                            </div>
-
+                        <div className="ng-popover--sort__reorder">
                             <div
                                 data-testid="copySort"
                                 role="presentation"
-                                className="sort__icon"
+                                className="ng-popover--sort__icon"
                                 onClick={() => this.copy(index)}
                             >
-                                <SortCopy />
+                                <i>
+                                    <SortCopy className="ng-icon" />
+                                </i>
                             </div>
                         </div>
-
-                        <div className="sort__reorder">
-                            <div className="">
-                                <div>&nbsp;</div>
-                            </div>
-
+                        <div className="ng-popover--sort__reorder">
                             <div
                                 data-testid="removeSort"
                                 role="presentation"
-                                className="sort__icon"
+                                className="ng-popover--sort__icon"
                                 onClick={() => this.remove(index)}
                             >
-                                <SortDelete />
+                                <i>
+                                    <SortDelete className="ng-icon" />
+                                </i>
                             </div>
                         </div>
                     </div>
@@ -267,82 +249,73 @@ class App extends React.Component {
         const { sortingOrderList, errorMessage } = this.state;
         const { closeSorting } = this.props;
         return (
-            <ClickAwayListener onClickAway={this.handleClick}>
-                <div className="neo-spreadsheet-popover">
-                    <div className="neo-spreadsheet-popover__sort">
-                        <div className="neo-spreadsheet-popover__title">
-                            <h2>Sort</h2>
-                            <div className="neo-spreadsheet-popover__close">
-                                <i
-                                    role="presentation"
-                                    data-testid="closeSorting"
-                                    onClick={() => closeSorting()}
-                                >
-                                    <IconClose />
-                                </i>
-                            </div>
-                        </div>
-
-                        <div className="neo-spreadsheet-popover__content">
-                            <DndProvider
-                                backend={MultiBackend}
-                                options={HTML5toTouch}
-                            >
-                                <SortingList
-                                    handleReorderListOfSort={
-                                        this.handleReorderListOfSort
-                                    }
-                                    sortsArray={this.createColumnsArrayFromProps(
-                                        sortingOrderList
-                                    )}
-                                />
-                            </DndProvider>
-                        </div>
-                        <div className="sort-warning">
-                            {errorMessage ? (
-                                <span className="alert alert-danger">
-                                    Sort by opted are same, Please choose
-                                    different one.
-                                </span>
-                            ) : (
-                                ""
-                            )}
-                        </div>
-                        <div className="sort__new">
-                            <div
-                                role="presentation"
-                                className="sort__section"
-                                data-testid="addSort"
-                                onClick={() => this.add()}
-                                onKeyDown={() => this.add()}
-                            >
-                                <span>+</span>
-                                <div className="sort__txt">New Sort</div>
-                            </div>
-                        </div>
-                        <div className="sort__footer">
-                            <div className="sort__btns">
-                                <button
-                                    type="button"
-                                    className="btns"
-                                    onClick={this.clearAll}
-                                >
-                                    Clear All
-                                </button>
-
-                                <button
-                                    data-testid="applySort"
-                                    type="button"
-                                    className="btns btns__save"
-                                    onClick={() =>
-                                        this.updateTableAsPerSortCondition()
-                                    }
-                                >
-                                    Ok
-                                </button>
-                            </div>
-                        </div>
+            <ClickAwayListener
+                onClickAway={this.handleClick}
+                className="ng-popover ng-popover--sort"
+                data-testid="groupsortoverlay"
+            >
+                <div className="ng-popover__header">
+                    <span>Group Sort</span>
+                    <div className="ng-popover__close">
+                        <i
+                            role="presentation"
+                            data-testid="closeSorting"
+                            onClick={() => closeSorting()}
+                        >
+                            <IconClose className="ng-icon" />
+                        </i>
                     </div>
+                </div>
+                <div className="ng-popover__content">
+                    <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+                        <SortingList
+                            handleReorderListOfSort={
+                                this.handleReorderListOfSort
+                            }
+                            sortsArray={this.createColumnsArrayFromProps(
+                                sortingOrderList
+                            )}
+                        />
+                    </DndProvider>
+                </div>
+                <div className="ng-popover--sort__warning">
+                    {errorMessage ? (
+                        <span className="alert alert-danger">
+                            Duplicate sort options found.
+                        </span>
+                    ) : (
+                        ""
+                    )}
+                </div>
+                <div className="ng-popover--sort__new">
+                    <div
+                        role="presentation"
+                        className="ng-popover--sort__section"
+                        data-testid="addSort"
+                        onClick={() => this.add()}
+                        onKeyDown={() => this.add()}
+                    >
+                        <span className="ng-popover--sort__icon-plus">+</span>
+                        <div className="ng-popover__txt">New Sort</div>
+                    </div>
+                </div>
+                <div className="ng-popover__footer">
+                    <button
+                        type="button"
+                        className="neo-btn neo-btn-link btn btn-secondary"
+                        onClick={this.clearAll}
+                    >
+                        Clear All
+                    </button>
+
+                    <button
+                        data-testid="applySort"
+                        type="button"
+                        className="neo-btn neo-btn-primary btn btn-secondary"
+                        onClick={() => this.updateTableAsPerSortCondition()}
+                    >
+                        Ok
+                    </button>
                 </div>
             </ClickAwayListener>
         );
