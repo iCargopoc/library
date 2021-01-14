@@ -1825,16 +1825,31 @@ const GridComponent = (props) => {
     };
 
     useEffect(() => {
+        const mappedOriginalColumns = originalColumns.map((column) => {
+            const updatedColumn = column;
+            if (!(allProps || enableGroupHeaders) && column.groupHeader) {
+                delete updatedColumn.groupHeader;
+            }
+            if (!(allProps || enableJsxHeaders) && column.title) {
+                // We know that jsx Header is been provided only for Flight column
+                // Hence update the Header value to string "Flight" and delete title
+                updatedColumn.Header = "Flight";
+                delete updatedColumn.title;
+            }
+            return updatedColumn;
+        });
         if (treeStructure) {
-            setParentColumn(originalParentColumn);
-            setIndexPageInfo(null);
-            setCursorPageInfo(null);
             if (
                 parentRowExpandable !== false &&
                 isParentExpandedByDefault !== true
             ) {
                 setGridData(parentData);
                 setOriginalGridData(parentData);
+                setParentColumn(originalParentColumn);
+                setColumns(mappedOriginalColumns);
+                setColumnToExpand(originalColumnToExpand);
+                setIndexPageInfo(null);
+                setCursorPageInfo(null);
             } else {
                 const newPageSize = 5;
                 const newGridData = [...parentData];
@@ -1872,6 +1887,11 @@ const GridComponent = (props) => {
                                     }
                                     setGridData(newGridData);
                                     setOriginalGridData(newGridData);
+                                    setParentColumn(originalParentColumn);
+                                    setColumns(mappedOriginalColumns);
+                                    setColumnToExpand(originalColumnToExpand);
+                                    setIndexPageInfo(null);
+                                    setCursorPageInfo(null);
                                 });
                             }
                         );
@@ -1883,6 +1903,10 @@ const GridComponent = (props) => {
                 paginationType === "index" ? indexPageInfo : cursorPageInfo;
             fetchData(pageInfo).then((data) => {
                 if (data && data.length > 0) {
+                    const defaultSelectedRows = data.filter((initialData) => {
+                        const { travelId } = initialData;
+                        return rowsForSelection.includes(travelId);
+                    });
                     if (isSubComponentGrid) {
                         let pageNumner =
                             pageInfo.pageNum ||
@@ -1935,20 +1959,15 @@ const GridComponent = (props) => {
                                 setSubComponentColumnToExpand(
                                     originalSubComponentColumnToExpand
                                 );
+                                setColumns(mappedOriginalColumns);
+                                setColumnToExpand(originalColumnToExpand);
                                 // Update local state based on rowsToSelect
                                 if (
                                     rowsForSelection &&
                                     rowsForSelection.length > 0
                                 ) {
                                     setRowsToSelect(rowsForSelection);
-                                    setUserSelectedRows(
-                                        data.filter((initialData) => {
-                                            const { travelId } = initialData;
-                                            return rowsForSelection.includes(
-                                                travelId
-                                            );
-                                        })
-                                    );
+                                    setUserSelectedRows(defaultSelectedRows);
                                 }
                             }
                         });
@@ -1962,15 +1981,12 @@ const GridComponent = (props) => {
                         }
                         setGridData(data);
                         setOriginalGridData(data);
+                        setColumns(mappedOriginalColumns);
+                        setColumnToExpand(originalColumnToExpand);
                         // Update local state based on rowsToSelect
                         if (rowsForSelection && rowsForSelection.length > 0) {
                             setRowsToSelect(rowsForSelection);
-                            setUserSelectedRows(
-                                data.filter((initialData) => {
-                                    const { travelId } = initialData;
-                                    return rowsForSelection.includes(travelId);
-                                })
-                            );
+                            setUserSelectedRows(defaultSelectedRows);
                         }
                     }
                 } else if (paginationType === "index") {
@@ -1986,21 +2002,6 @@ const GridComponent = (props) => {
                 }
             });
         }
-        const mappedOriginalColumns = originalColumns.map((column) => {
-            const updatedColumn = column;
-            if (!(allProps || enableGroupHeaders) && column.groupHeader) {
-                delete updatedColumn.groupHeader;
-            }
-            if (!(allProps || enableJsxHeaders) && column.title) {
-                // We know that jsx Header is been provided only for Flight column
-                // Hence update the Header value to string "Flight" and delete title
-                updatedColumn.Header = "Flight";
-                delete updatedColumn.title;
-            }
-            return updatedColumn;
-        });
-        setColumns(mappedOriginalColumns);
-        setColumnToExpand(originalColumnToExpand);
     }, []);
 
     const removeRowSelection = (event) => {
