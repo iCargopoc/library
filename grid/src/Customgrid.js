@@ -189,9 +189,23 @@ const Customgrid = (props) => {
                     pageSize
                 };
                 if (paginationType === "cursor") {
-                    pageInfoToReturn.endCursor = endCursor;
+                    let calculatedEndCursor = endCursor;
+                    if (currentEndCursor.current === -1) {
+                        currentEndCursor.current = endCursor;
+                    } else {
+                        calculatedEndCursor = endCursor.current + pageSize;
+                        calculatedEndCursor.current = calculatedEndCursor;
+                    }
+                    pageInfoToReturn.endCursor = calculatedEndCursor;
                 } else {
-                    pageInfoToReturn.pageNum = pageNum + 1;
+                    let calculatedPageNumber = pageNum;
+                    if (currentPageNumber.current === -1) {
+                        currentPageNumber.current = pageNum;
+                    } else {
+                        calculatedPageNumber = currentPageNumber.current + 1;
+                        currentPageNumber.current = calculatedPageNumber;
+                    }
+                    pageInfoToReturn.pageNum = calculatedPageNumber + 1;
                 }
             }
             return loadNextPage(pageInfoToReturn);
