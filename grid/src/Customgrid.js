@@ -152,15 +152,8 @@ const Customgrid = (props) => {
             return Promise.resolve();
         }
         if (loadNextPage && typeof loadNextPage === "function") {
-            const { pageNum, endCursor, pageSize } = pageInfo;
-            let pageInfoToReturn = {
-                pageSize
-            };
-            if (paginationType === "cursor") {
-                pageInfoToReturn.endCursor = endCursor;
-            } else {
-                pageInfoToReturn.pageNum = pageNum + 1;
-            }
+            let pageInfoToReturn = {};
+            const { pageSize } = pageInfo;
             const pageNumToReturn = pageToReload.current;
             if (
                 pageNumToReturn !== null &&
@@ -190,6 +183,16 @@ const Customgrid = (props) => {
                     };
                 }
                 pageToReload.current = -1;
+            } else {
+                const { pageNum, endCursor } = pageInfo;
+                pageInfoToReturn = {
+                    pageSize
+                };
+                if (paginationType === "cursor") {
+                    pageInfoToReturn.endCursor = endCursor;
+                } else {
+                    pageInfoToReturn.pageNum = pageNum + 1;
+                }
             }
             return loadNextPage(pageInfoToReturn);
         }
