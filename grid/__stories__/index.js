@@ -72,6 +72,10 @@ const GridComponent = (props) => {
     });
     // Ref to keep store of pages that are reloaded based on total records count.
     const reloadedPages = useRef([]);
+    // Ref to keep store of pages that are loaded till now.
+    const loadedPages = useRef([]);
+    // Ref to keep store of endCursors that are loaded till now.
+    const loadedEndCursors = useRef([]);
     // State for holding grid data
     const [gridData, setGridData] = useState([]);
     // State for holding Original grid data, to be used while clearing group sort
@@ -1657,10 +1661,85 @@ const GridComponent = (props) => {
                             }
                         });
                     } else {
-                        setGridData(
-                            getSortedData(gridData.concat(data), sortOptions)
-                        );
-                        setOriginalGridData(originalGridData.concat(data));
+                        let isThisReload = false;
+                        if (paginationType === "index") {
+                            console.log(
+                                "loadedPages.current",
+                                loadedPages.current
+                            );
+                            isThisReload = loadedPages.current.includes(
+                                updatedPageInfo.pageNum
+                            );
+                        } else {
+                            console.log(
+                                "loadedEndCursors.current",
+                                loadedEndCursors.current
+                            );
+                            isThisReload = loadedEndCursors.current.includes(
+                                updatedPageInfo.endCursor
+                            );
+                        }
+                        if (isThisReload) {
+                            const updatedGridData = [...gridData].map(
+                                (dataItem) => {
+                                    let updatedDataItem = { ...dataItem };
+                                    if (updatedDataItem) {
+                                        const newDataItem = data.find(
+                                            (item) => {
+                                                return (
+                                                    item[idAttribute] ===
+                                                    updatedDataItem[idAttribute]
+                                                );
+                                            }
+                                        );
+                                        if (newDataItem) {
+                                            updatedDataItem = newDataItem;
+                                        }
+                                    }
+                                    return updatedDataItem;
+                                }
+                            );
+                            const updatedOriginalGridData = [
+                                ...originalGridData
+                            ].map((dataItem) => {
+                                let updatedDataItem = { ...dataItem };
+                                if (updatedDataItem) {
+                                    const newDataItem = data.find((item) => {
+                                        return (
+                                            item[idAttribute] ===
+                                            updatedDataItem[idAttribute]
+                                        );
+                                    });
+                                    if (newDataItem) {
+                                        updatedDataItem = newDataItem;
+                                    }
+                                }
+                                return updatedDataItem;
+                            });
+                            setGridData(
+                                getSortedData(updatedGridData, sortOptions)
+                            );
+                            setOriginalGridData(updatedOriginalGridData);
+                        } else {
+                            if (paginationType === "index") {
+                                const thisPageList = [...loadedPages.current];
+                                thisPageList.push(updatedPageInfo.pageNum);
+                                loadedPages.current = [...thisPageList];
+                            } else {
+                                const thisCursorList = [
+                                    ...loadedEndCursors.current
+                                ];
+                                thisCursorList.push(updatedPageInfo.endCursor);
+                                loadedEndCursors.current = [...thisCursorList];
+                            }
+                            setGridData(
+                                getSortedData(
+                                    gridData.concat(data),
+                                    sortOptions
+                                )
+                            );
+                            setOriginalGridData(originalGridData.concat(data));
+                        }
                         if (paginationType === "index") {
                             const isReloadRequired =
                                 !(
@@ -1874,6 +1953,13 @@ const GridComponent = (props) => {
                             }
                         });
                     } else {
+                        if (paginationType === "index") {
+                            loadedPages.current = [indexPageInfo.pageNum];
+                        } else {
+                            loadedEndCursors.current = [
+                                cursorPageInfo.endCursor
+                            ];
+                        }
                         setGridData(data);
                         setOriginalGridData(data);
                         // Update local state based on rowsToSelect
