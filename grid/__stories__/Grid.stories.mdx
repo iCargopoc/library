@@ -1119,6 +1119,58 @@ const fileName="Custom filename"
 />
 ```
 
+#### With auto page refresh
+
+<Story name="With auto page refresh">
+    <GridComponent
+        allProps
+        previousPageRefresh
+        className="icargoCustomClass"
+        title="AWBs"
+        gridWidth="100%"
+        rowsToOverscan={4}
+        CustomPanel={CustomPanel}
+        fileName="Custom filename"
+        rowsForSelection={[1, 7, 17]}
+        fileName="Custom filename"
+    />
+    ;
+</Story>
+
+```jsx
+<Grid
+    className={className}
+    title={title}
+    gridWidth={gridWidth}
+    gridData={gridData}
+    rowsToOverscan={4}
+    idAttribute={idAttribute}
+    paginationType={paginationType}
+    pageInfo={gridPageInfo}
+    loadMoreData={loadMoreData}
+    columns={columns}
+    columnToExpand={columnToExpand}
+    rowActions={rowActions}
+    expandableColumn={expandableColumn}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    getRowInfo={getRowInfo}
+    onGridRefresh={onGridRefresh}
+    CustomPanel={CustomPanel}
+    rowsToSelect={rowsToSelect}
+    rowsToDeselect={rowsToDeselect}
+    gridHeader
+    rowSelector
+    globalSearch
+    columnFilter
+    groupSort
+    columnChooser
+    exportData
+    fileName={fileName}
+    previousPageRefresh
+/>
+```
+
 #### Tree view with all props
 
 <Story name="Tree view with all props">
@@ -1386,5 +1438,59 @@ const fileName="Custom filename"
     columnChooser
     exportData
     fileName={fileName}
+/>
+```
+
+#### Sub components with auto page refresh
+
+<Story name="Sub components with auto page refresh">
+    <GridComponent
+        allProps
+        previousPageRefresh
+        isSubComponentGrid
+        className="icargoCustomClass"
+        title="AWBs"
+        gridWidth="100%"
+        rowsToOverscan={4}
+        CustomPanel={CustomPanel}
+        fileName="Custom filename"
+        rowsForSelection={[1, 7, 17]}
+        fileName="Custom filename"
+    />
+    ;
+</Story>
+
+```jsx
+<Grid
+    isSubComponentGrid
+    className={className}
+    title={title}
+    gridWidth={gridWidth}
+    gridData={gridData}
+    rowsToOverscan={4}
+    idAttribute={idAttribute}
+    paginationType={paginationType}
+    pageInfo={gridPageInfo}
+    loadMoreData={loadMoreData}
+    columns={columns}
+    columnToExpand={columnToExpand}
+    rowActions={rowActions}
+    expandableColumn={expandableColumn}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    getRowInfo={getRowInfo}
+    onGridRefresh={onGridRefresh}
+    CustomPanel={CustomPanel}
+    rowsToSelect={rowsToSelect}
+    rowsToDeselect={rowsToDeselect}
+    gridHeader
+    rowSelector
+    globalSearch
+    columnFilter
+    groupSort
+    columnChooser
+    exportData
+    fileName={fileName}
+    previousPageRefresh
 />
 ```

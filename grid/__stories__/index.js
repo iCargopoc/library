@@ -48,7 +48,8 @@ const GridComponent = (props) => {
         enableServersideSorting,
         treeStructure,
         parentRowExpandable,
-        parentRowsToExpand
+        parentRowsToExpand,
+        previousPageRefresh
     } = props;
 
     const idAttribute = "travelId";
@@ -1604,7 +1605,6 @@ const GridComponent = (props) => {
                             info.endCursor
                         );
                     }
-
                     if (isSubComponentGrid) {
                         let pageNumner =
                             info.pageNum ||
@@ -1649,7 +1649,6 @@ const GridComponent = (props) => {
                                         return updatedItem;
                                     }
                                 );
-
                                 if (isThisReload) {
                                     const updatedGridData = [...gridData].map(
                                         (dataItem) => {
@@ -1734,13 +1733,15 @@ const GridComponent = (props) => {
                                 }
                                 if (paginationType === "index") {
                                     const isReloadRequired =
+                                        previousPageRefresh === true &&
                                         !(
                                             reloadedPages &&
                                             reloadedPages.current &&
                                             reloadedPages.current.includes(
                                                 info.pageNum
                                             )
-                                        ) && info.pageNum % 3 === 0;
+                                        ) &&
+                                        info.pageNum % 3 === 0;
                                     if (
                                         isReloadRequired &&
                                         reloadedPages &&
@@ -1762,13 +1763,15 @@ const GridComponent = (props) => {
                                     const cursorPageNum =
                                         (info.endCursor + 1) / gridPageSize;
                                     const isReloadRequired =
+                                        previousPageRefresh === true &&
                                         !(
                                             reloadedPages &&
                                             reloadedPages.current &&
                                             reloadedPages.current.includes(
                                                 cursorPageNum
                                             )
-                                        ) && cursorPageNum % 3 === 0;
+                                        ) &&
+                                        cursorPageNum % 3 === 0;
                                     if (
                                         isReloadRequired &&
                                         reloadedPages &&
@@ -1853,11 +1856,13 @@ const GridComponent = (props) => {
                         }
                         if (paginationType === "index") {
                             const isReloadRequired =
+                                previousPageRefresh === true &&
                                 !(
                                     reloadedPages &&
                                     reloadedPages.current &&
                                     reloadedPages.current.includes(info.pageNum)
-                                ) && info.pageNum % 3 === 0;
+                                ) &&
+                                info.pageNum % 3 === 0;
                             if (
                                 isReloadRequired &&
                                 reloadedPages &&
@@ -1879,13 +1884,15 @@ const GridComponent = (props) => {
                             const cursorPageNum =
                                 (info.endCursor + 1) / gridPageSize;
                             const isReloadRequired =
+                                previousPageRefresh === true &&
                                 !(
                                     reloadedPages &&
                                     reloadedPages.current &&
                                     reloadedPages.current.includes(
                                         cursorPageNum
                                     )
-                                ) && cursorPageNum % 3 === 0;
+                                ) &&
+                                cursorPageNum % 3 === 0;
                             if (
                                 isReloadRequired &&
                                 reloadedPages &&
@@ -2060,6 +2067,15 @@ const GridComponent = (props) => {
                                         return updatedItem;
                                     }
                                 );
+                                if (paginationType === "index") {
+                                    loadedPages.current = [
+                                        indexPageInfo.pageNum
+                                    ];
+                                } else {
+                                    loadedEndCursors.current = [
+                                        cursorPageInfo.endCursor
+                                    ];
+                                }
                                 setGridData(updatedData);
                                 setOriginalGridData(updatedData);
                                 setSubComponentColumnns(
