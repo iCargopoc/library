@@ -907,11 +907,14 @@ const Customgrid = (props) => {
     useEffect(() => {
         if (!isFirstRendering && isParentGrid && fixedRowHeight === true) {
             reRenderListData();
-            if (isReloading && isReloading.current !== false) {
-                isReloading.current = false;
-            }
         }
     }, [gridData, groupSortOptions]);
+
+    useEffect(() => {
+        if (!isFirstRendering) {
+            isReloading.current = false;
+        }
+    }, [gridData]);
 
     useEffect(() => {
         if (!isFirstRendering) {
