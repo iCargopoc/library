@@ -1501,7 +1501,7 @@ const GridComponent = (props) => {
             if (updatedPageInfo !== null && updatedPageInfo !== undefined) {
                 // Next page loading
                 const pageInfoForApi = { ...updatedPageInfo };
-                if (pageInfoForApi.endCursor) {
+                if (paginationType === "cursor") {
                     pageInfoForApi.endCursor += pageInfoForApi.pageSize;
                 }
                 fetchData(pageInfoForApi).then((apiData) => {
@@ -1589,11 +1589,27 @@ const GridComponent = (props) => {
             }
         } else {
             const info = { ...updatedPageInfo };
-            if (info.endCursor) {
+            if (paginationType === "cursor") {
                 info.endCursor += info.pageSize;
             }
             fetchData(info).then((data) => {
                 if (data && data.length > 0) {
+                    let isThisReload = false;
+                    if (paginationType === "index") {
+                        console.log("loadedPages.current", loadedPages.current);
+                        isThisReload = loadedPages.current.includes(
+                            info.pageNum
+                        );
+                    } else {
+                        console.log(
+                            "loadedEndCursors.current",
+                            loadedEndCursors.current
+                        );
+                        isThisReload = loadedEndCursors.current.includes(
+                            info.endCursor
+                        );
+                    }
+
                     if (isSubComponentGrid) {
                         let pageNumner =
                             info.pageNum ||
@@ -1638,47 +1654,147 @@ const GridComponent = (props) => {
                                         return updatedItem;
                                     }
                                 );
-                                setGridData(
-                                    getSortedData(
-                                        gridData.concat(updatedData),
-                                        sortOptions
-                                    )
-                                );
-                                setOriginalGridData(
-                                    originalGridData.concat(updatedData)
-                                );
+
+                                if (isThisReload) {
+                                    const updatedGridData = [...gridData].map(
+                                        (dataItem) => {
+                                            let updatedDataItem = {
+                                                ...dataItem
+                                            };
+                                            if (updatedDataItem) {
+                                                const newDataItem = updatedData.find(
+                                                    (item) => {
+                                                        return (
+                                                            item[
+                                                                idAttribute
+                                                            ] ===
+                                                            updatedDataItem[
+                                                                idAttribute
+                                                            ]
+                                                        );
+                                                    }
+                                                );
+                                                if (newDataItem) {
+                                                    updatedDataItem = newDataItem;
+                                                }
+                                            }
+                                            return updatedDataItem;
+                                        }
+                                    );
+                                    const updatedOriginalGridData = [
+                                        ...originalGridData
+                                    ].map((dataItem) => {
+                                        let updatedDataItem = { ...dataItem };
+                                        if (updatedDataItem) {
+                                            const newDataItem = updatedData.find(
+                                                (item) => {
+                                                    return (
+                                                        item[idAttribute] ===
+                                                        updatedDataItem[
+                                                            idAttribute
+                                                        ]
+                                                    );
+                                                }
+                                            );
+                                            if (newDataItem) {
+                                                updatedDataItem = newDataItem;
+                                            }
+                                        }
+                                        return updatedDataItem;
+                                    });
+                                    setGridData(
+                                        getSortedData(
+                                            updatedGridData,
+                                            sortOptions
+                                        )
+                                    );
+                                    setOriginalGridData(
+                                        updatedOriginalGridData
+                                    );
+                                } else {
+                                    if (paginationType === "index") {
+                                        const thisPageList = [
+                                            ...loadedPages.current
+                                        ];
+                                        thisPageList.push(info.pageNum);
+                                        loadedPages.current = [...thisPageList];
+                                    } else {
+                                        const thisCursorList = [
+                                            ...loadedEndCursors.current
+                                        ];
+                                        thisCursorList.push(info.endCursor);
+                                        loadedEndCursors.current = [
+                                            ...thisCursorList
+                                        ];
+                                    }
+                                    setGridData(
+                                        getSortedData(
+                                            gridData.concat(updatedData),
+                                            sortOptions
+                                        )
+                                    );
+                                    setOriginalGridData(
+                                        originalGridData.concat(updatedData)
+                                    );
+                                }
                                 if (paginationType === "index") {
+                                    const isReloadRequired =
+                                        !(
+                                            reloadedPages &&
+                                            reloadedPages.current &&
+                                            reloadedPages.current.includes(
+                                                info.pageNum
+                                            )
+                                        ) && info.pageNum % 3 === 0;
+                                    if (
+                                        isReloadRequired &&
+                                        reloadedPages &&
+                                        reloadedPages.current
+                                    ) {
+                                        reloadedPages.current = [
+                                            ...reloadedPages.current,
+                                            info.pageNum
+                                        ];
+                                    }
                                     setIndexPageInfo({
                                         ...indexPageInfo,
-                                        pageNum: info.pageNum
+                                        pageNum: info.pageNum,
+                                        total: isReloadRequired
+                                            ? indexPageInfo.total + 1
+                                            : indexPageInfo.total
                                     });
                                 } else {
+                                    const cursorPageNum =
+                                        (info.endCursor + 1) / gridPageSize;
+                                    const isReloadRequired =
+                                        !(
+                                            reloadedPages &&
+                                            reloadedPages.current &&
+                                            reloadedPages.current.includes(
+                                                cursorPageNum
+                                            )
+                                        ) && cursorPageNum % 3 === 0;
+                                    if (
+                                        isReloadRequired &&
+                                        reloadedPages &&
+                                        reloadedPages.current
+                                    ) {
+                                        reloadedPages.current = [
+                                            ...reloadedPages.current,
+                                            cursorPageNum
+                                        ];
+                                    }
                                     setCursorPageInfo({
                                         ...cursorPageInfo,
-                                        endCursor: info.endCursor
+                                        endCursor: info.endCursor,
+                                        total: isReloadRequired
+                                            ? cursorPageInfo.total + 1
+                                            : cursorPageInfo.total
                                     });
                                 }
                             }
                         });
                     } else {
-                        let isThisReload = false;
-                        if (paginationType === "index") {
-                            console.log(
-                                "loadedPages.current",
-                                loadedPages.current
-                            );
-                            isThisReload = loadedPages.current.includes(
-                                info.pageNum
-                            );
-                        } else {
-                            console.log(
-                                "loadedEndCursors.current",
-                                loadedEndCursors.current
-                            );
-                            isThisReload = loadedEndCursors.current.includes(
-                                info.endCursor
-                            );
-                        }
                         if (isThisReload) {
                             const updatedGridData = [...gridData].map(
                                 (dataItem) => {
