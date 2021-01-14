@@ -7,9 +7,9 @@ import {
 } from "./Utilities/ColumnsUtilities";
 import Customgrid from "./Customgrid";
 // Old method - eslint-disable-next-line import/no-unresolved
-// import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
+import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 // lazy styles inclusion via styleloader
-import __cmpStyles from "./Styles/main.scss";
+// import __cmpStyles from "./Styles/main.scss";
 
 const processedData = (gridData: [Object], parentIdAttribute: String): ?[] => {
     if (gridData && gridData.length > 0) {
@@ -54,16 +54,16 @@ const processedData = (gridData: [Object], parentIdAttribute: String): ?[] => {
 const getProcessedData = memoize(processedData);
 
 const Grid = (props: Object): ?React$Element<*> => {
-    useEffect((): Function => {
-        if (__cmpStyles.use) {
-            __cmpStyles.use();
-        }
-        return () => {
-            if (__cmpStyles.unuse) {
-                __cmpStyles.unuse();
-            }
-        };
-    }, []);
+    // useEffect((): Function => {
+    //     if (__cmpStyles.use) {
+    //         __cmpStyles.use();
+    //     }
+    //     return () => {
+    //         if (__cmpStyles.unuse) {
+    //             __cmpStyles.unuse();
+    //         }
+    //     };
+    // }, []);
 
     const {
         className,
@@ -502,21 +502,20 @@ const Grid = (props: Object): ?React$Element<*> => {
 
     // Gets called when page scroll reaches the bottom of the grid.
     // Trigger call back and get the grid data updated.
-    const loadNextPage = (returnedPageNum: Object): Function => {
-        if (returnedPageNum === -1) {
-            const { pageNum, pageSize, endCursor } = pageInfo;
-            setIsNextPageLoading(true);
-            if (paginationType === "cursor") {
-                loadMoreData({
-                    endCursor,
-                    pageSize
-                });
-            } else {
-                loadMoreData({
-                    pageNum: pageNum + 1,
-                    pageSize
-                });
-            }
+    const loadNextPage = (returnedPageInfo: Object): Function => {
+        const { pageNum, pageSize, endCursor } = returnedPageInfo;
+        setIsNextPageLoading(true);
+        if (paginationType === "cursor") {
+            loadMoreData({
+                endCursor,
+                pageSize
+            });
+        } else {
+            loadMoreData({
+                pageNum: pageNum + 1,
+                pageSize
+            });
+
         }
     };
 
