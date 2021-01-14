@@ -72,6 +72,7 @@ const Customgrid = (props) => {
         rowsToOverscan,
         idAttribute,
         pageInfo,
+        paginationType,
         totalRecordsCount,
         searchColumn,
         onRowSelect,
@@ -138,6 +139,7 @@ const Customgrid = (props) => {
     // Variables and functions used for handling infinite loading
     const invalidPages = useRef([]);
     const pageToReload = useRef(-1);
+    const currentPageNumber = useRef(-1);
     const isReloading = useRef(false);
     const isPaginationNeeded =
         pageInfo !== undefined &&
@@ -149,8 +151,12 @@ const Customgrid = (props) => {
             return Promise.resolve();
         }
         if (loadNextPage && typeof loadNextPage === "function") {
-            let pageInfoToReturn = pageInfo;
-            const pageNumToReturn = pageToReload ? pageToReload.current : null;
+            const { pageNum, pageSize } = pageInfo;
+            let pageInfoToReturn = {
+                pageNum: pageNum + 1,
+                pageSize
+            };
+            const pageNumToReturn = pageToReload.current;
             if (
                 pageNumToReturn !== null &&
                 pageNumToReturn !== undefined &&
@@ -158,10 +164,23 @@ const Customgrid = (props) => {
             ) {
                 console.log("Reloading page", pageNumToReturn);
                 console.log("Invalid pages", invalidPages.current);
-                const { pageNum, pageSize } = pageInfo;
-                if (typeof pageNum === "number" && pageNum > 0) {
+                if (paginationType === "cursor") {
+                    let pageEndCursor = 0;
+                    try {
+                        pageEndCursor =
+                            gridData[pageNumToReturn * pageSize - 1][
+                                idAttribute
+                            ];
+                    } catch (ex) {
+                        console.log("Error finding end cursor of page");
+                    }
                     pageInfoToReturn = {
-                        pageNum: pageNumToReturn - 1,
+                        endCursor: pageEndCursor,
+                        pageSize
+                    };
+                } else {
+                    pageInfoToReturn = {
+                        pageNum: pageNumToReturn,
                         pageSize
                     };
                 }
@@ -174,29 +193,19 @@ const Customgrid = (props) => {
     const isItemLoaded = (index) => {
         let isReloadRequired = false;
         if (isReloading && isReloading.current === false) {
-            const invalidPagesArray =
-                invalidPages && invalidPages.current
-                    ? invalidPages.current
-                    : [];
-            if (invalidPagesArray.length > 0) {
+            const invalidPagesArray = invalidPages.current;
+            if (invalidPagesArray && invalidPagesArray.length > 0) {
                 const { pageSize } = pageInfo;
                 invalidPagesArray.forEach((page) => {
-                    const pageIndex = page * pageSize;
-                    if (
-                        index === pageIndex + overScanCount ||
-                        index === pageIndex - overScanCount
-                    ) {
+                    const pageLastIndex = page * pageSize - 1;
+                    const isScrollUpTriggered = pageLastIndex + overScanCount;
+                    const isScrollDownTriggered = pageLastIndex - overScanCount;
+                    if (isScrollUpTriggered || isScrollDownTriggered) {
                         isReloadRequired = true;
                         invalidPages.current = invalidPagesArray.filter(
                             (val) => val !== page
                         );
-                        if (
-                            pageToReload &&
-                            pageToReload.current !== null &&
-                            pageToReload.current !== undefined
-                        ) {
-                            pageToReload.current = page;
-                        }
+                        pageToReload.current = page;
                     }
                 });
             }
@@ -898,19 +907,17 @@ const Customgrid = (props) => {
 
     useEffect(() => {
         if (!isFirstRendering) {
-            if (invalidPages && invalidPages.current) {
-                const { pageNum, endCursor, pageSize } = pageInfo;
-                const currentPage =
-                    typeof pageNum === "number" && pageNum > 0
-                        ? pageNum
-                        : (endCursor + 1) / pageSize;
-                if (currentPage > 1) {
-                    const pagesArray = [];
-                    for (let i = 1; i < currentPage; i++) {
-                        pagesArray.push(i);
-                    }
-                    invalidPages.current = pagesArray;
+            const { pageNum, endCursor, pageSize } = pageInfo;
+            const currentPage =
+                paginationType === "cursor"
+                    ? (endCursor + 1) / pageSize
+                    : pageNum;
+            if (currentPage > 1) {
+                const pagesArray = [];
+                for (let i = 1; i < currentPage; i++) {
+                    pagesArray.push(i);
                 }
+                invalidPages.current = pagesArray;
             }
         }
     }, [totalRecordsCount]);
@@ -1667,6 +1674,7 @@ Customgrid.propTypes = {
     rowsToOverscan: PropTypes.number,
     idAttribute: PropTypes.string,
     pageInfo: PropTypes.object,
+    paginationType: PropTypes.string,
     totalRecordsCount: PropTypes.number,
     searchColumn: PropTypes.func,
     onRowSelect: PropTypes.func,

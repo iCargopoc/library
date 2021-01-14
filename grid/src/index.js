@@ -7,9 +7,9 @@ import {
 } from "./Utilities/ColumnsUtilities";
 import Customgrid from "./Customgrid";
 // Old method - eslint-disable-next-line import/no-unresolved
-import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
+// import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 // lazy styles inclusion via styleloader
-// import __cmpStyles from "./Styles/main.scss";
+import __cmpStyles from "./Styles/main.scss";
 
 const processedData = (gridData: [Object], parentIdAttribute: String): ?[] => {
     if (gridData && gridData.length > 0) {
@@ -54,16 +54,16 @@ const processedData = (gridData: [Object], parentIdAttribute: String): ?[] => {
 const getProcessedData = memoize(processedData);
 
 const Grid = (props: Object): ?React$Element<*> => {
-    // useEffect((): Function => {
-    //     if (__cmpStyles.use) {
-    //         __cmpStyles.use();
-    //     }
-    //     return () => {
-    //         if (__cmpStyles.unuse) {
-    //             __cmpStyles.unuse();
-    //         }
-    //     };
-    // }, []);
+    useEffect((): Function => {
+        if (__cmpStyles.use) {
+            __cmpStyles.use();
+        }
+        return () => {
+            if (__cmpStyles.unuse) {
+                __cmpStyles.unuse();
+            }
+        };
+    }, []);
 
     const {
         className,
@@ -512,7 +512,7 @@ const Grid = (props: Object): ?React$Element<*> => {
             });
         } else {
             loadMoreData({
-                pageNum: pageNum + 1,
+                pageNum,
                 pageSize
             });
         }
@@ -612,6 +612,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     rowsToOverscan={rowsToOverscan}
                     idAttribute={idAttribute}
                     pageInfo={pageInfo}
+                    paginationType={paginationType}
                     totalRecordsCount={totalRecordsCount}
                     updateRowInGrid={updateRowInGrid}
                     searchColumn={searchColumn}
