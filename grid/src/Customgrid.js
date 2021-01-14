@@ -160,8 +160,6 @@ const Customgrid = (props) => {
                 pageNumToReturn !== undefined &&
                 pageNumToReturn > -1
             ) {
-                console.log("Reloading page", pageNumToReturn);
-                console.log("Invalid pages", invalidPages.current);
                 if (paginationType === "cursor") {
                     let pageEndCursor = 0;
                     try {

@@ -1596,15 +1596,10 @@ const GridComponent = (props) => {
                 if (data && data.length > 0) {
                     let isThisReload = false;
                     if (paginationType === "index") {
-                        console.log("loadedPages.current", loadedPages.current);
                         isThisReload = loadedPages.current.includes(
                             info.pageNum
                         );
                     } else {
-                        console.log(
-                            "loadedEndCursors.current",
-                            loadedEndCursors.current
-                        );
                         isThisReload = loadedEndCursors.current.includes(
                             info.endCursor
                         );
