@@ -140,6 +140,7 @@ const Customgrid = (props) => {
     const invalidPages = useRef([]);
     const pageToReload = useRef(-1);
     const currentPageNumber = useRef(-1);
+    const currentEndCursor = useRef(-1);
     const isReloading = useRef(false);
     const isPaginationNeeded =
         pageInfo !== undefined &&
@@ -151,11 +152,15 @@ const Customgrid = (props) => {
             return Promise.resolve();
         }
         if (loadNextPage && typeof loadNextPage === "function") {
-            const { pageNum, pageSize } = pageInfo;
+            const { pageNum, endCursor, pageSize } = pageInfo;
             let pageInfoToReturn = {
-                pageNum: pageNum + 1,
                 pageSize
             };
+            if (paginationType === "cursor") {
+                pageInfoToReturn.endCursor = endCursor;
+            } else {
+                pageInfoToReturn.pageNum = pageNum + 1;
+            }
             const pageNumToReturn = pageToReload.current;
             if (
                 pageNumToReturn !== null &&
