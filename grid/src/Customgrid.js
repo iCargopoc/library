@@ -222,7 +222,11 @@ const Customgrid = (props) => {
                     const pageLastIndex = page * pageSize - 1;
                     const isScrollUpTriggered = pageLastIndex + overScanCount;
                     const isScrollDownTriggered = pageLastIndex - overScanCount;
-                    if (isScrollUpTriggered || isScrollDownTriggered) {
+                    if (
+                        (index === overScanCount && page === 1) ||
+                        index === isScrollUpTriggered ||
+                        index === isScrollDownTriggered
+                    ) {
                         isReloadRequired = true;
                         invalidPages.current = invalidPagesArray.filter(
                             (val) => val !== page
