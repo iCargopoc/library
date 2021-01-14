@@ -1650,7 +1650,7 @@ const GridComponent = (props) => {
                                 if (paginationType === "index") {
                                     setIndexPageInfo({
                                         ...indexPageInfo,
-                                        pageNum: updatedPageInfo.pageNum
+                                        pageNum: info.pageNum
                                     });
                                 } else {
                                     setCursorPageInfo({
@@ -1745,10 +1745,8 @@ const GridComponent = (props) => {
                                 !(
                                     reloadedPages &&
                                     reloadedPages.current &&
-                                    reloadedPages.current.includes(
-                                        updatedPageInfo.pageNum
-                                    )
-                                ) && updatedPageInfo.pageNum % 3 === 0;
+                                    reloadedPages.current.includes(info.pageNum)
+                                ) && info.pageNum % 3 === 0;
                             if (
                                 isReloadRequired &&
                                 reloadedPages &&
@@ -1756,12 +1754,12 @@ const GridComponent = (props) => {
                             ) {
                                 reloadedPages.current = [
                                     ...reloadedPages.current,
-                                    updatedPageInfo.pageNum
+                                    info.pageNum
                                 ];
                             }
                             setIndexPageInfo({
                                 ...indexPageInfo,
-                                pageNum: updatedPageInfo.pageNum,
+                                pageNum: info.pageNum,
                                 total: isReloadRequired
                                     ? indexPageInfo.total + 1
                                     : indexPageInfo.total
@@ -1799,7 +1797,7 @@ const GridComponent = (props) => {
                 } else if (paginationType === "index") {
                     setIndexPageInfo({
                         ...indexPageInfo,
-                        pageNum: updatedPageInfo.pageNum,
+                        pageNum: info.pageNum,
                         lastPage: true
                     });
                 } else {
