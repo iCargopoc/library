@@ -1668,7 +1668,7 @@ const GridComponent = (props) => {
                                 loadedPages.current
                             );
                             isThisReload = loadedPages.current.includes(
-                                updatedPageInfo.pageNum
+                                info.pageNum
                             );
                         } else {
                             console.log(
@@ -1676,7 +1676,7 @@ const GridComponent = (props) => {
                                 loadedEndCursors.current
                             );
                             isThisReload = loadedEndCursors.current.includes(
-                                updatedPageInfo.endCursor
+                                info.endCursor
                             );
                         }
                         if (isThisReload) {
@@ -1723,13 +1723,13 @@ const GridComponent = (props) => {
                         } else {
                             if (paginationType === "index") {
                                 const thisPageList = [...loadedPages.current];
-                                thisPageList.push(updatedPageInfo.pageNum);
+                                thisPageList.push(info.pageNum);
                                 loadedPages.current = [...thisPageList];
                             } else {
                                 const thisCursorList = [
                                     ...loadedEndCursors.current
                                 ];
-                                thisCursorList.push(updatedPageInfo.endCursor);
+                                thisCursorList.push(info.endCursor);
                                 loadedEndCursors.current = [...thisCursorList];
                             }
                             setGridData(

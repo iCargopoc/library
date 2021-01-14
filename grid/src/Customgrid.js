@@ -166,7 +166,7 @@ const Customgrid = (props) => {
                     let pageEndCursor = 0;
                     try {
                         pageEndCursor =
-                            gridData[pageNumToReturn * pageSize - 1][
+                            gridData[(pageNumToReturn - 1) * (pageSize - 1)][
                                 idAttribute
                             ];
                     } catch (ex) {
@@ -190,8 +190,9 @@ const Customgrid = (props) => {
                     if (currentEndCursor.current === -1) {
                         currentEndCursor.current = endCursor;
                     } else {
-                        calculatedEndCursor = endCursor.current + pageSize;
-                        calculatedEndCursor.current = calculatedEndCursor;
+                        calculatedEndCursor =
+                            currentEndCursor.current + pageSize;
+                        currentEndCursor.current = calculatedEndCursor;
                     }
                     pageInfoToReturn = {
                         endCursor: calculatedEndCursor,
