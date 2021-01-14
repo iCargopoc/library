@@ -1,8 +1,8 @@
+// @flow
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-param-reassign */
 import React, { useRef, useCallback, useEffect } from "react";
 import { VariableSizeList as List } from "react-window";
-import PropTypes from "prop-types";
 import ListItem from "./ListItem";
 
 const RowsList = ({
@@ -41,10 +41,46 @@ const RowsList = ({
     rowSelector,
     rowActions,
     expandableColumn
-}) => {
+}: {
+    onItemsRendered: Function,
+    infiniteLoaderRef: any,
+    listRef: any,
+    height: number,
+    theme: string,
+    isGroupedColumnsGrid: boolean,
+    rows: Array<Object>,
+    idAttribute: string,
+    overScanCount: number,
+    prepareRow: Function,
+    isParentGrid: boolean,
+    multiRowSelection: boolean,
+    parentRowExpandable: boolean,
+    isRowExpandEnabled: boolean,
+    isParentRowSelected: Function,
+    isParentRowCollapsed: Function,
+    toggleParentRowSelection: Function,
+    toggleParentRow: Function,
+    isParentRowOpen: Function,
+    isLoadMoreChildRowsRequiredForRow: Function,
+    loadMoreChildData: Function,
+    parentColumn: Object,
+    additionalColumn: Object,
+    getRowInfo: Function,
+    expandedParentRows: Array<Object>,
+    reRenderListData: Function,
+    fixedRowHeight: boolean,
+    isLoadMoreRequiredForNormalRow: Function,
+    subComponentColumnns: Array<Object>,
+    subComponentAdditionalColumn: Object,
+    isSubComponentGrid: boolean,
+    rowsWithExpandedSubComponents: Array<Object>,
+    rowSelector: boolean,
+    rowActions: Function,
+    expandableColumn: boolean
+}): ?React$Element<*> => {
     const sizeMap = useRef({});
 
-    const setSize = (index, size) => {
+    const setSize = (index: number, size: number) => {
         const currentSize = sizeMap.current[index];
         if (currentSize !== size) {
             sizeMap.current = { ...sizeMap.current, [index]: size };
@@ -52,7 +88,7 @@ const RowsList = ({
         }
     };
 
-    const getSize = (index) => {
+    const getSize = (index: number): Object => {
         const currentRow = rows[index];
         const { original } = currentRow;
         const { lastPage, isParent } = original;
@@ -87,7 +123,7 @@ const RowsList = ({
         return rowSizeToReturn || defaultRowSize;
     };
 
-    useEffect(() => {
+    useEffect((): Object => {
         reRenderListData();
         return () => {
             if (infiniteLoaderRef) {
@@ -99,7 +135,7 @@ const RowsList = ({
 
     return (
         <List
-            ref={(list) => {
+            ref={(list: List) => {
                 if (list !== null && list !== undefined) {
                     if (infiniteLoaderRef) {
                         infiniteLoaderRef(list);
@@ -118,7 +154,7 @@ const RowsList = ({
             className="neo-grid__tbody-list"
         >
             {useCallback(
-                ({ index, style }) => {
+                ({ index, style }: Object): any => {
                     // if (isItemLoaded(index)) - This check never became false during testing. Hence avoiding it to reach 100% code coverage in JEST test.
                     const row = rows[index];
                     prepareRow(row);
@@ -169,43 +205,4 @@ const RowsList = ({
         </List>
     );
 };
-
-RowsList.propTypes = {
-    onItemsRendered: PropTypes.func,
-    infiniteLoaderRef: PropTypes.any,
-    listRef: PropTypes.any,
-    height: PropTypes.number,
-    theme: PropTypes.string,
-    isGroupedColumnsGrid: PropTypes.bool,
-    rows: PropTypes.arrayOf(PropTypes.object),
-    idAttribute: PropTypes.string,
-    overScanCount: PropTypes.number,
-    prepareRow: PropTypes.func,
-    isParentGrid: PropTypes.bool,
-    multiRowSelection: PropTypes.bool,
-    parentRowExpandable: PropTypes.bool,
-    isRowExpandEnabled: PropTypes.bool,
-    isParentRowSelected: PropTypes.func,
-    isParentRowCollapsed: PropTypes.func,
-    toggleParentRowSelection: PropTypes.func,
-    toggleParentRow: PropTypes.func,
-    isParentRowOpen: PropTypes.func,
-    isLoadMoreChildRowsRequiredForRow: PropTypes.func,
-    loadMoreChildData: PropTypes.func,
-    parentColumn: PropTypes.object,
-    additionalColumn: PropTypes.object,
-    getRowInfo: PropTypes.func,
-    expandedParentRows: PropTypes.array,
-    reRenderListData: PropTypes.func,
-    fixedRowHeight: PropTypes.bool,
-    isLoadMoreRequiredForNormalRow: PropTypes.func,
-    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
-    subComponentAdditionalColumn: PropTypes.object,
-    isSubComponentGrid: PropTypes.bool,
-    rowsWithExpandedSubComponents: PropTypes.array,
-    rowSelector: PropTypes.bool,
-    rowActions: PropTypes.any,
-    expandableColumn: PropTypes.bool
-};
-
 export default RowsList;
