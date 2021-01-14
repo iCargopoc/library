@@ -152,8 +152,8 @@ const Customgrid = (props) => {
             return Promise.resolve();
         }
         if (loadNextPage && typeof loadNextPage === "function") {
-            let pageInfoToReturn = {};
             const { pageSize } = pageInfo;
+            let pageInfoToReturn = { pageSize };
             const pageNumToReturn = pageToReload.current;
             if (
                 pageNumToReturn !== null &&
@@ -174,20 +174,17 @@ const Customgrid = (props) => {
                     }
                     pageInfoToReturn = {
                         endCursor: pageEndCursor,
-                        pageSize
+                        ...pageInfoToReturn
                     };
                 } else {
                     pageInfoToReturn = {
                         pageNum: pageNumToReturn,
-                        pageSize
+                        ...pageInfoToReturn
                     };
                 }
                 pageToReload.current = -1;
             } else {
                 const { pageNum, endCursor } = pageInfo;
-                pageInfoToReturn = {
-                    pageSize
-                };
                 if (paginationType === "cursor") {
                     let calculatedEndCursor = endCursor;
                     if (currentEndCursor.current === -1) {
@@ -196,7 +193,10 @@ const Customgrid = (props) => {
                         calculatedEndCursor = endCursor.current + pageSize;
                         calculatedEndCursor.current = calculatedEndCursor;
                     }
-                    pageInfoToReturn.endCursor = calculatedEndCursor;
+                    pageInfoToReturn = {
+                        endCursor: calculatedEndCursor,
+                        ...pageInfoToReturn
+                    };
                 } else {
                     let calculatedPageNumber = pageNum;
                     if (currentPageNumber.current === -1) {
@@ -205,7 +205,10 @@ const Customgrid = (props) => {
                         calculatedPageNumber = currentPageNumber.current + 1;
                         currentPageNumber.current = calculatedPageNumber;
                     }
-                    pageInfoToReturn.pageNum = calculatedPageNumber + 1;
+                    pageInfoToReturn = {
+                        pageNum: calculatedPageNumber + 1,
+                        ...pageInfoToReturn
+                    };
                 }
             }
             return loadNextPage(pageInfoToReturn);
