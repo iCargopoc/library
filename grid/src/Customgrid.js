@@ -135,9 +135,10 @@ const Customgrid = (props) => {
 
     const gridDataLength = gridData.length;
 
-    // Variables used for handling infinite loading
+    // Variables and functions used for handling infinite loading
     const invalidPages = useRef([]);
     const pageToReload = useRef(-1);
+    const isReloading = useRef(false);
     const isPaginationNeeded =
         pageInfo !== undefined &&
         pageInfo !== null &&
@@ -145,9 +146,10 @@ const Customgrid = (props) => {
     const itemCount = gridDataLength + 1;
     const loadMoreItems = () => {
         if (isNextPageLoading) {
-            return {};
+            return Promise.resolve();
         }
         if (loadNextPage && typeof loadNextPage === "function") {
+            let pageInfoToReturn = pageInfo;
             const pageNumToReturn = pageToReload ? pageToReload.current : null;
             if (
                 pageNumToReturn !== null &&
@@ -156,37 +158,51 @@ const Customgrid = (props) => {
             ) {
                 console.log("Reloading page", pageNumToReturn);
                 console.log("Invalid pages", invalidPages.current);
+                const { pageNum, pageSize } = pageInfo;
+                if (typeof pageNum === "number" && pageNum > 0) {
+                    pageInfoToReturn = {
+                        pageNum: pageNumToReturn - 1,
+                        pageSize
+                    };
+                }
                 pageToReload.current = -1;
             }
-            return loadNextPage(pageNumToReturn);
+            return loadNextPage(pageInfoToReturn);
         }
-        return {};
+        return Promise.resolve();
     };
     const isItemLoaded = (index) => {
         let isReloadRequired = false;
-        const invalidPagesArray =
-            invalidPages && invalidPages.current ? invalidPages.current : [];
-        if (invalidPagesArray.length > 0) {
-            const { pageSize } = pageInfo;
-            invalidPagesArray.forEach((page) => {
-                const pageIndex = page * pageSize;
-                if (
-                    index === pageIndex + overScanCount ||
-                    index === pageIndex - overScanCount
-                ) {
-                    isReloadRequired = true;
-                    invalidPages.current = invalidPagesArray.filter(
-                        (val) => val !== page
-                    );
+        if (isReloading && isReloading.current === false) {
+            const invalidPagesArray =
+                invalidPages && invalidPages.current
+                    ? invalidPages.current
+                    : [];
+            if (invalidPagesArray.length > 0) {
+                const { pageSize } = pageInfo;
+                invalidPagesArray.forEach((page) => {
+                    const pageIndex = page * pageSize;
                     if (
-                        pageToReload &&
-                        pageToReload.current !== null &&
-                        pageToReload.current !== undefined
+                        index === pageIndex + overScanCount ||
+                        index === pageIndex - overScanCount
                     ) {
-                        pageToReload.current = page;
+                        isReloadRequired = true;
+                        invalidPages.current = invalidPagesArray.filter(
+                            (val) => val !== page
+                        );
+                        if (
+                            pageToReload &&
+                            pageToReload.current !== null &&
+                            pageToReload.current !== undefined
+                        ) {
+                            pageToReload.current = page;
+                        }
                     }
-                }
-            });
+                });
+            }
+            if (isReloadRequired === true) {
+                isReloading.current = true;
+            }
         }
         return isReloadRequired === false && index < gridDataLength;
     };
@@ -874,6 +890,9 @@ const Customgrid = (props) => {
     useEffect(() => {
         if (!isFirstRendering && isParentGrid && fixedRowHeight === true) {
             reRenderListData();
+            if (isReloading && isReloading.current !== false) {
+                isReloading.current = false;
+            }
         }
     }, [gridData, groupSortOptions]);
 
