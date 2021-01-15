@@ -141,7 +141,6 @@ const Customgrid = (props) => {
     const pageToReload = useRef(-1);
     const currentPageNumber = useRef(-1);
     const currentEndCursor = useRef(-1);
-    const isReloading = useRef(false);
     const isPaginationNeeded =
         pageInfo !== undefined &&
         pageInfo !== null &&
@@ -201,11 +200,7 @@ const Customgrid = (props) => {
     };
     const isItemLoaded = (index) => {
         let isReloadRequired = false;
-        if (
-            isReloading &&
-            isReloading.current === false &&
-            paginationType !== "cursor"
-        ) {
+        if (paginationType !== "cursor") {
             const invalidPagesArray = invalidPages.current;
             if (invalidPagesArray && invalidPagesArray.length > 0) {
                 const { pageSize } = pageInfo;
@@ -220,9 +215,6 @@ const Customgrid = (props) => {
                         pageToReload.current = page;
                     }
                 });
-            }
-            if (isReloadRequired === true) {
-                isReloading.current = true;
             }
         }
         return isReloadRequired === false && index < gridDataLength;
@@ -915,15 +907,9 @@ const Customgrid = (props) => {
     }, [gridData, groupSortOptions]);
 
     useEffect(() => {
-        if (!isFirstRendering) {
-            isReloading.current = false;
-        }
-    }, [gridData]);
-
-    useEffect(() => {
         if (!isFirstRendering && paginationType !== "cursor") {
             const { pageNum, pageSize } = pageInfo;
-            const totalPageSize = Math.ceil(gridData / pageSize);
+            const totalPageSize = Math.ceil(gridData.length / pageSize);
             if (pageSize > 1) {
                 const pagesArray = [];
                 for (let i = 1; i <= totalPageSize; i++) {
