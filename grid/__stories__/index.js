@@ -2019,10 +2019,14 @@ const GridComponent = (props) => {
                 paginationType === "index" ? indexPageInfo : cursorPageInfo;
             fetchData(pageInfo).then((data) => {
                 if (data && data.length > 0) {
-                    const defaultSelectedRows = data.filter((initialData) => {
-                        const { travelId } = initialData;
-                        return rowsForSelection.includes(travelId);
-                    });
+                    if (rowsForSelection && rowsForSelection.length > 0) {
+                        const defaultSelectedRows = data.filter(
+                            (initialData) => {
+                                const { travelId } = initialData;
+                                return rowsForSelection.includes(travelId);
+                            }
+                        );
+                    }
                     if (isSubComponentGrid) {
                         let pageNumner =
                             pageInfo.pageNum ||
