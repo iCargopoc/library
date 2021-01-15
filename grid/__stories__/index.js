@@ -2019,13 +2019,19 @@ const GridComponent = (props) => {
                 paginationType === "index" ? indexPageInfo : cursorPageInfo;
             fetchData(pageInfo).then((data) => {
                 if (data && data.length > 0) {
-                    if (rowsForSelection && rowsForSelection.length > 0) {
-                        const defaultSelectedRows = data.filter(
-                            (initialData) => {
-                                const { travelId } = initialData;
-                                return rowsForSelection.includes(travelId);
-                            }
-                        );
+                    let defaultSelectedRows = [];
+                    const rowsForSelectionProps =
+                        rowsForSelection && rowsForSelection.length > 0
+                            ? rowsForSelection
+                            : [];
+                    if (
+                        rowsForSelectionProps &&
+                        rowsForSelectionProps.length > 0
+                    ) {
+                        defaultSelectedRows = data.filter((initialData) => {
+                            const { travelId } = initialData;
+                            return rowsForSelectionProps.includes(travelId);
+                        });
                     }
                     if (isSubComponentGrid) {
                         let pageNumner =
@@ -2090,14 +2096,8 @@ const GridComponent = (props) => {
                                 );
                                 setColumns(mappedOriginalColumns);
                                 setColumnToExpand(originalColumnToExpand);
-                                // Update local state based on rowsToSelect
-                                if (
-                                    rowsForSelection &&
-                                    rowsForSelection.length > 0
-                                ) {
-                                    setRowsToSelect(rowsForSelection);
-                                    setUserSelectedRows(defaultSelectedRows);
-                                }
+                                setRowsToSelect(rowsForSelectionProps);
+                                setUserSelectedRows(defaultSelectedRows);
                             }
                         });
                     } else {
@@ -2112,11 +2112,8 @@ const GridComponent = (props) => {
                         setOriginalGridData(data);
                         setColumns(mappedOriginalColumns);
                         setColumnToExpand(originalColumnToExpand);
-                        // Update local state based on rowsToSelect
-                        if (rowsForSelection && rowsForSelection.length > 0) {
-                            setRowsToSelect(rowsForSelection);
-                            setUserSelectedRows(defaultSelectedRows);
-                        }
+                        setRowsToSelect(rowsForSelectionProps);
+                        setUserSelectedRows(defaultSelectedRows);
                     }
                 } else if (paginationType === "index") {
                     setIndexPageInfo({
