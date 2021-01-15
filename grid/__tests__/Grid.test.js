@@ -575,9 +575,6 @@ describe("render Index file ", () => {
         fireEvent.change(flightNoInput, { target: { value: "123" } });
 
         // Save the changes
-        const setState = jest.fn(() => editedRowValue);
-        const useStateSpy = jest.spyOn(React, "useState");
-        useStateSpy.mockImplementation(() => [editedRowValue, setState]);
         fireEvent.click(getByTestId("cell-edit-save"));
 
         // Call back should be made as data has been changed
@@ -952,25 +949,38 @@ describe("render Index file ", () => {
         expect(gridContainer).toBeInTheDocument();
 
         // Cell edit
-        const editButton = getAllByTestId("cell-edit-icon");
+        let editButton = getAllByTestId("cell-edit-icon");
         act(() => {
             editButton[0].dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
-        const flightNoInput = getByTestId("flightnoinput");
+        let flightNoInput = getByTestId("flightnoinput");
         expect(flightNoInput.value).toBe("XX2225");
         fireEvent.change(flightNoInput, { target: { value: "123" } });
-        const setState = jest.fn(() => editedRowValue);
-        const useStateSpy = jest.spyOn(React, "useState");
-        useStateSpy.mockImplementation(() => [editedRowValue, setState]);
         fireEvent.click(getByTestId("cell-edit-save"));
 
+        // Again open edit overlay and check if data has been changed.
+        editButton = getAllByTestId("cell-edit-icon");
+        act(() => {
+            editButton[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        flightNoInput = getByTestId("flightnoinput");
+        expect(flightNoInput.value).toBe("XX2225");
+
+        // Single row selection
         const selectRowCheckbox = getAllByTestId("rowSelector-singleRow")[4];
         act(() => {
             selectRowCheckbox.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
+        // Selected checkbox count should be 1
+        const selectedCheckboxes = gridContainer.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        );
+        expect(selectedCheckboxes.length).toBe(1);
     });
 });
