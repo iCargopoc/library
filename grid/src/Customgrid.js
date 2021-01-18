@@ -141,10 +141,7 @@ const Customgrid = (props) => {
     const pagesToReload = useRef([]);
     const currentPageNumber = useRef(-1);
     const currentEndCursor = useRef(-1);
-    const isPaginationNeeded =
-        pageInfo !== undefined &&
-        pageInfo !== null &&
-        pageInfo.lastPage === false;
+    const isPaginationNeeded = pageInfo !== undefined && pageInfo !== null;
     const itemCount = gridDataLength + 1;
     const loadMoreItems = () => {
         if (loadNextPage && typeof loadNextPage === "function") {
