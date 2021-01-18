@@ -1,5 +1,6 @@
+// @flow
 import { createContext } from "react";
 
-export const CellDisplayAndEditContext = createContext({});
+export const CellDisplayAndEditContext: Object = createContext({});
 
-export const AdditionalColumnContext = createContext({});
+export const AdditionalColumnContext: Object = createContext({});

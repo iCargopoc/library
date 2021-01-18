@@ -515,6 +515,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                 pageNum,
                 pageSize
             });
+
         }
     };
 
