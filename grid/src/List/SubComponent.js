@@ -1,3 +1,4 @@
+// @flow
 import React, { useMemo } from "react";
 import {
     useTable,
@@ -10,7 +11,16 @@ import RowSelector from "../Functions/RowSelector";
 import RowOptions from "../Functions/RowOptions";
 import { IconAngle } from "../Utilities/SvgUtilities";
 
-const SubComponent = (props) => {
+const SubComponent = (props: {
+    subComponentData: Array<Object>,
+    subComponentColumnns: Array<Object>,
+    subComponentAdditionalColumn: Object,
+    getRowInfo: Function,
+    rowActions: Function,
+    expandableColumn: boolean,
+    rowSelector: boolean,
+    multiRowSelection: boolean
+}): React$Element<*> => {
     const {
         subComponentData,
         subComponentColumnns,
@@ -30,8 +40,8 @@ const SubComponent = (props) => {
         typeof subComponentAdditionalColumn.Cell === "function"
     );
 
-    const columns = useMemo(() => subComponentColumnns);
-    const data = useMemo(() => [...subComponentData]);
+    const columns = useMemo((): Object => subComponentColumnns);
+    const data = useMemo((): Object => [...subComponentData]);
 
     const {
         getTableProps,
@@ -49,10 +59,10 @@ const SubComponent = (props) => {
         useExpanded,
         useRowSelect,
         useFlexLayout,
-        (hooks) => {
+        (hooks: Object): Object => {
             // Add checkbox for all rows in grid, with different properties for header row and body rows, only if required
             if (rowSelector !== false) {
-                hooks.allColumns.push((hookColumns) => [
+                hooks.allColumns.push((hookColumns: Object): Object => [
                     {
                         id: "subcomponent_selection",
                         columnId: "subComponentColumn_custom_0",
@@ -64,7 +74,7 @@ const SubComponent = (props) => {
                         minWidth: 62,
                         width: 62,
                         maxWidth: 62,
-                        Header: (headerSelectProps) => {
+                        Header: (headerSelectProps: Object): Object => {
                             const {
                                 getToggleAllRowsSelectedProps
                             } = headerSelectProps;
@@ -78,7 +88,7 @@ const SubComponent = (props) => {
                                 />
                             );
                         },
-                        Cell: (cellSelectProps) => {
+                        Cell: (cellSelectProps: Object): Object => {
                             const { row } = cellSelectProps;
                             // Check if row selector is required for this row using the getRowInfo prop passed
                             let isRowSelectable = true;
@@ -115,7 +125,7 @@ const SubComponent = (props) => {
             ); // If row actions are available
             const isRowExpandAvailable = isRowExpandEnabled || expandableColumn; // If row expand option is available
             if (isRowActionsAvailable || isRowExpandAvailable) {
-                hooks.allColumns.push((hookColumns) => [
+                hooks.allColumns.push((hookColumns: Object): Object => [
                     ...hookColumns,
                     {
                         id: "subComponentCustom",
@@ -128,7 +138,7 @@ const SubComponent = (props) => {
                         minWidth: 35,
                         width: 35,
                         maxWidth: 35,
-                        Cell: (cellCustomProps) => {
+                        Cell: (cellCustomProps: Object): Object => {
                             const { row } = cellCustomProps;
                             // Check if expand icon is required for this row using the getRowInfo prop passed
                             let isRowExpandable = true;
@@ -186,34 +196,36 @@ const SubComponent = (props) => {
             data-testid="subcomponent-content"
         >
             <div className="neo-grid__thead">
-                {headerGroups.map((headerGroup) => {
+                {headerGroups.map((headerGroup: Object): Object => {
                     return (
                         <div
                             {...headerGroup.getHeaderGroupProps()}
                             className="neo-grid__tr"
                         >
-                            {headerGroup.headers.map((column) => {
-                                const { display } = column;
-                                if (display === true) {
-                                    return (
-                                        <div
-                                            {...column.getHeaderProps()}
-                                            className="neo-grid__th"
-                                        >
-                                            <div className="neo-grid__th-title">
-                                                {column.render("Header")}
+                            {headerGroup.headers.map(
+                                (column: Object): Object => {
+                                    const { display } = column;
+                                    if (display === true) {
+                                        return (
+                                            <div
+                                                {...column.getHeaderProps()}
+                                                className="neo-grid__th"
+                                            >
+                                                <div className="neo-grid__th-title">
+                                                    {column.render("Header")}
+                                                </div>
                                             </div>
-                                        </div>
-                                    );
+                                        );
+                                    }
+                                    return null;
                                 }
-                                return null;
-                            })}
+                            )}
                         </div>
                     );
                 })}
             </div>
             <div {...getTableBodyProps()} className="neo-grid__tbody">
-                {rows.map((row) => {
+                {rows.map((row: Object): Object => {
                     prepareRow(row);
 
                     const { original, cells, isExpanded } = row;
@@ -236,7 +248,7 @@ const SubComponent = (props) => {
                                     data-testid="subcontentrow_wrap"
                                     className="neo-grid__row-wrap"
                                 >
-                                    {cells.map((cell) => {
+                                    {cells.map((cell: Object): Object => {
                                         if (cell.column.display === true) {
                                             return (
                                                 <div

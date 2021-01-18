@@ -1,5 +1,5 @@
+// @flow
 import React from "react";
-import PropTypes from "prop-types";
 import ParentItem from "./ParentItem";
 import RowItem from "./RowItem";
 
@@ -33,7 +33,37 @@ const ListItem = ({
     rowSelector,
     rowActions,
     expandableColumn
-}) => {
+}: {
+    row: Object,
+    idAttribute: string,
+    style: Object,
+    theme: string,
+    index: Number,
+    setSize: Function,
+    isParentGrid: boolean,
+    multiRowSelection: boolean,
+    parentRowExpandable: boolean,
+    isRowExpandEnabled: boolean,
+    isParentRowSelected: Function,
+    isParentRowCollapsed: Function,
+    toggleParentRowSelection: Function,
+    toggleParentRow: Function,
+    isParentRowOpen: Function,
+    isLoadMoreChildRowsRequiredForRow: Function,
+    loadMoreChildData: Function,
+    parentColumn: Object,
+    additionalColumn: Object,
+    getRowInfo: Function,
+    subComponentColumnns: Array<Object>,
+    subComponentAdditionalColumn: Object,
+    isSubComponentGrid: boolean,
+    rowsWithExpandedSubComponents: Array<Object>,
+    fixedRowHeight: boolean,
+    isLoadMoreRequiredForNormalRow: Function,
+    rowSelector: boolean,
+    rowActions: Function,
+    expandableColumn: boolean
+}): any => {
     if (isParentRowCollapsed(row)) {
         return null;
     }
@@ -106,37 +136,4 @@ const ListItem = ({
         </div>
     );
 };
-
-ListItem.propTypes = {
-    row: PropTypes.object,
-    idAttribute: PropTypes.string,
-    style: PropTypes.object,
-    theme: PropTypes.string,
-    index: PropTypes.number,
-    setSize: PropTypes.func,
-    isParentGrid: PropTypes.bool,
-    multiRowSelection: PropTypes.bool,
-    parentRowExpandable: PropTypes.bool,
-    isRowExpandEnabled: PropTypes.bool,
-    isParentRowSelected: PropTypes.func,
-    isParentRowCollapsed: PropTypes.func,
-    toggleParentRowSelection: PropTypes.func,
-    toggleParentRow: PropTypes.func,
-    isParentRowOpen: PropTypes.func,
-    isLoadMoreChildRowsRequiredForRow: PropTypes.func,
-    loadMoreChildData: PropTypes.func,
-    parentColumn: PropTypes.object,
-    additionalColumn: PropTypes.object,
-    getRowInfo: PropTypes.func,
-    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
-    subComponentAdditionalColumn: PropTypes.object,
-    isSubComponentGrid: PropTypes.bool,
-    rowsWithExpandedSubComponents: PropTypes.array,
-    fixedRowHeight: PropTypes.bool,
-    isLoadMoreRequiredForNormalRow: PropTypes.func,
-    rowSelector: PropTypes.bool,
-    rowActions: PropTypes.any,
-    expandableColumn: PropTypes.bool
-};
-
 export default ListItem;
