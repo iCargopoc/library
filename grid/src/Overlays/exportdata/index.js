@@ -1,6 +1,6 @@
+// @flow
 import React, { useState, useEffect } from "react";
 import ClickAwayListener from "react-click-away-listener";
-import PropTypes from "prop-types";
 import update from "immutability-helper";
 import JsPdf from "jspdf";
 import "jspdf-autotable";
@@ -14,7 +14,7 @@ import {
 } from "../../Utilities/SvgUtilities";
 import { convertToIndividualColumns } from "../../Utilities/GridUtilities";
 
-const ExportData = (props) => {
+const ExportData = (props: Object): any => {
     const {
         toggleExportDataOverlay,
         rows,
@@ -67,7 +67,11 @@ const ExportData = (props) => {
     const [warning, setWarning] = useState("");
 
     // Update display value of column based on columnId
-    const updatedDisplayOfColumn = (column, columnid, flag) => {
+    const updatedDisplayOfColumn = (
+        column: Object,
+        columnid: string,
+        flag: boolean
+    ): any[] => {
         const updatedColumn = { ...column };
         const { isGroupHeader, columnId } = column;
         const groupedColumns = column.columns;
@@ -77,19 +81,22 @@ const ExportData = (props) => {
             groupedColumns.length > 0
         ) {
             let atleastOneColumnDisplayed = false;
-            const updatedColumns = [...groupedColumns].map((col) => {
-                const updatedCol = { ...col };
-                if (
-                    (columnid &&
-                        (columnid === "all" || columnid === col.columnId)) ||
-                    columnid === undefined
-                ) {
-                    updatedCol.display = flag;
+            const updatedColumns = [...groupedColumns].map(
+                (col: Object): Object => {
+                    const updatedCol = { ...col };
+                    if (
+                        (columnid &&
+                            (columnid === "all" ||
+                                columnid === col.columnId)) ||
+                        columnid === undefined
+                    ) {
+                        updatedCol.display = flag;
+                    }
+                    atleastOneColumnDisplayed =
+                        atleastOneColumnDisplayed || updatedCol.display;
+                    return updatedCol;
                 }
-                atleastOneColumnDisplayed =
-                    atleastOneColumnDisplayed || updatedCol.display;
-                return updatedCol;
-            });
+            );
             updatedColumn.display = atleastOneColumnDisplayed;
             updatedColumn.columns = updatedColumns;
         } else if (
@@ -102,7 +109,10 @@ const ExportData = (props) => {
     };
 
     // Update display value of managedAdditionalColumn state with given value
-    const updatedDisplayOfAdditionalColumn = (flag, isSubComponentColumn) => {
+    const updatedDisplayOfAdditionalColumn = (
+        flag: boolean,
+        isSubComponentColumn: boolean
+    ) => {
         if (isSubComponentColumn) {
             setManagedSubComponentAdditionalColumn(
                 update(managedSubComponentAdditionalColumn, {
@@ -120,11 +130,11 @@ const ExportData = (props) => {
 
     // update the display flag value of column or all columns in managedColumns and managedAdditionalColumn state, based on the selection
     const updateColumns = (
-        columnid,
-        isadditionalcolumn,
-        checked,
-        isSubComponentColumn
-    ) => {
+        columnid: string,
+        isadditionalcolumn: string,
+        checked: boolean,
+        isSubComponentColumn: boolean
+    ): any => {
         if (
             columnid === "all" ||
             (isAdditionalColumnPresent && isadditionalcolumn === "true")
@@ -137,7 +147,7 @@ const ExportData = (props) => {
             if (isSubComponentColumn) {
                 const updatedManagedColumns = [
                     ...managedSubComponentColumns
-                ].map((column) => {
+                ].map((column: Object): any[] => {
                     return updatedDisplayOfColumn(column, columnid, checked);
                 });
                 setManagedSubComponentColumns(
@@ -147,7 +157,7 @@ const ExportData = (props) => {
                 );
             } else {
                 const updatedManagedColumns = [...managedColumns].map(
-                    (column) => {
+                    (column: Object): any[] => {
                         return updatedDisplayOfColumn(
                             column,
                             columnid,
@@ -164,7 +174,10 @@ const ExportData = (props) => {
         }
     };
 
-    const downloadPDF = (rowFilteredValues, rowFilteredHeader) => {
+    const downloadPDF = (
+        rowFilteredValues: Object,
+        rowFilteredHeader: Object
+    ): Object => {
         const unit = "pt";
         const size = "A4"; // Use A1, A2, A3 or A4
         const orientation = "landscape"; // portrait or landscape
@@ -189,7 +202,7 @@ const ExportData = (props) => {
         doc.save(`${exportedFileName}.pdf`);
     };
 
-    const downloadCSVFile = async (filteredRowValue) => {
+    const downloadCSVFile = async (filteredRowValue: Object) => {
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".csv";
@@ -206,15 +219,21 @@ const ExportData = (props) => {
         const exportOverlay = document.querySelector(
             "[data-testid='exportoverlay']"
         );
-        exportOverlay.appendChild(link);
+        if (exportOverlay != null) {
+            exportOverlay.appendChild(link);
+        }
         const linkToDownload = document.querySelector(
             "[data-testid='csv-file-download-link']"
         );
-        linkToDownload.click();
-        exportOverlay.removeChild(link);
+        if (linkToDownload != null) {
+            linkToDownload.click();
+        }
+        if (exportOverlay != null) {
+            exportOverlay.removeChild(link);
+        }
     };
 
-    const downloadXLSFile = async (filteredRowValue) => {
+    const downloadXLSFile = async (filteredRowValue: Object) => {
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".xlsx";
@@ -231,12 +250,18 @@ const ExportData = (props) => {
         const exportOverlay = document.querySelector(
             "[data-testid='exportoverlay']"
         );
-        exportOverlay.appendChild(link);
+        if (exportOverlay != null) {
+            exportOverlay.appendChild(link);
+        }
         const linkToDownload = document.querySelector(
             "[data-testid='excel-file-download-link']"
         );
-        linkToDownload.click();
-        exportOverlay.removeChild(link);
+        if (linkToDownload != null) {
+            linkToDownload.click();
+        }
+        if (exportOverlay != null) {
+            exportOverlay.removeChild(link);
+        }
     };
 
     const exportRowData = () => {
@@ -248,12 +273,12 @@ const ExportData = (props) => {
 
         const filteredManagedColumns = convertToIndividualColumns(
             managedColumns
-        ).filter((column) => {
+        ).filter((column: Object): boolean => {
             return column.display === true;
         });
 
         const filteredManagedSubComponentColumns = managedSubComponentColumns.filter(
-            (column) => {
+            (column: Object): boolean => {
                 return column.display === true;
             }
         );
@@ -265,13 +290,13 @@ const ExportData = (props) => {
             downloadTypes.length > 0
         ) {
             const rowLength = rows.length;
-            rows.forEach((rowDetails, index) => {
+            rows.forEach((rowDetails: Object, index: number) => {
                 const row = rowDetails.original;
                 if (row.isParent !== true) {
                     const filteredColumnVal = {};
                     const rowFilteredValues = [];
                     const rowFilteredHeader = [];
-                    filteredManagedColumns.forEach((columnName) => {
+                    filteredManagedColumns.forEach((columnName: any) => {
                         const {
                             Header,
                             title,
@@ -291,7 +316,7 @@ const ExportData = (props) => {
                                 accessorRowValue !== undefined &&
                                 typeof accessorRowValue === "object"
                             ) {
-                                innerCells.forEach((cell) => {
+                                innerCells.forEach((cell: Object) => {
                                     if (cell.display === true) {
                                         const innerCellAccessor = cell.accessor;
                                         const innerCellHeader = cell.Header;
@@ -299,7 +324,10 @@ const ExportData = (props) => {
                                             accessorRowValue[innerCellAccessor];
                                         if (accessorRowValue.length > 0) {
                                             accessorRowValue.forEach(
-                                                (item, itemIndex) => {
+                                                (
+                                                    item: Object,
+                                                    itemIndex: string
+                                                ) => {
                                                     const itemInnerCellAccessor =
                                                         item[innerCellAccessor];
                                                     columnValue = itemInnerCellAccessor
@@ -349,7 +377,7 @@ const ExportData = (props) => {
                     ) {
                         const { innerCells } = managedAdditionalColumn;
                         // For column in the expanded section
-                        innerCells.forEach((expandedCell) => {
+                        innerCells.forEach((expandedCell: Object) => {
                             if (expandedCell.display === true) {
                                 const expandedCellAccessor =
                                     expandedCell.accessor;
@@ -365,7 +393,7 @@ const ExportData = (props) => {
                                     if (expandedCellValue.length > 0) {
                                         const newValues = [];
                                         expandedCellValue.forEach(
-                                            (cellValue) => {
+                                            (cellValue: Object) => {
                                                 newValues.push(
                                                     Object.values(
                                                         cellValue
@@ -395,7 +423,7 @@ const ExportData = (props) => {
                 }
             });
 
-            downloadTypes.forEach((item) => {
+            downloadTypes.forEach((item: Object) => {
                 if (item === "pdf") {
                     downloadPDF(filteredRowValues, filteredRowHeader);
                 } else if (item === "excel") {
@@ -418,13 +446,13 @@ const ExportData = (props) => {
         }
     };
 
-    const changeDownloadType = (event) => {
+    const changeDownloadType = (event: Object) => {
         const { value, checked } = event.currentTarget;
         if (checked) {
             setDownloadTypes(downloadTypes.concat([value]));
         } else {
             setDownloadTypes(
-                downloadTypes.filter((type) => {
+                downloadTypes.filter((type: Object): Object => {
                     return type !== value;
                 })
             );
@@ -596,17 +624,6 @@ const ExportData = (props) => {
         );
     }
     return null;
-};
-
-ExportData.propTypes = {
-    toggleExportDataOverlay: PropTypes.func,
-    rows: PropTypes.arrayOf(PropTypes.object),
-    columns: PropTypes.arrayOf(PropTypes.object),
-    additionalColumn: PropTypes.object,
-    isSubComponentGrid: PropTypes.bool,
-    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
-    subComponentAdditionalColumn: PropTypes.object,
-    fileName: PropTypes.string
 };
 
 export default ExportData;
