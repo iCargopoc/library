@@ -100,7 +100,7 @@ export const findDeSelectedRows = (
     oldUserSelectedRowIdentifiers: any[],
     currentUserSelectedRowIdentifiers: any[],
     idAttribute: any
-): any[] => {
+): any => {
     const deSelectedRows = [];
     if (
         selectedRows &&
@@ -125,7 +125,7 @@ export const findDeSelectedRows = (
     return deSelectedRows;
 };
 
-export const convertToIndividualColumns = (managableColumns: any): any[] => {
+export const convertToIndividualColumns = (managableColumns: any): any => {
     let modifiedColumns = [];
     if (managableColumns && managableColumns.length > 0) {
         managableColumns.forEach((item: Object) => {

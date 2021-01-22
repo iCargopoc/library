@@ -135,7 +135,7 @@ const RowsList = ({
 
     return (
         <List
-            ref={(list: List) => {
+            ref={(list: Object) => {
                 if (list !== null && list !== undefined) {
                     if (infiniteLoaderRef) {
                         infiniteLoaderRef(list);

@@ -6,7 +6,6 @@ import {
     useRowSelect,
     useExpanded
 } from "react-table";
-import PropTypes from "prop-types";
 import RowSelector from "../Functions/RowSelector";
 import RowOptions from "../Functions/RowOptions";
 import { IconAngle } from "../Utilities/SvgUtilities";
@@ -285,14 +284,3 @@ const SubComponent = (props: {
 };
 
 export default SubComponent;
-
-SubComponent.propTypes = {
-    subComponentData: PropTypes.arrayOf(PropTypes.object),
-    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
-    subComponentAdditionalColumn: PropTypes.object,
-    getRowInfo: PropTypes.func,
-    rowActions: PropTypes.any,
-    expandableColumn: PropTypes.bool,
-    rowSelector: PropTypes.bool,
-    multiRowSelection: PropTypes.bool
-};
