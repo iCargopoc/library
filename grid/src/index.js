@@ -112,6 +112,9 @@ const Grid = (props: Object): ?React$Element<*> => {
     // Set state value for variable to check if the loading process is going on
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
 
+    // Set state value for holding the count of page reloads
+    const [pageReloadCount, setPageReloadCount] = useState(0);
+
     // To check if useEffect Call is completed or not
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -502,9 +505,16 @@ const Grid = (props: Object): ?React$Element<*> => {
 
     // Gets called when page scroll reaches the bottom of the grid.
     // Trigger call back and get the grid data updated.
-    const loadNextPage = (returnedPageInfo: Object): Function => {
+    const loadNextPage = (
+        returnedPageInfo: Object,
+        isReload: boolean
+    ): Function => {
         const { pageNum, pageSize, endCursor } = returnedPageInfo;
-        setIsNextPageLoading(true);
+        if (isReload) {
+            setPageReloadCount(pageReloadCount + 1);
+        } else {
+            setIsNextPageLoading(true);
+        }
         if (paginationType === "cursor") {
             loadMoreData({
                 endCursor,
@@ -520,6 +530,8 @@ const Grid = (props: Object): ?React$Element<*> => {
 
     useEffect(() => {
         setIsNextPageLoading(false);
+        const newPageReloadCount = pageReloadCount - 1;
+        setPageReloadCount(newPageReloadCount < 0 ? 0 : newPageReloadCount);
         if (pageInfo) {
             const { total } = pageInfo;
             if (typeof total === "number" && total !== totalRecordsCount) {
@@ -639,6 +651,19 @@ const Grid = (props: Object): ?React$Element<*> => {
                     rowsToDeselect={rowsToDeselect}
                     fixedRowHeight={fixedRowHeight}
                 />
+                {pageReloadCount > 0 ? (
+                    <>
+                        <div className="ng-loader ng-loader--overlay">
+                            <div className="ng-loader__block">
+                                <div className="ng-loader__item" />
+                                <div className="ng-loader__item" />
+                                <div className="ng-loader__item" />
+                                <div className="ng-loader__item" />
+                            </div>
+                        </div>
+                        <div className="ng-overlay" />
+                    </>
+                ) : null}
             </div>
         );
     }

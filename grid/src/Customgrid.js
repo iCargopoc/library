@@ -161,7 +161,7 @@ const Customgrid = (props) => {
                 pagesToReload.current = pageNumsToReturn.filter(
                     (num) => num !== firstPageToReload
                 );
-                return loadNextPage(pageInfoToReturn);
+                return loadNextPage(pageInfoToReturn, true);
             }
             if (isNextPageLoading) {
                 return Promise.resolve();
@@ -192,7 +192,7 @@ const Customgrid = (props) => {
                     ...pageInfoToReturn
                 };
             }
-            return loadNextPage(pageInfoToReturn);
+            return loadNextPage(pageInfoToReturn, false);
         }
         return Promise.resolve();
     };
