@@ -35,7 +35,7 @@ const ColumnSearch = ({
     const getAllColumns = (
         columnsList: [],
         additionalColumnItem: Object
-    ): [] => {
+    ): any => {
         let allCoulmns = [];
         if (columnsList && columnsList.length > 0) {
             allCoulmns = [...columnsList];
