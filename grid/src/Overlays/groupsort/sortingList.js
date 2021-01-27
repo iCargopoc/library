@@ -1,22 +1,32 @@
+// @flow
 import React from "react";
 import { useDrop } from "react-dnd";
 import update from "immutability-helper";
-import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
 import SortItem from "./sortingItem";
 
-const SortingList = (props) => {
+const SortingList = (props: {
+    updateSortingOptions: Function,
+    sortingOrders: Array<Object>,
+    sortOptions: Array<Object>,
+    columns: Array<Object>,
+    copySortOption: Function,
+    deleteSortOption: Function,
+    updateSingleSortingOption: Function
+}): React$Element<*> => {
     const { updateSortingOptions, sortingOrders, sortOptions, columns } = props;
 
-    const findSort = (sortId) => {
-        const sort = sortOptions.filter((c, index) => index === sortId)[0];
+    const findSort = (sortId: String): Object => {
+        const sort = sortOptions.filter(
+            (c: Object, index: number): boolean => index === sortId
+        )[0];
         return {
             sort,
             index: sortOptions.indexOf(sort)
         };
     };
 
-    const moveSort = (sortId, atIndex) => {
+    const moveSort = (sortId: String, atIndex: Number) => {
         const { sort, index } = findSort(sortId);
         updateSortingOptions(
             update(sortOptions, {
@@ -40,37 +50,28 @@ const SortingList = (props) => {
                         <li className="ng-popover--sort__item-text">Order</li>
                     </ul>
                 ) : null}
-                {sortOptions.map((sortOption, index) => {
-                    return (
-                        <SortItem
-                            id={index}
-                            key={index}
-                            sortOption={sortOption}
-                            sortingOrders={sortingOrders}
-                            columns={columns}
-                            moveSort={moveSort}
-                            findSort={findSort}
-                            updateSingleSortingOption={
-                                props.updateSingleSortingOption
-                            }
-                            copySortOption={props.copySortOption}
-                            deleteSortOption={props.deleteSortOption}
-                        />
-                    );
-                })}
+                {sortOptions.map(
+                    (sortOption: Object, index: number): Object => {
+                        return (
+                            <SortItem
+                                id={index}
+                                key={index}
+                                sortOption={sortOption}
+                                sortingOrders={sortingOrders}
+                                columns={columns}
+                                moveSort={moveSort}
+                                findSort={findSort}
+                                updateSingleSortingOption={
+                                    props.updateSingleSortingOption
+                                }
+                                copySortOption={props.copySortOption}
+                                deleteSortOption={props.deleteSortOption}
+                            />
+                        );
+                    }
+                )}
             </div>
         </React.Fragment>
     );
 };
-
-SortingList.propTypes = {
-    updateSortingOptions: PropTypes.func,
-    sortingOrders: PropTypes.array,
-    sortOptions: PropTypes.array,
-    columns: PropTypes.arrayOf(PropTypes.object),
-    copySortOption: PropTypes.func,
-    deleteSortOption: PropTypes.func,
-    updateSingleSortingOption: PropTypes.func
-};
-
 export default SortingList;

@@ -1,5 +1,5 @@
+// @flow
 import React from "react";
-import PropTypes from "prop-types";
 
 const groupedColumnItem = ({
     id,
@@ -10,7 +10,16 @@ const groupedColumnItem = ({
     innerCells,
     isSubComponentColumn,
     onInnerCellChange
-}) => {
+}: {
+    id: string,
+    Header: any,
+    title: string,
+    display: boolean,
+    isadditionalcolumn: boolean,
+    innerCells: Array<Object>,
+    isSubComponentColumn: boolean,
+    onInnerCellChange: Function
+}): React$Element<*> => {
     const isItemToBeDisplayed =
         innerCells && innerCells.length > 0 && display === true;
 
@@ -22,7 +31,7 @@ const groupedColumnItem = ({
                 </strong>
             ) : null}
             {isItemToBeDisplayed
-                ? innerCells.map((cell) => {
+                ? innerCells.map((cell: Object): Object => {
                       const { cellId } = cell;
                       return (
                           <div
@@ -42,7 +51,7 @@ const groupedColumnItem = ({
                                               isadditionalcolumn
                                           }
                                           checked={cell.display}
-                                          onChange={(event) =>
+                                          onChange={(event: String): Object =>
                                               onInnerCellChange(
                                                   event,
                                                   isSubComponentColumn
@@ -64,16 +73,4 @@ const groupedColumnItem = ({
         </div>
     );
 };
-
-groupedColumnItem.propTypes = {
-    id: PropTypes.string,
-    Header: PropTypes.any,
-    title: PropTypes.string,
-    display: PropTypes.bool,
-    isadditionalcolumn: PropTypes.bool,
-    innerCells: PropTypes.arrayOf(PropTypes.object),
-    isSubComponentColumn: PropTypes.bool,
-    onInnerCellChange: PropTypes.func
-};
-
 export default groupedColumnItem;

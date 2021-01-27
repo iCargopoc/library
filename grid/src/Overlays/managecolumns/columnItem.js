@@ -1,6 +1,6 @@
+// @flow
 import React from "react";
 import { useDrag, useDrop } from "react-dnd";
-import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
 import { IconDragHorizontal } from "../../Utilities/SvgUtilities";
 import GroupedColumnItem from "./groupedColumnItem";
@@ -17,15 +17,27 @@ const ColumnItem = ({
     innerCells,
     isSubComponentColumn,
     onInnerCellChange
-}) => {
+}: {
+    id: string,
+    columnHeader: any,
+    columnTitle: string,
+    moveColumn: Function,
+    findColumn: Function,
+    isadditionalcolumn: boolean,
+    isGroupHeader: boolean,
+    columns: Array<Object>,
+    innerCells: Array<Object>,
+    isSubComponentColumn: boolean,
+    onInnerCellChange: Function
+}): React$Element<*> => {
     const originalIndex = findColumn(id).index;
 
     const [{ isDragging }, drag] = useDrag({
         item: { type: ItemTypes.COLUMN, id, originalIndex },
-        collect: (monitor) => ({
+        collect: (monitor: Object): Object => ({
             isDragging: monitor.isDragging()
         }),
-        end: (dropResult, monitor) => {
+        end: (dropResult: Object, monitor: Object) => {
             const monitorGetItemValue = monitor.getItem();
             const { id: droppedId } = monitorGetItemValue;
             const newOriginalIndex = monitorGetItemValue.originalIndex;
@@ -38,8 +50,8 @@ const ColumnItem = ({
 
     const [, drop] = useDrop({
         accept: ItemTypes.COLUMN,
-        canDrop: () => false,
-        hover({ id: draggedId }) {
+        canDrop: (): boolean => false,
+        hover({ id: draggedId }: Object) {
             if (draggedId !== id) {
                 const { index: overIndex } = findColumn(id);
                 moveColumn(draggedId, overIndex);
@@ -62,7 +74,7 @@ const ColumnItem = ({
                             ? "subcomponentcolumnItemDnd"
                             : "columnItemDnd"
                     }
-                    ref={(node) => drag(drop(node))}
+                    ref={(node: Object): Object => drag(drop(node))}
                 >
                     <i>
                         <IconDragHorizontal className="ng-icon" />
@@ -70,7 +82,7 @@ const ColumnItem = ({
                 </div>
                 <span>{columnTitle || columnHeader}</span>
                 {isGroupHeader === true && columns && columns.length > 0 ? (
-                    columns.map((col) => {
+                    columns.map((col: Object): Object => {
                         const {
                             columnId,
                             Header,
@@ -95,7 +107,7 @@ const ColumnItem = ({
                 ) : (
                     <div className="ng-popover--column__list">
                         {innerCells && innerCells.length > 0
-                            ? innerCells.map((cell) => {
+                            ? innerCells.map((cell: Object): Object => {
                                   const { cellId, Header, display } = cell;
                                   return (
                                       <div
@@ -115,7 +127,9 @@ const ColumnItem = ({
                                                           isadditionalcolumn
                                                       }
                                                       checked={display}
-                                                      onChange={(event) =>
+                                                      onChange={(
+                                                          event: String
+                                                      ): Object =>
                                                           onInnerCellChange(
                                                               event,
                                                               isSubComponentColumn
@@ -140,19 +154,4 @@ const ColumnItem = ({
         </div>
     );
 };
-
-ColumnItem.propTypes = {
-    id: PropTypes.string,
-    columnHeader: PropTypes.any,
-    columnTitle: PropTypes.string,
-    moveColumn: PropTypes.func,
-    findColumn: PropTypes.func,
-    isadditionalcolumn: PropTypes.bool,
-    isGroupHeader: PropTypes.bool,
-    columns: PropTypes.arrayOf(PropTypes.object),
-    innerCells: PropTypes.arrayOf(PropTypes.object),
-    isSubComponentColumn: PropTypes.bool,
-    onInnerCellChange: PropTypes.func
-};
-
 export default ColumnItem;

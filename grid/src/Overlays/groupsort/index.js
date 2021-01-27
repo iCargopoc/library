@@ -1,15 +1,21 @@
+// @flow
 import React, { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import ClickAwayListener from "react-click-away-listener";
-import PropTypes from "prop-types";
 import SortingList from "./sortingList";
 import { convertToIndividualColumns } from "../../Utilities/GridUtilities";
 import { IconCancel } from "../../Utilities/SvgUtilities";
 
-const GroupSort = (props) => {
+const GroupSort = (props: {
+    toggleGroupSortOverLay: Function,
+    groupSortOptions: Array<Object>,
+    gridColumns: Array<Object>,
+    gridSubComponentColumns: Array<Object>,
+    applyGroupSort: Function
+}): ?React$Element<*> => {
     const {
         toggleGroupSortOverLay,
         applyGroupSort,
@@ -28,7 +34,7 @@ const GroupSort = (props) => {
         const sortingOrders = ["Ascending", "Descending"];
         let defaultSortingOption = [];
         const defaultSortBy = parentColumns.find(
-            (col) =>
+            (col: Object): boolean =>
                 col.isSortable &&
                 col.accessor !== null &&
                 col.accessor !== undefined
@@ -40,7 +46,7 @@ const GroupSort = (props) => {
                 defaultSortBy.innerCells.length > 0
             ) {
                 const sortableInnerCell = defaultSortBy.innerCells.find(
-                    (cell) => cell.isSortable
+                    (cell: Object): boolean => cell.isSortable
                 );
                 if (sortableInnerCell && sortableInnerCell.accessor) {
                     defaultSortOn = sortableInnerCell.accessor;
@@ -73,7 +79,7 @@ const GroupSort = (props) => {
             ]
         };
 
-        const updateSortingOptions = (sortingOptions) => {
+        const updateSortingOptions = (sortingOptions: Object): Object => {
             setSortOptions(sortingOptions);
         };
 
@@ -88,11 +94,11 @@ const GroupSort = (props) => {
         };
 
         const updateSingleSortingOption = (
-            sortIndex,
-            sortByValue,
-            sortOnValue,
-            sortOrder,
-            isSubComponentColumn
+            sortIndex: Number,
+            sortByValue: String,
+            sortOnValue: String,
+            sortOrder: String,
+            isSubComponentColumn: boolean
         ) => {
             const newOptionsList = sortOptions.slice(0);
             const newSortingOption = {
@@ -101,20 +107,21 @@ const GroupSort = (props) => {
                 order: sortOrder,
                 isSubComponentColumn
             };
-            const updatedSortOptions = newOptionsList.map((option, index) =>
-                index === sortIndex ? newSortingOption : option
+            const updatedSortOptions = newOptionsList.map(
+                (option: Object, index: number): Object =>
+                    index === sortIndex ? newSortingOption : option
             );
             updateSortingOptions(updatedSortOptions);
         };
 
-        const copySortOption = (sortIndex) => {
+        const copySortOption = (sortIndex: number) => {
             const newOption = sortOptions.slice(0)[sortIndex];
             setSortOptions(sortOptions.concat(newOption));
         };
 
-        const deleteSortOption = (sortIndex) => {
+        const deleteSortOption = (sortIndex: Number) => {
             setSortOptions(
-                sortOptions.filter((option, index) => {
+                sortOptions.filter((option: Object, index: number): boolean => {
                     return index !== sortIndex;
                 })
             );
@@ -122,17 +129,19 @@ const GroupSort = (props) => {
 
         const applySort = () => {
             let isError = false;
-            sortOptions.map((option, index) => {
+            sortOptions.map((option: Object, index: number): Object => {
                 const { sortBy, sortOn, isSubComponentColumn } = option;
                 const optionIndex = index;
-                const duplicateSort = sortOptions.find((opt, optIndex) => {
-                    return (
-                        sortBy === opt.sortBy &&
-                        sortOn === opt.sortOn &&
-                        isSubComponentColumn === opt.isSubComponentColumn &&
-                        optionIndex !== optIndex
-                    );
-                });
+                const duplicateSort = sortOptions.find(
+                    (opt: Object, optIndex: number): boolean => {
+                        return (
+                            sortBy === opt.sortBy &&
+                            sortOn === opt.sortOn &&
+                            isSubComponentColumn === opt.isSubComponentColumn &&
+                            optionIndex !== optIndex
+                        );
+                    }
+                );
                 if (duplicateSort) {
                     isError = true;
                 }
@@ -219,13 +228,4 @@ const GroupSort = (props) => {
     }
     return null;
 };
-
-GroupSort.propTypes = {
-    toggleGroupSortOverLay: PropTypes.func,
-    groupSortOptions: PropTypes.arrayOf(PropTypes.object),
-    gridColumns: PropTypes.arrayOf(PropTypes.object),
-    gridSubComponentColumns: PropTypes.arrayOf(PropTypes.object),
-    applyGroupSort: PropTypes.func
-};
-
 export default GroupSort;
