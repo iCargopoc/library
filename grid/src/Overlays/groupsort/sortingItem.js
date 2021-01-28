@@ -1,6 +1,6 @@
+// @flow
 import React from "react";
 import { useDrag, useDrop } from "react-dnd";
-import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
 
 import {
@@ -19,15 +19,25 @@ const SortItem = ({
     updateSingleSortingOption,
     copySortOption,
     deleteSortOption
-}) => {
+}: {
+    id: number,
+    sortOption: Object,
+    columns: Array<Object>,
+    sortingOrders: Array<Object>,
+    moveSort: Function,
+    findSort: Function,
+    updateSingleSortingOption: Function,
+    copySortOption: Function,
+    deleteSortOption: Function
+}): React$Element<*> => {
     const originalIndex = findSort(id).index;
 
     const [{ isDragging }, drag] = useDrag({
         item: { type: ItemTypes.SORT_ITEM, id, originalIndex },
-        collect: (monitor) => ({
+        collect: (monitor: Object): Object => ({
             isDragging: monitor.isDragging()
         }),
-        end: (dropResult, monitor) => {
+        end: (dropResult: Object, monitor: Object) => {
             const monitorGetItemValue = monitor.getItem();
             const { id: droppedId } = monitorGetItemValue;
             const newOriginalIndex = monitorGetItemValue.originalIndex;
@@ -40,8 +50,8 @@ const SortItem = ({
 
     const [, drop] = useDrop({
         accept: ItemTypes.SORT_ITEM,
-        canDrop: () => false,
-        hover({ id: draggedId }) {
+        canDrop: (): boolean => false,
+        hover({ id: draggedId }: Object) {
             if (draggedId !== id) {
                 const { index: overIndex } = findSort(id);
                 moveSort(draggedId, overIndex);
@@ -49,24 +59,26 @@ const SortItem = ({
         }
     });
 
-    const getInncerCellsOfColumn = (columnAccessor) => {
-        const origCol = columns.find((column) => {
+    const getInncerCellsOfColumn = (columnAccessor: Object): Object => {
+        const origCol = columns.find((column: Object): Object => {
             return column.accessor === columnAccessor;
         });
         if (origCol && origCol.innerCells) {
-            return origCol.innerCells.filter((cell) => cell.isSortable);
+            return origCol.innerCells.filter(
+                (cell: Object): boolean => cell.isSortable
+            );
         }
         return [];
     };
 
-    const checkIfColumnIsSubComponent = (columnAccessor) => {
-        const origCol = columns.find((column) => {
+    const checkIfColumnIsSubComponent = (columnAccessor: String): boolean => {
+        const origCol = columns.find((column: Object): boolean => {
             return column.accessor === columnAccessor;
         });
         return origCol ? origCol.isSubComponentColumn : false;
     };
 
-    const changeSortByOptions = (event) => {
+    const changeSortByOptions = (event: Object) => {
         const { value } = event.currentTarget;
         const innerCellsList = getInncerCellsOfColumn(value);
         updateSingleSortingOption(
@@ -80,7 +92,7 @@ const SortItem = ({
         );
     };
 
-    const changeSortOnOptions = (event) => {
+    const changeSortOnOptions = (event: Object) => {
         const newSortOnValue = event.target.value;
         updateSingleSortingOption(
             id,
@@ -91,7 +103,7 @@ const SortItem = ({
         );
     };
 
-    const changeSortOrderOptions = (event) => {
+    const changeSortOrderOptions = (event: Object) => {
         const newSortOrderValue = event.target.value;
         updateSingleSortingOption(
             id,
@@ -122,7 +134,7 @@ const SortItem = ({
                 <div
                     className="ng-popover__drag"
                     data-testid="sortItemDnd"
-                    ref={(node) => drag(drop(node))}
+                    ref={(node: Object): Object => drag(drop(node))}
                 >
                     <i className="ng-icon-block">
                         <IconDragVertical className="ng-icon" />
@@ -138,7 +150,7 @@ const SortItem = ({
                         onChange={changeSortByOptions}
                         value={sortOption.sortBy}
                     >
-                        {columns.map((orgItem) => {
+                        {columns.map((orgItem: Object): Object => {
                             if (orgItem.isSortable) {
                                 return (
                                     <option
@@ -166,7 +178,7 @@ const SortItem = ({
                         {getInncerCellsOfColumn(sortOption.sortBy) &&
                         getInncerCellsOfColumn(sortOption.sortBy).length > 0 ? (
                             getInncerCellsOfColumn(sortOption.sortBy).map(
-                                (innerCellItem) => (
+                                (innerCellItem: Object): Object => (
                                     <option
                                         data-testid="groupSort-sortOn-Option"
                                         key={innerCellItem.cellId}
@@ -196,7 +208,7 @@ const SortItem = ({
                         value={sortOption.order}
                         onChange={changeSortOrderOptions}
                     >
-                        {sortingOrders.map((order) => (
+                        {sortingOrders.map((order: Object): Object => (
                             <option
                                 data-testid="groupSort-order-Option"
                                 key={order}
@@ -234,17 +246,4 @@ const SortItem = ({
         </div>
     );
 };
-
-SortItem.propTypes = {
-    id: PropTypes.number,
-    sortOption: PropTypes.object,
-    columns: PropTypes.arrayOf(PropTypes.object),
-    sortingOrders: PropTypes.array,
-    moveSort: PropTypes.func,
-    findSort: PropTypes.func,
-    updateSingleSortingOption: PropTypes.func,
-    copySortOption: PropTypes.func,
-    deleteSortOption: PropTypes.func
-};
-
 export default SortItem;

@@ -1,11 +1,16 @@
+// @flow
 import React from "react";
 import { useDrop } from "react-dnd";
 import update from "immutability-helper";
-import PropTypes from "prop-types";
 import { ItemTypes } from "./ItemTypes";
 import ColumnItem from "./columnItem";
 
-const ColumnsList = (props) => {
+const ColumnsList = (props: {
+    onColumnReorder: Function,
+    managedColumns: Array<Object>,
+    onInnerCellChange: Function,
+    isSubComponentColumn: boolean
+}): React$Element<*> => {
     const {
         onColumnReorder,
         managedColumns,
@@ -13,9 +18,9 @@ const ColumnsList = (props) => {
         isSubComponentColumn
     } = props;
 
-    const findColumn = (columnId) => {
+    const findColumn = (columnId: String): Object => {
         const column = managedColumns.filter(
-            (c) => `${c.columnId}` === columnId
+            (c: Object): boolean => `${c.columnId}` === columnId
         )[0];
         return {
             column,
@@ -23,7 +28,7 @@ const ColumnsList = (props) => {
         };
     };
 
-    const moveColumn = (columnId, atIndex) => {
+    const moveColumn = (columnId: String, atIndex: Number) => {
         const { column, index } = findColumn(columnId);
         if (index >= 0) {
             onColumnReorder(
@@ -40,9 +45,11 @@ const ColumnsList = (props) => {
 
     const [, drop] = useDrop({ accept: ItemTypes.COLUMN });
 
-    const filteredManagedColumns = managedColumns.filter((column) => {
-        return column.display === true;
-    });
+    const filteredManagedColumns = managedColumns.filter(
+        (column: Object): boolean => {
+            return column.display === true;
+        }
+    );
 
     return (
         <React.Fragment key="ColumnManageFragment">
@@ -55,7 +62,7 @@ const ColumnsList = (props) => {
                         : "columns-list-box"
                 }
             >
-                {filteredManagedColumns.map((column) => {
+                {filteredManagedColumns.map((column: Object): Object => {
                     const {
                         columnId,
                         Header,
@@ -86,12 +93,4 @@ const ColumnsList = (props) => {
         </React.Fragment>
     );
 };
-
-ColumnsList.propTypes = {
-    onColumnReorder: PropTypes.func,
-    managedColumns: PropTypes.arrayOf(PropTypes.object),
-    onInnerCellChange: PropTypes.func,
-    isSubComponentColumn: PropTypes.bool
-};
-
 export default ColumnsList;
