@@ -145,8 +145,8 @@ const Customgrid = (props) => {
     const itemCount = gridDataLength + 1;
     const loadMoreItems = () => {
         if (loadNextPage && typeof loadNextPage === "function") {
-            const { pageSize } = pageInfo;
-            let pageInfoToReturn = { pageSize };
+            const { pageSize, lastPage } = pageInfo;
+            let pageInfoToReturn = { pageSize, lastPage };
             const pageNumsToReturn = pagesToReload.current;
             if (
                 pageNumsToReturn &&

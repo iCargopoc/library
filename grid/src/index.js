@@ -509,22 +509,24 @@ const Grid = (props: Object): ?React$Element<*> => {
         returnedPageInfo: Object,
         isReload: boolean
     ): Function => {
-        const { pageNum, pageSize, endCursor } = returnedPageInfo;
-        if (isReload) {
-            setPageReloadCount(pageReloadCount + 1);
-        } else {
-            setIsNextPageLoading(true);
-        }
-        if (paginationType === "cursor") {
-            loadMoreData({
-                endCursor,
-                pageSize
-            });
-        } else {
-            loadMoreData({
-                pageNum,
-                pageSize
-            });
+        const { pageNum, pageSize, endCursor, lastPage } = returnedPageInfo;
+        if (lastPage !== true) {
+            if (isReload) {
+                setPageReloadCount(pageReloadCount + 1);
+            } else {
+                setIsNextPageLoading(true);
+            }
+            if (paginationType === "cursor") {
+                loadMoreData({
+                    endCursor,
+                    pageSize
+                });
+            } else {
+                loadMoreData({
+                    pageNum,
+                    pageSize
+                });
+            }
         }
     };
 
