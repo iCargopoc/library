@@ -1,16 +1,16 @@
+// @flow
 import React, { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import ClickAwayListener from "react-click-away-listener";
-import PropTypes from "prop-types";
 import update from "immutability-helper";
 import ColumnSearch from "../common/columnsSearch";
 import ColumnsList from "./columnsList";
 import { IconCancel } from "../../Utilities/SvgUtilities";
 
-const ColumnReordering = (props) => {
+const ColumnReordering = (props: any): ?React$Element<*> => {
     const {
         toggleManageColumnsOverlay,
         columns,
@@ -78,7 +78,11 @@ const ColumnReordering = (props) => {
     const [warning, setWarning] = useState("");
 
     // Update display value of column based on columnId
-    const updatedDisplayOfColumn = (column, columnid, flag) => {
+    const updatedDisplayOfColumn = (
+        column: Object,
+        columnid: any,
+        flag: Object
+    ): Object => {
         const updatedColumn = { ...column };
         const { isGroupHeader, columnId } = column;
         const groupedColumns = column.columns;
@@ -88,19 +92,22 @@ const ColumnReordering = (props) => {
             groupedColumns.length > 0
         ) {
             let atleastOneColumnDisplayed = false;
-            const updatedColumns = [...groupedColumns].map((col) => {
-                const updatedCol = { ...col };
-                if (
-                    (columnid &&
-                        (columnid === "all" || columnid === col.columnId)) ||
-                    columnid === undefined
-                ) {
-                    updatedCol.display = flag;
+            const updatedColumns = [...groupedColumns].map(
+                (col: Object): any => {
+                    const updatedCol = { ...col };
+                    if (
+                        (columnid &&
+                            (columnid === "all" ||
+                                columnid === col.columnId)) ||
+                        columnid === undefined
+                    ) {
+                        updatedCol.display = flag;
+                    }
+                    atleastOneColumnDisplayed =
+                        atleastOneColumnDisplayed || updatedCol.display;
+                    return updatedCol;
                 }
-                atleastOneColumnDisplayed =
-                    atleastOneColumnDisplayed || updatedCol.display;
-                return updatedCol;
-            });
+            );
             updatedColumn.display = atleastOneColumnDisplayed;
             updatedColumn.columns = updatedColumns;
         } else if (
@@ -113,8 +120,12 @@ const ColumnReordering = (props) => {
     };
 
     // Update display value of inner cells based on columnId & cellId
-    const updatedDisplayOfInnerCells = (innerCells, cellid, flag) => {
-        return [...innerCells].map((cell) => {
+    const updatedDisplayOfInnerCells = (
+        innerCells: Object,
+        cellid: any,
+        flag: any
+    ): Object => {
+        return [...innerCells].map((cell: Object): any => {
             const updatedCell = { ...cell };
             const { cellId } = cell;
             if (cellId === cellid || cellid === "all") {
@@ -125,7 +136,10 @@ const ColumnReordering = (props) => {
     };
 
     // Update display value of managedAdditionalColumn state with given value
-    const updatedDisplayOfAdditionalColumn = (flag, isSubComponentColumn) => {
+    const updatedDisplayOfAdditionalColumn = (
+        flag: any,
+        isSubComponentColumn: boolean
+    ) => {
         if (isSubComponentColumn) {
             setManagedSubComponentAdditionalColumn(
                 update(managedSubComponentAdditionalColumn, {
@@ -144,11 +158,11 @@ const ColumnReordering = (props) => {
     // #region - Column chooser region
     // update the display flag value of column or all columns in managedColumns and managedAdditionalColumn state, based on the selection
     const updateColumns = (
-        columnid,
-        isadditionalcolumn,
-        checked,
-        isSubComponentColumn
-    ) => {
+        columnid: any,
+        isadditionalcolumn: any,
+        checked: any,
+        isSubComponentColumn: boolean
+    ): any => {
         if (
             isAdditionalColumnPresent &&
             (columnid === "all" || isadditionalcolumn === "true")
@@ -161,7 +175,7 @@ const ColumnReordering = (props) => {
             if (isSubComponentColumn) {
                 const updatedManagedColumns = [
                     ...managedSubComponentColumns
-                ].map((column) => {
+                ].map((column: Object): any => {
                     return updatedDisplayOfColumn(column, columnid, checked);
                 });
                 setManagedSubComponentColumns(
@@ -171,7 +185,7 @@ const ColumnReordering = (props) => {
                 );
             } else {
                 const updatedManagedColumns = [...managedColumns].map(
-                    (column) => {
+                    (column: Object): any => {
                         return updatedDisplayOfColumn(
                             column,
                             columnid,
@@ -191,7 +205,10 @@ const ColumnReordering = (props) => {
 
     // #region - Column settings region
     // Updates the order of columns in managedColumns state
-    const onColumnReorder = (reorderedColumns, isSubComponentColumn) => {
+    const onColumnReorder = (
+        reorderedColumns: Object,
+        isSubComponentColumn: boolean
+    ) => {
         if (isSubComponentColumn) {
             setManagedSubComponentColumns(
                 update(managedSubComponentColumns, {
@@ -208,8 +225,12 @@ const ColumnReordering = (props) => {
     };
 
     // Updates the inner cell display value accordingly
-    const changeInnerCellSelection = (innerCells, cellid, flag) => {
-        const indexOfCell = innerCells.findIndex((cell) => {
+    const changeInnerCellSelection = (
+        innerCells: Object,
+        cellid: String,
+        flag: any
+    ): any => {
+        const indexOfCell = innerCells.findIndex((cell: Object): any => {
             return cell.cellId === cellid;
         });
         return update(innerCells, {
@@ -222,59 +243,64 @@ const ColumnReordering = (props) => {
     };
 
     // Update the display flag value of inner cell in managedColumns state, based on the selection
-    const onInnerCellChange = (event, isSubComponentColumn) => {
+    const onInnerCellChange = (
+        event: Object,
+        isSubComponentColumn: boolean
+    ) => {
         const { checked, dataset } = event.currentTarget;
         const { columnid, cellid, isadditionalcolumn } = dataset;
         if (isadditionalcolumn === "false" && isSubComponentColumn) {
-            setManagedSubComponentColumns(() => {
-                return [...managedSubComponentColumns].map((column) => {
-                    const updatedColumn = { ...column };
-                    const {
-                        columnId,
-                        innerCells,
-                        isGroupHeader
-                    } = updatedColumn;
-                    const groupedColumns = updatedColumn.columns;
-                    if (
-                        columnId === columnid &&
-                        innerCells &&
-                        innerCells.length > 0
-                    ) {
-                        updatedColumn.innerCells = updatedDisplayOfInnerCells(
-                            [...innerCells],
-                            cellid,
-                            checked
-                        );
-                    } else if (
-                        isGroupHeader === true &&
-                        groupedColumns &&
-                        groupedColumns.length > 0
-                    ) {
-                        const updatedColumns = [...groupedColumns].map(
-                            (col) => {
-                                const updatedCol = { ...col };
-                                if (
-                                    col.columnId === columnid &&
-                                    col.innerCells &&
-                                    col.innerCells.length > 0
-                                ) {
-                                    updatedCol.innerCells = updatedDisplayOfInnerCells(
-                                        [...col.innerCells],
-                                        cellid,
-                                        checked
-                                    );
+            setManagedSubComponentColumns((): Object => {
+                return [...managedSubComponentColumns].map(
+                    (column: Object): any => {
+                        const updatedColumn = { ...column };
+                        const {
+                            columnId,
+                            innerCells,
+                            isGroupHeader
+                        } = updatedColumn;
+                        const groupedColumns = updatedColumn.columns;
+                        if (
+                            columnId === columnid &&
+                            innerCells &&
+                            innerCells.length > 0
+                        ) {
+                            updatedColumn.innerCells = updatedDisplayOfInnerCells(
+                                [...innerCells],
+                                cellid,
+                                checked
+                            );
+                        } else if (
+                            isGroupHeader === true &&
+                            groupedColumns &&
+                            groupedColumns.length > 0
+                        ) {
+                            const updatedColumns = [...groupedColumns].map(
+                                (col: Object): any => {
+                                    const updatedCol = { ...col };
+                                    if (
+                                        col.columnId === columnid &&
+                                        col.innerCells &&
+                                        col.innerCells.length > 0
+                                    ) {
+                                        updatedCol.innerCells = updatedDisplayOfInnerCells(
+                                            [...col.innerCells],
+                                            cellid,
+                                            checked
+                                        );
+                                    }
+                                    return updatedCol;
                                 }
-                                return updatedCol;
-                            }
-                        );
-                        updatedColumn.columns = updatedColumns;
+                            );
+                            updatedColumn.columns = updatedColumns;
+                        }
+                        return updatedColumn;
                     }
-                    return updatedColumn;
-                });
+                );
             });
         } else if (isadditionalcolumn === "false" && !isSubComponentColumn) {
-            setManagedColumns(() => {
-                return [...managedColumns].map((column) => {
+            setManagedColumns((): any => {
+                return [...managedColumns].map((column: Object): any => {
                     const updatedColumn = { ...column };
                     const {
                         columnId,
@@ -298,7 +324,7 @@ const ColumnReordering = (props) => {
                         groupedColumns.length > 0
                     ) {
                         const updatedColumns = [...groupedColumns].map(
-                            (col) => {
+                            (col: Object): any => {
                                 const updatedCol = { ...col };
                                 if (
                                     col.columnId === columnid &&
@@ -319,7 +345,10 @@ const ColumnReordering = (props) => {
                     return updatedColumn;
                 });
             });
-        } else if (isSubComponentColumn) {
+        } else if (
+            isSubComponentColumn &&
+            managedSubComponentAdditionalColumn != null
+        ) {
             setManagedSubComponentAdditionalColumn(
                 update(managedSubComponentAdditionalColumn, {
                     innerCells: {
@@ -331,7 +360,7 @@ const ColumnReordering = (props) => {
                     }
                 })
             );
-        } else {
+        } else if (managedAdditionalColumn != null) {
             setManagedAdditionalColumn(
                 update(managedAdditionalColumn, {
                     innerCells: {
@@ -382,11 +411,13 @@ const ColumnReordering = (props) => {
 
     const onColumnChooserSave = () => {
         setWarning("");
-        const filteredManagedColumns = managedColumns.filter((column) => {
-            return column.display === true;
-        });
+        const filteredManagedColumns = managedColumns.filter(
+            (column: Object): any => {
+                return column.display === true;
+            }
+        );
         const filteredManagedSubComponentColumns = managedSubComponentColumns.filter(
-            (column) => {
+            (column: Object): any => {
                 return column.display === true;
             }
         );
@@ -413,20 +444,24 @@ const ColumnReordering = (props) => {
 
     useEffect(() => {
         setManagedColumns([...columns]);
-        setManagedAdditionalColumn(
-            isAdditionalColumnPresent ? { ...additionalColumn } : null
-        );
+        if (isAdditionalColumnPresent) {
+            setManagedAdditionalColumn({ ...additionalColumn });
+        }
         if (isSubComponentGrid) {
             setManagedSubComponentColumns([...subComponentColumnns]);
-            setManagedSubComponentAdditionalColumn(
-                isSubComponentAdditionalColumnPresent
-                    ? { ...subComponentAdditionalColumn }
-                    : null
-            );
+            if (isSubComponentAdditionalColumnPresent) {
+                setManagedSubComponentAdditionalColumn({
+                    ...subComponentAdditionalColumn
+                });
+            }
         }
     }, []);
 
-    if (managedColumns && managedColumns.length > 0) {
+    if (
+        managedColumns &&
+        managedColumns.length > 0 &&
+        managedAdditionalColumn != null
+    ) {
         const isAdditionalColumnSelected =
             managedAdditionalColumn !== null &&
             managedAdditionalColumn.innerCells &&
@@ -454,15 +489,21 @@ const ColumnReordering = (props) => {
         const subComponentAdditionalColumnHeader = isSubComponentAdditionalColumnPresent
             ? subComponentAdditionalColumn.Header
             : "";
-        const managedSubComponentAdditionalColumnInnercells = isSubComponentAdditionalColumnSelected
-            ? managedSubComponentAdditionalColumn.innerCells
-            : [];
-        const managedSubComponentAdditionalColumnColumnId = isSubComponentAdditionalColumnSelected
-            ? managedSubComponentAdditionalColumn.columnId
-            : "";
-        const managedSubComponentAdditionalColumnDisplayType = isSubComponentAdditionalColumnSelected
-            ? managedSubComponentAdditionalColumn.isDisplayInExpandedRegion
-            : "true";
+        const managedSubComponentAdditionalColumnInnercells =
+            isSubComponentAdditionalColumnSelected &&
+            managedSubComponentAdditionalColumn != null
+                ? managedSubComponentAdditionalColumn.innerCells
+                : [];
+        const managedSubComponentAdditionalColumnColumnId =
+            isSubComponentAdditionalColumnSelected &&
+            managedSubComponentAdditionalColumn != null
+                ? managedSubComponentAdditionalColumn.columnId
+                : "";
+        const managedSubComponentAdditionalColumnDisplayType =
+            isSubComponentAdditionalColumnSelected &&
+            managedSubComponentAdditionalColumn != null
+                ? managedSubComponentAdditionalColumn.isDisplayInExpandedRegion
+                : "true";
 
         return (
             <ClickAwayListener
@@ -543,7 +584,7 @@ const ColumnReordering = (props) => {
                                     </div>
                                     <div className="ng-popover--column__list">
                                         {managedAdditionalColumnInnercells.map(
-                                            (cell) => {
+                                            (cell: Object): Object => {
                                                 const {
                                                     cellId,
                                                     Header,
@@ -574,8 +615,8 @@ const ColumnReordering = (props) => {
                                                                         display
                                                                     }
                                                                     onChange={(
-                                                                        event
-                                                                    ) =>
+                                                                        event: any
+                                                                    ): any =>
                                                                         onInnerCellChange(
                                                                             event,
                                                                             false
@@ -632,7 +673,7 @@ const ColumnReordering = (props) => {
                                             </div>
                                             <div className="ng-popover--column__list">
                                                 {managedSubComponentAdditionalColumnInnercells.map(
-                                                    (cell) => {
+                                                    (cell: Object): any => {
                                                         const {
                                                             cellId,
                                                             Header,
@@ -663,8 +704,8 @@ const ColumnReordering = (props) => {
                                                                                 display
                                                                             }
                                                                             onChange={(
-                                                                                event
-                                                                            ) =>
+                                                                                event: any
+                                                                            ): any =>
                                                                                 onInnerCellChange(
                                                                                     event,
                                                                                     true
@@ -723,20 +764,6 @@ const ColumnReordering = (props) => {
         );
     }
     return null;
-};
-
-ColumnReordering.propTypes = {
-    toggleManageColumnsOverlay: PropTypes.func,
-    columns: PropTypes.arrayOf(PropTypes.object),
-    originalColumns: PropTypes.arrayOf(PropTypes.object),
-    additionalColumn: PropTypes.object,
-    originalAdditionalColumn: PropTypes.object,
-    isSubComponentGrid: PropTypes.bool,
-    subComponentColumnns: PropTypes.arrayOf(PropTypes.object),
-    originalSubComponentColumns: PropTypes.arrayOf(PropTypes.object),
-    subComponentAdditionalColumn: PropTypes.object,
-    originalSubComponentAdditionalColumn: PropTypes.object,
-    updateColumnStructure: PropTypes.func
 };
 
 export default ColumnReordering;
