@@ -17,12 +17,12 @@ const ColumnSearch = ({
 }: {
     columns: [],
     additionalColumn: any,
-    managedColumns: [],
+    managedColumns: any,
     managedAdditionalColumn: any,
     isSubComponentGrid: boolean,
     subComponentColumnns: [],
     subComponentAdditionalColumn: any,
-    managedSubComponentColumns: [],
+    managedSubComponentColumns: any,
     managedSubComponentAdditionalColumn: any,
     updateColumns: Function
 }): any => {
