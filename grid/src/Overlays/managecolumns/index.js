@@ -80,8 +80,8 @@ const ColumnReordering = (props: any): ?React$Element<*> => {
     // Update display value of column based on columnId
     const updatedDisplayOfColumn = (
         column: Object,
-        columnid: any,
-        flag: Object
+        columnid: string,
+        flag: Boolean
     ): Object => {
         const updatedColumn = { ...column };
         const { isGroupHeader, columnId } = column;
@@ -122,8 +122,8 @@ const ColumnReordering = (props: any): ?React$Element<*> => {
     // Update display value of inner cells based on columnId & cellId
     const updatedDisplayOfInnerCells = (
         innerCells: Object,
-        cellid: any,
-        flag: any
+        cellid: string,
+        flag: Boolean
     ): Object => {
         return [...innerCells].map((cell: Object): any => {
             const updatedCell = { ...cell };
@@ -137,8 +137,8 @@ const ColumnReordering = (props: any): ?React$Element<*> => {
 
     // Update display value of managedAdditionalColumn state with given value
     const updatedDisplayOfAdditionalColumn = (
-        flag: any,
-        isSubComponentColumn: boolean
+        flag: Boolean,
+        isSubComponentColumn: Boolean
     ) => {
         if (isSubComponentColumn) {
             setManagedSubComponentAdditionalColumn(
@@ -158,10 +158,10 @@ const ColumnReordering = (props: any): ?React$Element<*> => {
     // #region - Column chooser region
     // update the display flag value of column or all columns in managedColumns and managedAdditionalColumn state, based on the selection
     const updateColumns = (
-        columnid: any,
+        columnid: string,
         isadditionalcolumn: any,
-        checked: any,
-        isSubComponentColumn: boolean
+        checked: Boolean,
+        isSubComponentColumn: Boolean
     ): any => {
         if (
             isAdditionalColumnPresent &&
@@ -228,7 +228,7 @@ const ColumnReordering = (props: any): ?React$Element<*> => {
     const changeInnerCellSelection = (
         innerCells: Object,
         cellid: String,
-        flag: any
+        flag: Boolean
     ): any => {
         const indexOfCell = innerCells.findIndex((cell: Object): any => {
             return cell.cellId === cellid;
@@ -345,27 +345,28 @@ const ColumnReordering = (props: any): ?React$Element<*> => {
                     return updatedColumn;
                 });
             });
-        } else if (
-            isSubComponentColumn &&
-            managedSubComponentAdditionalColumn != null
-        ) {
+        } else if (isSubComponentColumn) {
             setManagedSubComponentAdditionalColumn(
                 update(managedSubComponentAdditionalColumn, {
                     innerCells: {
                         $set: changeInnerCellSelection(
-                            managedSubComponentAdditionalColumn.innerCells,
+                            managedSubComponentAdditionalColumn != null
+                                ? managedSubComponentAdditionalColumn.innerCells
+                                : null,
                             cellid,
                             checked
                         )
                     }
                 })
             );
-        } else if (managedAdditionalColumn != null) {
+        } else {
             setManagedAdditionalColumn(
                 update(managedAdditionalColumn, {
                     innerCells: {
                         $set: changeInnerCellSelection(
-                            managedAdditionalColumn.innerCells,
+                            managedAdditionalColumn != null
+                                ? managedAdditionalColumn.innerCells
+                                : null,
                             cellid,
                             checked
                         )
@@ -457,11 +458,7 @@ const ColumnReordering = (props: any): ?React$Element<*> => {
         }
     }, []);
 
-    if (
-        managedColumns &&
-        managedColumns.length > 0 &&
-        managedAdditionalColumn != null
-    ) {
+    if (managedColumns && managedColumns.length > 0) {
         const isAdditionalColumnSelected =
             managedAdditionalColumn !== null &&
             managedAdditionalColumn.innerCells &&
@@ -470,15 +467,18 @@ const ColumnReordering = (props: any): ?React$Element<*> => {
         const additionalColumnHeader = isAdditionalColumnPresent
             ? additionalColumn.Header
             : "";
-        const managedAdditionalColumnInnercells = isAdditionalColumnSelected
-            ? managedAdditionalColumn.innerCells
-            : [];
-        const managedAdditionalColumnColumnId = isAdditionalColumnSelected
-            ? managedAdditionalColumn.columnId
-            : "";
-        const managedAdditionalColumnDisplayType = isAdditionalColumnSelected
-            ? managedAdditionalColumn.isDisplayInExpandedRegion
-            : "true";
+        const managedAdditionalColumnInnercells =
+            isAdditionalColumnSelected && managedAdditionalColumn != null
+                ? managedAdditionalColumn.innerCells
+                : [];
+        const managedAdditionalColumnColumnId =
+            isAdditionalColumnSelected && managedAdditionalColumn != null
+                ? managedAdditionalColumn.columnId
+                : "";
+        const managedAdditionalColumnDisplayType =
+            isAdditionalColumnSelected && managedAdditionalColumn != null
+                ? managedAdditionalColumn.isDisplayInExpandedRegion
+                : "true";
 
         const isSubComponentAdditionalColumnSelected =
             isSubComponentGrid &&
