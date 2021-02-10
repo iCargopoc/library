@@ -12,7 +12,7 @@ export const extractColumns = (
     expandableColumn: any,
     isParentGrid: boolean,
     isSubComponentColumns: boolean
-): [] => {
+): Array<Object> => {
     if (columns && columns.length > 0) {
         // Remove iPad only columns from desktop and vice-versa
         const filteredColumns = columns.filter((column: Object): boolean => {

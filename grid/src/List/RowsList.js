@@ -42,8 +42,8 @@ const RowsList = ({
     rowActions,
     expandableColumn
 }: {
-    onItemsRendered: Function,
-    infiniteLoaderRef: any,
+    onItemsRendered?: Function,
+    infiniteLoaderRef?: any,
     listRef: any,
     height: number,
     theme: string,
@@ -77,7 +77,7 @@ const RowsList = ({
     rowSelector: boolean,
     rowActions: Function,
     expandableColumn: boolean
-}): ?React$Element<*> => {
+}): any => {
     const sizeMap = useRef({});
 
     const setSize = (index: number, size: number) => {

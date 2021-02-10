@@ -10,7 +10,7 @@ import ColumnSearch from "../common/columnsSearch";
 import ColumnsList from "./columnsList";
 import { IconCancel } from "../../Utilities/SvgUtilities";
 
-const ColumnReordering = (props: any): ?React$Element<*> => {
+const ColumnReordering = (props: any): any => {
     const {
         toggleManageColumnsOverlay,
         columns,
