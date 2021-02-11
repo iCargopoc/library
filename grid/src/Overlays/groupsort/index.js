@@ -15,7 +15,7 @@ const GroupSort = (props: {
     gridColumns: Array<Object>,
     gridSubComponentColumns: Array<Object>,
     applyGroupSort: Function
-}): ?React$Element<*> => {
+}): any => {
     const {
         toggleGroupSortOverLay,
         applyGroupSort,
