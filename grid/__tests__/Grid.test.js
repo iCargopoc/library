@@ -33,13 +33,6 @@ describe("render Index file ", () => {
             </div>
         );
     });
-    const editedRowValue = {
-        travelId: 0,
-        flight: {
-            flightno: "123",
-            date: "31-Aug-2016"
-        }
-    };
     const mockUpdateDateValue = jest.fn();
     const mockEditCell = jest.fn((rowData, DisplayTag, rowUpdateCallBack) => {
         const { flightno, date } = rowData.flight;
@@ -821,6 +814,34 @@ describe("render Index file ", () => {
         // Check if error message is present
         const errorElement = getByTestId("nocolumnserror");
         expect(errorElement).toBeInTheDocument();
+    });
+
+    it("test Grid loading without grid title", () => {
+        mockOffsetSize(1440, 900);
+        const { container } = render(
+            <Grid
+                gridData={data}
+                idAttribute="travelId"
+                paginationType="index"
+                pageInfo={pageInfo}
+                loadMoreData={mockLoadMoreData}
+                columnToExpand={mockAdditionalColumn}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                onGridRefresh={mockGridRefresh}
+                CustomPanel={mockCustomPanel}
+                showTitle={false}
+            />
+        );
+        const gridContainer = container;
+        expect(gridContainer).toBeInTheDocument();
+
+        // Check if error message is present
+        const gridTitleElementCount = gridContainer.querySelectorAll(
+            "[data-testid='grid-title-container']"
+        ).length;
+        expect(gridTitleElementCount).toBe(0);
     });
 
     it("test row selection retained after applying group sort", () => {

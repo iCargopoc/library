@@ -1218,7 +1218,10 @@ const Customgrid = (props: {
                         </div>
                     ) : null}
                     {showTitle !== false ? (
-                        <div className="ng-header-results">
+                        <div
+                            className="ng-header-results"
+                            data-testid="grid-title-container"
+                        >
                             <span className="ng-header-results__count">
                                 {totalRecordsCount > 0 &&
                                 rows.length === gridDataLength
