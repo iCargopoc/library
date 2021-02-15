@@ -88,6 +88,7 @@ const Customgrid = (props: {
     CustomPanel: any,
     multiRowSelection: boolean,
     gridHeader: boolean,
+    showTitle: boolean,
     rowSelector: boolean,
     globalSearch: boolean,
     columnFilter: boolean,
@@ -132,6 +133,7 @@ const Customgrid = (props: {
         CustomPanel,
         multiRowSelection,
         gridHeader,
+        showTitle,
         rowSelector,
         globalSearch,
         columnFilter,
@@ -1202,30 +1204,32 @@ const Customgrid = (props: {
                             : ""
                     }`}
                 >
-                    <div className="ng-header-results">
-                        {gridHeader === false &&
-                        multiRowSelection !== false &&
-                        rowSelector !== false ? (
-                            <div className="neo-form-check ng-header-results__check">
-                                <input
-                                    type="checkbox"
-                                    data-testid="rowSelector-allRows-fromHeaderTitle"
-                                    className="neo-checkbox form-check-input"
-                                    checked={isAllRowsSelected()}
-                                    onChange={toggleAllRowsSelection}
-                                />
-                            </div>
-                        ) : null}
-                        <span className="ng-header-results__count">
-                            {totalRecordsCount > 0 &&
-                            rows.length === gridDataLength
-                                ? totalRecordsCount
-                                : findAllChildRows(rows).length}
-                        </span>
-                        <span className="ng-header-results__title">
-                            {title || "Rows"}
-                        </span>
-                    </div>
+                    {gridHeader === false &&
+                    multiRowSelection !== false &&
+                    rowSelector !== false ? (
+                        <div className="neo-form-check ng-header-results__check">
+                            <input
+                                type="checkbox"
+                                data-testid="rowSelector-allRows-fromHeaderTitle"
+                                className="neo-checkbox form-check-input"
+                                checked={isAllRowsSelected()}
+                                onChange={toggleAllRowsSelection}
+                            />
+                        </div>
+                    ) : null}
+                    {showTitle !== false ? (
+                        <div className="ng-header-results">
+                            <span className="ng-header-results__count">
+                                {totalRecordsCount > 0 &&
+                                rows.length === gridDataLength
+                                    ? totalRecordsCount
+                                    : findAllChildRows(rows).length}
+                            </span>
+                            <span className="ng-header-results__title">
+                                {title || "Rows"}
+                            </span>
+                        </div>
+                    ) : null}
                     {CustomPanel ? (
                         <div className="neo-grid__customPanel">
                             <CustomPanel />

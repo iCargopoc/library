@@ -33,6 +33,7 @@ const GridComponent = (props) => {
         enableGroupHeaders,
         enableJsxHeaders,
         gridHeader,
+        showTitle,
         rowSelector,
         globalSearch,
         columnFilter,
@@ -2274,6 +2275,7 @@ const GridComponent = (props) => {
                     fixedRowHeight={fixedRowHeight}
                     multiRowSelection={multiRowSelection}
                     gridHeader={allProps || gridHeader}
+                    showTitle={allProps || showTitle}
                     rowSelector={allProps || rowSelector}
                     globalSearch={allProps || globalSearch}
                     columnFilter={allProps || columnFilter}

@@ -52,15 +52,27 @@ const GridComponent = () => {
     // This is required only if tree view is required.
     const parentIdAttribute = "titleId"
 
-    // In tree view, this is the row data of parent rows in the grid
+    // JSON Data
+    const gridData = [
+            {...}, // Should contain an property that has the unique value for each row - idAttribute
+            {...}
+        ];
+
+    // In tree view, this is the structure of grid data
     const parentData = [
         {
-            titleId: 0,
+            titleId: 0, // parentIdAttribute
             title: "EXCVGRATES",
             count: 3,
             lastModified: "User name",
             date: "21 Jul 2020",
-            time: "18:39"
+            time: "18:39",
+            childData:{
+                lastPage: false,
+                pageNum: 1,
+                pageSize: 50,
+                data: [{...}, {...}] // JSON Data which has idAttribute
+            }
         },
         {
             titleId: 1,
@@ -68,7 +80,13 @@ const GridComponent = () => {
             count: 3,
             lastModified: "User name",
             date: "21 Jul 2020",
-            time: "18:39"
+            time: "18:39",
+            childData:{
+                lastPage: false,
+                pageNum: 11,
+                pageSize: 50,
+                data: [{...}, {...}] // JSON Data
+            }
         },
         {
             titleId: 2,
@@ -76,7 +94,13 @@ const GridComponent = () => {
             count: 1,
             lastModified: "User name",
             date: "21 Jul 2020",
-            time: "18:39"
+            time: "18:39",
+            childData:{
+                lastPage: false,
+                pageNum: 21,
+                pageSize: 50,
+                data: [{...}, {...}] // JSON Data
+            }
         }
     ];
 
@@ -98,19 +122,22 @@ const GridComponent = () => {
         }
     };
 
-    // JSON Data
-    const gridData = [{...}, {...}];
-
     // JSON Data with sub components
     const gridData =
     [
         {
-            ...,
-            subComponentData: [{...}, {...}]
+            ..., // Normal JSON data which has idAttribute
+            subComponentData: [
+                    {...}, // Should contain the same idAttribute in all subcomponent rows.
+                    {...} // Should contain the same idAttribute in all subcomponent rows.
+                ]
         },
         {
-            ...,
-            subComponentData: [{...}, {...}]
+            ..., // Normal JSON data which has idAttribute
+            subComponentData: [
+                    {...}, // Should contain the same idAttribute in all subcomponent rows.
+                    {...} // Should contain the same idAttribute in all subcomponent rows.
+                ]
         }
     ];
 
@@ -370,6 +397,10 @@ const GridComponent = () => {
     // If row selectors are enabled, checkbox to select all rows will appear at the header portion (before the Grid title)
     // By default Grid considers gridHeader as true
     const gridHeader = true;
+
+    // False if Grid column title has to be hidden
+    // By default Grid considers showTitle as true
+    const showTitle = true
 
     // False if row selector column has to be removed from Grid
     // By default Grid considers rowSelector as true
@@ -934,6 +965,26 @@ const gridHeader = false;
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     gridHeader={gridHeader}
+/>;
+```
+
+#### Hide grid title
+
+<Story name="Hide grid title">
+    <GridComponent showTitle={false} passIdAttribute />;
+</Story>
+
+```jsx
+// This should be a boolean value. Flase will not render the Grid title.
+const showTitle = false;
+
+<Grid
+    gridData={gridData}
+    idAttribute={idAttribute}
+    columns={columns}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    showTitle={showTitle}
 />;
 ```
 

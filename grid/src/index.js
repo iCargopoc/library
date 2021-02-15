@@ -93,6 +93,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         CustomPanel,
         multiRowSelection,
         gridHeader,
+        showTitle,
         rowSelector,
         globalSearch,
         columnFilter,
@@ -641,6 +642,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     CustomPanel={CustomPanel}
                     multiRowSelection={multiRowSelection}
                     gridHeader={gridHeader}
+                    showTitle={showTitle}
                     rowSelector={rowSelector}
                     globalSearch={globalSearch}
                     columnFilter={columnFilter}
