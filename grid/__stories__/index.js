@@ -263,7 +263,7 @@ const GridComponent = (props) => {
         {
             titleId: 0,
             title: "EXCVGRATES",
-            count: 3,
+            count: 300,
             lastModified: "User name",
             date: "21 Jul 2020",
             time: "18:39"
@@ -271,7 +271,7 @@ const GridComponent = (props) => {
         {
             titleId: 1,
             title: "EXCVGRATES",
-            count: 3,
+            count: 300,
             lastModified: "User name",
             date: "21 Jul 2020",
             time: "18:39"
@@ -279,7 +279,7 @@ const GridComponent = (props) => {
         {
             titleId: 2,
             title: "EXCVGRATES",
-            count: 1,
+            count: 300,
             lastModified: "User name",
             date: "21 Jul 2020",
             time: "18:39"
@@ -876,12 +876,16 @@ const GridComponent = (props) => {
 
     const originalParentColumn = {
         Header: "ParentColumn",
-        displayCell: (rowData) => {
-            const { titleId, title, count, lastModified, date, time } = rowData;
+        displayCell: (rowData, isExpanded) => {
+            const { title, count, lastModified, date, time } = rowData;
             return (
                 <div className="parentRow">
                     <h2 className="parentRowHead">
-                        {title} ({count})
+                        {title} (
+                        {isExpanded
+                            ? `Expanded - ${count}`
+                            : `Collapsed - ${count}`}
+                        )
                     </h2>
                     <div className="parentRowInfo">
                         <span className="parentRowInfoType">

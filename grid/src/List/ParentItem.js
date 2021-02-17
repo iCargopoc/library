@@ -29,6 +29,8 @@ const ParentItem = ({
     rowSelector: boolean
 }): React$Element<*> => {
     const { original } = row;
+    const isParentRowOpened = isParentRowOpen(row);
+
     return (
         <Measure
             bounds
@@ -63,7 +65,7 @@ const ParentItem = ({
                                     }
                                     data-testid="acccordion-expand-collapse"
                                 >
-                                    {isParentRowOpen(row) ? (
+                                    {isParentRowOpened ? (
                                         <IconCollapse className="ng-icon" />
                                     ) : (
                                         <IconExpand className="ng-icon" />
@@ -75,7 +77,10 @@ const ParentItem = ({
                             className="ng-accordion__content"
                             data-testid="parentRowContent"
                         >
-                            {parentColumn.displayCell(original)}
+                            {parentColumn.displayCell(
+                                original,
+                                isParentRowOpened
+                            )}
                         </div>
                     </div>
                 </div>
