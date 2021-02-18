@@ -39,6 +39,7 @@ import {
     IconCollapse
 } from "./Utilities/SvgUtilities";
 import {
+    setColumnWidths,
     findSelectedRows,
     findSelectedRowIdAttributes,
     findSelectedRowIdFromIdAttribute,
@@ -309,7 +310,7 @@ const Customgrid = (props: {
         updatedSubComponentColumns: Object,
         updatedSubComponentAdditionalColumn: Object
     ) => {
-        setGridColumns([...updatedColumns]);
+        setGridColumns([...setColumnWidths([...updatedColumns])]);
         setAdditionalColumn(updatedAdditionalColumn);
         if (isSubComponentGrid) {
             setSubComponentColumnns(updatedSubComponentColumns);

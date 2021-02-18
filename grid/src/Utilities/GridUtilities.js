@@ -19,6 +19,67 @@ export const updatedActionsHeaderClass = (isDesktop: boolean) => {
     }
 };
 
+export const setColumnWidths = (gridColumns: any[]): any[] => {
+    let updatedColumns = [...gridColumns];
+
+    // Get total width of hidden columns including grouped columns
+    let hiddencolumnsWidth = 0;
+    gridColumns.forEach((gridCol: Object) => {
+        const { columns } = gridCol;
+        if (columns && columns.length > 0) {
+            columns.forEach((col: Object) => {
+                const { display, originalWidth } = col;
+                if (
+                    display === false &&
+                    typeof originalWidth === "number" &&
+                    originalWidth > 0
+                ) {
+                    hiddencolumnsWidth += originalWidth;
+                }
+            });
+        } else {
+            const { display, originalWidth } = gridCol;
+            if (
+                display === false &&
+                typeof originalWidth === "number" &&
+                originalWidth > 0
+            ) {
+                hiddencolumnsWidth += originalWidth;
+            }
+        }
+    });
+
+    // Loop through all columns and apply extra width available to all columns which are not hidden
+    updatedColumns = [...gridColumns].map((gridCol: Object): Object => {
+        const updatedCol = { ...gridCol };
+        const { columns } = updatedCol;
+        if (columns && columns.length > 0) {
+            updatedCol.columns = [...columns].map((col: Object): Object => {
+                const modifiedCol = { ...col };
+                const { originalWidth, widthFactor, display } = modifiedCol;
+                if (hiddencolumnsWidth > 0 && display !== false) {
+                    modifiedCol.width =
+                        originalWidth +
+                        (widthFactor / 100) * hiddencolumnsWidth;
+                } else {
+                    modifiedCol.width = originalWidth;
+                }
+                return modifiedCol;
+            });
+        } else {
+            const { originalWidth, widthFactor, display } = updatedCol;
+            if (hiddencolumnsWidth > 0 && display !== false) {
+                updatedCol.width =
+                    originalWidth + (widthFactor / 100) * hiddencolumnsWidth;
+            } else {
+                updatedCol.width = originalWidth;
+            }
+        }
+        return updatedCol;
+    });
+    return updatedColumns;
+};
+
 export const findSelectedRows = (
     rows: any,
     selectedRowIds: any[],

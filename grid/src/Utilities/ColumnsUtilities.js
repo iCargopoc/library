@@ -24,13 +24,21 @@ export const extractColumns = (
         filteredColumns.forEach((column: Object, index: number) => {
             const { innerCells, accessor, sortValue } = column;
             const isInnerCellsPresent = innerCells && innerCells.length > 0;
-            const elem = column;
+            const elem = { ...column };
 
             // Add column Id
             elem.columnId =
                 isSubComponentColumns === true
                     ? `subComponentColumn_${index}`
                     : `column_${index}`;
+
+            // Set Width Factor
+            if (typeof column.widthFactor !== "number") {
+                elem.widthFactor = 0;
+            }
+
+            // Set a copy of the column width
+            elem.originalWidth = column.width;
 
             // Add flag to identify if this is subcomponent column
             elem.isSubComponentColumn = isSubComponentColumns === true;
