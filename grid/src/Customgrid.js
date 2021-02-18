@@ -313,7 +313,9 @@ const Customgrid = (props: {
         setGridColumns([...setColumnWidths([...updatedColumns])]);
         setAdditionalColumn(updatedAdditionalColumn);
         if (isSubComponentGrid) {
-            setSubComponentColumnns(updatedSubComponentColumns);
+            setSubComponentColumnns([
+                ...setColumnWidths([...updatedSubComponentColumns])
+            ]);
             setSubComponentAdditionalColumn(
                 updatedSubComponentAdditionalColumn
             );

@@ -906,6 +906,7 @@ const GridComponent = (props) => {
             Header: "HAWB No",
             accessor: "hawbId",
             width: 250,
+            widthGrow: 1,
             isSortable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawbId } = rowData;
