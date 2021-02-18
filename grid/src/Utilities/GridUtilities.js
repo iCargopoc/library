@@ -22,61 +22,72 @@ export const updatedActionsHeaderClass = (isDesktop: boolean) => {
 export const setColumnWidths = (gridColumns: any[]): any[] => {
     let updatedColumns = [...gridColumns];
 
-    // Get total width of hidden columns including grouped columns
-    let hiddencolumnsWidth = 0;
+    // Get total width of hidden columns and total width grow of displayed columns, including grouped columns
+    let totalHiddenColumnsWidth = 0;
+    let totalDisplayColumnsWidthGrow = 0;
     gridColumns.forEach((gridCol: Object) => {
         const { columns } = gridCol;
         if (columns && columns.length > 0) {
             columns.forEach((col: Object) => {
-                const { display, originalWidth } = col;
+                const { display, originalWidth, widthGrow } = col;
                 if (
                     display === false &&
                     typeof originalWidth === "number" &&
                     originalWidth > 0
                 ) {
-                    hiddencolumnsWidth += originalWidth;
+                    totalHiddenColumnsWidth += originalWidth;
+                } else if (display !== false) {
+                    totalDisplayColumnsWidthGrow += widthGrow;
                 }
             });
         } else {
-            const { display, originalWidth } = gridCol;
+            const { display, originalWidth, widthGrow } = gridCol;
             if (
                 display === false &&
                 typeof originalWidth === "number" &&
                 originalWidth > 0
             ) {
-                hiddencolumnsWidth += originalWidth;
+                totalHiddenColumnsWidth += originalWidth;
+            } else if (display !== false) {
+                totalDisplayColumnsWidthGrow += widthGrow;
             }
         }
     });
 
-    // Loop through all columns and apply extra width available to all columns which are not hidden
-    updatedColumns = [...gridColumns].map((gridCol: Object): Object => {
-        const updatedCol = { ...gridCol };
-        const { columns } = updatedCol;
-        if (columns && columns.length > 0) {
-            updatedCol.columns = [...columns].map((col: Object): Object => {
-                const modifiedCol = { ...col };
-                const { originalWidth, widthFactor, display } = modifiedCol;
-                if (hiddencolumnsWidth > 0 && display !== false) {
-                    modifiedCol.width =
-                        originalWidth +
-                        (widthFactor / 100) * hiddencolumnsWidth;
-                } else {
-                    modifiedCol.width = originalWidth;
-                }
-                return modifiedCol;
-            });
-        } else {
-            const { originalWidth, widthFactor, display } = updatedCol;
-            if (hiddencolumnsWidth > 0 && display !== false) {
-                updatedCol.width =
-                    originalWidth + (widthFactor / 100) * hiddencolumnsWidth;
+    // If width grow is specified for atleast 1 column
+    if (totalDisplayColumnsWidthGrow > 0) {
+        // Loop through all columns that are not hidden, and divide totalHiddenColumnsWidth based on the ration widthGrow:totalDisplayColumnsWidthGrow
+        updatedColumns = [...gridColumns].map((gridCol: Object): Object => {
+            const updatedCol = { ...gridCol };
+            const { columns } = updatedCol;
+            if (columns && columns.length > 0) {
+                updatedCol.columns = [...columns].map((col: Object): Object => {
+                    const modifiedCol = { ...col };
+                    const { originalWidth, widthGrow, display } = modifiedCol;
+                    if (totalHiddenColumnsWidth > 0 && display !== false) {
+                        modifiedCol.width =
+                            originalWidth +
+                            (widthGrow / totalDisplayColumnsWidthGrow) *
+                                totalHiddenColumnsWidth;
+                    } else {
+                        modifiedCol.width = originalWidth;
+                    }
+                    return modifiedCol;
+                });
             } else {
-                updatedCol.width = originalWidth;
+                const { originalWidth, widthGrow, display } = updatedCol;
+                if (totalHiddenColumnsWidth > 0 && display !== false) {
+                    updatedCol.width =
+                        originalWidth +
+                        (widthGrow / totalDisplayColumnsWidthGrow) *
+                            totalHiddenColumnsWidth;
+                } else {
+                    updatedCol.width = originalWidth;
+                }
             }
-        }
-        return updatedCol;
-    });
+            return updatedCol;
+        });
+    }
     return updatedColumns;
 };
 

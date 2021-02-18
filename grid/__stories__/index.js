@@ -348,7 +348,6 @@ const GridComponent = (props) => {
             Header: "Id",
             accessor: "travelId",
             width: 5,
-            widthFactor: 0,
             disableFilters: true,
             isSearchable: true,
             isSortable: true,
@@ -379,7 +378,6 @@ const GridComponent = (props) => {
             title: "Flight",
             accessor: "flight",
             width: 10,
-            widthFactor: 0,
             isSortable: true,
             innerCells: [
                 {
@@ -497,7 +495,7 @@ const GridComponent = (props) => {
             accessor: "details",
             onlyInDesktop: true,
             width: 15,
-            widthFactor: 50,
+            widthGrow: 1,
             innerCells: [
                 {
                     Header: "Flight Model",
@@ -558,7 +556,6 @@ const GridComponent = (props) => {
             Header: "Weight",
             accessor: "weight",
             width: 10,
-            widthFactor: 50,
             isSortable: true,
             innerCells: [
                 {

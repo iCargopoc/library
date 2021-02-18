@@ -22,7 +22,7 @@ export const extractColumns = (
         const modifiedColumns = [];
         // Loop through the columns configuration and create required column structure
         filteredColumns.forEach((column: Object, index: number) => {
-            const { innerCells, accessor, sortValue } = column;
+            const { innerCells, accessor, sortValue, widthGrow } = column;
             const isInnerCellsPresent = innerCells && innerCells.length > 0;
             const elem = { ...column };
 
@@ -32,9 +32,9 @@ export const extractColumns = (
                     ? `subComponentColumn_${index}`
                     : `column_${index}`;
 
-            // Set Width Factor
-            if (typeof column.widthFactor !== "number") {
-                elem.widthFactor = 0;
+            // Set Width grow value if not set
+            if (!(typeof widthGrow === "number" && widthGrow >= 0)) {
+                elem.widthGrow = 0;
             }
 
             // Set a copy of the column width
