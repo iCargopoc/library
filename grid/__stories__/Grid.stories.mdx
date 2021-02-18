@@ -147,6 +147,8 @@ const GridComponent = () => {
             Header: "Id",
             accessor: "travelId",
             width: 50,
+            widthGrow: 1, // This is the factor that Grid uses to identify how to allocate the width of a hidden column to other columns.
+            display: false, // False if this column has to be hidden by default. Default value for this property is true.
             disableFilters: true,
             disableSortBy: true,
             disableResizing: true,
