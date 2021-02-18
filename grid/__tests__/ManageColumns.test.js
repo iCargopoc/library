@@ -77,6 +77,7 @@ describe("Column manage functionality test", () => {
                 title: "Flight",
                 accessor: "flight",
                 width: 100,
+                widthGrow: 1,
                 isSortable: true,
                 innerCells: [
                     {
@@ -406,6 +407,7 @@ describe("Column manage functionality test", () => {
                 Header: "Weight",
                 accessor: "weight",
                 width: 130,
+                widthGrow: 2,
                 isSortable: true,
                 innerCells: [
                     {
@@ -656,7 +658,6 @@ describe("Column manage functionality test", () => {
             {
                 Header: "Queued Booking",
                 accessor: "queuedBooking",
-                width: 130,
                 innerCells: [
                     {
                         Header: "Sr",
@@ -951,6 +952,17 @@ describe("Column manage functionality test", () => {
     };
 
     const mockGridColumns = getColumns();
+    const mockGridColumnsForWidthGrow = [...getColumns()];
+    mockGridColumnsForWidthGrow.splice(5, 0, {
+        groupHeader: "Flight & Segment",
+        Header: "Sample column",
+        accessor: "remarks",
+        disableSortBy: true,
+        isSearchable: false,
+        displayCell: (rowData, DisplayTag, isDesktop, isExpandableColumn) => {
+            return <p>Remarks</p>;
+        }
+    });
     const mockAdditionalColumn = getColumnToExpand();
     const mockData = getGridData();
 
@@ -1059,7 +1071,7 @@ describe("Column manage functionality test", () => {
         expect(columnsCount).toBe(9);
         expect(additionalColumnsCount).toBe(1);
 
-        // Un check Flight column checkbox (Another one from grouped columns)
+        // Un check Segment column checkbox (Another one from grouped columns)
         let segmentCheckbox = getAllByTestId("selectSingleSearchableColumn")[4];
         fireEvent.click(segmentCheckbox);
 
@@ -1083,7 +1095,7 @@ describe("Column manage functionality test", () => {
         expect(columnsCount).toBe(8);
         expect(additionalColumnsCount).toBe(0);
 
-        // Try to apply changes
+        // Apply changes
         let saveButton = getByTestId("save_columnsManage");
         act(() => {
             saveButton.dispatchEvent(
@@ -1142,7 +1154,7 @@ describe("Column manage functionality test", () => {
         expect(columnsCount).toBe(10);
         expect(additionalColumnsCount).toBe(0);
 
-        // Ceck Flight column checkbox (Another one from grouped columns)
+        // Check Segment column checkbox (Another one from grouped columns)
         segmentCheckbox = getAllByTestId("selectSingleSearchableColumn")[4];
         fireEvent.click(segmentCheckbox);
 
@@ -1390,6 +1402,141 @@ describe("Column manage functionality test", () => {
             "[data-testid='managecolumnoverlay']"
         ).length;
         expect(columnChooserOverlayCount).toBe(0);
+    });
+
+    it("test width grow", () => {
+        mockOffsetSize(1280, 1024);
+        const { container, getByTestId, getAllByTestId } = render(
+            <Grid
+                gridData={mockData}
+                idAttribute="travelId"
+                columns={mockGridColumnsForWidthGrow}
+                columnToExpand={mockAdditionalColumn}
+            />
+        );
+        const gridContainer = container;
+        // Check if grid has been loaded
+        expect(gridContainer).toBeInTheDocument();
+
+        // Check width of flight, weight and volume columns
+        let flightColumnWidth = gridContainer.querySelectorAll(
+            "[data-testid='grid-header']"
+        )[4];
+        let weightColumnWidth = gridContainer.querySelectorAll(
+            "[data-testid='grid-header']"
+        )[7];
+        let volumeColumnWidth = gridContainer.querySelectorAll(
+            "[data-testid='grid-header']"
+        )[8];
+        expect(flightColumnWidth.style.width).toBe("100px");
+        expect(weightColumnWidth.style.width).toBe("130px");
+        expect(volumeColumnWidth.style.width).toBe("100px");
+
+        // Open Column chooser overlay
+        let columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Un check Id column checkbox
+        const idCheckbox = getAllByTestId("selectSingleSearchableColumn")[2];
+        fireEvent.click(idCheckbox);
+
+        // Un check Segment column checkbox (Another one from grouped columns)
+        const segmentCheckbox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[4];
+        fireEvent.click(segmentCheckbox);
+
+        // Apply changes
+        let saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Width of flight and weight columns should increase (because of widthGrow) and width of volume column should not increase
+        flightColumnWidth = gridContainer.querySelectorAll(
+            "[data-testid='grid-header']"
+        )[3];
+        weightColumnWidth = gridContainer.querySelectorAll(
+            "[data-testid='grid-header']"
+        )[5];
+        volumeColumnWidth = gridContainer.querySelectorAll(
+            "[data-testid='grid-header']"
+        )[6];
+        expect(flightColumnWidth.style.width).toBe("150px");
+        expect(weightColumnWidth.style.width).toBe("230px");
+        expect(volumeColumnWidth.style.width).toBe("100px");
+
+        // Open Column chooser overlay again
+        columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Un-check Sample column - which doesn't have width specified in group columns
+        const sampleColumnCheckbox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[5];
+        fireEvent.click(sampleColumnCheckbox);
+
+        // Un-check Queued Booking - which doesn't have width specified
+        const queuedBookingCheckbox = getAllByTestId(
+            "selectSingleSearchableColumn"
+        )[11];
+        fireEvent.click(queuedBookingCheckbox);
+
+        // Apply changes
+        saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Open Column chooser overlay again
+        columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Reset Changes
+        const resetButton = getByTestId("reset_columnsManage");
+        act(() => {
+            resetButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Close Overlay
+        const closeButton = getByTestId("cancel_columnsManage");
+        act(() => {
+            closeButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Width of flight, weight and volume columns should reset to original values after reset
+        flightColumnWidth = gridContainer.querySelectorAll(
+            "[data-testid='grid-header']"
+        )[4];
+        weightColumnWidth = gridContainer.querySelectorAll(
+            "[data-testid='grid-header']"
+        )[7];
+        volumeColumnWidth = gridContainer.querySelectorAll(
+            "[data-testid='grid-header']"
+        )[8];
+        expect(flightColumnWidth.style.width).toBe("100px");
+        expect(weightColumnWidth.style.width).toBe("130px");
+        expect(volumeColumnWidth.style.width).toBe("100px");
     });
 
     it("test column manage without additional column", () => {
