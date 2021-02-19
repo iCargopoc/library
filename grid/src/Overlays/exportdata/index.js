@@ -197,18 +197,27 @@ const ExportData = (props: Object): any => {
         doc.save(`${exportedFileName}.pdf`);
     };
 
-    const downloadCSVFile = async (filteredRowValue: Object) => {
+    const downloadSheetFile = async (
+        filteredRowValue: Object,
+        extensionType: string
+    ) => {
+        const isExcelFile = extensionType === "excel";
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-        const fileExtension = ".csv";
+        const fileExtension = isExcelFile ? ".xlsx" : ".csv";
         const ws = XLSX.utils.json_to_sheet(filteredRowValue);
         const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-        const excelBuffer = XLSX.write(wb, { bookType: "csv", type: "array" });
+        const excelBuffer = XLSX.write(wb, {
+            bookType: isExcelFile ? "xlsx" : "csv",
+            type: "array"
+        });
         const data = new Blob([excelBuffer], { type: fileType });
         const href = await URL.createObjectURL(data);
         const link = document.createElement("a");
         link.style.visibility = "hidden";
-        link.dataset.testid = "csv-file-download-link";
+        link.dataset.testid = isExcelFile
+            ? "excel-file-download-link"
+            : "csv-file-download-link";
         link.href = href;
         link.download = exportedFileName + fileExtension;
         const exportOverlay = document.querySelector(
@@ -217,40 +226,9 @@ const ExportData = (props: Object): any => {
         if (exportOverlay != null) {
             exportOverlay.appendChild(link);
         }
-        const linkToDownload = document.querySelector(
-            "[data-testid='csv-file-download-link']"
-        );
-        if (linkToDownload != null) {
-            linkToDownload.click();
-        }
-        if (exportOverlay != null) {
-            exportOverlay.removeChild(link);
-        }
-    };
-
-    const downloadXLSFile = async (filteredRowValue: Object) => {
-        const fileType =
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-        const fileExtension = ".xlsx";
-        const ws = XLSX.utils.json_to_sheet(filteredRowValue);
-        const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-        const data = new Blob([excelBuffer], { type: fileType });
-        const href = await URL.createObjectURL(data);
-        const link = document.createElement("a");
-        link.style.visibility = "hidden";
-        link.dataset.testid = "excel-file-download-link";
-        link.href = href;
-        link.download = exportedFileName + fileExtension;
-        const exportOverlay = document.querySelector(
-            "[data-testid='exportoverlay']"
-        );
-        if (exportOverlay != null) {
-            exportOverlay.appendChild(link);
-        }
-        const linkToDownload = document.querySelector(
-            "[data-testid='excel-file-download-link']"
-        );
+        const linkToDownload = isExcelFile
+            ? document.querySelector("[data-testid='excel-file-download-link']")
+            : document.querySelector("[data-testid='csv-file-download-link']");
         if (linkToDownload != null) {
             linkToDownload.click();
         }
@@ -432,9 +410,9 @@ const ExportData = (props: Object): any => {
                 if (item === "pdf") {
                     downloadPDF(filteredRowValues, filteredRowHeader);
                 } else if (item === "excel") {
-                    downloadXLSFile(filteredRow);
+                    downloadSheetFile(filteredRow, item);
                 } else {
-                    downloadCSVFile(filteredRow);
+                    downloadSheetFile(filteredRow, item);
                 }
             });
         } else if (!(rows && rows.length > 0)) {
