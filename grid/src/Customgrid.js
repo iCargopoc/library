@@ -100,7 +100,8 @@ const Customgrid = (props: {
     onGridRefresh: Function,
     rowsToSelect: Array<Object>,
     rowsToDeselect: Array<Object>,
-    fixedRowHeight: boolean
+    fixedRowHeight: boolean,
+    pdfPaperSize: string
 }): any => {
     const {
         isDesktop,
@@ -142,6 +143,7 @@ const Customgrid = (props: {
         columnChooser,
         exportData,
         fileName,
+        pdfPaperSize,
         onGridRefresh,
         rowsToSelect,
         rowsToDeselect,
@@ -1360,6 +1362,7 @@ const Customgrid = (props: {
                                             subComponentAdditionalColumn
                                         }
                                         fileName={fileName}
+                                        pdfPaperSize={pdfPaperSize}
                                     />
                                 ) : null}
                             </div>

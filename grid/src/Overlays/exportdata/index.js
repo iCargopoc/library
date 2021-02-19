@@ -23,10 +23,12 @@ const ExportData = (props: Object): any => {
         isSubComponentGrid,
         subComponentColumnns,
         subComponentAdditionalColumn,
-        fileName
+        fileName,
+        pdfPaperSize
     } = props;
 
     const exportedFileName = fileName || "iCargo Neo Report";
+    const exportedPdfPaperSize = pdfPaperSize || "A4"; // Use A1, A2, A3, A4 or A5 - Default value is A4
 
     // Check if additional Column is present or not
     const isAdditionalColumnPresent =
@@ -178,8 +180,8 @@ const ExportData = (props: Object): any => {
         rowFilteredValues: Object,
         rowFilteredHeader: Object
     ): Object => {
-        const unit = "pt";
-        const size = "A1"; // Use A1, A2, A3 or A4
+        const unit = "mm";
+        const size = exportedPdfPaperSize;
         const orientation = "landscape"; // portrait or landscape
 
         const doc = new JsPdf(orientation, unit, size);
@@ -189,7 +191,7 @@ const ExportData = (props: Object): any => {
             tableWidth: "auto", // 'auto'|'wrap'|'number'
             headStyles: { fillColor: [102, 102, 255] },
             theme: "grid", // 'striped'|'grid'|'plain'|'css'
-            margin: { top: 10, right: 10, bottom: 10, left: 10 }
+            margin: { top: 5, right: 5, bottom: 5, left: 5 }
         };
         doc.autoTable(content);
         doc.save(`${exportedFileName}.pdf`);

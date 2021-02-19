@@ -433,6 +433,10 @@ const GridComponent = () => {
     // If prop is not specified Grid uses 'iCargo Neo Report' as the file name.
     const fileName = "Custom filename";
 
+    // This should be a string value. If prop is specified this will be the paper size for PDF export.
+    // By default the paper size for PDF export will be A4.
+    const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
+
     // If theme is portal Grid will assign different style for Grid header portion and Grid rows.
     // All other themes will have default stylings.
     const theme = "portal"
@@ -497,6 +501,7 @@ const GridComponent = () => {
             fixedRowHeight={fixedRowHeight}
             multiRowSelection={multiRowSelection}
             gridHeader={gridHeader}
+            showTitle={showTitle}
             rowSelector={rowSelector}
             globalSearch={globalSearch}
             columnFilter={columnFilter}
@@ -504,6 +509,7 @@ const GridComponent = () => {
             columnChooser={columnChooser}
             exportData={exportData}
             fileName={fileName}
+            pdfPaperSize={pdfPaperSize}
         />
     );
 };
@@ -1122,6 +1128,26 @@ const fileName="Custom filename"
 />;
 ```
 
+#### With custom paper size for PDF export
+
+<Story name="With custom paper size for PDF export">
+    <GridComponent pdfPaperSize="A1" />;
+</Story>
+
+```jsx
+// This should be a string value. If prop is specified this will be the paper size for PDF export.
+// By default the paper size for PDF export will be A4
+const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
+
+<Grid
+    gridData={gridData}
+    columns={columns}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    pdfPaperSize={pdfPaperSize}
+/>;
+```
+
 #### With all props
 
 <Story name="With all props">
@@ -1134,7 +1160,7 @@ const fileName="Custom filename"
         CustomPanel={CustomPanel}
         fileName="Custom filename"
         rowsForSelection={[1, 7, 17]}
-        fileName="Custom filename"
+        pdfPaperSize="A1"
     />
     ;
 </Story>
@@ -1169,6 +1195,7 @@ const fileName="Custom filename"
     columnChooser
     exportData
     fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
 />
 ```
 
@@ -1185,7 +1212,7 @@ const fileName="Custom filename"
         CustomPanel={CustomPanel}
         fileName="Custom filename"
         rowsForSelection={[1, 7, 17]}
-        fileName="Custom filename"
+        pdfPaperSize="A1"
     />
     ;
 </Story>
@@ -1220,6 +1247,7 @@ const fileName="Custom filename"
     columnChooser
     exportData
     fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
     previousPageRefresh
 />
 ```
@@ -1236,7 +1264,7 @@ const fileName="Custom filename"
         CustomPanel={CustomPanel}
         fileName="Custom filename"
         rowsForSelection={[1, 7, 17]}
-        fileName="Custom filename"
+        pdfPaperSize="A1"
         treeStructure
     />
     ;
@@ -1274,6 +1302,7 @@ const fileName="Custom filename"
     columnChooser
     exportData
     fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
 />
 ```
 
@@ -1290,7 +1319,7 @@ const fileName="Custom filename"
         CustomPanel={CustomPanel}
         fileName="Custom filename"
         rowsForSelection={[1, 7, 17]}
-        fileName="Custom filename"
+        pdfPaperSize="A1"
         treeStructure
     />
     ;
@@ -1329,6 +1358,7 @@ const fileName="Custom filename"
     columnChooser
     exportData
     fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
 />
 ```
 
@@ -1344,7 +1374,7 @@ const fileName="Custom filename"
         CustomPanel={CustomPanel}
         fileName="Custom filename"
         rowsForSelection={[1, 7, 17]}
-        fileName="Custom filename"
+        pdfPaperSize="A1"
         treeStructure
         parentRowExpandable={false}
     />
@@ -1384,6 +1414,7 @@ const fileName="Custom filename"
     columnChooser
     exportData
     fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
 />
 ```
 
@@ -1399,7 +1430,7 @@ const fileName="Custom filename"
         CustomPanel={CustomPanel}
         fileName="Custom filename"
         rowsForSelection={[1, 7, 17]}
-        fileName="Custom filename"
+        pdfPaperSize="A1"
         treeStructure
         parentRowsToExpand={[0, 2]}
     />
@@ -1439,6 +1470,7 @@ const fileName="Custom filename"
     columnChooser
     exportData
     fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
 />
 ```
 
@@ -1455,7 +1487,7 @@ const fileName="Custom filename"
         CustomPanel={CustomPanel}
         fileName="Custom filename"
         rowsForSelection={[1, 7, 17]}
-        fileName="Custom filename"
+        pdfPaperSize="A1"
     />
     ;
 </Story>
@@ -1491,6 +1523,7 @@ const fileName="Custom filename"
     columnChooser
     exportData
     fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
 />
 ```
 
@@ -1508,7 +1541,7 @@ const fileName="Custom filename"
         CustomPanel={CustomPanel}
         fileName="Custom filename"
         rowsForSelection={[1, 7, 17]}
-        fileName="Custom filename"
+        pdfPaperSize="A1"
     />
     ;
 </Story>
@@ -1544,6 +1577,7 @@ const fileName="Custom filename"
     columnChooser
     exportData
     fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
     previousPageRefresh
 />
 ```

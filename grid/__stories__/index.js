@@ -50,7 +50,8 @@ const GridComponent = (props) => {
         treeStructure,
         parentRowExpandable,
         parentRowsToExpand,
-        previousPageRefresh
+        previousPageRefresh,
+        pdfPaperSize
     } = props;
 
     const idAttribute = "travelId";
@@ -2289,6 +2290,7 @@ const GridComponent = (props) => {
                     columnChooser={allProps || columnChooser}
                     exportData={allProps || exportData}
                     fileName={fileName || null}
+                    pdfPaperSize={pdfPaperSize || null}
                 />
             </div>
         );
