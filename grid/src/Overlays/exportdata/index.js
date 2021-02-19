@@ -179,25 +179,18 @@ const ExportData = (props: Object): any => {
         rowFilteredHeader: Object
     ): Object => {
         const unit = "pt";
-        const size = "A4"; // Use A1, A2, A3 or A4
+        const size = "A1"; // Use A1, A2, A3 or A4
         const orientation = "landscape"; // portrait or landscape
 
         const doc = new JsPdf(orientation, unit, size);
-
-        doc.setFontSize(12);
-        const title = "iCargo Neo Report";
-
         const content = {
-            startY: 50,
             head: rowFilteredHeader,
             body: rowFilteredValues,
-            tableWidth: "wrap", // 'auto'|'wrap'|'number'
+            tableWidth: "auto", // 'auto'|'wrap'|'number'
             headStyles: { fillColor: [102, 102, 255] },
             theme: "grid", // 'striped'|'grid'|'plain'|'css'
-            margin: { top: 30, right: 30, bottom: 10, left: 30 }
+            margin: { top: 10, right: 10, bottom: 10, left: 10 }
         };
-
-        doc.text(title, 30, 40);
         doc.autoTable(content);
         doc.save(`${exportedFileName}.pdf`);
     };
@@ -289,7 +282,7 @@ const ExportData = (props: Object): any => {
             filteredManagedColumns.length > 0 &&
             downloadTypes.length > 0
         ) {
-            const rowLength = rows.length;
+            let isHeaderCreated = false;
             rows.forEach((rowDetails: Object, index: number) => {
                 const row = rowDetails.original;
                 if (row.isParent !== true) {
@@ -342,9 +335,11 @@ const ExportData = (props: Object): any => {
                                                     rowFilteredValues.push(
                                                         columnValue
                                                     );
-                                                    rowFilteredHeader.push(
-                                                        columnHeader
-                                                    );
+                                                    if (!isHeaderCreated) {
+                                                        rowFilteredHeader.push(
+                                                            columnHeader
+                                                        );
+                                                    }
                                                 }
                                             );
                                         } else if (innerCellAccessorValue) {
@@ -356,9 +351,11 @@ const ExportData = (props: Object): any => {
                                                 columnHeader
                                             ] = columnValue;
                                             rowFilteredValues.push(columnValue);
-                                            rowFilteredHeader.push(
-                                                columnHeader
-                                            );
+                                            if (!isHeaderCreated) {
+                                                rowFilteredHeader.push(
+                                                    columnHeader
+                                                );
+                                            }
                                         }
                                     }
                                 });
@@ -367,7 +364,9 @@ const ExportData = (props: Object): any => {
                                 columnHeader = title || Header;
                                 filteredColumnVal[columnHeader] = columnValue;
                                 rowFilteredValues.push(columnValue);
-                                rowFilteredHeader.push(columnHeader);
+                                if (!isHeaderCreated) {
+                                    rowFilteredHeader.push(columnHeader);
+                                }
                             }
                         }
                     });
@@ -412,14 +411,18 @@ const ExportData = (props: Object): any => {
                                     expandedCellHeader
                                 ] = formattedValue;
                                 rowFilteredValues.push(formattedValue);
-                                rowFilteredHeader.push(expandedCellHeader);
+                                if (!isHeaderCreated) {
+                                    rowFilteredHeader.push(expandedCellHeader);
+                                }
                             }
                         });
                     }
                     filteredRow.push(filteredColumnVal);
                     filteredRowValues.push(rowFilteredValues);
-                    if (rowLength === index + 1)
+                    if (!isHeaderCreated) {
                         filteredRowHeader.push(rowFilteredHeader);
+                    }
+                    isHeaderCreated = true;
                 }
             });
 
