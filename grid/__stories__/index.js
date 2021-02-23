@@ -451,7 +451,7 @@ const GridComponent = (props) => {
                 }
             ],
             disableSortBy: true,
-            isSearchable: false,
+            isSearchable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 if (rowData.segment) {
                     const { from, to } = rowData.segment;
@@ -540,7 +540,7 @@ const GridComponent = (props) => {
                 }
             ],
             disableSortBy: true,
-            isSearchable: true,
+            isSearchable: false,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 return (
                     <DetailsView
@@ -653,11 +653,13 @@ const GridComponent = (props) => {
             width: 10,
             innerCells: [
                 {
+                    isExtendedArray: true,
                     Header: "Position",
                     accessor: "position",
                     isSearchable: true
                 },
                 {
+                    isExtendedArray: true,
                     Header: "Value",
                     accessor: "value",
                     isSearchable: true

@@ -27,6 +27,7 @@ import RowsList from "./List/RowsList";
 import ColumnReordering from "./Overlays/managecolumns";
 import GroupSort from "./Overlays/groupsort";
 import ExportData from "./Overlays/exportdata";
+import { matchSorter } from "match-sorter";
 import {
     IconColumns,
     IconAngle,
@@ -361,47 +362,116 @@ const Customgrid = (props: {
         ): Object => {
             // convert user searched text to lower case
             const searchText = filterValue ? filterValue.toLowerCase() : "";
-            // Loop through all rows
-            return rowsToFilter.filter((row: Object): boolean => {
-                // Find original data value of each row
-                const { original } = row;
-                // Return value of the filter method
-                let returnValue = false;
-                // Loop through all column values for each row
-                convertToIndividualColumns([...managableColumns]).forEach(
-                    (column: Object): Object => {
-                        // Do search for each column
-                        returnValue =
-                            returnValue ||
-                            searchColumn(column, original, searchText);
-                    }
-                );
-                // If grid has sub component feature and row has sub component values check in that too
-                if (isSubComponentGrid) {
-                    const { subComponentData } = original;
-                    if (subComponentData && subComponentData.length > 0) {
-                        // Loop through all sub component rows
-                        subComponentData.forEach(
-                            (subComponentRow: Object): Object => {
-                                // Loop through all sub component column values for each row
-                                convertToIndividualColumns([
-                                    ...managableSubComponentColumnns
-                                ]).forEach((column: Object): Object => {
-                                    // Do search for each column
-                                    returnValue =
-                                        returnValue ||
-                                        searchColumn(
-                                            column,
-                                            subComponentRow,
-                                            searchText
-                                        );
-                                });
-                            }
+            let filterValarr = [];
+            let colonSepText = null;
+            let results = [];
+            let accessor = [];
+            if (searchText.includes(":")) {
+                colonSepText = searchText.split(":");
+            }
+            if (colonSepText) {
+                filterValarr.push(searchText.split(":")[1]);
+
+                managableColumns
+                    .filter((key: Object): Object => {
+                        return (
+                            key.hasOwnProperty("isSearchable") &&
+                            key.isSearchable === true
                         );
-                    }
-                }
-                return returnValue;
-            });
+                    })
+                    .map((key: Object): Object => {
+                        if (key.hasOwnProperty("innerCells")) {
+                            key.innerCells.map((innerCell: Object): Object => {
+                                if (
+                                    innerCell.accessor.toLowerCase() ===
+                                    colonSepText[0]
+                                ) {
+                                    accessor.push(
+                                        "original." +
+                                            key.accessor +
+                                            "." +
+                                            innerCell.accessor
+                                    );
+                                    return;
+                                }
+                            });
+                        } else {
+                            if (
+                                key.accessor.toLowerCase() === colonSepText[0]
+                            ) {
+                                accessor.push("original." + key.accessor);
+                                return;
+                            }
+                        }
+                    });
+
+                results = matchSorter(
+                    rowsToFilter,
+                    filterValarr,
+                    {
+                        keys: typeof accessor[0] !== "undefined" ? accessor : []
+                    },
+                    { threshold: matchSorter.rankings.EQUAL }
+                );
+            } else {
+                managableColumns
+                    .filter((key: Object): Object => {
+                        return (
+                            key.hasOwnProperty("isSearchable") &&
+                            key.isSearchable === true
+                        );
+                    })
+                    .map((key: Object): Object => {
+                        let constructAccessor = null;
+                        if (key.hasOwnProperty("innerCells")) {
+                            key.innerCells.map((innerCell: Object): Object => {
+                                if (
+                                    innerCell.hasOwnProperty("isSearchable") &&
+                                    innerCell.isSearchable === true
+                                ) {
+                                    if (
+                                        innerCell.hasOwnProperty(
+                                            "isExtendedArray"
+                                        ) &&
+                                        innerCell.isExtendedArray === true
+                                    ) {
+                                        constructAccessor =
+                                            "original." +
+                                            key.accessor +
+                                            ".*." +
+                                            innerCell.accessor;
+                                    } else {
+                                        constructAccessor =
+                                            "original." +
+                                            key.accessor +
+                                            "." +
+                                            innerCell.accessor;
+                                    }
+                                    accessor.push(constructAccessor);
+                                    return;
+                                }
+                            });
+                        } else {
+                            if (
+                                key.hasOwnProperty("isExtendedArray") &&
+                                key.isExtendedArray === true
+                            ) {
+                                constructAccessor =
+                                    "original." + "*." + key.accessor;
+                            } else {
+                                constructAccessor = "original." + key.accessor;
+                            }
+                            accessor.push(constructAccessor);
+                            return;
+                        }
+                    });
+
+                results = matchSorter(rowsToFilter, searchText, {
+                    keys: typeof accessor[0] !== "undefined" ? accessor : []
+                });
+            }
+            const sortedResult = results.sort((a, b) => a.index - b.index);
+            return sortedResult;
         },
         [managableColumns, managableSubComponentColumnns, isSubComponentGrid]
     );
