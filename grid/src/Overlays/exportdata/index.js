@@ -231,6 +231,129 @@ const ExportData = (props: Object): any => {
         exportOverlay.removeChild(link);
     };
 
+    const formatExportData = (
+        columnsGroup: any,
+        row: object,
+        isHeaderCreated: boolean,
+        filteredRow: any,
+        filteredRowValues: any,
+        filteredRowHeader: any
+    ) => {
+        const filteredColumnVal = {};
+        const rowFilteredValues = [];
+        const rowFilteredHeader = [];
+        columnsGroup.forEach((columnName: any) => {
+            const { Header, title, accessor, innerCells } = columnName;
+            const isInnerCellsPresent = innerCells && innerCells.length > 0;
+            const accessorRowValue = row[accessor];
+            let columnValue = "";
+            let columnHeader = "";
+            // For grid columns (not the one in expanded section)
+            if (accessor) {
+                if (
+                    isInnerCellsPresent &&
+                    accessorRowValue !== null &&
+                    accessorRowValue !== undefined &&
+                    typeof accessorRowValue === "object"
+                ) {
+                    innerCells.forEach((cell: Object) => {
+                        if (cell.display === true) {
+                            const innerCellAccessor = cell.accessor;
+                            const innerCellHeader = cell.Header;
+                            const innerCellAccessorValue =
+                                accessorRowValue[innerCellAccessor];
+                            if (accessorRowValue.length > 0) {
+                                accessorRowValue.forEach(
+                                    (item: Object, itemIndex: string) => {
+                                        const itemInnerCellAccessor =
+                                            item[innerCellAccessor];
+                                        columnValue = itemInnerCellAccessor
+                                            ? itemInnerCellAccessor.toString()
+                                            : "";
+                                        columnHeader = `${
+                                            title || Header
+                                        } - ${innerCellHeader}_${itemIndex}`;
+                                        filteredColumnVal[
+                                            columnHeader
+                                        ] = columnValue;
+                                        rowFilteredValues.push(columnValue);
+                                        if (!isHeaderCreated) {
+                                            rowFilteredHeader.push(
+                                                columnHeader
+                                            );
+                                        }
+                                    }
+                                );
+                            } else if (innerCellAccessorValue) {
+                                columnValue = innerCellAccessorValue;
+                                columnHeader = `${
+                                    title || Header
+                                } - ${innerCellHeader}`;
+                                filteredColumnVal[columnHeader] = columnValue;
+                                rowFilteredValues.push(columnValue);
+                                if (!isHeaderCreated) {
+                                    rowFilteredHeader.push(columnHeader);
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    columnValue = accessorRowValue;
+                    columnHeader = title || Header;
+                    filteredColumnVal[columnHeader] = columnValue;
+                    rowFilteredValues.push(columnValue);
+                    if (!isHeaderCreated) {
+                        rowFilteredHeader.push(columnHeader);
+                    }
+                }
+            }
+        });
+        if (
+            managedAdditionalColumn &&
+            managedAdditionalColumn.display === true
+        ) {
+            const { innerCells } = managedAdditionalColumn;
+            // For column in the expanded section
+            innerCells.forEach((expandedCell: Object) => {
+                if (expandedCell.display === true) {
+                    const expandedCellAccessor = expandedCell.accessor;
+                    const expandedCellHeader = expandedCell.Header;
+                    const expandedCellValue = row[expandedCellAccessor];
+                    let formattedValue = expandedCellValue;
+                    if (
+                        expandedCellValue !== null &&
+                        expandedCellValue !== undefined &&
+                        typeof expandedCellValue === "object"
+                    ) {
+                        if (expandedCellValue.length > 0) {
+                            const newValues = [];
+                            expandedCellValue.forEach((cellValue: Object) => {
+                                newValues.push(
+                                    Object.values(cellValue).join("--")
+                                );
+                            });
+                            formattedValue = newValues.join("||");
+                        } else {
+                            formattedValue = Object.values(
+                                expandedCellValue
+                            ).join("||");
+                        }
+                    }
+                    filteredColumnVal[expandedCellHeader] = formattedValue;
+                    rowFilteredValues.push(formattedValue);
+                    if (!isHeaderCreated) {
+                        rowFilteredHeader.push(expandedCellHeader);
+                    }
+                }
+            });
+        }
+        filteredRow.push(filteredColumnVal);
+        filteredRowValues.push(rowFilteredValues);
+        if (!isHeaderCreated) {
+            filteredRowHeader.push(rowFilteredHeader);
+        }
+    };
+
     const exportRowData = () => {
         const filteredRow = [];
         const filteredRowValues = [];
@@ -260,142 +383,14 @@ const ExportData = (props: Object): any => {
             rows.forEach((rowDetails: Object) => {
                 const row = rowDetails.original;
                 if (row.isParent !== true) {
-                    const filteredColumnVal = {};
-                    const rowFilteredValues = [];
-                    const rowFilteredHeader = [];
-                    filteredManagedColumns.forEach((columnName: any) => {
-                        const {
-                            Header,
-                            title,
-                            accessor,
-                            innerCells
-                        } = columnName;
-                        const isInnerCellsPresent =
-                            innerCells && innerCells.length > 0;
-                        const accessorRowValue = row[accessor];
-                        let columnValue = "";
-                        let columnHeader = "";
-                        // For grid columns (not the one in expanded section)
-                        if (accessor) {
-                            if (
-                                isInnerCellsPresent &&
-                                accessorRowValue !== null &&
-                                accessorRowValue !== undefined &&
-                                typeof accessorRowValue === "object"
-                            ) {
-                                innerCells.forEach((cell: Object) => {
-                                    if (cell.display === true) {
-                                        const innerCellAccessor = cell.accessor;
-                                        const innerCellHeader = cell.Header;
-                                        const innerCellAccessorValue =
-                                            accessorRowValue[innerCellAccessor];
-                                        if (accessorRowValue.length > 0) {
-                                            accessorRowValue.forEach(
-                                                (
-                                                    item: Object,
-                                                    itemIndex: string
-                                                ) => {
-                                                    const itemInnerCellAccessor =
-                                                        item[innerCellAccessor];
-                                                    columnValue = itemInnerCellAccessor
-                                                        ? itemInnerCellAccessor.toString()
-                                                        : "";
-                                                    columnHeader = `${
-                                                        title || Header
-                                                    } - ${innerCellHeader}_${itemIndex}`;
-                                                    filteredColumnVal[
-                                                        columnHeader
-                                                    ] = columnValue;
-                                                    rowFilteredValues.push(
-                                                        columnValue
-                                                    );
-                                                    if (!isHeaderCreated) {
-                                                        rowFilteredHeader.push(
-                                                            columnHeader
-                                                        );
-                                                    }
-                                                }
-                                            );
-                                        } else if (innerCellAccessorValue) {
-                                            columnValue = innerCellAccessorValue;
-                                            columnHeader = `${
-                                                title || Header
-                                            } - ${innerCellHeader}`;
-                                            filteredColumnVal[
-                                                columnHeader
-                                            ] = columnValue;
-                                            rowFilteredValues.push(columnValue);
-                                            if (!isHeaderCreated) {
-                                                rowFilteredHeader.push(
-                                                    columnHeader
-                                                );
-                                            }
-                                        }
-                                    }
-                                });
-                            } else {
-                                columnValue = accessorRowValue;
-                                columnHeader = title || Header;
-                                filteredColumnVal[columnHeader] = columnValue;
-                                rowFilteredValues.push(columnValue);
-                                if (!isHeaderCreated) {
-                                    rowFilteredHeader.push(columnHeader);
-                                }
-                            }
-                        }
-                    });
-                    if (
-                        managedAdditionalColumn &&
-                        managedAdditionalColumn.display === true
-                    ) {
-                        const { innerCells } = managedAdditionalColumn;
-                        // For column in the expanded section
-                        innerCells.forEach((expandedCell: Object) => {
-                            if (expandedCell.display === true) {
-                                const expandedCellAccessor =
-                                    expandedCell.accessor;
-                                const expandedCellHeader = expandedCell.Header;
-                                const expandedCellValue =
-                                    row[expandedCellAccessor];
-                                let formattedValue = expandedCellValue;
-                                if (
-                                    expandedCellValue !== null &&
-                                    expandedCellValue !== undefined &&
-                                    typeof expandedCellValue === "object"
-                                ) {
-                                    if (expandedCellValue.length > 0) {
-                                        const newValues = [];
-                                        expandedCellValue.forEach(
-                                            (cellValue: Object) => {
-                                                newValues.push(
-                                                    Object.values(
-                                                        cellValue
-                                                    ).join("--")
-                                                );
-                                            }
-                                        );
-                                        formattedValue = newValues.join("||");
-                                    } else {
-                                        formattedValue = Object.values(
-                                            expandedCellValue
-                                        ).join("||");
-                                    }
-                                }
-                                filteredColumnVal[
-                                    expandedCellHeader
-                                ] = formattedValue;
-                                rowFilteredValues.push(formattedValue);
-                                if (!isHeaderCreated) {
-                                    rowFilteredHeader.push(expandedCellHeader);
-                                }
-                            }
-                        });
-                    }
-                    filteredRow.push(filteredColumnVal);
-                    filteredRowValues.push(rowFilteredValues);
-                    if (!isHeaderCreated) {
-                        filteredRowHeader.push(rowFilteredHeader);
-                    }
+                    formatExportData(
+                        filteredManagedColumns,
+                        row,
+                        isHeaderCreated,
+                        filteredRow,
+                        filteredRowValues,
+                        filteredRowHeader
+                    );
                     isHeaderCreated = true;
                 }
             });
