@@ -396,14 +396,6 @@ const ExportData = (props: Object): any => {
                     if (!isHeaderCreated) {
                         filteredRowHeader.push(rowFilteredHeader);
                     }
-                    const asd = [];
-                    filteredRowHeader.forEach((item) => {
-                        asd.push("");
-                    });
-                    filteredRowValues.push(asd);
-                    console.log("filteredRow", filteredRow);
-                    console.log("filteredRowValues", filteredRowValues);
-                    console.log("filteredRowHeader", filteredRowHeader);
                     isHeaderCreated = true;
                 }
             });
