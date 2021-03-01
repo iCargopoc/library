@@ -957,10 +957,6 @@ const GridComponent = (props) => {
                 {
                     Header: "Type",
                     accessor: "type"
-                },
-                {
-                    Header: "Std",
-                    accessor: "std"
                 }
             ],
             disableSortBy: true,
@@ -1045,12 +1041,10 @@ const GridComponent = (props) => {
                                 </li>
                                 <li className="divider">|</li>
                                 <li>
-                                    <DisplayTag columnKey="hawb" cellKey="std">
-                                        <strong>{item1} </strong>
-                                        <span>{item2}</span>
-                                        <strong> {item3} </strong>
-                                        <span>{item4}</span>
-                                    </DisplayTag>
+                                    <strong>{item1} </strong>
+                                    <span>{item2}</span>
+                                    <strong> {item3} </strong>
+                                    <span>{item4}</span>
                                 </li>
                             </ul>
                         </div>
