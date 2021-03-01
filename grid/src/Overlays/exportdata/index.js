@@ -223,12 +223,18 @@ const ExportData = (props: Object): any => {
         const exportOverlay = document.querySelector(
             "[data-testid='exportoverlay']"
         );
-        exportOverlay.appendChild(link);
+        if (exportOverlay != null) {
+            exportOverlay.appendChild(link);
+        }
         const linkToDownload = isExcelFile
             ? document.querySelector("[data-testid='excel-file-download-link']")
             : document.querySelector("[data-testid='csv-file-download-link']");
-        linkToDownload.click();
-        exportOverlay.removeChild(link);
+        if (linkToDownload != null) {
+            linkToDownload.click();
+        }
+        if (exportOverlay != null) {
+            exportOverlay.removeChild(link);
+        }
     };
 
     const exportRowData = () => {
@@ -244,11 +250,11 @@ const ExportData = (props: Object): any => {
             return column.display === true;
         });
 
-        const filteredManagedSubComponentColumns = managedSubComponentColumns.filter(
-            (column: Object): boolean => {
-                return column.display === true;
-            }
-        );
+        const filteredManagedSubComponentColumns = convertToIndividualColumns(
+            managedSubComponentColumns
+        ).filter((column: Object): boolean => {
+            return column.display === true;
+        });
 
         if (
             rows &&
