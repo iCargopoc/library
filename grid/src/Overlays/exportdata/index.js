@@ -267,7 +267,7 @@ const ExportData = (props: Object): any => {
                     const rowFilteredValues = [];
                     const rowFilteredHeader = [];
 
-                    // Loop through all parent columns
+                    // Loop through all main columns
                     filteredManagedColumns.forEach((columnName: any) => {
                         const {
                             Header,
@@ -364,7 +364,7 @@ const ExportData = (props: Object): any => {
                         }
                     });
 
-                    // Loop through parent additional column
+                    // Loop through main additional column
                     if (
                         managedAdditionalColumn &&
                         managedAdditionalColumn.display === true
@@ -438,7 +438,7 @@ const ExportData = (props: Object): any => {
                             filteredManagedSubComponentColumns.length > 0
                         ) {
                             // Copy value object (excel and csv) and value array (pdf) and update all existing values to ""
-                            // This is to create empty column value under parent column name, in case of sub component rows
+                            // This is to create empty column value under main column name, in case of sub component rows
                             const nullFilteredColumnVal = {
                                 ...filteredColumnVal
                             };
@@ -466,7 +466,7 @@ const ExportData = (props: Object): any => {
                                     ...nullRowFilteredValues
                                 ];
                                 // Loop through sub component columns
-                                // Logic is same as above (parent columns)
+                                // Logic is same as above (main columns)
                                 filteredManagedSubComponentColumns.forEach(
                                     (subCompColumnName: any) => {
                                         const subCompHeader =
@@ -590,7 +590,7 @@ const ExportData = (props: Object): any => {
                                     }
                                 );
                                 // If additional column is present for sub component data
-                                // Logic remains same as that of parent additional column
+                                // Logic remains same as that of main additional column
                                 if (
                                     managedSubComponentAdditionalColumn &&
                                     managedSubComponentAdditionalColumn.display ===
