@@ -8,6 +8,13 @@ import regeneratorRuntime from "regenerator-runtime";
 import Grid from "../src/index";
 
 describe("render Index file ", () => {
+    jest.setTimeout(30000);
+    HTMLCanvasElement.prototype.getContext = () => {
+        // return whatever getContext has to return
+        return [];
+    };
+    global.URL.createObjectURL = jest.fn();
+
     function mockOffsetSize(width, height) {
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,
@@ -84,6 +91,24 @@ describe("render Index file ", () => {
             subComponentData: [
                 {
                     hawbId: 6001,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: "Q7",
+                            subCompValue: "4/9"
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -109,6 +134,24 @@ describe("render Index file ", () => {
                 },
                 {
                     hawbId: 6002,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: "Q7",
+                            subCompValue: "4/9"
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -134,6 +177,24 @@ describe("render Index file ", () => {
                 },
                 {
                     hawbId: 6003,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: "Q7",
+                            subCompValue: "4/9"
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -221,6 +282,24 @@ describe("render Index file ", () => {
             subComponentData: [
                 {
                     hawbId: i * 100 + 1,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: "Q7",
+                            subCompValue: "4/9"
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -246,6 +325,24 @@ describe("render Index file ", () => {
                 },
                 {
                     hawbId: i * 100 + 2,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: "Q7",
+                            subCompValue: "4/9"
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -271,6 +368,24 @@ describe("render Index file ", () => {
                 },
                 {
                     hawbId: i * 100 + 3,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: "Q7",
+                            subCompValue: "4/9"
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -473,6 +588,52 @@ describe("render Index file ", () => {
             }
         },
         {
+            Header: "Sub Comp ULD Positions",
+            accessor: "subCompUldPositions",
+            width: 120,
+            innerCells: [
+                {
+                    Header: "Sub Comp Position",
+                    accessor: "subCompPosition"
+                },
+                {
+                    Header: "Sub Comp Value",
+                    accessor: "subCompValue"
+                }
+            ],
+            displayCell: (rowData, DisplayTag) => {
+                const { subCompUldPositions } = rowData;
+                return (
+                    <div className="uld-details">
+                        <ul>
+                            {subCompUldPositions.map((positions, index) => {
+                                return (
+                                    <li key={index}>
+                                        <DisplayTag
+                                            columnKey="subCompUldPositions"
+                                            cellKey="subCompPosition"
+                                        >
+                                            <span>
+                                                {positions.subCompPosition}
+                                            </span>
+                                        </DisplayTag>
+                                        <DisplayTag
+                                            columnKey="subCompUldPositions"
+                                            cellKey="subCompValue"
+                                        >
+                                            <strong>
+                                                {positions.subCompValue}
+                                            </strong>
+                                        </DisplayTag>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                );
+            }
+        },
+        {
             groupHeader: "Other Details",
             Header: "AWB Details",
             accessor: "hawb",
@@ -620,7 +781,17 @@ describe("render Index file ", () => {
 
     const mockSubComponentAdditionalColumn = {
         Header: "Additional Column",
-        innerCells: [{ Header: "Remarks", accessor: "remarks" }],
+        innerCells: [
+            { Header: "Remarks", accessor: "remarks" },
+            {
+                Header: "sub Comp Uld Positions Additional",
+                accessor: "subCompUldPositions"
+            },
+            {
+                Header: "sub Comp scr Additional",
+                accessor: "scr"
+            }
+        ],
         displayCell: (rowData, DisplayTag, isDesktop) => {
             const { remarks } = rowData;
             return (
@@ -1248,7 +1419,7 @@ describe("render Index file ", () => {
 
         // Drag and Drop boxes
         const columnDnds = getAllByTestId("subcomponentcolumnItemDnd");
-        expect(columnDnds).toHaveLength(2);
+        expect(columnDnds).toHaveLength(3);
         const firstNode = columnDnds[0];
         const lastNode = columnDnds[1];
 
@@ -1332,7 +1503,7 @@ describe("render Index file ", () => {
         let subComponentColumnsCheckboxes = getAllByTestId(
             "selectSingleSearchableSubComponentColumn"
         );
-        expect(subComponentColumnsCheckboxes.length).toBe(4);
+        expect(subComponentColumnsCheckboxes.length).toBe(5);
 
         // Filter columns
         const filterList = getByTestId("filterColumnsList");
@@ -1354,7 +1525,7 @@ describe("render Index file ", () => {
         subComponentColumnsCheckboxes = getAllByTestId(
             "selectSingleSearchableSubComponentColumn"
         );
-        expect(subComponentColumnsCheckboxes.length).toBe(4);
+        expect(subComponentColumnsCheckboxes.length).toBe(5);
 
         // Close overlay
         const closeButton = getByTestId("cancel_columnsManage");
@@ -1412,7 +1583,7 @@ describe("render Index file ", () => {
             "selectSingleSearchableSubComponentColumn"
         );
         const childColumnCheckboxesLength = childColumnCheckboxes.length;
-        expect(childColumnCheckboxesLength).toBe(4);
+        expect(childColumnCheckboxesLength).toBe(5);
 
         // Un-check first column
         expect(childColumnCheckboxes[0].checked).toBeTruthy();
@@ -1443,7 +1614,7 @@ describe("render Index file ", () => {
         ).toBeTruthy();
 
         // Un-check all sub component columns
-        const allSubComponentColumns = getAllByTestId(
+        let allSubComponentColumns = getAllByTestId(
             "selectAllSearchableSubComponentColumns"
         );
         expect(allSubComponentColumns[0].checked).toBeTruthy();
@@ -1451,7 +1622,7 @@ describe("render Index file ", () => {
         expect(allSubComponentColumns[0].checked).toBeFalsy();
 
         // Try to export data
-        const exportButton = getByTestId("export_button");
+        let exportButton = getByTestId("export_button");
         act(() => {
             exportButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
@@ -1463,6 +1634,28 @@ describe("render Index file ", () => {
             "Select at least one sub component column"
         );
         expect(errorMessage.length).toBe(1);
+
+        // Re-check all sub component columns
+        allSubComponentColumns = getAllByTestId(
+            "selectAllSearchableSubComponentColumns"
+        );
+        expect(allSubComponentColumns[0].checked).toBeFalsy();
+        fireEvent.click(allSubComponentColumns[0]);
+        expect(allSubComponentColumns[0].checked).toBeTruthy();
+
+        // Select excel
+        const selectExcel = getByTestId("chk_excel_test");
+        expect(selectExcel.checked).toEqual(false);
+        fireEvent.click(selectExcel);
+        expect(selectExcel.checked).toEqual(true);
+
+        // Try to export data
+        exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
     });
 
     it("test group sort overlay grid with sub component data and sub component row expand", () => {
