@@ -427,230 +427,253 @@ const ExportData = (props: Object): any => {
                     }
                     isHeaderCreated = true;
 
-                    // Check if grid has sub component column provided and corresponding row has sub component data
-                    const { subComponentData } = row;
-                    if (
-                        subComponentData &&
-                        subComponentData.length > 0 &&
-                        filteredManagedSubComponentColumns &&
-                        filteredManagedSubComponentColumns.length > 0
-                    ) {
-                        // Copy value object (excel and csv) and value array (pdf) and update all existing values to ""
-                        // This is to create empty column value under parent column name, in case of sub component rows
-                        const nullFilteredColumnVal = { ...filteredColumnVal };
-                        let nullRowFilteredValues = [...rowFilteredValues];
-                        const subCompRowFilteredHeader = [];
-                        Object.keys(nullFilteredColumnVal).forEach(
-                            (val: any) => {
-                                nullFilteredColumnVal[val] = "";
-                            }
-                        );
-                        nullRowFilteredValues = nullRowFilteredValues.map(
-                            (rowVal: any): any => {
-                                let updatedRowVal = rowVal;
-                                updatedRowVal = "";
-                                return updatedRowVal;
-                            }
-                        );
-
-                        // Loop through sub component data
-                        subComponentData.forEach((subCompRow: Object) => {
-                            const subCompFilteredColumnVal = {
-                                ...nullFilteredColumnVal
+                    // For sub component Grid
+                    if (isSubComponentGrid) {
+                        // Check if grid has sub component column provided and corresponding row has sub component data
+                        const { subComponentData } = row;
+                        if (
+                            subComponentData &&
+                            subComponentData.length > 0 &&
+                            filteredManagedSubComponentColumns &&
+                            filteredManagedSubComponentColumns.length > 0
+                        ) {
+                            // Copy value object (excel and csv) and value array (pdf) and update all existing values to ""
+                            // This is to create empty column value under parent column name, in case of sub component rows
+                            const nullFilteredColumnVal = {
+                                ...filteredColumnVal
                             };
-                            const subCompRowFilteredValues = [
-                                ...nullRowFilteredValues
-                            ];
-                            // Loop through sub component columns
-                            // Logic is same as above (parent columns)
-                            filteredManagedSubComponentColumns.forEach(
-                                (subCompColumnName: any) => {
-                                    const subCompHeader =
-                                        subCompColumnName.Header;
-                                    const subCompTitle =
-                                        subCompColumnName.title;
-                                    const subCompAccessor =
-                                        subCompColumnName.accessor;
-                                    const subCompInnerCells =
-                                        subCompColumnName.innerCells;
-                                    const isSubCompInnerCellsPresent =
-                                        subCompInnerCells &&
-                                        subCompInnerCells.length > 0;
-                                    const subCompAccessorRowValue =
-                                        subCompRow[subCompAccessor];
-                                    let subCompColumnValue = "";
-                                    let subCompColumnHeader = "";
-                                    if (subCompAccessor) {
-                                        if (
-                                            isSubCompInnerCellsPresent &&
-                                            subCompAccessorRowValue !== null &&
-                                            subCompAccessorRowValue !==
-                                                undefined &&
-                                            typeof subCompAccessorRowValue ===
-                                                "object"
-                                        ) {
-                                            subCompInnerCells.forEach(
-                                                (cell: Object) => {
-                                                    if (cell.display === true) {
-                                                        const innerCellAccessor =
-                                                            cell.accessor;
-                                                        const innerCellHeader =
-                                                            cell.Header;
-                                                        const innerCellAccessorValue =
-                                                            subCompAccessorRowValue[
-                                                                innerCellAccessor
-                                                            ];
+                            let nullRowFilteredValues = [...rowFilteredValues];
+                            const subCompRowFilteredHeader = [];
+                            Object.keys(nullFilteredColumnVal).forEach(
+                                (val: any) => {
+                                    nullFilteredColumnVal[val] = "";
+                                }
+                            );
+                            nullRowFilteredValues = nullRowFilteredValues.map(
+                                (rowVal: any): any => {
+                                    let updatedRowVal = rowVal;
+                                    updatedRowVal = "";
+                                    return updatedRowVal;
+                                }
+                            );
+
+                            // Loop through sub component data
+                            subComponentData.forEach((subCompRow: Object) => {
+                                const subCompFilteredColumnVal = {
+                                    ...nullFilteredColumnVal
+                                };
+                                const subCompRowFilteredValues = [
+                                    ...nullRowFilteredValues
+                                ];
+                                // Loop through sub component columns
+                                // Logic is same as above (parent columns)
+                                filteredManagedSubComponentColumns.forEach(
+                                    (subCompColumnName: any) => {
+                                        const subCompHeader =
+                                            subCompColumnName.Header;
+                                        const subCompTitle =
+                                            subCompColumnName.title;
+                                        const subCompAccessor =
+                                            subCompColumnName.accessor;
+                                        const subCompInnerCells =
+                                            subCompColumnName.innerCells;
+                                        const isSubCompInnerCellsPresent =
+                                            subCompInnerCells &&
+                                            subCompInnerCells.length > 0;
+                                        const subCompAccessorRowValue =
+                                            subCompRow[subCompAccessor];
+                                        let subCompColumnValue = "";
+                                        let subCompColumnHeader = "";
+                                        if (subCompAccessor) {
+                                            if (
+                                                isSubCompInnerCellsPresent &&
+                                                subCompAccessorRowValue !==
+                                                    null &&
+                                                subCompAccessorRowValue !==
+                                                    undefined &&
+                                                typeof subCompAccessorRowValue ===
+                                                    "object"
+                                            ) {
+                                                subCompInnerCells.forEach(
+                                                    (cell: Object) => {
                                                         if (
-                                                            subCompAccessorRowValue.length >
-                                                            0
+                                                            cell.display ===
+                                                            true
                                                         ) {
-                                                            subCompAccessorRowValue.forEach(
-                                                                (
-                                                                    item: Object,
-                                                                    itemIndex: any
-                                                                ) => {
-                                                                    const itemInnerCellAccessor =
-                                                                        item[
-                                                                            innerCellAccessor
-                                                                        ];
-                                                                    subCompColumnValue = itemInnerCellAccessor
-                                                                        ? itemInnerCellAccessor.toString()
-                                                                        : "";
-                                                                    subCompColumnHeader = `SubRow - ${
-                                                                        subCompTitle ||
-                                                                        subCompHeader
-                                                                    } - ${innerCellHeader}_${itemIndex}`;
-                                                                    subCompFilteredColumnVal[
-                                                                        subCompColumnHeader
-                                                                    ] = subCompColumnValue;
-                                                                    subCompRowFilteredValues.push(
-                                                                        subCompColumnValue
-                                                                    );
-                                                                    if (
-                                                                        !isSubCompHeaderCreated
-                                                                    ) {
-                                                                        subCompRowFilteredHeader.push(
-                                                                            subCompColumnHeader
-                                                                        );
-                                                                    }
-                                                                }
-                                                            );
-                                                        } else if (
-                                                            innerCellAccessorValue
-                                                        ) {
-                                                            subCompColumnValue = innerCellAccessorValue;
-                                                            subCompColumnHeader = `SubRow - ${
-                                                                subCompTitle ||
-                                                                subCompHeader
-                                                            } - ${innerCellHeader}`;
-                                                            subCompFilteredColumnVal[
-                                                                subCompColumnHeader
-                                                            ] = subCompColumnValue;
-                                                            subCompRowFilteredValues.push(
-                                                                subCompColumnValue
-                                                            );
+                                                            const innerCellAccessor =
+                                                                cell.accessor;
+                                                            const innerCellHeader =
+                                                                cell.Header;
+                                                            const innerCellAccessorValue =
+                                                                subCompAccessorRowValue[
+                                                                    innerCellAccessor
+                                                                ];
                                                             if (
-                                                                !isSubCompHeaderCreated
+                                                                subCompAccessorRowValue.length >
+                                                                0
                                                             ) {
-                                                                subCompRowFilteredHeader.push(
-                                                                    subCompColumnHeader
+                                                                subCompAccessorRowValue.forEach(
+                                                                    (
+                                                                        item: Object,
+                                                                        itemIndex: any
+                                                                    ) => {
+                                                                        const itemInnerCellAccessor =
+                                                                            item[
+                                                                                innerCellAccessor
+                                                                            ];
+                                                                        subCompColumnValue = itemInnerCellAccessor
+                                                                            ? itemInnerCellAccessor.toString()
+                                                                            : "";
+                                                                        subCompColumnHeader = `SubRow - ${
+                                                                            subCompTitle ||
+                                                                            subCompHeader
+                                                                        } - ${innerCellHeader}_${itemIndex}`;
+                                                                        subCompFilteredColumnVal[
+                                                                            subCompColumnHeader
+                                                                        ] = subCompColumnValue;
+                                                                        subCompRowFilteredValues.push(
+                                                                            subCompColumnValue
+                                                                        );
+                                                                        if (
+                                                                            !isSubCompHeaderCreated
+                                                                        ) {
+                                                                            subCompRowFilteredHeader.push(
+                                                                                subCompColumnHeader
+                                                                            );
+                                                                        }
+                                                                    }
                                                                 );
+                                                            } else if (
+                                                                innerCellAccessorValue
+                                                            ) {
+                                                                subCompColumnValue = innerCellAccessorValue;
+                                                                subCompColumnHeader = `SubRow - ${
+                                                                    subCompTitle ||
+                                                                    subCompHeader
+                                                                } - ${innerCellHeader}`;
+                                                                subCompFilteredColumnVal[
+                                                                    subCompColumnHeader
+                                                                ] = subCompColumnValue;
+                                                                subCompRowFilteredValues.push(
+                                                                    subCompColumnValue
+                                                                );
+                                                                if (
+                                                                    !isSubCompHeaderCreated
+                                                                ) {
+                                                                    subCompRowFilteredHeader.push(
+                                                                        subCompColumnHeader
+                                                                    );
+                                                                }
                                                             }
                                                         }
                                                     }
-                                                }
-                                            );
-                                        } else {
-                                            subCompColumnValue = subCompAccessorRowValue;
-                                            subCompColumnHeader = `SubRow - ${
-                                                subCompTitle || subCompHeader
-                                            }`;
-                                            subCompFilteredColumnVal[
-                                                subCompColumnHeader
-                                            ] = subCompColumnValue;
-                                            subCompRowFilteredValues.push(
-                                                subCompColumnValue
-                                            );
-                                            if (!isSubCompHeaderCreated) {
-                                                subCompRowFilteredHeader.push(
-                                                    subCompColumnHeader
-                                                );
-                                            }
-                                        }
-                                    }
-                                }
-                            );
-                            // If additional column is present for sub component data
-                            // Logic remains same as that of parent additional column
-                            if (
-                                managedSubComponentAdditionalColumn &&
-                                managedSubComponentAdditionalColumn.display ===
-                                    true
-                            ) {
-                                const {
-                                    innerCells
-                                } = managedSubComponentAdditionalColumn;
-                                innerCells.forEach((expandedCell: Object) => {
-                                    if (expandedCell.display === true) {
-                                        const expandedCellAccessor =
-                                            expandedCell.accessor;
-                                        const expandedCellHeader = `SubRow - ${expandedCell.Header}`;
-                                        const expandedCellValue =
-                                            subCompRow[expandedCellAccessor];
-                                        let formattedValue = expandedCellValue;
-                                        if (
-                                            expandedCellValue !== null &&
-                                            expandedCellValue !== undefined &&
-                                            typeof expandedCellValue ===
-                                                "object"
-                                        ) {
-                                            if (expandedCellValue.length > 0) {
-                                                const newValues = [];
-                                                expandedCellValue.forEach(
-                                                    (cellValue: Object) => {
-                                                        newValues.push(
-                                                            Object.values(
-                                                                cellValue
-                                                            ).join("--")
-                                                        );
-                                                    }
-                                                );
-                                                formattedValue = newValues.join(
-                                                    "||"
                                                 );
                                             } else {
-                                                formattedValue = Object.values(
-                                                    expandedCellValue
-                                                ).join("||");
+                                                subCompColumnValue = subCompAccessorRowValue;
+                                                subCompColumnHeader = `SubRow - ${
+                                                    subCompTitle ||
+                                                    subCompHeader
+                                                }`;
+                                                subCompFilteredColumnVal[
+                                                    subCompColumnHeader
+                                                ] = subCompColumnValue;
+                                                subCompRowFilteredValues.push(
+                                                    subCompColumnValue
+                                                );
+                                                if (!isSubCompHeaderCreated) {
+                                                    subCompRowFilteredHeader.push(
+                                                        subCompColumnHeader
+                                                    );
+                                                }
                                             }
                                         }
-                                        subCompFilteredColumnVal[
-                                            expandedCellHeader
-                                        ] = formattedValue;
-                                        subCompRowFilteredValues.push(
-                                            formattedValue
-                                        );
-                                        if (!isSubCompHeaderCreated) {
-                                            subCompRowFilteredHeader.push(
-                                                expandedCellHeader
-                                            );
-                                        }
                                     }
-                                });
-                            }
-                            filteredRow.push({
-                                ...subCompFilteredColumnVal
-                            });
-                            filteredRowValues.push(subCompRowFilteredValues);
-                            if (!isSubCompHeaderCreated) {
-                                const newHeaderArray = filteredRowHeader[0].concat(
-                                    subCompRowFilteredHeader
                                 );
-                                filteredRowHeader = [];
-                                filteredRowHeader.push(newHeaderArray);
-                            }
-                            isSubCompHeaderCreated = true;
-                        });
+                                // If additional column is present for sub component data
+                                // Logic remains same as that of parent additional column
+                                if (
+                                    managedSubComponentAdditionalColumn &&
+                                    managedSubComponentAdditionalColumn.display ===
+                                        true
+                                ) {
+                                    const {
+                                        innerCells
+                                    } = managedSubComponentAdditionalColumn;
+                                    innerCells.forEach(
+                                        (expandedCell: Object) => {
+                                            if (expandedCell.display === true) {
+                                                const expandedCellAccessor =
+                                                    expandedCell.accessor;
+                                                const expandedCellHeader = `SubRow - ${expandedCell.Header}`;
+                                                const expandedCellValue =
+                                                    subCompRow[
+                                                        expandedCellAccessor
+                                                    ];
+                                                let formattedValue = expandedCellValue;
+                                                if (
+                                                    expandedCellValue !==
+                                                        null &&
+                                                    expandedCellValue !==
+                                                        undefined &&
+                                                    typeof expandedCellValue ===
+                                                        "object"
+                                                ) {
+                                                    if (
+                                                        expandedCellValue.length >
+                                                        0
+                                                    ) {
+                                                        const newValues = [];
+                                                        expandedCellValue.forEach(
+                                                            (
+                                                                cellValue: Object
+                                                            ) => {
+                                                                newValues.push(
+                                                                    Object.values(
+                                                                        cellValue
+                                                                    ).join("--")
+                                                                );
+                                                            }
+                                                        );
+                                                        formattedValue = newValues.join(
+                                                            "||"
+                                                        );
+                                                    } else {
+                                                        formattedValue = Object.values(
+                                                            expandedCellValue
+                                                        ).join("||");
+                                                    }
+                                                }
+                                                subCompFilteredColumnVal[
+                                                    expandedCellHeader
+                                                ] = formattedValue;
+                                                subCompRowFilteredValues.push(
+                                                    formattedValue
+                                                );
+                                                if (!isSubCompHeaderCreated) {
+                                                    subCompRowFilteredHeader.push(
+                                                        expandedCellHeader
+                                                    );
+                                                }
+                                            }
+                                        }
+                                    );
+                                }
+                                filteredRow.push({
+                                    ...subCompFilteredColumnVal
+                                });
+                                filteredRowValues.push(
+                                    subCompRowFilteredValues
+                                );
+                                if (!isSubCompHeaderCreated) {
+                                    const newHeaderArray = filteredRowHeader[0].concat(
+                                        subCompRowFilteredHeader
+                                    );
+                                    filteredRowHeader = [];
+                                    filteredRowHeader.push(newHeaderArray);
+                                }
+                                isSubCompHeaderCreated = true;
+                            });
+                        }
                     }
                 }
             });
