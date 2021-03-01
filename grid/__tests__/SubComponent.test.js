@@ -125,7 +125,7 @@ describe("render Index file ", () => {
                         goodsType: "Dangerous Goods"
                     },
                     scr: {
-                        status: "Not ready to send",
+                        status: null,
                         ack: "Call",
                         num: 639
                     },
@@ -176,7 +176,7 @@ describe("render Index file ", () => {
                         "Laboris enim non do esse aliquip adipisicing eiusmod officia quis commodo sit. Voluptate ullamco occaecat incididunt amet ad dolor nisi ad consectetur. Laboris nulla esse do occaecat tempor cupidatat labore."
                 },
                 {
-                    hawbId: 6003,
+                    hawbId: null,
                     subCompUldPositions: [
                         {
                             subCompPosition: "L1",
@@ -191,8 +191,8 @@ describe("render Index file ", () => {
                             subCompValue: "8/4"
                         },
                         {
-                            subCompPosition: "Q7",
-                            subCompValue: "4/9"
+                            subCompPosition: null,
+                            subCompValue: undefined
                         }
                     ],
                     hawb: {
@@ -741,6 +741,7 @@ describe("render Index file ", () => {
                 {
                     Header: "NUM",
                     accessor: "num",
+                    display: false,
                     isSearchable: true,
                     isSortable: true
                 },
@@ -750,29 +751,65 @@ describe("render Index file ", () => {
                 }
             ],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
-                const { scr } = rowData;
-                const { ack, num, status } = scr;
+                if (rowData) {
+                    const { scr } = rowData;
+                    if (scr) {
+                        const { ack, num, status } = scr;
+                        return (
+                            <div className="details-wrap">
+                                <ul className="details-expanded-content">
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="scr"
+                                            cellKey="ack"
+                                        >
+                                            <span>{ack}</span>
+                                        </DisplayTag>
+                                    </li>
+                                    <li className="divider">|</li>
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="scr"
+                                            cellKey="num"
+                                        >
+                                            {num}
+                                        </DisplayTag>
+                                    </li>
+                                    <li className="divider">|</li>
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="scr"
+                                            cellKey="status"
+                                        >
+                                            {status}
+                                        </DisplayTag>
+                                    </li>
+                                </ul>
+                            </div>
+                        );
+                    }
+                }
+            }
+        },
+        {
+            Header: "Empty",
+            accessor: null,
+            width: 250,
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 return (
-                    <div className="details-wrap">
-                        <ul className="details-expanded-content">
-                            <li>
-                                <DisplayTag columnKey="scr" cellKey="ack">
-                                    <span>{ack}</span>
-                                </DisplayTag>
-                            </li>
-                            <li className="divider">|</li>
-                            <li>
-                                <DisplayTag columnKey="scr" cellKey="num">
-                                    {num}
-                                </DisplayTag>
-                            </li>
-                            <li className="divider">|</li>
-                            <li>
-                                <DisplayTag columnKey="scr" cellKey="status">
-                                    {status}
-                                </DisplayTag>
-                            </li>
-                        </ul>
+                    <div className="travelId-details">This is null column</div>
+                );
+            }
+        },
+        {
+            Header: "Hidden",
+            accessor: "unknown",
+            display: false,
+            width: 250,
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
+                return (
+                    <div className="travelId-details">
+                        This is hidden column
                     </div>
                 );
             }
@@ -790,6 +827,11 @@ describe("render Index file ", () => {
             {
                 Header: "sub Comp scr Additional",
                 accessor: "scr"
+            },
+            {
+                Header: "sub Comp hawb Additional",
+                accessor: "hawb",
+                display: false
             }
         ],
         displayCell: (rowData, DisplayTag, isDesktop) => {
@@ -1419,7 +1461,7 @@ describe("render Index file ", () => {
 
         // Drag and Drop boxes
         const columnDnds = getAllByTestId("subcomponentcolumnItemDnd");
-        expect(columnDnds).toHaveLength(3);
+        expect(columnDnds).toHaveLength(4);
         const firstNode = columnDnds[0];
         const lastNode = columnDnds[1];
 
@@ -1475,6 +1517,8 @@ describe("render Index file ", () => {
             "selectAllSearchableSubComponentColumns"
         );
         expect(chkAllSubComponentColumn.length).toBeGreaterThan(0);
+        expect(chkAllSubComponentColumn[0].checked).toBeFalsy();
+        fireEvent.click(chkAllSubComponentColumn[0]);
         expect(chkAllSubComponentColumn[0].checked).toBeTruthy();
         fireEvent.click(chkAllSubComponentColumn[0]);
         expect(chkAllSubComponentColumn[0].checked).toBeFalsy();
@@ -1503,7 +1547,7 @@ describe("render Index file ", () => {
         let subComponentColumnsCheckboxes = getAllByTestId(
             "selectSingleSearchableSubComponentColumn"
         );
-        expect(subComponentColumnsCheckboxes.length).toBe(5);
+        expect(subComponentColumnsCheckboxes.length).toBe(7);
 
         // Filter columns
         const filterList = getByTestId("filterColumnsList");
@@ -1515,7 +1559,7 @@ describe("render Index file ", () => {
         subComponentColumnsCheckboxes = getAllByTestId(
             "selectSingleSearchableSubComponentColumn"
         );
-        expect(subComponentColumnsCheckboxes.length).toBe(2);
+        expect(subComponentColumnsCheckboxes.length).toBe(3);
 
         // Remove searched value
         fireEvent.change(filterList, { target: { value: "" } });
@@ -1525,7 +1569,7 @@ describe("render Index file ", () => {
         subComponentColumnsCheckboxes = getAllByTestId(
             "selectSingleSearchableSubComponentColumn"
         );
-        expect(subComponentColumnsCheckboxes.length).toBe(5);
+        expect(subComponentColumnsCheckboxes.length).toBe(7);
 
         // Close overlay
         const closeButton = getByTestId("cancel_columnsManage");
@@ -1583,7 +1627,7 @@ describe("render Index file ", () => {
             "selectSingleSearchableSubComponentColumn"
         );
         const childColumnCheckboxesLength = childColumnCheckboxes.length;
-        expect(childColumnCheckboxesLength).toBe(5);
+        expect(childColumnCheckboxesLength).toBe(7);
 
         // Un-check first column
         expect(childColumnCheckboxes[0].checked).toBeTruthy();
@@ -1617,6 +1661,8 @@ describe("render Index file ", () => {
         let allSubComponentColumns = getAllByTestId(
             "selectAllSearchableSubComponentColumns"
         );
+        expect(allSubComponentColumns[0].checked).toBeFalsy();
+        fireEvent.click(allSubComponentColumns[0]);
         expect(allSubComponentColumns[0].checked).toBeTruthy();
         fireEvent.click(allSubComponentColumns[0]);
         expect(allSubComponentColumns[0].checked).toBeFalsy();
