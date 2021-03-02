@@ -1354,6 +1354,8 @@ const Customgrid = (props: {
                                         rows={rows}
                                         columns={gridColumns}
                                         additionalColumn={additionalColumn}
+                                        isParentGrid={isParentGrid}
+                                        parentColumn={parentColumn}
                                         isSubComponentGrid={isSubComponentGrid}
                                         subComponentColumnns={
                                             subComponentColumnns

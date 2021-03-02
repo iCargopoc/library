@@ -20,6 +20,8 @@ const ExportData = (props: Object): any => {
         rows,
         columns,
         additionalColumn,
+        isParentGrid,
+        parentColumn,
         isSubComponentGrid,
         subComponentColumnns,
         subComponentAdditionalColumn,
@@ -263,15 +265,75 @@ const ExportData = (props: Object): any => {
             downloadTypes.length > 0
         ) {
             let isHeaderCreated = false;
+            let isParentHeaderCreated = false;
             let isSubCompHeaderCreated = false;
+
+            let parentFilteredColumnVal = {};
+            let parentRowFilteredValues = [];
+            let parentRowFilteredHeader = [];
 
             // Loop through all rows
             rows.forEach((rowDetails: Object) => {
                 const row = rowDetails.original;
-                if (row.isParent !== true) {
+
+                const { isParent } = row;
+                // If Parent row in tree-view
+                if (isParentGrid === true && isParent === true) {
+                    const { innerCells } = parentColumn;
+                    if (innerCells && innerCells.length > 0) {
+                        parentFilteredColumnVal = {};
+                        parentRowFilteredValues = [];
+                        parentRowFilteredHeader = [];
+
+                        innerCells.forEach((parentCell: any) => {
+                            const { title, Header, accessor } = parentCell;
+                            const parentRowValue = row[accessor];
+                            let parentColumnValue = "";
+                            let parentColumnHeader = "";
+                            if (accessor) {
+                                // If inner cells are not present and column value is not an object or array
+                                parentColumnValue = parentRowValue;
+                                parentColumnHeader = title || Header;
+                                // Create object required for Excel and CSV export
+                                parentFilteredColumnVal[
+                                    parentColumnHeader
+                                ] = parentColumnValue;
+                                // Create value array required for PDF export
+                                parentRowFilteredValues.push(parentColumnValue);
+                                // Create header array required for PDF export (only 1 time required)
+                                if (!isParentHeaderCreated) {
+                                    parentRowFilteredHeader.push(
+                                        parentColumnHeader
+                                    );
+                                }
+                            }
+                        });
+                        // Push all objects created into final varialbe, which corresponds to each row
+                        filteredRow.push(parentFilteredColumnVal);
+                        filteredRowValues.push(parentRowFilteredValues);
+                        if (!isParentHeaderCreated) {
+                            filteredRowHeader.push(parentRowFilteredHeader);
+                        }
+                        isParentHeaderCreated = true;
+                    }
+                } else {
+                    const isParentRowPresent =
+                        parentRowFilteredValues.length > 0;
+
                     const filteredColumnVal = {};
-                    const rowFilteredValues = [];
                     const rowFilteredHeader = [];
+                    let rowFilteredValues = isParentRowPresent
+                        ? [...parentRowFilteredValues]
+                        : [];
+                    if (isParentRowPresent) {
+                        rowFilteredValues = rowFilteredValues.map(
+                            (rowVal: any): any => {
+                                let updatedRowVal = rowVal;
+                                updatedRowVal = "";
+                                return updatedRowVal;
+                            }
+                        );
+                    }
 
                     // Loop through all main columns
                     filteredManagedColumns.forEach((columnName: any) => {
@@ -429,7 +491,18 @@ const ExportData = (props: Object): any => {
                     filteredRow.push(filteredColumnVal);
                     filteredRowValues.push(rowFilteredValues);
                     if (!isHeaderCreated) {
-                        filteredRowHeader.push(rowFilteredHeader);
+                        if (
+                            isParentRowPresent &&
+                            filteredRowHeader.length > 0
+                        ) {
+                            const updatedHeaderArray = filteredRowHeader[0].concat(
+                                rowFilteredHeader
+                            );
+                            filteredRowHeader = [];
+                            filteredRowHeader.push(updatedHeaderArray);
+                        } else {
+                            filteredRowHeader.push(rowFilteredHeader);
+                        }
                     }
                     isHeaderCreated = true;
 

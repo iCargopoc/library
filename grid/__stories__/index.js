@@ -878,6 +878,20 @@ const GridComponent = (props) => {
 
     const originalParentColumn = {
         Header: "ParentColumn",
+        innerCells: [
+            {
+                Header: "Title Id",
+                accessor: "titleId"
+            },
+            {
+                Header: "Title",
+                accessor: "title"
+            },
+            {
+                Header: "Count",
+                accessor: "count"
+            }
+        ],
         displayCell: (rowData, isExpanded) => {
             const { title, count, lastModified, date, time } = rowData;
             return (
