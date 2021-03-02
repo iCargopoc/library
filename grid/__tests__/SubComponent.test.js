@@ -1704,6 +1704,56 @@ describe("render Index file ", () => {
         });
     });
 
+    it("test export overlay grid with sub component data and without sub component row expand", () => {
+        mockOffsetSize(600, 600);
+        const { container, getAllByTestId, getByTestId, getAllByText } = render(
+            <Grid
+                title={mockTitle}
+                gridWidth={mockGridWidth}
+                gridData={mockGridData}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                subComponentColumnns={subComponentColumns}
+                getRowInfo={mockGetRowInfo}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open export overlay
+        const exportDataIcon = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            exportDataIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        const exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        expect(exportDataOverlayCount).toBe(1);
+
+        // Select excel
+        const selectExcel = getByTestId("chk_excel_test");
+        expect(selectExcel.checked).toEqual(false);
+        fireEvent.click(selectExcel);
+        expect(selectExcel.checked).toEqual(true);
+
+        // Try to export data
+        const exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+    });
+
     it("test group sort overlay grid with sub component data and sub component row expand", () => {
         mockOffsetSize(600, 600);
         const { container, getAllByTestId, getByTestId } = render(
