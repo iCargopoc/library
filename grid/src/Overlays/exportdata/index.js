@@ -200,14 +200,18 @@ const ExportData = (props: Object): any => {
     };
 
     const downloadSheetFile = async (
-        filteredRowValue: Object,
+        rowFilteredValues: Object,
+        rowFilteredHeader: Object,
         extensionType: string
     ) => {
+        const updatedRowFilteredValues = [...rowFilteredValues];
+        const updatedRowFilteredHeader = [...rowFilteredHeader];
+        updatedRowFilteredValues.unshift(updatedRowFilteredHeader[0]);
         const isExcelFile = extensionType === "excel";
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = isExcelFile ? ".xlsx" : ".csv";
-        const ws = XLSX.utils.json_to_sheet(filteredRowValue);
+        const ws = XLSX.utils.aoa_to_sheet(updatedRowFilteredValues);
         const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
         const excelBuffer = XLSX.write(wb, {
             bookType: isExcelFile ? "xlsx" : "csv",
@@ -240,7 +244,6 @@ const ExportData = (props: Object): any => {
     };
 
     const exportRowData = () => {
-        const filteredRow = [];
         const filteredRowValues = [];
         let filteredRowHeader = [];
 
@@ -264,11 +267,13 @@ const ExportData = (props: Object): any => {
             filteredManagedColumns.length > 0 &&
             downloadTypes.length > 0
         ) {
+            // Variables to check if header values are pushed atleast 1 time, for parent row, normal row and sub component row
             let isHeaderCreated = false;
             let isParentHeaderCreated = false;
             let isSubCompHeaderCreated = false;
 
-            let parentFilteredColumnVal = {};
+            // Variable to hold header and row values of parent row.
+            // This can be used in normal rows to check if this is a parent grid export
             let parentRowFilteredValues = [];
             let parentRowFilteredHeader = [];
 
@@ -276,12 +281,12 @@ const ExportData = (props: Object): any => {
             rows.forEach((rowDetails: Object) => {
                 const row = rowDetails.original;
 
+                // Tree view grid
                 const { isParent } = row;
-                // If Parent row in tree-view
                 if (isParentGrid === true && isParent === true) {
+                    // Loop through inner cells
                     const { innerCells } = parentColumn;
                     if (innerCells && innerCells.length > 0) {
-                        parentFilteredColumnVal = {};
                         parentRowFilteredValues = [];
                         parentRowFilteredHeader = [];
 
@@ -294,13 +299,9 @@ const ExportData = (props: Object): any => {
                                 // If inner cells are not present and column value is not an object or array
                                 parentColumnValue = parentRowValue;
                                 parentColumnHeader = title || Header;
-                                // Create object required for Excel and CSV export
-                                parentFilteredColumnVal[
-                                    parentColumnHeader
-                                ] = parentColumnValue;
-                                // Create value array required for PDF export
+                                // Create value array required for export
                                 parentRowFilteredValues.push(parentColumnValue);
-                                // Create header array required for PDF export (only 1 time required)
+                                // Create header array required for export (only 1 time required)
                                 if (!isParentHeaderCreated) {
                                     parentRowFilteredHeader.push(
                                         parentColumnHeader
@@ -309,7 +310,6 @@ const ExportData = (props: Object): any => {
                             }
                         });
                         // Push all objects created into final varialbe, which corresponds to each row
-                        filteredRow.push(parentFilteredColumnVal);
                         filteredRowValues.push(parentRowFilteredValues);
                         if (!isParentHeaderCreated) {
                             filteredRowHeader.push(parentRowFilteredHeader);
@@ -317,11 +317,14 @@ const ExportData = (props: Object): any => {
                         isParentHeaderCreated = true;
                     }
                 } else {
+                    // Check if parent rows are present or not
                     const isParentRowPresent =
                         parentRowFilteredValues.length > 0;
 
-                    const filteredColumnVal = {};
+                    // Create new variable for headers
                     const rowFilteredHeader = [];
+                    // Copy value array and update all existing values to ""
+                    // This is to create empty column value under parent column name
                     let rowFilteredValues = isParentRowPresent
                         ? [...parentRowFilteredValues]
                         : [];
@@ -376,18 +379,12 @@ const ExportData = (props: Object): any => {
                                                     columnValue = itemInnerCellAccessor
                                                         ? itemInnerCellAccessor.toString()
                                                         : "";
-                                                    columnHeader = `${
-                                                        title || Header
-                                                    } - ${innerCellHeader}_${itemIndex}`;
-                                                    // Create object required for Excel and CSV export
-                                                    filteredColumnVal[
-                                                        columnHeader
-                                                    ] = columnValue;
-                                                    // Create value array required for PDF export
+                                                    columnHeader = `${innerCellHeader}_${itemIndex}`;
+                                                    // Create value array required for export
                                                     rowFilteredValues.push(
                                                         columnValue
                                                     );
-                                                    // Create header array required for PDF export (only 1 time required)
+                                                    // Create header array required for export (only 1 time required)
                                                     if (!isHeaderCreated) {
                                                         rowFilteredHeader.push(
                                                             columnHeader
@@ -398,16 +395,10 @@ const ExportData = (props: Object): any => {
                                         } else if (innerCellAccessorValue) {
                                             // If column value is an object
                                             columnValue = innerCellAccessorValue;
-                                            columnHeader = `${
-                                                title || Header
-                                            } - ${innerCellHeader}`;
-                                            // Create object required for Excel and CSV export
-                                            filteredColumnVal[
-                                                columnHeader
-                                            ] = columnValue;
-                                            // Create value array required for PDF export
+                                            columnHeader = innerCellHeader;
+                                            // Create value array required for export
                                             rowFilteredValues.push(columnValue);
-                                            // Create header array required for PDF export (only 1 time required)
+                                            // Create header array (only 1 time required)
                                             if (!isHeaderCreated) {
                                                 rowFilteredHeader.push(
                                                     columnHeader
@@ -420,11 +411,9 @@ const ExportData = (props: Object): any => {
                                 // If inner cells are not present and column value is not an object or array
                                 columnValue = accessorRowValue;
                                 columnHeader = title || Header;
-                                // Create object required for Excel and CSV export
-                                filteredColumnVal[columnHeader] = columnValue;
-                                // Create value array required for PDF export
+                                // Create value array required for export
                                 rowFilteredValues.push(columnValue);
-                                // Create header array required for PDF export (only 1 time required)
+                                // Create header array required for export (only 1 time required)
                                 if (!isHeaderCreated) {
                                     rowFilteredHeader.push(columnHeader);
                                 }
@@ -473,13 +462,9 @@ const ExportData = (props: Object): any => {
                                         ).join("||");
                                     }
                                 }
-                                // Create object required for Excel and CSV export
-                                filteredColumnVal[
-                                    expandedCellHeader
-                                ] = formattedValue;
-                                // Create value array required for PDF export
+                                // Create value array required for export
                                 rowFilteredValues.push(formattedValue);
-                                // Create header array required for PDF export (only 1 time required)
+                                // Create header array required for export (only 1 time required)
                                 if (!isHeaderCreated) {
                                     rowFilteredHeader.push(expandedCellHeader);
                                 }
@@ -488,8 +473,8 @@ const ExportData = (props: Object): any => {
                     }
 
                     // Push all objects created into final varialbe, which corresponds to each row
-                    filteredRow.push(filteredColumnVal);
                     filteredRowValues.push(rowFilteredValues);
+                    // If parent rows are present, concat existing header array with newly created array
                     if (!isHeaderCreated) {
                         if (
                             isParentRowPresent &&
@@ -516,18 +501,12 @@ const ExportData = (props: Object): any => {
                             filteredManagedSubComponentColumns &&
                             filteredManagedSubComponentColumns.length > 0
                         ) {
-                            // Copy value object (excel and csv) and value array (pdf) and update all existing values to ""
-                            // This is to create empty column value under main column name, in case of sub component rows
-                            const nullFilteredColumnVal = {
-                                ...filteredColumnVal
-                            };
-                            let nullRowFilteredValues = [...rowFilteredValues];
+                            // Create new variable for headers
                             const subCompRowFilteredHeader = [];
-                            Object.keys(nullFilteredColumnVal).forEach(
-                                (val: any) => {
-                                    nullFilteredColumnVal[val] = "";
-                                }
-                            );
+
+                            // Copy value array and update all existing values to ""
+                            // This is to create empty column value under main column name, in case of sub component rows
+                            let nullRowFilteredValues = [...rowFilteredValues];
                             nullRowFilteredValues = nullRowFilteredValues.map(
                                 (rowVal: any): any => {
                                     let updatedRowVal = rowVal;
@@ -538,9 +517,6 @@ const ExportData = (props: Object): any => {
 
                             // Loop through sub component data
                             subComponentData.forEach((subCompRow: Object) => {
-                                const subCompFilteredColumnVal = {
-                                    ...nullFilteredColumnVal
-                                };
                                 const subCompRowFilteredValues = [
                                     ...nullRowFilteredValues
                                 ];
@@ -603,13 +579,7 @@ const ExportData = (props: Object): any => {
                                                                         subCompColumnValue = itemInnerCellAccessor
                                                                             ? itemInnerCellAccessor.toString()
                                                                             : "";
-                                                                        subCompColumnHeader = `SubRow - ${
-                                                                            subCompTitle ||
-                                                                            subCompHeader
-                                                                        } - ${innerCellHeader}_${itemIndex}`;
-                                                                        subCompFilteredColumnVal[
-                                                                            subCompColumnHeader
-                                                                        ] = subCompColumnValue;
+                                                                        subCompColumnHeader = `${innerCellHeader}_${itemIndex}`;
                                                                         subCompRowFilteredValues.push(
                                                                             subCompColumnValue
                                                                         );
@@ -626,13 +596,7 @@ const ExportData = (props: Object): any => {
                                                                 innerCellAccessorValue
                                                             ) {
                                                                 subCompColumnValue = innerCellAccessorValue;
-                                                                subCompColumnHeader = `SubRow - ${
-                                                                    subCompTitle ||
-                                                                    subCompHeader
-                                                                } - ${innerCellHeader}`;
-                                                                subCompFilteredColumnVal[
-                                                                    subCompColumnHeader
-                                                                ] = subCompColumnValue;
+                                                                subCompColumnHeader = innerCellHeader;
                                                                 subCompRowFilteredValues.push(
                                                                     subCompColumnValue
                                                                 );
@@ -649,13 +613,9 @@ const ExportData = (props: Object): any => {
                                                 );
                                             } else {
                                                 subCompColumnValue = subCompAccessorRowValue;
-                                                subCompColumnHeader = `SubRow - ${
+                                                subCompColumnHeader =
                                                     subCompTitle ||
-                                                    subCompHeader
-                                                }`;
-                                                subCompFilteredColumnVal[
-                                                    subCompColumnHeader
-                                                ] = subCompColumnValue;
+                                                    subCompHeader;
                                                 subCompRowFilteredValues.push(
                                                     subCompColumnValue
                                                 );
@@ -683,7 +643,8 @@ const ExportData = (props: Object): any => {
                                             if (expandedCell.display === true) {
                                                 const expandedCellAccessor =
                                                     expandedCell.accessor;
-                                                const expandedCellHeader = `SubRow - ${expandedCell.Header}`;
+                                                const expandedCellHeader =
+                                                    expandedCell.Header;
                                                 const expandedCellValue =
                                                     subCompRow[
                                                         expandedCellAccessor
@@ -722,9 +683,6 @@ const ExportData = (props: Object): any => {
                                                         ).join("||");
                                                     }
                                                 }
-                                                subCompFilteredColumnVal[
-                                                    expandedCellHeader
-                                                ] = formattedValue;
                                                 subCompRowFilteredValues.push(
                                                     formattedValue
                                                 );
@@ -737,9 +695,6 @@ const ExportData = (props: Object): any => {
                                         }
                                     );
                                 }
-                                filteredRow.push({
-                                    ...subCompFilteredColumnVal
-                                });
                                 filteredRowValues.push(
                                     subCompRowFilteredValues
                                 );
@@ -761,9 +716,17 @@ const ExportData = (props: Object): any => {
                 if (item === "pdf") {
                     downloadPDF(filteredRowValues, filteredRowHeader);
                 } else if (item === "excel") {
-                    downloadSheetFile(filteredRow, item);
+                    downloadSheetFile(
+                        filteredRowValues,
+                        filteredRowHeader,
+                        item
+                    );
                 } else {
-                    downloadSheetFile(filteredRow, item);
+                    downloadSheetFile(
+                        filteredRowValues,
+                        filteredRowHeader,
+                        item
+                    );
                 }
             });
         } else if (!(rows && rows.length > 0)) {
