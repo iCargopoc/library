@@ -8,6 +8,13 @@ import regeneratorRuntime from "regenerator-runtime";
 import Grid from "../src/index";
 
 describe("render Index file ", () => {
+    jest.setTimeout(30000);
+    HTMLCanvasElement.prototype.getContext = () => {
+        // return whatever getContext has to return
+        return [];
+    };
+    global.URL.createObjectURL = jest.fn();
+
     function mockOffsetSize(width, height) {
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,
@@ -84,6 +91,24 @@ describe("render Index file ", () => {
             subComponentData: [
                 {
                     hawbId: 6001,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: "Q7",
+                            subCompValue: "4/9"
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -100,7 +125,7 @@ describe("render Index file ", () => {
                         goodsType: "Dangerous Goods"
                     },
                     scr: {
-                        status: "Not ready to send",
+                        status: null,
                         ack: "Call",
                         num: 639
                     },
@@ -109,6 +134,24 @@ describe("render Index file ", () => {
                 },
                 {
                     hawbId: 6002,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: "Q7",
+                            subCompValue: "4/9"
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -133,7 +176,25 @@ describe("render Index file ", () => {
                         "Laboris enim non do esse aliquip adipisicing eiusmod officia quis commodo sit. Voluptate ullamco occaecat incididunt amet ad dolor nisi ad consectetur. Laboris nulla esse do occaecat tempor cupidatat labore."
                 },
                 {
-                    hawbId: 6003,
+                    hawbId: null,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: null,
+                            subCompValue: undefined
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -221,6 +282,24 @@ describe("render Index file ", () => {
             subComponentData: [
                 {
                     hawbId: i * 100 + 1,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: "Q7",
+                            subCompValue: "4/9"
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -246,6 +325,24 @@ describe("render Index file ", () => {
                 },
                 {
                     hawbId: i * 100 + 2,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: "Q7",
+                            subCompValue: "4/9"
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -271,6 +368,24 @@ describe("render Index file ", () => {
                 },
                 {
                     hawbId: i * 100 + 3,
+                    subCompUldPositions: [
+                        {
+                            subCompPosition: "L1",
+                            subCompValue: "7/9"
+                        },
+                        {
+                            subCompPosition: "Q1",
+                            subCompValue: "9/3"
+                        },
+                        {
+                            subCompPosition: "L6",
+                            subCompValue: "8/4"
+                        },
+                        {
+                            subCompPosition: "Q7",
+                            subCompValue: "4/9"
+                        }
+                    ],
                     hawb: {
                         hawbNo: "H1886",
                         from: "CBB",
@@ -473,6 +588,52 @@ describe("render Index file ", () => {
             }
         },
         {
+            Header: "Sub Comp ULD Positions",
+            accessor: "subCompUldPositions",
+            width: 120,
+            innerCells: [
+                {
+                    Header: "Sub Comp Position",
+                    accessor: "subCompPosition"
+                },
+                {
+                    Header: "Sub Comp Value",
+                    accessor: "subCompValue"
+                }
+            ],
+            displayCell: (rowData, DisplayTag) => {
+                const { subCompUldPositions } = rowData;
+                return (
+                    <div className="uld-details">
+                        <ul>
+                            {subCompUldPositions.map((positions, index) => {
+                                return (
+                                    <li key={index}>
+                                        <DisplayTag
+                                            columnKey="subCompUldPositions"
+                                            cellKey="subCompPosition"
+                                        >
+                                            <span>
+                                                {positions.subCompPosition}
+                                            </span>
+                                        </DisplayTag>
+                                        <DisplayTag
+                                            columnKey="subCompUldPositions"
+                                            cellKey="subCompValue"
+                                        >
+                                            <strong>
+                                                {positions.subCompValue}
+                                            </strong>
+                                        </DisplayTag>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                );
+            }
+        },
+        {
             groupHeader: "Other Details",
             Header: "AWB Details",
             accessor: "hawb",
@@ -580,6 +741,7 @@ describe("render Index file ", () => {
                 {
                     Header: "NUM",
                     accessor: "num",
+                    display: false,
                     isSearchable: true,
                     isSortable: true
                 },
@@ -589,29 +751,65 @@ describe("render Index file ", () => {
                 }
             ],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
-                const { scr } = rowData;
-                const { ack, num, status } = scr;
+                if (rowData) {
+                    const { scr } = rowData;
+                    if (scr) {
+                        const { ack, num, status } = scr;
+                        return (
+                            <div className="details-wrap">
+                                <ul className="details-expanded-content">
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="scr"
+                                            cellKey="ack"
+                                        >
+                                            <span>{ack}</span>
+                                        </DisplayTag>
+                                    </li>
+                                    <li className="divider">|</li>
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="scr"
+                                            cellKey="num"
+                                        >
+                                            {num}
+                                        </DisplayTag>
+                                    </li>
+                                    <li className="divider">|</li>
+                                    <li>
+                                        <DisplayTag
+                                            columnKey="scr"
+                                            cellKey="status"
+                                        >
+                                            {status}
+                                        </DisplayTag>
+                                    </li>
+                                </ul>
+                            </div>
+                        );
+                    }
+                }
+            }
+        },
+        {
+            Header: "Empty",
+            accessor: null,
+            width: 250,
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 return (
-                    <div className="details-wrap">
-                        <ul className="details-expanded-content">
-                            <li>
-                                <DisplayTag columnKey="scr" cellKey="ack">
-                                    <span>{ack}</span>
-                                </DisplayTag>
-                            </li>
-                            <li className="divider">|</li>
-                            <li>
-                                <DisplayTag columnKey="scr" cellKey="num">
-                                    {num}
-                                </DisplayTag>
-                            </li>
-                            <li className="divider">|</li>
-                            <li>
-                                <DisplayTag columnKey="scr" cellKey="status">
-                                    {status}
-                                </DisplayTag>
-                            </li>
-                        </ul>
+                    <div className="travelId-details">This is null column</div>
+                );
+            }
+        },
+        {
+            Header: "Hidden",
+            accessor: "unknown",
+            display: false,
+            width: 250,
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
+                return (
+                    <div className="travelId-details">
+                        This is hidden column
                     </div>
                 );
             }
@@ -620,7 +818,22 @@ describe("render Index file ", () => {
 
     const mockSubComponentAdditionalColumn = {
         Header: "Additional Column",
-        innerCells: [{ Header: "Remarks", accessor: "remarks" }],
+        innerCells: [
+            { Header: "Remarks", accessor: "remarks" },
+            {
+                Header: "sub Comp Uld Positions Additional",
+                accessor: "subCompUldPositions"
+            },
+            {
+                Header: "sub Comp scr Additional",
+                accessor: "scr"
+            },
+            {
+                Header: "sub Comp hawb Additional",
+                accessor: "hawb",
+                display: false
+            }
+        ],
         displayCell: (rowData, DisplayTag, isDesktop) => {
             const { remarks } = rowData;
             return (
@@ -1248,7 +1461,7 @@ describe("render Index file ", () => {
 
         // Drag and Drop boxes
         const columnDnds = getAllByTestId("subcomponentcolumnItemDnd");
-        expect(columnDnds).toHaveLength(2);
+        expect(columnDnds).toHaveLength(4);
         const firstNode = columnDnds[0];
         const lastNode = columnDnds[1];
 
@@ -1304,6 +1517,8 @@ describe("render Index file ", () => {
             "selectAllSearchableSubComponentColumns"
         );
         expect(chkAllSubComponentColumn.length).toBeGreaterThan(0);
+        expect(chkAllSubComponentColumn[0].checked).toBeFalsy();
+        fireEvent.click(chkAllSubComponentColumn[0]);
         expect(chkAllSubComponentColumn[0].checked).toBeTruthy();
         fireEvent.click(chkAllSubComponentColumn[0]);
         expect(chkAllSubComponentColumn[0].checked).toBeFalsy();
@@ -1332,7 +1547,7 @@ describe("render Index file ", () => {
         let subComponentColumnsCheckboxes = getAllByTestId(
             "selectSingleSearchableSubComponentColumn"
         );
-        expect(subComponentColumnsCheckboxes.length).toBe(4);
+        expect(subComponentColumnsCheckboxes.length).toBe(7);
 
         // Filter columns
         const filterList = getByTestId("filterColumnsList");
@@ -1344,7 +1559,7 @@ describe("render Index file ", () => {
         subComponentColumnsCheckboxes = getAllByTestId(
             "selectSingleSearchableSubComponentColumn"
         );
-        expect(subComponentColumnsCheckboxes.length).toBe(2);
+        expect(subComponentColumnsCheckboxes.length).toBe(3);
 
         // Remove searched value
         fireEvent.change(filterList, { target: { value: "" } });
@@ -1354,7 +1569,7 @@ describe("render Index file ", () => {
         subComponentColumnsCheckboxes = getAllByTestId(
             "selectSingleSearchableSubComponentColumn"
         );
-        expect(subComponentColumnsCheckboxes.length).toBe(4);
+        expect(subComponentColumnsCheckboxes.length).toBe(7);
 
         // Close overlay
         const closeButton = getByTestId("cancel_columnsManage");
@@ -1412,7 +1627,7 @@ describe("render Index file ", () => {
             "selectSingleSearchableSubComponentColumn"
         );
         const childColumnCheckboxesLength = childColumnCheckboxes.length;
-        expect(childColumnCheckboxesLength).toBe(4);
+        expect(childColumnCheckboxesLength).toBe(7);
 
         // Un-check first column
         expect(childColumnCheckboxes[0].checked).toBeTruthy();
@@ -1443,15 +1658,17 @@ describe("render Index file ", () => {
         ).toBeTruthy();
 
         // Un-check all sub component columns
-        const allSubComponentColumns = getAllByTestId(
+        let allSubComponentColumns = getAllByTestId(
             "selectAllSearchableSubComponentColumns"
         );
+        expect(allSubComponentColumns[0].checked).toBeFalsy();
+        fireEvent.click(allSubComponentColumns[0]);
         expect(allSubComponentColumns[0].checked).toBeTruthy();
         fireEvent.click(allSubComponentColumns[0]);
         expect(allSubComponentColumns[0].checked).toBeFalsy();
 
         // Try to export data
-        const exportButton = getByTestId("export_button");
+        let exportButton = getByTestId("export_button");
         act(() => {
             exportButton.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
@@ -1463,6 +1680,78 @@ describe("render Index file ", () => {
             "Select at least one sub component column"
         );
         expect(errorMessage.length).toBe(1);
+
+        // Re-check all sub component columns
+        allSubComponentColumns = getAllByTestId(
+            "selectAllSearchableSubComponentColumns"
+        );
+        expect(allSubComponentColumns[0].checked).toBeFalsy();
+        fireEvent.click(allSubComponentColumns[0]);
+        expect(allSubComponentColumns[0].checked).toBeTruthy();
+
+        // Select excel
+        const selectExcel = getByTestId("chk_excel_test");
+        expect(selectExcel.checked).toEqual(false);
+        fireEvent.click(selectExcel);
+        expect(selectExcel.checked).toEqual(true);
+
+        // Try to export data
+        exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+    });
+
+    it("test export overlay grid with sub component data and without sub component row expand", () => {
+        mockOffsetSize(600, 600);
+        const { container, getAllByTestId, getByTestId, getAllByText } = render(
+            <Grid
+                title={mockTitle}
+                gridWidth={mockGridWidth}
+                gridData={mockGridData}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                subComponentColumnns={subComponentColumns}
+                getRowInfo={mockGetRowInfo}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open export overlay
+        const exportDataIcon = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            exportDataIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        const exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        expect(exportDataOverlayCount).toBe(1);
+
+        // Select excel
+        const selectExcel = getByTestId("chk_excel_test");
+        expect(selectExcel.checked).toEqual(false);
+        fireEvent.click(selectExcel);
+        expect(selectExcel.checked).toEqual(true);
+
+        // Try to export data
+        const exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
     });
 
     it("test group sort overlay grid with sub component data and sub component row expand", () => {

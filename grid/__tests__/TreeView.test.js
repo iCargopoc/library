@@ -6,6 +6,13 @@ import "@testing-library/jest-dom/extend-expect";
 import Grid from "../src/index";
 
 describe("render Index file ", () => {
+    jest.setTimeout(30000);
+    HTMLCanvasElement.prototype.getContext = () => {
+        // return whatever getContext has to return
+        return [];
+    };
+    global.URL.createObjectURL = jest.fn();
+
     function mockOffsetSize(width, height) {
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,
@@ -170,6 +177,41 @@ describe("render Index file ", () => {
 
     const parentColumn = {
         Header: "ParentColumn",
+        displayCell: (rowData) => {
+            const { title, count, lastModified, date, time } = rowData;
+            return (
+                <div className="parentRow">
+                    <h2 className="parentRowHead">
+                        {title} ({count})
+                    </h2>
+                    <div className="parentRowInfo">
+                        <span className="parentRowInfoType">
+                            Last Modified : {lastModified}
+                        </span>
+                        <span className="parentRowInfoType">{date}</span>
+                        <span className="parentRowInfoType">{time}</span>
+                    </div>
+                </div>
+            );
+        }
+    };
+
+    const parentColumnWithInnerCell = {
+        Header: "ParentColumn",
+        innerCells: [
+            {
+                Header: "Title Id",
+                accessor: "titleId"
+            },
+            {
+                Header: "Title",
+                accessor: "title"
+            },
+            {
+                Header: "Count",
+                accessor: null
+            }
+        ],
         displayCell: (rowData) => {
             const { title, count, lastModified, date, time } = rowData;
             return (
@@ -791,7 +833,7 @@ describe("render Index file ", () => {
                 loadMoreData={mockLoadMoreData}
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
-                parentColumn={parentColumn}
+                parentColumn={parentColumnWithInnerCell}
                 parentIdAttribute={parentIdAttribute}
                 parentRowExpandable={false}
                 rowActions={mockRowActions}
@@ -874,6 +916,51 @@ describe("render Index file ", () => {
             "[data-testid='groupsortoverlay']"
         );
         expect(sortOverlay.length).toBe(0);
+
+        // Open export overlay
+        const toggleExportDataOverlay = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            toggleExportDataOverlay.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        const exportOverlay = getByTestId("exportoverlay");
+        expect(exportOverlay).toBeInTheDocument();
+
+        // Select excel file type
+        const selectPdf = getByTestId("chk_pdf_test");
+        fireEvent.click(selectPdf);
+        expect(selectPdf.checked).toEqual(true);
+
+        // Click export data button
+        fireEvent.click(getByTestId("export_button"));
+    });
+
+    it("test grid with parent data and child data and parentRowExpandable as false - export without inner cells", () => {
+        mockOffsetSize(600, 600);
+        const { container, getByTestId } = render(
+            <Grid
+                title={mockTitle}
+                gridWidth={mockGridWidth}
+                gridData={parentDataWithAllChildData}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                parentColumn={parentColumn}
+                parentIdAttribute={parentIdAttribute}
+                parentRowExpandable={false}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                rowsToDeselect={mockRowsToDeselect}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
 
         // Open export overlay
         const toggleExportDataOverlay = getByTestId("toggleExportDataOverlay");
