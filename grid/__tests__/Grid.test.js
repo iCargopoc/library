@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React from "react";
-import { render, cleanup, fireEvent } from "@testing-library/react";
+import { render, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
 import Grid from "../src/index";
@@ -194,6 +194,25 @@ describe("render Index file ", () => {
             }
         }
     ];
+
+    const gridColumnsWithoutSearch = [...gridColumns].map((col) => {
+        const updatedCol = { ...col };
+        const { isSearchable, innerCells } = col;
+        if (isSearchable === true) {
+            updatedCol.isSearchable = false;
+        }
+        if (innerCells && innerCells.length > 0) {
+            const updatedInnerCells = [...innerCells].map((cell) => {
+                const updatedCell = { ...cell };
+                if (cell.isSearchable === true) {
+                    updatedCell.isSearchable = false;
+                }
+                return updatedCell;
+            });
+            updatedCol.innerCells = updatedInnerCells;
+        }
+        return updatedCol;
+    });
 
     const mockAdditionalColumn = {
         Header: "Remarks",
@@ -1003,5 +1022,36 @@ describe("render Index file ", () => {
             'input[type="checkbox"]:checked'
         );
         expect(selectedCheckboxes.length).toBe(1);
+    });
+
+    it("test global search without any searchable columns", async () => {
+        mockOffsetSize(1440, 900);
+        const { container, getByTestId, getAllByTestId } = render(
+            <Grid
+                gridData={data}
+                idAttribute="travelId"
+                columns={gridColumnsWithoutSearch}
+                columnToExpand={mockAdditionalColumn}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Get the count of total rows present
+        const oldRowsCount = getAllByTestId("gridrow").length;
+
+        // Global Filter Search with value "asd"
+        const input = getByTestId("globalFilter-textbox");
+        expect(input.value).toBe("");
+        fireEvent.change(input, { target: { value: "asd" } });
+        expect(input.value).toBe("asd");
+
+        // Check new rows count
+        const newRowsCount = getAllByTestId("gridrow").length;
+
+        // Rows count should not change
+        await waitFor(() => expect(newRowsCount).toBe(oldRowsCount));
     });
 });

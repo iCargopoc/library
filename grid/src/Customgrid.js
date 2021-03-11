@@ -355,7 +355,7 @@ const Customgrid = (props: {
     const createAccessorList = (
         columns: Array<Object>,
         isSubComponent: boolean
-    ): Array => {
+    ): any => {
         const accessorList = [];
         convertToIndividualColumns([...columns]).forEach(
             (column: Object): Object => {
@@ -405,6 +405,21 @@ const Customgrid = (props: {
         return accessorList;
     };
 
+    // Create a list of accessors to be searched from columns array
+    let accessorList = createAccessorList(managableColumns, false);
+
+    // Append accessors if sub component is present
+    if (
+        isSubComponentGrid &&
+        managableSubComponentColumnns &&
+        managableSubComponentColumnns.length > 0
+    ) {
+        accessorList = [
+            ...accessorList,
+            ...createAccessorList(managableSubComponentColumnns, true)
+        ];
+    }
+
     // Global Search Filter Logic - React table wants all parameters passed into useTable function to be memoized
     const globalFilterLogic = useCallback(
         (
@@ -412,31 +427,11 @@ const Customgrid = (props: {
             columnsToFilter: Object,
             filterValue: String
         ): Object => {
-            // Create a list of accessors to be searched from columns array
-            let accessorList = createAccessorList(managableColumns, false);
-
-            // Append accessors if sub component is present
-            if (
-                isSubComponentGrid &&
-                managableSubComponentColumnns &&
-                managableSubComponentColumnns.length > 0
-            ) {
-                accessorList = [
-                    ...accessorList,
-                    ...createAccessorList(managableSubComponentColumnns, true)
-                ];
-            }
-
-            // If accessors are present, do match-sorter and return results
-            if (accessorList.length > 0) {
-                return matchSorter(rowsToFilter, filterValue, {
-                    keys: accessorList,
-                    sorter: (rankedItems: Object): Object => rankedItems // To avoid automatic sorting based on match
-                });
-            }
-
-            // Else return all rows
-            return rowsToFilter;
+            // Do match-sorter and return results
+            return matchSorter(rowsToFilter, filterValue, {
+                keys: accessorList,
+                sorter: (rankedItems: Object): Object => rankedItems // To avoid automatic sorting based on match
+            });
         },
         [managableColumns, managableSubComponentColumnns, isSubComponentGrid]
     );
