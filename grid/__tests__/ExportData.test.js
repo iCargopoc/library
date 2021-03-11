@@ -535,7 +535,7 @@ describe("Export data functionality test", () => {
                 Header: "ULD Positions",
                 accessor: "uldPositions",
                 width: 120,
-                isChildArray: true,
+                isArray: true,
                 innerCells: [
                     {
                         Header: "Position",

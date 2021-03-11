@@ -651,7 +651,7 @@ const GridComponent = (props) => {
             Header: "ULD Positions",
             accessor: "uldPositions",
             width: 10,
-            isChildArray: true,
+            isArray: true,
             innerCells: [
                 {
                     Header: "Position",

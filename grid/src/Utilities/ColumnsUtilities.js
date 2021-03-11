@@ -28,7 +28,7 @@ export const extractColumns = (
                 accessor,
                 sortValue,
                 widthGrow,
-                isChildArray
+                isArray
             } = column;
             const isInnerCellsPresent = innerCells && innerCells.length > 0;
             const isColumnFilterEnabled =
@@ -90,7 +90,7 @@ export const extractColumns = (
 
                     // If column filter is not disabled, add it to the accessor list
                     if (isColumnFilterEnabled) {
-                        if (isChildArray === true) {
+                        if (isArray === true) {
                             accessorList.push({
                                 threshold: matchSorter.rankings.CONTAINS,
                                 key: `original.${accessor}.*.${cellElem.accessor}`

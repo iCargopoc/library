@@ -359,17 +359,12 @@ const Customgrid = (props: {
         const accessorList = [];
         convertToIndividualColumns([...columns]).forEach(
             (column: Object): Object => {
-                const {
-                    isSearchable,
-                    innerCells,
-                    isChildArray,
-                    accessor
-                } = column;
+                const { isSearchable, innerCells, isArray, accessor } = column;
                 if (isSearchable === true) {
                     if (innerCells && innerCells.length > 0) {
                         innerCells.forEach((innerCell: Object): Object => {
                             if (innerCell.isSearchable === true) {
-                                if (isChildArray) {
+                                if (isArray === true) {
                                     accessorList.push({
                                         threshold:
                                             matchSorter.rankings.CONTAINS,
