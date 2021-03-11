@@ -19,6 +19,7 @@ import {
 } from "react-table";
 import AutoSizer from "react-virtualized-auto-sizer";
 import InfiniteLoader from "react-window-infinite-loader";
+import { matchSorter } from "match-sorter";
 import RowSelector from "./Functions/RowSelector";
 import DefaultColumnFilter from "./Functions/DefaultColumnFilter";
 import GlobalFilter from "./Functions/GlobalFilter";
@@ -73,7 +74,6 @@ const Customgrid = (props: {
     pageInfo: Object,
     paginationType: string,
     totalRecordsCount: number,
-    searchColumn: Function,
     onRowSelect: Function,
     getRowInfo: Function,
     expandableColumn: boolean,
@@ -123,7 +123,6 @@ const Customgrid = (props: {
         pageInfo,
         paginationType,
         totalRecordsCount,
-        searchColumn,
         onRowSelect,
         getRowInfo,
         expandableColumn,
@@ -359,49 +358,55 @@ const Customgrid = (props: {
             columnsToFilter: Object,
             filterValue: String
         ): Object => {
-            // convert user searched text to lower case
-            const searchText = filterValue ? filterValue.toLowerCase() : "";
-            // Loop through all rows
-            return rowsToFilter.filter((row: Object): boolean => {
-                // Find original data value of each row
-                const { original } = row;
-                // Return value of the filter method
-                let returnValue = false;
-                // Loop through all column values for each row
-                convertToIndividualColumns([...managableColumns]).forEach(
-                    (column: Object): Object => {
-                        // Do search for each column
-                        returnValue =
-                            returnValue ||
-                            searchColumn(column, original, searchText);
-                    }
-                );
-                // If grid has sub component feature and row has sub component values check in that too
-                if (isSubComponentGrid) {
-                    const { subComponentData } = original;
-                    if (subComponentData && subComponentData.length > 0) {
-                        // Loop through all sub component rows
-                        subComponentData.forEach(
-                            (subComponentRow: Object): Object => {
-                                // Loop through all sub component column values for each row
-                                convertToIndividualColumns([
-                                    ...managableSubComponentColumnns
-                                ]).forEach((column: Object): Object => {
-                                    // Do search for each column
-                                    returnValue =
-                                        returnValue ||
-                                        searchColumn(
-                                            column,
-                                            subComponentRow,
-                                            searchText
-                                        );
-                                });
-                            }
-                        );
+            // Create a list of accessors to be searched, by looping through the columns array
+            const accessorList = [];
+            convertToIndividualColumns([...managableColumns]).forEach(
+                (column: Object): Object => {
+                    const {
+                        isSearchable,
+                        innerCells,
+                        isChildArray,
+                        accessor
+                    } = column;
+                    if (isSearchable === true) {
+                        if (innerCells && innerCells.length > 0) {
+                            innerCells.forEach((innerCell: Object): Object => {
+                                if (innerCell.isSearchable === true) {
+                                    if (isChildArray) {
+                                        accessorList.push({
+                                            threshold:
+                                                matchSorter.rankings.CONTAINS,
+                                            key: `original.${accessor}.*.${innerCell.accessor}`
+                                        });
+                                    } else {
+                                        accessorList.push({
+                                            threshold:
+                                                matchSorter.rankings.CONTAINS,
+                                            key: `original.${accessor}.${innerCell.accessor}`
+                                        });
+                                    }
+                                }
+                            });
+                        } else {
+                            accessorList.push({
+                                threshold: matchSorter.rankings.CONTAINS,
+                                key: `original.${accessor}`
+                            });
+                        }
                     }
                 }
-                return returnValue;
-            });
+            );
+
+            // If accessors are present, do match-sorter and return results
+            if (accessorList.length > 0) {
+                return matchSorter(rowsToFilter, filterValue, {
+                    keys: accessorList,
+                    sorter: (rankedItems: Object): Object => rankedItems // To avoid automatic sorting based on match
+                });
+            }
+
+            // Else return all rows
+            return rowsToFilter;
         },
         [managableColumns, managableSubComponentColumnns, isSubComponentGrid]
     );
