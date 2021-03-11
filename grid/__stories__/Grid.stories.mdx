@@ -181,6 +181,7 @@ const GridComponent = () => {
             },
             title: "Flight", // Use this if Header is a jsx element.
             accessor: "flight",
+            isArray: true, // Pass this as true, if the value of 'flight' node in the data is an array.
             width: 100,
             isSortable: true, // This column will appear in groupsort overlay only if 'isSortable' value is true.
             innerCells: [
