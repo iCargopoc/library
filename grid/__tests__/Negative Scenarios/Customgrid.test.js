@@ -296,12 +296,6 @@ describe("render Customgrid", () => {
     const mockRowActions = jest.fn();
     const mockUpdateRowInGrid = jest.fn();
     const mockDeleteRowFromGrid = jest.fn();
-    const mocksearchColumn = jest.fn((column, original, searchText) => {
-        if (column && searchText) {
-            return original;
-        }
-        return null;
-    });
     const mockSelectBulkData = jest.fn();
     const mockIsExpandContentAvailable = true;
     const mockDisplayExpandedContent = jest.fn((rowData, DisplayTag) => {
@@ -379,7 +373,6 @@ describe("render Customgrid", () => {
                 idAttribute="travelId"
                 updateRowInGrid={mockUpdateRowInGrid}
                 deleteRowFromGrid={mockDeleteRowFromGrid}
-                searchColumn={mocksearchColumn}
                 onRowSelect={mockSelectBulkData}
                 isExpandContentAvailable={mockIsExpandContentAvailable}
                 displayExpandedContent={mockDisplayExpandedContent}
@@ -407,7 +400,6 @@ describe("render Customgrid", () => {
                 idAttribute="travelId"
                 updateRowInGrid={mockUpdateRowInGrid}
                 deleteRowFromGrid={mockDeleteRowFromGrid}
-                searchColumn={mocksearchColumn}
                 onRowSelect={mockSelectBulkData}
                 isExpandContentAvailable={mockIsExpandContentAvailable}
                 displayExpandedContent={mockDisplayExpandedContent}

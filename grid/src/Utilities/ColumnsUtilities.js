@@ -1,12 +1,12 @@
 // @flow
 import React from "react";
+import { matchSorter } from "match-sorter";
 import CellDisplayAndEdit from "../Functions/CellDisplayAndEdit";
 import { AdditionalColumnContext } from "./TagsContext";
 import AdditionalColumnTag from "../Functions/AdditionalColumnTag";
 
 export const extractColumns = (
     columns: any,
-    searchColumn: Function,
     isDesktop: boolean,
     updateRowInGrid: Function,
     expandableColumn: any,
@@ -22,9 +22,21 @@ export const extractColumns = (
         const modifiedColumns = [];
         // Loop through the columns configuration and create required column structure
         filteredColumns.forEach((column: Object, index: number) => {
-            const { innerCells, accessor, sortValue, widthGrow } = column;
+            const {
+                disableFilters,
+                innerCells,
+                accessor,
+                sortValue,
+                widthGrow,
+                isChildArray
+            } = column;
             const isInnerCellsPresent = innerCells && innerCells.length > 0;
+            const isColumnFilterEnabled =
+                disableFilters !== true && isSubComponentColumns !== true;
             const elem = { ...column };
+
+            // Variables for filter section
+            const accessorList = [];
 
             // Add column Id
             elem.columnId =
@@ -74,6 +86,21 @@ export const extractColumns = (
                     // Update isInnerCellSortable to true if any of the inner cells are sortable
                     if (cellElem.isSortable === true) {
                         isInnerCellSortable = true;
+                    }
+
+                    // If column filter is not disabled, add it to the accessor list
+                    if (isColumnFilterEnabled) {
+                        if (isChildArray === true) {
+                            accessorList.push({
+                                threshold: matchSorter.rankings.CONTAINS,
+                                key: `original.${accessor}.*.${cellElem.accessor}`
+                            });
+                        } else {
+                            accessorList.push({
+                                threshold: matchSorter.rankings.CONTAINS,
+                                key: `original.${accessor}.${cellElem.accessor}`
+                            });
+                        }
                     }
 
                     return cellElem;
@@ -153,22 +180,22 @@ export const extractColumns = (
             }
 
             // Add logic to filter column if column filter is not disabled
-            if (!elem.disableFilters && isSubComponentColumns !== true) {
+            if (isColumnFilterEnabled) {
+                if (!isInnerCellsPresent) {
+                    accessorList.push({
+                        threshold: matchSorter.rankings.CONTAINS,
+                        key: `original.${accessor}`
+                    });
+                }
                 elem.filter = (
                     rows: any,
                     id: String,
                     filterValue: String
-                ): any => {
-                    const searchText = filterValue
-                        ? filterValue.toLowerCase()
-                        : "";
-                    return rows.filter((row: any): boolean => {
-                        // Find original data value of each row
-                        const { original } = row;
-                        // Do search for the column
-                        return searchColumn(column, original, searchText);
+                ): any =>
+                    matchSorter(rows, filterValue, {
+                        keys: accessorList,
+                        sorter: (rankedItems: Object): Object => rankedItems // To avoid automatic sorting based on match
                     });
-                };
             }
 
             modifiedColumns.push(elem);

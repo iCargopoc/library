@@ -123,85 +123,6 @@ const Grid = (props: Object): ?React$Element<*> => {
     // To check if total records count has been changed
     const [totalRecordsCount, setTotalRecordsCount] = useState(0);
 
-    // Logic for searching in each column
-    const searchColumn = (
-        column: Object,
-        original: Object,
-        searchText: string
-    ): boolean => {
-        // Check if row is parent row
-        const { isParent } = original;
-        // Return value
-        let isValuePresent = isParent === true;
-        // Find the accessor node and inner cells array of each column
-        const { accessor, innerCells } = column;
-        // Find accessor value of a column
-        const rowAccessorValue = original[accessor];
-        if (rowAccessorValue !== null && rowAccessorValue !== undefined) {
-            // Check if inner cells are available and save value to boolean var
-            const isInnerCellsPresent = innerCells && innerCells.length > 0;
-            // Check if the column needs to be skipped from search
-            if (column.isSearchable) {
-                // Enter if cell value is object or array
-                if (
-                    typeof rowAccessorValue === "object" &&
-                    isInnerCellsPresent
-                ) {
-                    // Enter if cell value is array
-                    if (rowAccessorValue.length > 0) {
-                        // Loop through cell array value and check if searched text is present
-                        rowAccessorValue.forEach((value: Object) => {
-                            innerCells.forEach((cell: Object) => {
-                                const dataAccessor = value[cell.accessor];
-                                const isSearchEnabled = cell.isSearchable;
-                                if (
-                                    dataAccessor &&
-                                    isSearchEnabled &&
-                                    dataAccessor
-                                        .toString()
-                                        .toLowerCase()
-                                        .includes(searchText)
-                                ) {
-                                    isValuePresent = true;
-                                }
-                            });
-                        });
-                    } else {
-                        // If cell value is an object, loop through inner cells and check if searched text is present
-                        innerCells.forEach((cell: Object) => {
-                            const dataAccessor =
-                                original[accessor][cell.accessor];
-                            const isSearchEnabled = cell.isSearchable;
-                            if (
-                                dataAccessor &&
-                                isSearchEnabled &&
-                                dataAccessor
-                                    .toString()
-                                    .toLowerCase()
-                                    .includes(searchText)
-                            ) {
-                                isValuePresent = true;
-                            }
-                        });
-                    }
-                } else {
-                    // If cell value is not an object or array, convert it to text and check if searched text is present
-                    const dataAccessor = original[accessor];
-                    if (
-                        dataAccessor &&
-                        dataAccessor
-                            .toString()
-                            .toLowerCase()
-                            .includes(searchText)
-                    ) {
-                        isValuePresent = true;
-                    }
-                }
-            }
-        }
-        return isValuePresent;
-    };
-
     // Gets triggered when one row item is updated
     const updateRowInGrid = (
         original: Object,
@@ -548,7 +469,6 @@ const Grid = (props: Object): ?React$Element<*> => {
         setGridColumns(
             extractColumns(
                 columns,
-                searchColumn,
                 isDesktop,
                 updateRowInGrid,
                 expandableColumn,
@@ -565,7 +485,6 @@ const Grid = (props: Object): ?React$Element<*> => {
         setGridSubComponentColumns(
             extractColumns(
                 subComponentColumnns,
-                searchColumn,
                 isDesktop,
                 updateRowInGrid,
                 expandableColumn,
@@ -631,7 +550,6 @@ const Grid = (props: Object): ?React$Element<*> => {
                     paginationType={paginationType}
                     totalRecordsCount={totalRecordsCount}
                     updateRowInGrid={updateRowInGrid}
-                    searchColumn={searchColumn}
                     onRowSelect={onRowSelect}
                     getRowInfo={getRowInfo}
                     expandableColumn={expandableColumn}
