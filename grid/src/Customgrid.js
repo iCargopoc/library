@@ -351,6 +351,60 @@ const Customgrid = (props: {
 
     const [expandedParentRows, setExpandedParentRows] = useState([]);
 
+    // Create accessor list from columns array based on the property isSearchable
+    const createAccessorList = (
+        columns: Array<Object>,
+        isSubComponent: boolean
+    ): Array => {
+        const accessorList = [];
+        convertToIndividualColumns([...columns]).forEach(
+            (column: Object): Object => {
+                const {
+                    isSearchable,
+                    innerCells,
+                    isChildArray,
+                    accessor
+                } = column;
+                if (isSearchable === true) {
+                    if (innerCells && innerCells.length > 0) {
+                        innerCells.forEach((innerCell: Object): Object => {
+                            if (innerCell.isSearchable === true) {
+                                if (isChildArray) {
+                                    accessorList.push({
+                                        threshold:
+                                            matchSorter.rankings.CONTAINS,
+                                        key:
+                                            isSubComponent === true
+                                                ? `original.subComponentData.*.${accessor}.*.${innerCell.accessor}`
+                                                : `original.${accessor}.*.${innerCell.accessor}`
+                                    });
+                                } else {
+                                    accessorList.push({
+                                        threshold:
+                                            matchSorter.rankings.CONTAINS,
+                                        key:
+                                            isSubComponent === true
+                                                ? `original.subComponentData.*.${accessor}.${innerCell.accessor}`
+                                                : `original.${accessor}.${innerCell.accessor}`
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        accessorList.push({
+                            threshold: matchSorter.rankings.CONTAINS,
+                            key:
+                                isSubComponent === true
+                                    ? `original.subComponentData.*.${accessor}`
+                                    : `original.${accessor}`
+                        });
+                    }
+                }
+            }
+        );
+        return accessorList;
+    };
+
     // Global Search Filter Logic - React table wants all parameters passed into useTable function to be memoized
     const globalFilterLogic = useCallback(
         (
@@ -358,44 +412,20 @@ const Customgrid = (props: {
             columnsToFilter: Object,
             filterValue: String
         ): Object => {
-            // Create a list of accessors to be searched, by looping through the columns array
-            const accessorList = [];
-            convertToIndividualColumns([...managableColumns]).forEach(
-                (column: Object): Object => {
-                    const {
-                        isSearchable,
-                        innerCells,
-                        isChildArray,
-                        accessor
-                    } = column;
-                    if (isSearchable === true) {
-                        if (innerCells && innerCells.length > 0) {
-                            innerCells.forEach((innerCell: Object): Object => {
-                                if (innerCell.isSearchable === true) {
-                                    if (isChildArray) {
-                                        accessorList.push({
-                                            threshold:
-                                                matchSorter.rankings.CONTAINS,
-                                            key: `original.${accessor}.*.${innerCell.accessor}`
-                                        });
-                                    } else {
-                                        accessorList.push({
-                                            threshold:
-                                                matchSorter.rankings.CONTAINS,
-                                            key: `original.${accessor}.${innerCell.accessor}`
-                                        });
-                                    }
-                                }
-                            });
-                        } else {
-                            accessorList.push({
-                                threshold: matchSorter.rankings.CONTAINS,
-                                key: `original.${accessor}`
-                            });
-                        }
-                    }
-                }
-            );
+            // Create a list of accessors to be searched from columns array
+            let accessorList = createAccessorList(managableColumns, false);
+
+            // Append accessors if sub component is present
+            if (
+                isSubComponentGrid &&
+                managableSubComponentColumnns &&
+                managableSubComponentColumnns.length > 0
+            ) {
+                accessorList = [
+                    ...accessorList,
+                    ...createAccessorList(managableSubComponentColumnns, true)
+                ];
+            }
 
             // If accessors are present, do match-sorter and return results
             if (accessorList.length > 0) {
