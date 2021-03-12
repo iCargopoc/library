@@ -9,7 +9,7 @@ import {
     SortDelete
 } from "../../Utilities/SvgUtilities";
 
-const SortItem = ({
+const SortingItem = ({
     id,
     sortOption,
     columns,
@@ -246,4 +246,4 @@ const SortItem = ({
         </div>
     );
 };
-export default SortItem;
+export default SortingItem;

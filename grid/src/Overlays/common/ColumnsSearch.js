@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import update from "immutability-helper";
 import { convertToIndividualColumns } from "../../Utilities/GridUtilities";
 
-const ColumnSearch = ({
+const ColumnsSearch = ({
     columns,
     additionalColumn,
     managedColumns,
@@ -327,4 +327,4 @@ const ColumnSearch = ({
     );
 };
 
-export default ColumnSearch;
+export default ColumnsSearch;

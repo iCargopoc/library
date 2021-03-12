@@ -5,7 +5,7 @@ import update from "immutability-helper";
 import JsPdf from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
-import ColumnSearch from "../common/ColumnsSearch";
+import ColumnsSearch from "../common/ColumnsSearch";
 import {
     IconCsv,
     IconExcel,
@@ -772,7 +772,7 @@ const ExportData = (props: Object): any => {
                     <div className="ng-popover__header">
                         <span>Export Data</span>
                     </div>
-                    <ColumnSearch
+                    <ColumnsSearch
                         columns={columns}
                         additionalColumn={additionalColumn}
                         managedColumns={managedColumns}

@@ -3,7 +3,7 @@ import React from "react";
 import { useDrop } from "react-dnd";
 import update from "immutability-helper";
 import { ItemTypes } from "./ItemTypes";
-import SortItem from "./SortingItem";
+import SortingItem from "./SortingItem";
 
 const SortingList = (props: {
     updateSortingOptions: Function,
@@ -53,7 +53,7 @@ const SortingList = (props: {
                 {sortOptions.map(
                     (sortOption: Object, index: number): Object => {
                         return (
-                            <SortItem
+                            <SortingItem
                                 id={index}
                                 key={index}
                                 sortOption={sortOption}
