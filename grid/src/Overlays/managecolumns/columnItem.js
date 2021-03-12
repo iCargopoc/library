@@ -3,7 +3,7 @@ import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import { IconDragHorizontal } from "../../Utilities/SvgUtilities";
-import GroupedColumnItem from "./groupedColumnItem";
+import GroupedColumnItem from "./GroupedColumnItem";
 
 const ColumnItem = ({
     id,

@@ -226,51 +226,51 @@ const Grid = (props: Object): ?React$Element<*> => {
                                 childRowsOfParent &&
                                 childRowsOfParent.length > 0
                             ) {
-                                const sortedChildData = childRowsOfParent.sort(
-                                    (x: Object, y: Object): number => {
-                                        let compareResult = 0;
-                                        gridSortOptions.forEach(
-                                            (option: Object) => {
-                                                const {
-                                                    sortBy,
-                                                    sortOn,
-                                                    order
-                                                } = option;
-                                                const xSortBy = x[sortBy];
-                                                const ySortBy = y[sortBy];
-                                                let xSortOn = null;
-                                                let ySortOn = null;
-                                                if (
-                                                    xSortBy !== null &&
-                                                    xSortBy !== undefined
-                                                ) {
-                                                    xSortOn = xSortBy[sortOn];
-                                                }
-                                                if (
-                                                    ySortBy !== null &&
-                                                    ySortBy !== undefined
-                                                ) {
-                                                    ySortOn = ySortBy[sortOn];
-                                                }
-                                                const newResult =
-                                                    sortOn === "value"
-                                                        ? compareValues(
-                                                              order,
-                                                              xSortBy,
-                                                              ySortBy
-                                                          )
-                                                        : compareValues(
-                                                              order,
-                                                              xSortOn,
-                                                              ySortOn
-                                                          );
-                                                compareResult =
-                                                    compareResult || newResult;
+                                const sortedChildData = [
+                                    ...childRowsOfParent
+                                ].sort((x: Object, y: Object): number => {
+                                    let compareResult = 0;
+                                    gridSortOptions.forEach(
+                                        (option: Object) => {
+                                            const {
+                                                sortBy,
+                                                sortOn,
+                                                order
+                                            } = option;
+                                            const xSortBy = x[sortBy];
+                                            const ySortBy = y[sortBy];
+                                            let xSortOn = null;
+                                            let ySortOn = null;
+                                            if (
+                                                xSortBy !== null &&
+                                                xSortBy !== undefined
+                                            ) {
+                                                xSortOn = xSortBy[sortOn];
                                             }
-                                        );
-                                        return compareResult;
-                                    }
-                                );
+                                            if (
+                                                ySortBy !== null &&
+                                                ySortBy !== undefined
+                                            ) {
+                                                ySortOn = ySortBy[sortOn];
+                                            }
+                                            const newResult =
+                                                sortOn === "value"
+                                                    ? compareValues(
+                                                          order,
+                                                          xSortBy,
+                                                          ySortBy
+                                                      )
+                                                    : compareValues(
+                                                          order,
+                                                          xSortOn,
+                                                          ySortOn
+                                                      );
+                                            compareResult =
+                                                compareResult || newResult;
+                                        }
+                                    );
+                                    return compareResult;
+                                });
                                 sortedTreeData = [
                                     ...sortedTreeData,
                                     ...sortedChildData

@@ -5,7 +5,7 @@ import update from "immutability-helper";
 import JsPdf from "jspdf";
 import "jspdf-autotable";
 import * as XLSX from "xlsx";
-import ColumnSearch from "../common/columnsSearch";
+import ColumnSearch from "../common/ColumnsSearch";
 import {
     IconCsv,
     IconExcel,
@@ -331,9 +331,7 @@ const ExportData = (props: Object): any => {
                     if (isParentRowPresent) {
                         rowFilteredValues = rowFilteredValues.map(
                             (rowVal: any): any => {
-                                let updatedRowVal = rowVal;
-                                updatedRowVal = "";
-                                return updatedRowVal;
+                                return "";
                             }
                         );
                     }
@@ -509,9 +507,7 @@ const ExportData = (props: Object): any => {
                             let nullRowFilteredValues = [...rowFilteredValues];
                             nullRowFilteredValues = nullRowFilteredValues.map(
                                 (rowVal: any): any => {
-                                    let updatedRowVal = rowVal;
-                                    updatedRowVal = "";
-                                    return updatedRowVal;
+                                    return "";
                                 }
                             );
 
@@ -715,12 +711,6 @@ const ExportData = (props: Object): any => {
             downloadTypes.forEach((item: Object) => {
                 if (item === "pdf") {
                     downloadPDF(filteredRowValues, filteredRowHeader);
-                } else if (item === "excel") {
-                    downloadSheetFile(
-                        filteredRowValues,
-                        filteredRowHeader,
-                        item
-                    );
                 } else {
                     downloadSheetFile(
                         filteredRowValues,

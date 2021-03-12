@@ -353,11 +353,11 @@ const Customgrid = (props: {
 
     // Create accessor list from columns array based on the property isSearchable
     const createAccessorList = (
-        columns: Array<Object>,
+        columnsToCheck: Array<Object>,
         isSubComponent: boolean
     ): any => {
-        const accessorList = [];
-        convertToIndividualColumns([...columns]).forEach(
+        const newAccessorList = [];
+        convertToIndividualColumns([...columnsToCheck]).forEach(
             (column: Object): Object => {
                 const { isSearchable, innerCells, isArray, accessor } = column;
                 if (isSearchable === true) {
@@ -365,7 +365,7 @@ const Customgrid = (props: {
                         innerCells.forEach((innerCell: Object): Object => {
                             if (innerCell.isSearchable === true) {
                                 if (isArray === true) {
-                                    accessorList.push({
+                                    newAccessorList.push({
                                         threshold:
                                             matchSorter.rankings.CONTAINS,
                                         key:
@@ -374,7 +374,7 @@ const Customgrid = (props: {
                                                 : `original.${accessor}.*.${innerCell.accessor}`
                                     });
                                 } else {
-                                    accessorList.push({
+                                    newAccessorList.push({
                                         threshold:
                                             matchSorter.rankings.CONTAINS,
                                         key:
@@ -386,7 +386,7 @@ const Customgrid = (props: {
                             }
                         });
                     } else {
-                        accessorList.push({
+                        newAccessorList.push({
                             threshold: matchSorter.rankings.CONTAINS,
                             key:
                                 isSubComponent === true
@@ -397,7 +397,7 @@ const Customgrid = (props: {
                 }
             }
         );
-        return accessorList;
+        return newAccessorList;
     };
 
     // Create a list of accessors to be searched from columns array
@@ -1053,7 +1053,7 @@ const Customgrid = (props: {
                     const currentSelection = selectedRowKey.find(
                         (key: string): boolean => key !== rowIdToDeSelect
                     );
-                    if (rowIdToDeSelect && currentSelection) {
+                    if (currentSelection) {
                         toggleRowSelected(rowIdToDeSelect, false);
                     }
                 } else {
@@ -1201,9 +1201,7 @@ const Customgrid = (props: {
                 const nextRow = rows[index + 1];
                 if (nextRow) {
                     isLoadMoreChildNeeded =
-                        nextRow &&
-                        nextRow.original &&
-                        nextRow.original.isParent === true;
+                        nextRow.original && nextRow.original.isParent === true;
                 }
             }
         }

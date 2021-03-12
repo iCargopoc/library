@@ -6,8 +6,8 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import ClickAwayListener from "react-click-away-listener";
 import update from "immutability-helper";
-import ColumnSearch from "../common/columnsSearch";
-import ColumnsList from "./columnsList";
+import ColumnSearch from "../common/ColumnsSearch";
+import ColumnsList from "./ColumnsList";
 import { IconCancel } from "../../Utilities/SvgUtilities";
 
 const ColumnReordering = (props: any): any => {

@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 
-const groupedColumnItem = ({
+const GroupedColumnItem = ({
     id,
     Header,
     title,
@@ -73,4 +73,4 @@ const groupedColumnItem = ({
         </div>
     );
 };
-export default groupedColumnItem;
+export default GroupedColumnItem;

@@ -5,7 +5,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import MultiBackend, { TouchTransition } from "react-dnd-multi-backend";
 import ClickAwayListener from "react-click-away-listener";
-import SortingList from "./sortingList";
+import SortingList from "./SortingList";
 import { convertToIndividualColumns } from "../../Utilities/GridUtilities";
 import { IconCancel } from "../../Utilities/SvgUtilities";
 
