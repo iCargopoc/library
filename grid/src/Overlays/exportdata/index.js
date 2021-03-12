@@ -330,7 +330,7 @@ const ExportData = (props: Object): any => {
                         : [];
                     if (isParentRowPresent) {
                         rowFilteredValues = rowFilteredValues.map(
-                            (rowVal: any): any => {
+                            (): string => {
                                 return "";
                             }
                         );
@@ -506,7 +506,7 @@ const ExportData = (props: Object): any => {
                             // This is to create empty column value under main column name, in case of sub component rows
                             let nullRowFilteredValues = [...rowFilteredValues];
                             nullRowFilteredValues = nullRowFilteredValues.map(
-                                (rowVal: any): any => {
+                                (): string => {
                                     return "";
                                 }
                             );
