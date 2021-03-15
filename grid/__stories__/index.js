@@ -391,13 +391,56 @@ const GridComponent = (props) => {
                     Header: "Date",
                     accessor: "date",
                     isSearchable: true
+                },
+                {
+                    Header: "Flight Details",
+                    accessor: "flightdetails",
+                    isSearchable: true,
+                    innerCells: [
+                        {
+                            Header: "Connection Flights",
+                            accessor: "connectionflights",
+                            isSearchable: true,
+                            isArray: true,
+                            innerCells: [
+                                {
+                                    Header: "Airline Name",
+                                    accessor: "airlinename",
+                                    isSearchable: true
+                                },
+                                {
+                                    Header: "Airline Numbers",
+                                    accessor: "airlinenumbers",
+                                    isSearchable: true,
+                                    innerCells: [
+                                        {
+                                            Header: "Code",
+                                            accessor: "code",
+                                            isSearchable: true
+                                        },
+                                        {
+                                            Header: "Number",
+                                            accessor: "number",
+                                            isSearchable: true
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            Header: "Flight Class",
+                            accessor: "flightclass",
+                            isSearchable: true
+                        }
+                    ]
                 }
             ],
             sortValue: "flightno",
             isSearchable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 if (rowData.flight) {
-                    const { flightno, date } = rowData.flight;
+                    const { flightno, date, flightdetails } = rowData.flight;
+                    const { flightclass, connectionflights } = flightdetails;
                     return (
                         <div className="flight-details">
                             <DisplayTag columnKey="flight" cellKey="flightno">
@@ -406,6 +449,22 @@ const GridComponent = (props) => {
                             <DisplayTag columnKey="flight" cellKey="date">
                                 <span>{getValueOfDate(date, "cell")}</span>
                             </DisplayTag>
+                            <br />
+                            <span>{flightclass} Class</span>
+                            <br />
+                            {connectionflights.map((item, index) => {
+                                const { airlinename, airlinenumbers } = item;
+                                const { code, number } = airlinenumbers;
+                                return (
+                                    <>
+                                        <span>
+                                            {index + 1}) {airlinename}: {code}-
+                                            {number}
+                                        </span>
+                                        <br />
+                                    </>
+                                );
+                            })}
                         </div>
                     );
                 }
@@ -924,6 +983,7 @@ const GridComponent = (props) => {
             width: 250,
             widthGrow: 1,
             isSortable: true,
+            isSearchable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawbId } = rowData;
                 if (hawbId !== null && hawbId !== undefined) {
@@ -942,6 +1002,7 @@ const GridComponent = (props) => {
             onlyInDesktop: true,
             width: 800,
             isSortable: true,
+            isSearchable: true,
             innerCells: [
                 {
                     Header: "From",
@@ -972,6 +1033,30 @@ const GridComponent = (props) => {
                 {
                     Header: "Type",
                     accessor: "type"
+                },
+                {
+                    Header: "STD",
+                    accessor: "std",
+                    isSearchable: true,
+                    innerCells: [
+                        {
+                            Header: "Item1",
+                            accessor: "item1",
+                            isSearchable: true
+                        },
+                        {
+                            Header: "Item2",
+                            accessor: "item2"
+                        },
+                        {
+                            Header: "Item3",
+                            accessor: "item3"
+                        },
+                        {
+                            Header: "Item4",
+                            accessor: "item4"
+                        }
+                    ]
                 }
             ],
             disableSortBy: true,

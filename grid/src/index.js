@@ -137,12 +137,21 @@ const Grid = (props: Object): ?React$Element<*> => {
     // Local state value for holding columns configuration
     const [gridColumns, setGridColumns] = useState([]);
 
+    // Local state value for holding columns filter accessor configurations
+    const [gridColumnsAccessorList, setGridColumnsAccessorList] = useState([]);
+
     // Local state value for holding the additional column configuration
     const [additionalColumn, setAdditionalColumn] = useState(null);
 
     const isParentGrid = parentColumn !== null && parentColumn !== undefined;
 
     const [gridSubComponentColumns, setGridSubComponentColumns] = useState([]);
+
+    // Local state value for holding sub component columns filter accessor configurations
+    const [
+        gridSubComponentColumnsAccessorList,
+        setGridSubComponentColumnsAccessorList
+    ] = useState([]);
 
     const [
         gridSubComponentAdditionalColumn,
@@ -466,32 +475,40 @@ const Grid = (props: Object): ?React$Element<*> => {
     }, [gridData, pageInfo]);
 
     useEffect(() => {
-        setGridColumns(
-            extractColumns(
-                columns,
-                isDesktop,
-                updateRowInGrid,
-                expandableColumn,
-                isParentGrid,
-                false
-            )
+        const columnsConfigData = extractColumns(
+            columns,
+            isDesktop,
+            updateRowInGrid,
+            expandableColumn,
+            isParentGrid,
+            false
         );
+        const {
+            updatedColumnStructure,
+            columnsAccessorList
+        } = columnsConfigData;
+        setGridColumns(updatedColumnStructure);
+        setGridColumnsAccessorList(columnsAccessorList);
         setAdditionalColumn(
             extractAdditionalColumn(columnToExpand, isDesktop, false)
         );
     }, [columns, columnToExpand]);
 
     useEffect(() => {
-        setGridSubComponentColumns(
-            extractColumns(
-                subComponentColumnns,
-                isDesktop,
-                updateRowInGrid,
-                expandableColumn,
-                isParentGrid,
-                true
-            )
+        const columnsConfigData = extractColumns(
+            subComponentColumnns,
+            isDesktop,
+            updateRowInGrid,
+            expandableColumn,
+            isParentGrid,
+            true
         );
+        const {
+            updatedColumnStructure,
+            columnsAccessorList
+        } = columnsConfigData;
+        setGridSubComponentColumns(updatedColumnStructure);
+        setGridSubComponentColumnsAccessorList(columnsAccessorList);
         setGridSubComponentAdditionalColumn(
             extractAdditionalColumn(subComponentColumnToExpand, isDesktop, true)
         );
@@ -532,12 +549,16 @@ const Grid = (props: Object): ?React$Element<*> => {
                     title={title}
                     theme={theme}
                     managableColumns={gridColumns}
+                    columnsAccessorList={gridColumnsAccessorList}
                     expandedRowData={additionalColumn}
                     parentColumn={parentColumn}
                     parentIdAttribute={parentIdAttribute}
                     parentRowExpandable={parentRowExpandable}
                     parentRowsToExpand={parentRowsToExpand}
                     managableSubComponentColumnns={gridSubComponentColumns}
+                    subComponentColumnsAccessorList={
+                        gridSubComponentColumnsAccessorList
+                    }
                     managableSubComponentAdditionalColumn={
                         gridSubComponentAdditionalColumn
                     }

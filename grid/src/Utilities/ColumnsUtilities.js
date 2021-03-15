@@ -5,6 +5,40 @@ import CellDisplayAndEdit from "../Functions/CellDisplayAndEdit";
 import { AdditionalColumnContext } from "./TagsContext";
 import AdditionalColumnTag from "../Functions/AdditionalColumnTag";
 
+// Create Accessor List from Inner cells
+const createAccessorListFromInnerCells = (
+    currentAccessorList: any,
+    accessorPart: String,
+    innerCells: Array<Object>,
+    isArray: boolean,
+    isSubComponent: boolean
+): any => {
+    innerCells.forEach((innerCell: Object): Object => {
+        const { isSearchable, accessor } = innerCell;
+        if (isSearchable === true) {
+            const cellInnerCells = innerCell.innerCells;
+            const newAccessorPart =
+                isArray === true
+                    ? `${accessorPart}.*.${accessor}`
+                    : `${accessorPart}.${accessor}`;
+            if (cellInnerCells && cellInnerCells.length > 0) {
+                createAccessorListFromInnerCells(
+                    currentAccessorList,
+                    newAccessorPart,
+                    cellInnerCells,
+                    innerCell.isArray,
+                    isSubComponent
+                );
+            } else {
+                currentAccessorList.push({
+                    threshold: matchSorter.rankings.CONTAINS,
+                    key: newAccessorPart
+                });
+            }
+        }
+    });
+};
+
 export const extractColumns = (
     columns: any,
     isDesktop: boolean,
@@ -14,6 +48,9 @@ export const extractColumns = (
     isSubComponentColumns: boolean
 ): Array<Object> => {
     if (columns && columns.length > 0) {
+        // Create a list of accessors that has to be used for global filtering
+        const columnsAccessorList = [];
+
         // Remove iPad only columns from desktop and vice-versa
         const filteredColumns = columns.filter((column: Object): boolean => {
             return isDesktop ? !column.onlyInTablet : !column.onlyInDesktop;
@@ -28,14 +65,21 @@ export const extractColumns = (
                 accessor,
                 sortValue,
                 widthGrow,
-                isArray
+                isArray,
+                isSearchable
             } = column;
             const isInnerCellsPresent = innerCells && innerCells.length > 0;
             const isColumnFilterEnabled =
                 disableFilters !== true && isSubComponentColumns !== true;
             const elem = { ...column };
 
-            // Variables for filter section
+            // To be used to create accessors list of all columns which can be used for global filtering
+            const accessorPart =
+                isSubComponentColumns === true
+                    ? `original.subComponentData.*.${accessor}`
+                    : `original.${accessor}`;
+
+            // Variables for column filter section
             const accessorList = [];
 
             // Add column Id
@@ -65,6 +109,26 @@ export const extractColumns = (
                 // Set isSortable for column as false if that column is having innercells and none are sortable
                 let isInnerCellSortable = false;
 
+                // Update accessor list for global search with innerCells
+                createAccessorListFromInnerCells(
+                    columnsAccessorList,
+                    accessorPart,
+                    innerCells,
+                    isArray,
+                    isSubComponentColumns
+                );
+
+                // Update accessor list for column search with innerCells
+                if (isColumnFilterEnabled) {
+                    createAccessorListFromInnerCells(
+                        accessorList,
+                        accessorPart,
+                        innerCells,
+                        isArray,
+                        isSubComponentColumns
+                    );
+                }
+
                 innerCells.map((cell: Object, cellIndex: number): Object => {
                     const cellElem = cell;
 
@@ -86,21 +150,6 @@ export const extractColumns = (
                     // Update isInnerCellSortable to true if any of the inner cells are sortable
                     if (cellElem.isSortable === true) {
                         isInnerCellSortable = true;
-                    }
-
-                    // If column filter is not disabled, add it to the accessor list
-                    if (isColumnFilterEnabled) {
-                        if (isArray === true) {
-                            accessorList.push({
-                                threshold: matchSorter.rankings.CONTAINS,
-                                key: `original.${accessor}.*.${cellElem.accessor}`
-                            });
-                        } else {
-                            accessorList.push({
-                                threshold: matchSorter.rankings.CONTAINS,
-                                key: `original.${accessor}.${cellElem.accessor}`
-                            });
-                        }
                     }
 
                     return cellElem;
@@ -179,14 +228,24 @@ export const extractColumns = (
                 elem.disableSortBy = true;
             }
 
-            // Add logic to filter column if column filter is not disabled
-            if (isColumnFilterEnabled) {
-                if (!isInnerCellsPresent) {
-                    accessorList.push({
-                        threshold: matchSorter.rankings.CONTAINS,
-                        key: `original.${accessor}`
-                    });
+            // If innercells not present add filter logic with column accessor
+            if (!isInnerCellsPresent) {
+                // Filter object for match-sorter
+                const filterObj = {
+                    threshold: matchSorter.rankings.CONTAINS,
+                    key: accessorPart
+                };
+
+                // For column filter
+                if (isColumnFilterEnabled) {
+                    accessorList.push(filterObj);
                 }
+                // For global filter
+                if (isSearchable) {
+                    columnsAccessorList.push(filterObj);
+                }
+
+                // Set column filter logic
                 elem.filter = (
                     rows: any,
                     id: String,
@@ -226,9 +285,12 @@ export const extractColumns = (
                 }
             }
         });
-        return updatedColumnStructure;
+        return {
+            updatedColumnStructure,
+            columnsAccessorList
+        };
     }
-    return [];
+    return { updatedColumnStructure: [], columnsAccessorList: [] };
 };
 
 export const extractAdditionalColumn = (

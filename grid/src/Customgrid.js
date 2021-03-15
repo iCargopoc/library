@@ -60,11 +60,13 @@ const Customgrid = (props: {
     title: string,
     theme: string,
     managableColumns: Array<Object>,
+    columnsAccessorList: any,
     parentColumn: Object,
     parentIdAttribute: string,
     parentRowExpandable: boolean,
     parentRowsToExpand: Array<Object>,
     managableSubComponentColumnns: Array<Object>,
+    subComponentColumnsAccessorList: any,
     managableSubComponentAdditionalColumn: Object,
     loadChildData: Function,
     isParentGrid: boolean,
@@ -108,12 +110,14 @@ const Customgrid = (props: {
         title,
         theme,
         managableColumns,
+        columnsAccessorList,
         expandedRowData,
         parentColumn,
         parentIdAttribute,
         parentRowExpandable,
         parentRowsToExpand,
         managableSubComponentColumnns,
+        subComponentColumnsAccessorList,
         managableSubComponentAdditionalColumn,
         loadChildData,
         isParentGrid,
@@ -351,57 +355,8 @@ const Customgrid = (props: {
 
     const [expandedParentRows, setExpandedParentRows] = useState([]);
 
-    // Create accessor list from columns array based on the property isSearchable
-    const createAccessorList = (
-        columnsToCheck: Array<Object>,
-        isSubComponent: boolean
-    ): any => {
-        const newAccessorList = [];
-        convertToIndividualColumns([...columnsToCheck]).forEach(
-            (column: Object): Object => {
-                const { isSearchable, innerCells, isArray, accessor } = column;
-                if (isSearchable === true) {
-                    if (innerCells && innerCells.length > 0) {
-                        innerCells.forEach((innerCell: Object): Object => {
-                            if (innerCell.isSearchable === true) {
-                                if (isArray === true) {
-                                    newAccessorList.push({
-                                        threshold:
-                                            matchSorter.rankings.CONTAINS,
-                                        key:
-                                            isSubComponent === true
-                                                ? `original.subComponentData.*.${accessor}.*.${innerCell.accessor}`
-                                                : `original.${accessor}.*.${innerCell.accessor}`
-                                    });
-                                } else {
-                                    newAccessorList.push({
-                                        threshold:
-                                            matchSorter.rankings.CONTAINS,
-                                        key:
-                                            isSubComponent === true
-                                                ? `original.subComponentData.*.${accessor}.${innerCell.accessor}`
-                                                : `original.${accessor}.${innerCell.accessor}`
-                                    });
-                                }
-                            }
-                        });
-                    } else {
-                        newAccessorList.push({
-                            threshold: matchSorter.rankings.CONTAINS,
-                            key:
-                                isSubComponent === true
-                                    ? `original.subComponentData.*.${accessor}`
-                                    : `original.${accessor}`
-                        });
-                    }
-                }
-            }
-        );
-        return newAccessorList;
-    };
-
     // Create a list of accessors to be searched from columns array
-    let accessorList = createAccessorList(managableColumns, false);
+    let accessorList = [...columnsAccessorList];
 
     // Append accessors if sub component is present
     if (
@@ -409,10 +364,7 @@ const Customgrid = (props: {
         managableSubComponentColumnns &&
         managableSubComponentColumnns.length > 0
     ) {
-        accessorList = [
-            ...accessorList,
-            ...createAccessorList(managableSubComponentColumnns, true)
-        ];
+        accessorList = [...accessorList, ...subComponentColumnsAccessorList];
     }
 
     // Global Search Filter Logic - React table wants all parameters passed into useTable function to be memoized
