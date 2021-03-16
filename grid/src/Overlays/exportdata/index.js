@@ -243,30 +243,6 @@ const ExportData = (props: Object): any => {
         }
     };
 
-    const createColumnData = (
-        column: Object,
-        data: Object,
-        isHeaderCreated: boolean,
-        headerArray: any,
-        valuesArray: any
-    ) => {
-        // Find column header and column value
-        const { title, Header, accessor, display } = column;
-
-        // If column is not hidden
-        if (display !== false) {
-            const cellHeader = title || Header;
-            const cellValue = data[accessor];
-
-            // Push data to header array (only 1 time required)
-            if (!isHeaderCreated) {
-                headerArray.push(cellHeader);
-            }
-            // Push data to values array
-            valuesArray.push(cellValue);
-        }
-    };
-
     const createInnerCellObjectData = (
         currentInnerCells: Array<Object>,
         cellData: any,
@@ -274,17 +250,29 @@ const ExportData = (props: Object): any => {
         headerArray: any,
         valuesArray: any
     ) => {
-        // Loop through inner cells
-        currentInnerCells.forEach((cell: Object) => {
-            // Create export column for each cell
-            createColumnData(
-                cell,
-                cellData,
-                isHeaderCreated,
-                headerArray,
-                valuesArray
-            );
-        });
+        if (cellData !== null && cellData !== undefined) {
+            // Loop through inner cells
+            currentInnerCells.forEach((cell: Object) => {
+                const { title, Header, accessor, display } = cell;
+
+                // If column is not hidden and accessor is present
+                if (
+                    accessor !== null &&
+                    accessor !== undefined &&
+                    display !== false
+                ) {
+                    const cellHeader = title || Header;
+                    const cellValue = cellData[accessor];
+
+                    // Push data to header array (only 1 time required)
+                    if (!isHeaderCreated) {
+                        headerArray.push(cellHeader);
+                    }
+                    // Push data to values array
+                    valuesArray.push(cellValue);
+                }
+            });
+        }
     };
 
     const createInnerCellArrayData = (
@@ -300,22 +288,30 @@ const ExportData = (props: Object): any => {
 
         // Loop through array data
         cellData.forEach((data: any) => {
-            // Loop through inner cells
-            currentInnerCells.forEach((cell: Object, index: number) => {
-                const { title, Header, accessor, display } = cell;
-                if (display !== false) {
-                    if (!isCellHeaderCreated) {
-                        const cellHeader = title || Header;
-                        arrayDataHeader.push(cellHeader);
-                        arrayDataValue.push(data[accessor]);
-                    } else {
-                        const currentValue = [arrayDataValue[index]];
-                        currentValue.push(data[accessor]);
-                        arrayDataValue[index] = currentValue.join(" | ");
+            if (data !== null && data !== undefined) {
+                // Loop through inner cells
+                currentInnerCells.forEach((cell: Object, index: number) => {
+                    const { title, Header, accessor, display } = cell;
+                    if (
+                        accessor !== null &&
+                        accessor !== undefined &&
+                        display !== false
+                    ) {
+                        if (!isCellHeaderCreated) {
+                            const cellHeader = title || Header;
+                            arrayDataHeader.push(cellHeader);
+                            arrayDataValue.push(data[accessor]);
+                        } else {
+                            const currentValue = [arrayDataValue[index]];
+                            currentValue.push(data[accessor]);
+                            arrayDataValue[index] = currentValue.join(" | ");
+                        }
                     }
+                });
+                if (arrayDataHeader.length > 0) {
+                    isCellHeaderCreated = true;
                 }
-            });
-            isCellHeaderCreated = true;
+            }
         });
 
         // Push data to header array (only 1 time required)
@@ -337,42 +333,52 @@ const ExportData = (props: Object): any => {
         headerArray: any,
         valuesArray: any
     ) => {
-        // Loop through columns array
-        columnsList.forEach((column: any) => {
-            // If inner cells are present
-            const { innerCells, accessor } = column;
-            if (innerCells && innerCells.length > 0) {
-                const columnValue = data[accessor];
-                if (typeof columnValue === "object" && columnValue.length > 0) {
-                    // Format and push value into header and value arrays or grid, if column value is an array
-                    createInnerCellArrayData(
-                        innerCells,
-                        columnValue,
-                        isGridHeaderCreated,
-                        headerArray,
-                        valuesArray
-                    );
-                } else {
-                    // Format and push value into header and value arrays or grid, if column value is an object
-                    createInnerCellObjectData(
-                        innerCells,
-                        columnValue,
-                        isGridHeaderCreated,
-                        headerArray,
-                        valuesArray
-                    );
+        // Add entry only if data is present
+        if (data !== null && data !== undefined) {
+            // Loop through columns array
+            columnsList.forEach((column: any) => {
+                // If inner cells are present
+                const { title, Header, innerCells, accessor } = column;
+                // Add entry only if accessor is presnet
+                if (accessor !== null && accessor !== undefined) {
+                    if (innerCells && innerCells.length > 0) {
+                        const columnValue = data[accessor];
+                        if (
+                            typeof columnValue === "object" &&
+                            columnValue.length > 0
+                        ) {
+                            // Format and push value into header and value arrays or grid, if column value is an array
+                            createInnerCellArrayData(
+                                innerCells,
+                                columnValue,
+                                isGridHeaderCreated,
+                                headerArray,
+                                valuesArray
+                            );
+                        } else {
+                            // Format and push value into header and value arrays or grid, if column value is an object
+                            createInnerCellObjectData(
+                                innerCells,
+                                columnValue,
+                                isGridHeaderCreated,
+                                headerArray,
+                                valuesArray
+                            );
+                        }
+                    } else {
+                        const columnHeader = title || Header;
+                        const columnValue = data[accessor];
+
+                        // Push data to header array (only 1 time required)
+                        if (!isGridHeaderCreated) {
+                            headerArray.push(columnHeader);
+                        }
+                        // Push data to values array
+                        valuesArray.push(columnValue);
+                    }
                 }
-            } else {
-                // If not create values from column config
-                createColumnData(
-                    column,
-                    data,
-                    isGridHeaderCreated,
-                    headerArray,
-                    valuesArray
-                );
-            }
-        });
+            });
+        }
     };
 
     const prepareExportData = () => {
