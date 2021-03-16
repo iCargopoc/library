@@ -243,14 +243,6 @@ const ExportData = (props: Object): any => {
         }
     };
 
-    // const createDataFromCell = (list: any): string => {
-    //     const valueToFormat = [];
-    //     list.forEach((val: any) => {
-    //         valueToFormat.push(val.toString());
-    //     });
-    //     return valueToFormat.join(" || ");
-    // };
-
     const createColumnData = (
         column: Object,
         data: Object,
@@ -264,24 +256,7 @@ const ExportData = (props: Object): any => {
         // If column is not hidden
         if (display !== false) {
             const cellHeader = title || Header;
-            let cellValue = data[accessor];
-            if (!(cellValue !== null && cellValue !== undefined)) {
-                cellValue = "";
-            }
-
-            // // If cell value is flat (string/boolean/number)
-            // let formattedValue = cellValue.toString();
-
-            // // If cell value is array or object
-            // if (typeof cellValue === "object") {
-            //     if (cellValue.length > 0) {
-            //         formattedValue = createDataFromCell(cellValue);
-            //     } else {
-            //         formattedValue = createDataFromCell(
-            //             Object.values(cellValue)
-            //         );
-            //     }
-            // }
+            const cellValue = data[accessor];
 
             // Push data to header array (only 1 time required)
             if (!isHeaderCreated) {
@@ -366,13 +341,8 @@ const ExportData = (props: Object): any => {
         columnsList.forEach((column: any) => {
             // If inner cells are present
             const { innerCells, accessor } = column;
-            const columnValue = data[accessor];
-            if (
-                columnValue !== null &&
-                columnValue !== undefined &&
-                innerCells &&
-                innerCells.length > 0
-            ) {
+            if (innerCells && innerCells.length > 0) {
+                const columnValue = data[accessor];
                 if (typeof columnValue === "object" && columnValue.length > 0) {
                     // Format and push value into header and value arrays or grid, if column value is an array
                     createInnerCellArrayData(
