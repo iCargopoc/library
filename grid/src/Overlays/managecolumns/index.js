@@ -227,7 +227,7 @@ const ColumnReordering = (props: any): any => {
     // Updates the inner cell display value accordingly
     const changeInnerCellSelection = (
         innerCells: Object,
-        cellid: String,
+        cellid: string,
         flag: Boolean
     ): any => {
         const indexOfCell = innerCells.findIndex((cell: Object): any => {

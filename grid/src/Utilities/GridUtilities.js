@@ -148,7 +148,7 @@ export const findSelectedRowIdFromIdAttribute = (
     selectedRows: any,
     idAttribute: any,
     userSelectedRowIdentifiers: any[]
-): ?String => {
+): ?string => {
     if (
         selectedRows &&
         selectedRows.length > 0 &&
@@ -164,7 +164,7 @@ export const findSelectedRowIdFromIdAttribute = (
             return selectedRow.id;
         }
     }
-    return null;
+    return "";
 };
 
 export const findDeSelectedRows = (

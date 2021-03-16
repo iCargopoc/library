@@ -51,7 +51,7 @@ const GroupedColumnItem = ({
                                               isadditionalcolumn
                                           }
                                           checked={cell.display}
-                                          onChange={(event: String): Object =>
+                                          onChange={(event: Object): Object =>
                                               onInnerCellChange(
                                                   event,
                                                   isSubComponentColumn

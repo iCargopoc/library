@@ -71,7 +71,7 @@ const SortingItem = ({
         return [];
     };
 
-    const checkIfColumnIsSubComponent = (columnAccessor: String): boolean => {
+    const checkIfColumnIsSubComponent = (columnAccessor: string): boolean => {
         const origCol = columns.find((column: Object): boolean => {
             return column.accessor === columnAccessor;
         });

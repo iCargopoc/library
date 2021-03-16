@@ -248,8 +248,8 @@ export const extractColumns = (
                 // Set column filter logic
                 elem.filter = (
                     rows: any,
-                    id: String,
-                    filterValue: String
+                    id: string,
+                    filterValue: string
                 ): any =>
                     matchSorter(rows, filterValue, {
                         keys: accessorList,

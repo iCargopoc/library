@@ -371,7 +371,7 @@ const Customgrid = (props: {
         (
             rowsToFilter: Array<Object>,
             columnsToFilter: Object,
-            filterValue: String
+            filterValue: string
         ): Object => {
             // Do match-sorter and return results
             return matchSorter(rowsToFilter, filterValue, {
@@ -506,7 +506,7 @@ const Customgrid = (props: {
                                             ];
                                             if (isSubComponentsExpanded) {
                                                 currentRowsWithExpandedSubComponents = currentRowsWithExpandedSubComponents.filter(
-                                                    (rowId: String): Object =>
+                                                    (rowId: string): Object =>
                                                         rowId !== rowIdAttr
                                                 );
                                             } else {
@@ -696,7 +696,7 @@ const Customgrid = (props: {
     // Also identify if checkbox is checked or unchecked and if unchecked, return runchecked row details too to the callback function.
     // This is used in useeffects for row selection and row deselection
     const updateSelectedRows = (
-        rowsInGrid: String,
+        rowsInGrid: string,
         selectedRowIdsInGrid: Array<Object>
     ) => {
         if (idAttribute) {
@@ -910,7 +910,7 @@ const Customgrid = (props: {
             }
             const updatedSelectedRowIds = [];
             if (rowsToBeSelected && rowsToBeSelected.length > 0) {
-                rowsToBeSelected.forEach((rowId: String): Object => {
+                rowsToBeSelected.forEach((rowId: string): Object => {
                     const rowToSelect = preFilteredRows.find(
                         (row: Object): Object => {
                             const { original } = row;
@@ -925,7 +925,7 @@ const Customgrid = (props: {
                 });
             }
             if (rowsToBeDeselected && rowsToBeDeselected.length > 0) {
-                rowsToBeDeselected.forEach((rowId: String): Object => {
+                rowsToBeDeselected.forEach((rowId: string): Object => {
                     const rowToDeselect = preFilteredRows.find(
                         (row: Object): Object => {
                             const { original } = row;
@@ -996,7 +996,7 @@ const Customgrid = (props: {
                 // If selectedRowIds length is 2, means user has selected a row when there is already a row selection made
                 const selectedRowKey = Object.keys(selectedRowIds);
                 if (
-                    rowIdToDeSelect &&
+                    rowIdToDeSelect !== "" &&
                     selectedRowKey &&
                     selectedRowKey.length > 1
                 ) {

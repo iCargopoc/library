@@ -11,7 +11,7 @@ import Customgrid from "./Customgrid";
 // lazy styles inclusion via styleloader
 import __cmpStyles from "./Styles/main.scss";
 
-const processedData = (gridData: [Object], parentIdAttribute: String): ?[] => {
+const processedData = (gridData: [Object], parentIdAttribute: string): ?[] => {
     if (gridData && gridData.length > 0) {
         const processedGridData = [];
         gridData.forEach((gridDataItem: Object) => {

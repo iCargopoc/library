@@ -95,9 +95,9 @@ const GroupSort = (props: {
 
         const updateSingleSortingOption = (
             sortIndex: Number,
-            sortByValue: String,
-            sortOnValue: String,
-            sortOrder: String,
+            sortByValue: string,
+            sortOnValue: string,
+            sortOrder: string,
             isSubComponentColumn: boolean
         ) => {
             const newOptionsList = sortOptions.slice(0);

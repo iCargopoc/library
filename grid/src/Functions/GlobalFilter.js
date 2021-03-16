@@ -9,7 +9,7 @@ const GlobalFilter = ({
 }: Object): React$Element<*> => {
     const [value, setValue] = useState(globalFilter);
 
-    const onChange = useAsyncDebounce((changedValue: String) => {
+    const onChange = useAsyncDebounce((changedValue: string) => {
         setGlobalFilter(changedValue || undefined);
     }, 200);
 

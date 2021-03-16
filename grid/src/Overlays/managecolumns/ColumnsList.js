@@ -18,7 +18,7 @@ const ColumnsList = (props: {
         isSubComponentColumn
     } = props;
 
-    const findColumn = (columnId: String): Object => {
+    const findColumn = (columnId: string): Object => {
         const column = managedColumns.filter(
             (c: Object): boolean => `${c.columnId}` === columnId
         )[0];
@@ -28,7 +28,7 @@ const ColumnsList = (props: {
         };
     };
 
-    const moveColumn = (columnId: String, atIndex: Number) => {
+    const moveColumn = (columnId: string, atIndex: Number) => {
         const { column, index } = findColumn(columnId);
         if (index >= 0) {
             onColumnReorder(

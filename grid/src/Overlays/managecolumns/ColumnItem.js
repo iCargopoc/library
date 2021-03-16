@@ -128,7 +128,7 @@ const ColumnItem = ({
                                                       }
                                                       checked={display}
                                                       onChange={(
-                                                          event: String
+                                                          event: Object
                                                       ): Object =>
                                                           onInnerCellChange(
                                                               event,

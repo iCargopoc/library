@@ -30,7 +30,7 @@ export const findSelectedColumn = (
     });
     return selectedColumn;
 };
-export const checkInnerCells = (column: Object, cellKey: String): boolean => {
+export const checkInnerCells = (column: Object, cellKey: string): boolean => {
     if (column) {
         const { innerCells } = column;
         if (innerCells && innerCells.length > 0) {

@@ -66,7 +66,7 @@ describe("Grid utility file test", () => {
             "travelId",
             [5]
         );
-        expect(value).toBe(null);
+        expect(value).toBe("");
     });
 
     it("should test findDeSelectedRows with invalid oldUserSelectedRowIdentifiers", () => {
