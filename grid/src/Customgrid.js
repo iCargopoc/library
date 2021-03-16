@@ -46,7 +46,6 @@ import {
     findSelectedRowIdFromIdAttribute,
     findDeSelectedRows,
     updatedActionsHeaderClass,
-    convertToIndividualColumns,
     checkdisplayOfGroupedColumns,
     checkIfGroupsortIsApplicable,
     findAllChildRows,
