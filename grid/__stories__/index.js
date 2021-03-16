@@ -456,13 +456,13 @@ const GridComponent = (props) => {
                                 const { airlinename, airlinenumbers } = item;
                                 const { code, number } = airlinenumbers;
                                 return (
-                                    <>
+                                    <React.Fragment key={index}>
                                         <span>
                                             {index + 1}) {airlinename}: {code}-
                                             {number}
                                         </span>
                                         <br />
-                                    </>
+                                    </React.Fragment>
                                 );
                             })}
                         </div>
