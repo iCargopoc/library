@@ -17,7 +17,7 @@ const ParentItem = ({
     rowSelector
 }: {
     row: Object,
-    index: Number,
+    index: number,
     setSize: Function,
     multiRowSelection: boolean,
     parentRowExpandable: boolean,

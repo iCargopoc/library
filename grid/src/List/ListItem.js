@@ -38,7 +38,7 @@ const ListItem = ({
     idAttribute: string,
     style: Object,
     theme: string,
-    index: Number,
+    index: number,
     setSize: Function,
     isParentGrid: boolean,
     multiRowSelection: boolean,

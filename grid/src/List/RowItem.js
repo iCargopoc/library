@@ -30,7 +30,7 @@ const RowItem = ({
     row: Object,
     idAttribute: string,
     theme: string,
-    index: Number,
+    index: number,
     setSize: Function,
     isRowExpandEnabled: boolean,
     additionalColumn: Object,

@@ -28,7 +28,7 @@ const ColumnsList = (props: {
         };
     };
 
-    const moveColumn = (columnId: string, atIndex: Number) => {
+    const moveColumn = (columnId: string, atIndex: number) => {
         const { column, index } = findColumn(columnId);
         if (index >= 0) {
             onColumnReorder(

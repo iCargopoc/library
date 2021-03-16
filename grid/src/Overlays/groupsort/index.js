@@ -94,7 +94,7 @@ const GroupSort = (props: {
         };
 
         const updateSingleSortingOption = (
-            sortIndex: Number,
+            sortIndex: number,
             sortByValue: string,
             sortOnValue: string,
             sortOrder: string,
@@ -119,7 +119,7 @@ const GroupSort = (props: {
             setSortOptions(sortOptions.concat(newOption));
         };
 
-        const deleteSortOption = (sortIndex: Number) => {
+        const deleteSortOption = (sortIndex: number) => {
             setSortOptions(
                 sortOptions.filter((option: Object, index: number): boolean => {
                     return index !== sortIndex;

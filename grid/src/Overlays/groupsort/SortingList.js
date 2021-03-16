@@ -26,7 +26,7 @@ const SortingList = (props: {
         };
     };
 
-    const moveSort = (sortId: string, atIndex: Number) => {
+    const moveSort = (sortId: string, atIndex: number) => {
         const { sort, index } = findSort(sortId);
         updateSortingOptions(
             update(sortOptions, {
