@@ -1,8 +1,3 @@
-/**
- * Utils Method to Convert Date to required Format as per value of type
- * @param {String} inputDate
- * @param {String} type
- */
 export const getValueOfDate = (dateValue, type) => {
     if (dateValue) {
         const date = new Date(dateValue);
