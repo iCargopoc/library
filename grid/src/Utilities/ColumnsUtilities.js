@@ -8,7 +8,7 @@ import AdditionalColumnTag from "../Functions/AdditionalColumnTag";
 // Create Accessor List from Inner cells
 const createAccessorListFromInnerCells = (
     currentAccessorList: any,
-    accessorPart: String,
+    accessorPart: string,
     innerCells: Array<Object>,
     isArray: boolean,
     isSubComponent: boolean
@@ -46,7 +46,7 @@ export const extractColumns = (
     expandableColumn: any,
     isParentGrid: boolean,
     isSubComponentColumns: boolean
-): Array<Object> => {
+): Object => {
     if (columns && columns.length > 0) {
         // Create a list of accessors that has to be used for global filtering
         const columnsAccessorList = [];

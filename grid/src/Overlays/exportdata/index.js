@@ -243,7 +243,7 @@ const ExportData = (props: Object): any => {
         }
     };
 
-    const createDataFromCell = (list: any): String => {
+    const createDataFromCell = (list: any): string => {
         const valueToFormat = [];
         list.forEach((val: any) => {
             valueToFormat.push(val.toString());
@@ -323,7 +323,7 @@ const ExportData = (props: Object): any => {
         // Loop through array data
         cellData.forEach((data: any) => {
             // Loop through inner cells
-            currentInnerCells.forEach((cell: Object, index: Number) => {
+            currentInnerCells.forEach((cell: Object, index: number) => {
                 const { title, Header, accessor, display } = cell;
                 if (display !== false) {
                     if (!isCellHeaderCreated) {
@@ -342,12 +342,12 @@ const ExportData = (props: Object): any => {
 
         // Push data to header array (only 1 time required)
         if (!isHeaderCreated && arrayDataHeader.length > 0) {
-            arrayDataHeader.forEach((head: String) => {
+            arrayDataHeader.forEach((head: string) => {
                 headerArray.push(head);
             });
         }
         // Push data to values array
-        arrayDataValue.forEach((value: String) => {
+        arrayDataValue.forEach((value: string) => {
             valuesArray.push(value);
         });
     };
