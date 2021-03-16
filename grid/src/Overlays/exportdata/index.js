@@ -243,6 +243,14 @@ const ExportData = (props: Object): any => {
         }
     };
 
+    const createDataFromCell = (list: any): String => {
+        const valueToFormat = [];
+        list.forEach((val: any) => {
+            valueToFormat.push(val.toString());
+        });
+        return valueToFormat.join(" || ");
+    };
+
     const createColumnData = (
         column: Object,
         data: Object,
@@ -258,12 +266,26 @@ const ExportData = (props: Object): any => {
             const cellHeader = title || Header;
             const cellValue = data[accessor];
 
+            // If cell value is flat (string/boolean/number)
+            let formattedValue = cellValue.toString();
+
+            // If cell value is array or object
+            if (typeof cellValue === "object") {
+                if (cellValue.length > 0) {
+                    formattedValue = createDataFromCell(cellValue);
+                } else {
+                    formattedValue = createDataFromCell(
+                        Object.values(cellValue)
+                    );
+                }
+            }
+
             // Push data to header array (only 1 time required)
             if (!isHeaderCreated) {
                 headerArray.push(cellHeader);
             }
             // Push data to values array
-            valuesArray.push(cellValue);
+            valuesArray.push(formattedValue);
         }
     };
 
