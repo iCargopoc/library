@@ -428,7 +428,7 @@ const ExportData = (props: Object): any => {
                     const { innerCells } = parentColumn;
                     if (innerCells && innerCells.length > 0) {
                         // Format and push value into header and value arrays or tree grid
-                        createInnerCellObjectData(
+                        createDataFromColumns(
                             innerCells,
                             original,
                             isParentHeaderCreated,
