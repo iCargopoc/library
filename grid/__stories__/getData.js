@@ -14,43 +14,8 @@ export const fetchData = async (pageInfo) => {
 
     if (response !== undefined && response.data && response.data.result) {
         const { result } = response.data;
-
-        const flightClasses = ["Economy", "Business", "First"];
-        const airlineNames = [
-            "Air Asia",
-            "Air India",
-            "Go Air",
-            "Indigo",
-            "Jet Airways",
-            "Spice Jet"
-        ];
-        const airlineCodes = ["I5", "AI", "GA", "6E", "JA", "SJ"];
-        const airlineNumbers = ["7775", "2058", "1079", "8356", "4218", "3569"];
-        if (result) {
-            const updatedResult = result.map((item) => {
-                const updatedItem = { ...item };
-                const { flight } = item;
-                if (flight) {
-                    const newConnectionFlights = [];
-                    const randomNumber = Math.floor(Math.random() * 6);
-                    for (let i = 0; i <= randomNumber; i++) {
-                        newConnectionFlights.push({
-                            airlinename: airlineNames[i],
-                            airlinenumbers: {
-                                code: airlineCodes[i],
-                                number: airlineNumbers[i]
-                            }
-                        });
-                    }
-                    updatedItem.flight.flightdetails = {
-                        connectionflights: newConnectionFlights,
-                        flightclass:
-                            flightClasses[Math.floor(Math.random() * 3)]
-                    };
-                }
-                return updatedItem;
-            });
-            return updatedResult;
+        if (result && result.length > 0) {
+            return result;
         }
     }
     return [];
