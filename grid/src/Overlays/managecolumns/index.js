@@ -81,7 +81,7 @@ const ColumnReordering = (props: any): any => {
     const updatedDisplayOfColumn = (
         column: Object,
         columnid: string,
-        flag: Boolean
+        flag: boolean
     ): Object => {
         const updatedColumn = { ...column };
         const { isGroupHeader, columnId } = column;
@@ -123,7 +123,7 @@ const ColumnReordering = (props: any): any => {
     const updatedDisplayOfInnerCells = (
         innerCells: Object,
         cellid: string,
-        flag: Boolean
+        flag: boolean
     ): Object => {
         return [...innerCells].map((cell: Object): any => {
             const updatedCell = { ...cell };
@@ -137,8 +137,8 @@ const ColumnReordering = (props: any): any => {
 
     // Update display value of managedAdditionalColumn state with given value
     const updatedDisplayOfAdditionalColumn = (
-        flag: Boolean,
-        isSubComponentColumn: Boolean
+        flag: boolean,
+        isSubComponentColumn: boolean
     ) => {
         if (isSubComponentColumn) {
             setManagedSubComponentAdditionalColumn(
@@ -160,8 +160,8 @@ const ColumnReordering = (props: any): any => {
     const updateColumns = (
         columnid: string,
         isadditionalcolumn: any,
-        checked: Boolean,
-        isSubComponentColumn: Boolean
+        checked: boolean,
+        isSubComponentColumn: boolean
     ): any => {
         if (
             isAdditionalColumnPresent &&
@@ -228,7 +228,7 @@ const ColumnReordering = (props: any): any => {
     const changeInnerCellSelection = (
         innerCells: Object,
         cellid: string,
-        flag: Boolean
+        flag: boolean
     ): any => {
         const indexOfCell = innerCells.findIndex((cell: Object): any => {
             return cell.cellId === cellid;
