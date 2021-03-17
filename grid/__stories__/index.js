@@ -263,27 +263,27 @@ const GridComponent = (props) => {
     const parentData = [
         {
             titleId: 0,
-            title: "EXCVGRATES",
+            parentTitle: "EXCVGRATES 1",
             count: 300,
-            lastModified: "User name",
-            date: "21 Jul 2020",
+            lastModified: "User name 1",
+            date: "10 Jul 2020",
             time: "18:39"
         },
         {
             titleId: 1,
-            title: "EXCVGRATES",
+            parentTitle: "EXCVGRATES 2",
             count: 300,
-            lastModified: "User name",
-            date: "21 Jul 2020",
-            time: "18:39"
+            lastModified: "User name 2",
+            date: "10 Sep 2020",
+            time: "03:59"
         },
         {
             titleId: 2,
-            title: "EXCVGRATES",
+            parentTitle: "EXCVGRATES 3",
             count: 300,
-            lastModified: "User name",
-            date: "21 Jul 2020",
-            time: "18:39"
+            lastModified: "User name 3",
+            date: "10 Nov 2020",
+            time: "12:10"
         }
     ];
 
@@ -1167,7 +1167,7 @@ const GridComponent = (props) => {
             },
             {
                 Header: "Title",
-                accessor: "title"
+                accessor: "parentTitle"
             },
             {
                 Header: "Count",
@@ -1175,11 +1175,11 @@ const GridComponent = (props) => {
             }
         ],
         displayCell: (rowData, isExpanded) => {
-            const { title, count, lastModified, date, time } = rowData;
+            const { parentTitle, count, lastModified, date, time } = rowData;
             return (
                 <div className="parentRow">
                     <h2 className="parentRowHead">
-                        {title} (
+                        {parentTitle} (
                         {isExpanded
                             ? `Expanded - ${count}`
                             : `Collapsed - ${count}`}
@@ -1196,7 +1196,7 @@ const GridComponent = (props) => {
             );
         },
         exportData: (rowData, isDesktop) => {
-            const { titleId, title, count } = rowData;
+            const { titleId, parentTitle, count } = rowData;
             return [
                 {
                     header: "Title ID",
@@ -1204,7 +1204,7 @@ const GridComponent = (props) => {
                 },
                 {
                     header: "Title",
-                    body: validateData(title)
+                    body: validateData(parentTitle)
                 },
                 {
                     header: "Total Count",
