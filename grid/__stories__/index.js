@@ -373,7 +373,7 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "Travel Id",
-                        body: validateData(travelId)
+                        content: validateData(travelId)
                     }
                 ];
             }
@@ -404,7 +404,7 @@ const GridComponent = (props) => {
                 }
             ],
             sortValue: "flightno",
-            searchableAccessorList: [
+            searchKeys: [
                 "flight.flightno",
                 "flight.date",
                 "flight.flightdetails.connectionflights.*.airlinename",
@@ -484,19 +484,19 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "Flight No",
-                        body: validateData(flightno)
+                        content: validateData(flightno)
                     },
                     {
                         header: "Flight Date",
-                        body: validateData(date)
+                        content: validateData(date)
                     },
                     {
                         header: "Flight Class",
-                        body: validateData(flightclass)
+                        content: validateData(flightclass)
                     },
                     {
                         header: "Connection Flights",
-                        body: connectionFlightsArray.join(", ")
+                        content: connectionFlightsArray.join(", ")
                     }
                 ];
             }
@@ -517,7 +517,7 @@ const GridComponent = (props) => {
                     isSortable: true
                 }
             ],
-            searchableAccessorList: ["segment.from", "segment.to"],
+            searchKeys: ["segment.from", "segment.to"],
             width: 10,
             disableSortBy: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
@@ -565,11 +565,11 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "Origin",
-                        body: validateData(from)
+                        content: validateData(from)
                     },
                     {
                         header: "Destination",
-                        body: validateData(to)
+                        content: validateData(to)
                     }
                 ];
             }
@@ -615,7 +615,7 @@ const GridComponent = (props) => {
             width: 15,
             widthGrow: 1,
             disableSortBy: true,
-            searchableAccessorList: [
+            searchKeys: [
                 "details.flightModel",
                 "details.bodyType",
                 "details.type",
@@ -650,35 +650,35 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "Departure Time",
-                        body: validateData(startTime)
+                        content: validateData(startTime)
                     },
                     {
                         header: "Arrival Time",
-                        body: validateData(endTime)
+                        content: validateData(endTime)
                     },
                     {
                         header: "Flight Status",
-                        body: validateData(status)
+                        content: validateData(status)
                     },
                     {
                         header: "Flight Additional Status",
-                        body: validateData(additionalStatus)
+                        content: validateData(additionalStatus)
                     },
                     {
                         header: "Flight Model",
-                        body: validateData(flightModel)
+                        content: validateData(flightModel)
                     },
                     {
                         header: "Body Type",
-                        body: validateData(bodyType)
+                        content: validateData(bodyType)
                     },
                     {
                         header: "Flight Type",
-                        body: validateData(type)
+                        content: validateData(type)
                     },
                     {
                         header: "Time Status",
-                        body: validateData(timeStatus)
+                        content: validateData(timeStatus)
                     }
                 ];
             }
@@ -700,7 +700,7 @@ const GridComponent = (props) => {
             ],
             width: 10,
             sortValue: "percentage",
-            searchableAccessorList: ["weight.percentage", "weight.value"],
+            searchKeys: ["weight.percentage", "weight.value"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { weight } = rowData;
                 if (weight) {
@@ -734,11 +734,11 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "Weight %",
-                        body: validateData(percentage)
+                        content: validateData(percentage)
                     },
                     {
                         header: "Weight",
-                        body: validateData(value)
+                        content: validateData(value)
                     }
                 ];
             }
@@ -759,7 +759,7 @@ const GridComponent = (props) => {
             width: 10,
             isSortable: true,
             sortValue: "percentage",
-            searchableAccessorList: ["volume.percentage", "volume.value"],
+            searchKeys: ["volume.percentage", "volume.value"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { volume } = rowData;
                 if (volume) {
@@ -793,11 +793,11 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "Volume %",
-                        body: validateData(percentage)
+                        content: validateData(percentage)
                     },
                     {
                         header: "Volume",
-                        body: validateData(value)
+                        content: validateData(value)
                     }
                 ];
             }
@@ -817,10 +817,7 @@ const GridComponent = (props) => {
             ],
             width: 10,
             disableSortBy: true,
-            searchableAccessorList: [
-                "uldPositions.*.position",
-                "uldPositions.*.value"
-            ],
+            searchKeys: ["uldPositions.*.position", "uldPositions.*.value"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { uldPositions } = rowData;
                 if (uldPositions && uldPositions.length > 0) {
@@ -864,11 +861,11 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "ULD Position",
-                        body: positionArray.join(" | ")
+                        content: positionArray.join(" | ")
                     },
                     {
                         header: "ULD Value",
-                        body: valueArray.join(" | ")
+                        content: valueArray.join(" | ")
                     }
                 ];
             }
@@ -888,7 +885,7 @@ const GridComponent = (props) => {
             ],
             width: 10,
             sortValue: "revenue",
-            searchableAccessorList: ["revenue.revenue"],
+            searchKeys: ["revenue.revenue"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 if (rowData.revenue) {
                     const { revenue, yeild } = rowData.revenue;
@@ -911,11 +908,11 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "Revenue",
-                        body: validateData(revenue)
+                        content: validateData(revenue)
                     },
                     {
                         header: "Yeild",
-                        body: validateData(yeild)
+                        content: validateData(yeild)
                     }
                 ];
             }
@@ -925,7 +922,7 @@ const GridComponent = (props) => {
             accessor: "sr",
             width: 10,
             isSortable: true,
-            searchableAccessorList: ["sr"],
+            searchKeys: ["sr"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { sr } = rowData;
                 if (sr) {
@@ -959,7 +956,7 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "SR",
-                        body: validateData(sr)
+                        content: validateData(sr)
                     }
                 ];
             }
@@ -977,10 +974,7 @@ const GridComponent = (props) => {
                     accessor: "volume"
                 }
             ],
-            searchableAccessorList: [
-                "queuedBooking.sr",
-                "queuedBooking.volume"
-            ],
+            searchKeys: ["queuedBooking.sr", "queuedBooking.volume"],
             width: 10,
             disableSortBy: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
@@ -1013,11 +1007,11 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "Queued Booking SR",
-                        body: validateData(sr)
+                        content: validateData(sr)
                     },
                     {
                         header: "Queued Booking Volume",
-                        body: validateData(volume)
+                        content: validateData(volume)
                     }
                 ];
             }
@@ -1031,13 +1025,13 @@ const GridComponent = (props) => {
             {
                 Header: "Remarks",
                 accessor: "remarks",
-                searchableAccessorList: ["remarks"]
+                searchKeys: ["remarks"]
             },
             {
                 Header: "Details",
                 onlyInTablet: true,
                 accessor: "details",
-                searchableAccessorList: [
+                searchKeys: [
                     "details.flightModel",
                     "details.bodyType",
                     "details.type",
@@ -1104,7 +1098,7 @@ const GridComponent = (props) => {
             const { remarks } = rowData;
             dataToReturn.push({
                 header: "Remarks",
-                body: validateData(remarks)
+                content: validateData(remarks)
             });
             if (!isDesktop) {
                 const { details } = rowData;
@@ -1121,35 +1115,35 @@ const GridComponent = (props) => {
                 dataToReturn.push(
                     {
                         header: "Departure Time",
-                        body: validateData(startTime)
+                        content: validateData(startTime)
                     },
                     {
                         header: "Arrival Time",
-                        body: validateData(endTime)
+                        content: validateData(endTime)
                     },
                     {
                         header: "Flight Status",
-                        body: validateData(status)
+                        content: validateData(status)
                     },
                     {
                         header: "Flight Additional Status",
-                        body: validateData(additionalStatus)
+                        content: validateData(additionalStatus)
                     },
                     {
                         header: "Flight Model",
-                        body: validateData(flightModel)
+                        content: validateData(flightModel)
                     },
                     {
                         header: "Body Type",
-                        body: validateData(bodyType)
+                        content: validateData(bodyType)
                     },
                     {
                         header: "Flight Type",
-                        body: validateData(type)
+                        content: validateData(type)
                     },
                     {
                         header: "Time Status",
-                        body: validateData(timeStatus)
+                        content: validateData(timeStatus)
                     }
                 );
             }
@@ -1200,15 +1194,15 @@ const GridComponent = (props) => {
             return [
                 {
                     header: "Title ID",
-                    body: validateData(titleId)
+                    content: validateData(titleId)
                 },
                 {
                     header: "Title",
-                    body: validateData(parentTitle)
+                    content: validateData(parentTitle)
                 },
                 {
                     header: "Total Count",
-                    body: validateData(count)
+                    content: validateData(count)
                 }
             ];
         }
@@ -1222,7 +1216,7 @@ const GridComponent = (props) => {
             width: 250,
             widthGrow: 1,
             isSortable: true,
-            searchableAccessorList: ["hawbId"],
+            searchKeys: ["hawbId"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawbId } = rowData;
                 if (hawbId !== null && hawbId !== undefined) {
@@ -1239,7 +1233,7 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "HAWB ID",
-                        body: validateData(hawbId)
+                        content: validateData(hawbId)
                     }
                 ];
             }
@@ -1433,47 +1427,47 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "HAWB Origin",
-                        body: validateData(from)
+                        content: validateData(from)
                     },
                     {
                         header: "HAWB Destination",
-                        body: validateData(to)
+                        content: validateData(to)
                     },
                     {
                         header: "Goods Type",
-                        body: validateData(goodsType)
+                        content: validateData(goodsType)
                     },
                     {
                         header: "HAWB No",
-                        body: validateData(hawbNo)
+                        content: validateData(hawbNo)
                     },
                     {
                         header: "HAWB Ports",
-                        body: validateData(ports)
+                        content: validateData(ports)
                     },
                     {
                         header: "HAWB Status",
-                        body: validateData(status)
+                        content: validateData(status)
                     },
                     {
                         header: "Standard Item 1",
-                        body: validateData(item1)
+                        content: validateData(item1)
                     },
                     {
                         header: "Standard Item 2",
-                        body: validateData(item2)
+                        content: validateData(item2)
                     },
                     {
                         header: "Standard Item 3",
-                        body: validateData(item3)
+                        content: validateData(item3)
                     },
                     {
                         header: "Standard Item 4",
-                        body: validateData(item4)
+                        content: validateData(item4)
                     },
                     {
                         header: "HAWB Type",
-                        body: validateData(type)
+                        content: validateData(type)
                     }
                 ];
             }
@@ -1497,7 +1491,7 @@ const GridComponent = (props) => {
                 }
             ],
             width: 200,
-            searchableAccessorList: ["scr.num"],
+            searchKeys: ["scr.num"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { scr } = rowData;
                 const { ack, num, status } = scr;
@@ -1548,15 +1542,15 @@ const GridComponent = (props) => {
                 return [
                     {
                         header: "SCR Acknowledgement",
-                        body: validateData(ack)
+                        content: validateData(ack)
                     },
                     {
                         header: "SCR Number",
-                        body: validateData(num)
+                        content: validateData(num)
                     },
                     {
                         header: "SCR Status",
-                        body: validateData(status)
+                        content: validateData(status)
                     }
                 ];
             }
@@ -1570,7 +1564,7 @@ const GridComponent = (props) => {
             {
                 Header: "Remarks",
                 accessor: "remarks",
-                searchableAccessorList: ["remarks"]
+                searchKeys: ["remarks"]
             }
         ],
         displayCell: (rowData, DisplayTag, isDesktop) => {
@@ -1590,7 +1584,7 @@ const GridComponent = (props) => {
             return [
                 {
                     header: "HAWB Remarks",
-                    body: validateData(remarks)
+                    content: validateData(remarks)
                 }
             ];
         }

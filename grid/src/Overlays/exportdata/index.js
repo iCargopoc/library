@@ -252,16 +252,16 @@ const ExportData = (props: Object): any => {
             // If exportData is valid function
             if (typeof exportData === "function") {
                 // Get export content from the function
-                const exportContent = exportData(rowData, isDesktop);
+                const dataToExport = exportData(rowData, isDesktop);
                 // If export content is valid
                 if (
-                    typeof exportContent === "object" &&
-                    exportContent.length > 0
+                    typeof dataToExport === "object" &&
+                    dataToExport.length > 0
                 ) {
                     // Loop through export content
-                    exportContent.forEach((content: Object) => {
-                        // Get header and body values
-                        const { header, body } = content;
+                    dataToExport.forEach((data: Object) => {
+                        // Get header and content values
+                        const { header, content } = data;
                         // If header is not already created, push it to the header array
                         if (!isHeaderCreated) {
                             headersArray.push(header || "");
@@ -273,8 +273,8 @@ const ExportData = (props: Object): any => {
                                 headersCopyArray.push(header || "");
                             }
                         }
-                        // Push body to the values array
-                        valuesArray.push(body || "");
+                        // Push content to the values array
+                        valuesArray.push(content || "");
                     });
                 }
             }

@@ -32,7 +32,7 @@ export const extractColumns = (
                 innerCells,
                 accessor,
                 sortValue,
-                searchableAccessorList,
+                searchKeys,
                 widthGrow
             } = column;
 
@@ -165,12 +165,12 @@ export const extractColumns = (
                 elem.disableSortBy = true;
             }
 
-            // If searchableAccessorList is provided, use it for column filtering and global filtering
-            if (searchableAccessorList && searchableAccessorList.length > 0) {
+            // If searchKeys is provided, use it for column filtering and global filtering
+            if (searchKeys && searchKeys.length > 0) {
                 // Create a list of search keys to be used for column filtering
                 const columnSearchKeys = [];
-                // Loop through searchableAccessorList
-                searchableAccessorList.forEach((item: string) => {
+                // Loop through searchKeys
+                searchKeys.forEach((item: string) => {
                     // Create matchSorter search key object
                     const searchKey = {
                         threshold: matchSorter.rankings.CONTAINS,
@@ -292,14 +292,11 @@ export const extractAdditionalColumn = (
                         cellElem.display = true;
                     }
 
-                    // If searchableAccessorList is provided, use it for global filtering
-                    const { searchableAccessorList } = cell;
-                    if (
-                        searchableAccessorList &&
-                        searchableAccessorList.length > 0
-                    ) {
-                        // Loop through searchableAccessorList
-                        searchableAccessorList.forEach((item: string) => {
+                    // If searchKeys is provided, use it for global filtering
+                    const { searchKeys } = cell;
+                    if (searchKeys && searchKeys.length > 0) {
+                        // Loop through searchKeys
+                        searchKeys.forEach((item: string) => {
                             // Create matchSorter search key object
                             const searchKey = {
                                 threshold: matchSorter.rankings.CONTAINS,
