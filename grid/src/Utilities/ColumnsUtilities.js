@@ -236,7 +236,7 @@ export const extractAdditionalColumn = (
     additionalColumn: Object,
     isDesktop: boolean,
     isSubComponentColumns: boolean
-): ?Object => {
+): Object => {
     const { innerCells } = additionalColumn || {};
 
     // If innerCells are defined
