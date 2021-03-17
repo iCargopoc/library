@@ -404,12 +404,20 @@ const GridComponent = (props) => {
                 }
             ],
             sortValue: "flightno",
-            searchableAccessorList: ["flight.flightno", "flight.date"],
+            searchableAccessorList: [
+                "flight.flightno",
+                "flight.date",
+                "flight.flightdetails.connectionflights.*.airlinename",
+                "flight.flightdetails.connectionflights.*.airlinenumbers.code",
+                "flight.flightdetails.connectionflights.*.airlinenumbers.number",
+                "flight.flightdetails.flightclass"
+            ],
             width: 10,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { flight } = rowData;
                 if (flight) {
-                    const { flightno, date } = flight;
+                    const { flightno, date, flightdetails } = flight;
+                    const { flightclass, connectionflights } = flightdetails;
                     return (
                         <div className="flight-details">
                             <DisplayTag columnKey="flight" cellKey="flightno">
@@ -418,6 +426,22 @@ const GridComponent = (props) => {
                             <DisplayTag columnKey="flight" cellKey="date">
                                 <span>{getValueOfDate(date, "cell")}</span>
                             </DisplayTag>
+                            <br />
+                            <span>{flightclass} Class</span>
+                            <br />
+                            {connectionflights.map((item, index) => {
+                                const { airlinename, airlinenumbers } = item;
+                                const { code, number } = airlinenumbers;
+                                return (
+                                    <React.Fragment key={index}>
+                                        <span>
+                                            {index + 1}) {airlinename}: {code}-
+                                            {number}
+                                        </span>
+                                        <br />
+                                    </React.Fragment>
+                                );
+                            })}
                         </div>
                     );
                 }
@@ -443,7 +467,20 @@ const GridComponent = (props) => {
             },
             exportData: (rowData, isDesktop) => {
                 const { flight } = rowData;
-                const { flightno, date } = flight || {};
+                const { flightno, date, flightdetails } = flight || {};
+                const { flightclass, connectionflights } = flightdetails || {};
+
+                const connectionFlightsArray = [];
+                connectionflights.forEach((uld) => {
+                    const { airlinename, airlinenumbers } = uld || {};
+                    const { code, number } = airlinenumbers || {};
+                    connectionFlightsArray.push(
+                        `${validateData(airlinename)}: ${validateData(
+                            code
+                        )}-${validateData(number)}`
+                    );
+                });
+
                 return [
                     {
                         header: "Flight No",
@@ -452,6 +489,14 @@ const GridComponent = (props) => {
                     {
                         header: "Flight Date",
                         body: validateData(date)
+                    },
+                    {
+                        header: "Flight Class",
+                        body: validateData(flightclass)
+                    },
+                    {
+                        header: "Connection Flights",
+                        body: connectionFlightsArray.join(", ")
                     }
                 ];
             }
