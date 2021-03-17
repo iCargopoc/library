@@ -373,6 +373,7 @@ const Customgrid = (props: {
             columnsToFilter: Object,
             filterValue: string
         ): Object => {
+            console.log("accessorList", accessorList);
             // Do match-sorter and return results
             return matchSorter(rowsToFilter, filterValue, {
                 keys: accessorList,

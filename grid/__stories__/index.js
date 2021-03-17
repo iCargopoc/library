@@ -356,8 +356,6 @@ const GridComponent = (props) => {
             Header: "Id",
             accessor: "travelId",
             width: 5,
-            disableFilters: true,
-            isSearchable: true,
             isSortable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { travelId } = rowData;
@@ -394,23 +392,21 @@ const GridComponent = (props) => {
             },
             title: "Flight",
             accessor: "flight",
-            width: 10,
             isSortable: true,
             innerCells: [
                 {
                     Header: "Flight No",
                     accessor: "flightno",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 },
                 {
                     Header: "Date",
-                    accessor: "date",
-                    isSearchable: true
+                    accessor: "date"
                 }
             ],
             sortValue: "flightno",
-            isSearchable: true,
+            searchableAccessorList: ["flight.flightno", "flight.date"],
+            width: 10,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { flight } = rowData;
                 if (flight) {
@@ -465,24 +461,22 @@ const GridComponent = (props) => {
             groupHeader: "Flight & Segment",
             Header: "Segment",
             accessor: "segment",
-            width: 10,
-            isSortable: true,
             innerCells: [
                 {
                     Header: "From",
                     accessor: "from",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 },
                 {
                     Header: "To",
                     accessor: "to",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 }
             ],
+            searchableAccessorList: ["segment.from", "segment.to"],
+            width: 10,
+            isSortable: true,
             disableSortBy: true,
-            isSearchable: false,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { segment } = rowData;
                 if (segment) {
@@ -540,53 +534,53 @@ const GridComponent = (props) => {
         {
             Header: "Details",
             accessor: "details",
-            onlyInDesktop: true,
-            width: 15,
-            widthGrow: 1,
             innerCells: [
                 {
                     Header: "Flight Model",
-                    accessor: "flightModel",
-                    isSearchable: true
+                    accessor: "flightModel"
                 },
                 {
                     Header: "Body Type",
-                    accessor: "bodyType",
-                    isSearchable: true
+                    accessor: "bodyType"
                 },
                 {
                     Header: "Type",
-                    accessor: "type",
-                    isSearchable: true
+                    accessor: "type"
                 },
                 {
                     Header: "Start Time",
-                    accessor: "startTime",
-                    isSearchable: true
+                    accessor: "startTime"
                 },
                 {
                     Header: "End Time",
-                    accessor: "endTime",
-                    isSearchable: true
+                    accessor: "endTime"
                 },
                 {
                     Header: "Status",
-                    accessor: "status",
-                    isSearchable: true
+                    accessor: "status"
                 },
                 {
                     Header: "Additional Status",
-                    accessor: "additionalStatus",
-                    isSearchable: true
+                    accessor: "additionalStatus"
                 },
                 {
                     Header: "Time Status",
-                    accessor: "timeStatus",
-                    isSearchable: true
+                    accessor: "timeStatus"
                 }
             ],
+            onlyInDesktop: true,
+            width: 15,
+            widthGrow: 1,
             disableSortBy: true,
-            isSearchable: true,
+            searchableAccessorList: [
+                "details.flightModel",
+                "details.bodyType",
+                "details.type",
+                "details.startTime",
+                "details.endTime",
+                "details.status",
+                "details.timeStatus"
+            ],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 return (
                     <DetailsView
@@ -649,24 +643,22 @@ const GridComponent = (props) => {
         {
             Header: "Weight",
             accessor: "weight",
-            width: 10,
-            isSortable: true,
             innerCells: [
                 {
                     Header: "Percentage",
                     accessor: "percentage",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 },
                 {
                     Header: "Value",
                     accessor: "value",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 }
             ],
+            width: 10,
+            isSortable: true,
             sortValue: "percentage",
-            isSearchable: true,
+            searchableAccessorList: ["weight.percentage", "weight.value"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { weight } = rowData;
                 if (weight) {
@@ -712,22 +704,20 @@ const GridComponent = (props) => {
         {
             Header: "Volume",
             accessor: "volume",
-            width: 10,
-            isSortable: true,
             innerCells: [
                 {
                     Header: "Percentage",
-                    accessor: "percentage",
-                    isSearchable: true
+                    accessor: "percentage"
                 },
                 {
                     Header: "Value",
-                    accessor: "value",
-                    isSearchable: true
+                    accessor: "value"
                 }
             ],
+            width: 10,
+            isSortable: true,
             sortValue: "percentage",
-            isSearchable: true,
+            searchableAccessorList: ["volume.percentage", "volume.value"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { volume } = rowData;
                 if (volume) {
@@ -773,22 +763,22 @@ const GridComponent = (props) => {
         {
             Header: "ULD Positions",
             accessor: "uldPositions",
-            width: 10,
-            isArray: true,
             innerCells: [
                 {
                     Header: "Position",
-                    accessor: "position",
-                    isSearchable: true
+                    accessor: "position"
                 },
                 {
                     Header: "Value",
-                    accessor: "value",
-                    isSearchable: true
+                    accessor: "value"
                 }
             ],
+            width: 10,
             disableSortBy: true,
-            isSearchable: true,
+            searchableAccessorList: [
+                "uldPositions.*.position",
+                "uldPositions.*.value"
+            ],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { uldPositions } = rowData;
                 if (uldPositions && uldPositions.length > 0) {
@@ -844,21 +834,19 @@ const GridComponent = (props) => {
         {
             Header: "Revenue/Yield",
             accessor: "revenue",
-            width: 10,
             innerCells: [
                 {
                     Header: "Revenue",
-                    accessor: "revenue",
-                    isSearchable: true
+                    accessor: "revenue"
                 },
                 {
                     Header: "Yeild",
-                    accessor: "yeild",
-                    isSearchable: true
+                    accessor: "yeild"
                 }
             ],
+            width: 10,
             sortValue: "revenue",
-            isSearchable: true,
+            searchableAccessorList: ["revenue.revenue"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 if (rowData.revenue) {
                     const { revenue, yeild } = rowData.revenue;
@@ -895,7 +883,7 @@ const GridComponent = (props) => {
             accessor: "sr",
             width: 10,
             isSortable: true,
-            isSearchable: true,
+            searchableAccessorList: ["sr"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { sr } = rowData;
                 if (sr) {
@@ -937,21 +925,22 @@ const GridComponent = (props) => {
         {
             Header: "Queued Booking",
             accessor: "queuedBooking",
-            width: 10,
             innerCells: [
                 {
                     Header: "Sr",
-                    accessor: "sr",
-                    isSearchable: true
+                    accessor: "sr"
                 },
                 {
                     Header: "Volume",
-                    accessor: "volume",
-                    isSearchable: true
+                    accessor: "volume"
                 }
             ],
+            searchableAccessorList: [
+                "queuedBooking.sr",
+                "queuedBooking.volume"
+            ],
+            width: 10,
             disableSortBy: true,
-            isSearchable: false,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { queuedBooking } = rowData;
                 if (queuedBooking) {
@@ -1174,7 +1163,7 @@ const GridComponent = (props) => {
             width: 250,
             widthGrow: 1,
             isSortable: true,
-            isSearchable: true,
+            searchableAccessorList: ["hawbId"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawbId } = rowData;
                 if (hawbId !== null && hawbId !== undefined) {
@@ -1199,10 +1188,6 @@ const GridComponent = (props) => {
         {
             Header: "AWB Details",
             accessor: "hawb",
-            onlyInDesktop: true,
-            width: 800,
-            isSortable: true,
-            isSearchable: true,
             innerCells: [
                 {
                     Header: "From",
@@ -1235,7 +1220,9 @@ const GridComponent = (props) => {
                     accessor: "type"
                 }
             ],
-            disableSortBy: true,
+            onlyInDesktop: true,
+            width: 800,
+            isSortable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawb } = rowData;
                 const {
@@ -1436,9 +1423,6 @@ const GridComponent = (props) => {
         {
             Header: "SCR Details",
             accessor: "scr",
-            width: 200,
-            isSearchable: true,
-            isSortable: true,
             innerCells: [
                 {
                     Header: "ACK",
@@ -1447,7 +1431,6 @@ const GridComponent = (props) => {
                 {
                     Header: "NUM",
                     accessor: "num",
-                    isSearchable: true,
                     isSortable: true
                 },
                 {
@@ -1455,6 +1438,9 @@ const GridComponent = (props) => {
                     accessor: "status"
                 }
             ],
+            width: 200,
+            isSortable: true,
+            searchableAccessorList: ["scr.num"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { scr } = rowData;
                 const { ack, num, status } = scr;

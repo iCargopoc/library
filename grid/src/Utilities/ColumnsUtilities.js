@@ -5,40 +5,6 @@ import CellDisplayAndEdit from "../Functions/CellDisplayAndEdit";
 import { AdditionalColumnContext } from "./TagsContext";
 import AdditionalColumnTag from "../Functions/AdditionalColumnTag";
 
-// Create Accessor List from Inner cells
-const createAccessorListFromInnerCells = (
-    currentAccessorList: any,
-    accessorPart: string,
-    innerCells: Array<Object>,
-    isArray: boolean,
-    isSubComponent: boolean
-): any => {
-    innerCells.forEach((innerCell: Object): Object => {
-        const { isSearchable, accessor } = innerCell;
-        if (isSearchable === true) {
-            const cellInnerCells = innerCell.innerCells;
-            const newAccessorPart =
-                isArray === true
-                    ? `${accessorPart}.*.${accessor}`
-                    : `${accessorPart}.${accessor}`;
-            if (cellInnerCells && cellInnerCells.length > 0) {
-                createAccessorListFromInnerCells(
-                    currentAccessorList,
-                    newAccessorPart,
-                    cellInnerCells,
-                    innerCell.isArray,
-                    isSubComponent
-                );
-            } else {
-                currentAccessorList.push({
-                    threshold: matchSorter.rankings.CONTAINS,
-                    key: newAccessorPart
-                });
-            }
-        }
-    });
-};
-
 export const extractColumns = (
     columns: any,
     isDesktop: boolean,
@@ -48,7 +14,7 @@ export const extractColumns = (
     isSubComponentColumns: boolean
 ): Object => {
     if (columns && columns.length > 0) {
-        // Create a list of accessors that has to be used for global filtering
+        // Create a list of search keys that has to be used for global filtering
         const columnsAccessorList = [];
 
         // Remove iPad only columns from desktop and vice-versa
@@ -59,28 +25,19 @@ export const extractColumns = (
         const modifiedColumns = [];
         // Loop through the columns configuration and create required column structure
         filteredColumns.forEach((column: Object, index: number) => {
+            // Create a copy to modify
+            const elem = { ...column };
+
             const {
-                disableFilters,
                 innerCells,
                 accessor,
                 sortValue,
-                widthGrow,
-                isArray,
-                isSearchable
+                searchableAccessorList,
+                widthGrow
             } = column;
+
+            // Check if inner cells are present
             const isInnerCellsPresent = innerCells && innerCells.length > 0;
-            const isColumnFilterEnabled =
-                disableFilters !== true && isSubComponentColumns !== true;
-            const elem = { ...column };
-
-            // To be used to create accessors list of all columns which can be used for global filtering
-            const accessorPart =
-                isSubComponentColumns === true
-                    ? `original.subComponentData.*.${accessor}`
-                    : `original.${accessor}`;
-
-            // Variables for column filter section
-            const accessorList = [];
 
             // Add column Id
             elem.columnId =
@@ -104,35 +61,15 @@ export const extractColumns = (
                 elem.display = true;
             }
 
-            // Loop through inner cells and set flag and Id
+            // If innerCells are present, loop through inner cells and set flag and Id
             if (isInnerCellsPresent) {
                 // Set isSortable for column as false if that column is having innercells and none are sortable
                 let isInnerCellSortable = false;
 
-                // Update accessor list for global search with innerCells
-                createAccessorListFromInnerCells(
-                    columnsAccessorList,
-                    accessorPart,
-                    innerCells,
-                    isArray,
-                    isSubComponentColumns
-                );
-
-                // Update accessor list for column search with innerCells
-                if (isColumnFilterEnabled) {
-                    createAccessorListFromInnerCells(
-                        accessorList,
-                        accessorPart,
-                        innerCells,
-                        isArray,
-                        isSubComponentColumns
-                    );
-                }
-
                 innerCells.map((cell: Object, cellIndex: number): Object => {
                     const cellElem = cell;
 
-                    // Add column Id
+                    // Add cell Id
                     cellElem.cellId =
                         isSubComponentColumns === true
                             ? `subComponentColumn_${index}_cell_${cellIndex}`
@@ -228,33 +165,35 @@ export const extractColumns = (
                 elem.disableSortBy = true;
             }
 
-            // If innercells not present add filter logic with column accessor
-            if (!isInnerCellsPresent) {
-                // Filter object for match-sorter
-                const filterObj = {
-                    threshold: matchSorter.rankings.CONTAINS,
-                    key: accessorPart
-                };
-
-                // For column filter
-                if (isColumnFilterEnabled) {
-                    accessorList.push(filterObj);
-                }
-                // For global filter
-                if (isSearchable) {
-                    columnsAccessorList.push(filterObj);
-                }
-
-                // Set column filter logic
+            // If searchableAccessorList is provided, use it for column filtering and global filtering
+            if (searchableAccessorList && searchableAccessorList.length > 0) {
+                // Create a list of search keys to be used for column filtering
+                const columnSearchKeys = [];
+                // Loop through searchableAccessorList
+                searchableAccessorList.forEach((item: string) => {
+                    // Create matchSorter search key object
+                    const searchKey = {
+                        threshold: matchSorter.rankings.CONTAINS,
+                        key: isSubComponentColumns
+                            ? `original.subComponentData.*.${item}`
+                            : `original.${item}`
+                    };
+                    // Push it to both column filtering and global filtering search keys list
+                    columnSearchKeys.push(searchKey);
+                    columnsAccessorList.push(searchKey);
+                });
+                // Set column filter logic using list created
                 elem.filter = (
                     rows: any,
                     id: string,
                     filterValue: string
                 ): any =>
                     matchSorter(rows, filterValue, {
-                        keys: accessorList,
+                        keys: columnSearchKeys,
                         sorter: (rankedItems: Object): Object => rankedItems // To avoid automatic sorting based on match
                     });
+            } else {
+                elem.disableFilters = true;
             }
 
             modifiedColumns.push(elem);
