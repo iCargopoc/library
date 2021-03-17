@@ -1028,8 +1028,25 @@ const GridComponent = (props) => {
     const originalColumnToExpand = {
         Header: "Remarks",
         innerCells: [
-            { Header: "Remarks", accessor: "remarks" },
-            { Header: "Details", onlyInTablet: true, accessor: "details" }
+            {
+                Header: "Remarks",
+                accessor: "remarks",
+                searchableAccessorList: ["remarks"]
+            },
+            {
+                Header: "Details",
+                onlyInTablet: true,
+                accessor: "details",
+                searchableAccessorList: [
+                    "details.flightModel",
+                    "details.bodyType",
+                    "details.type",
+                    "details.startTime",
+                    "details.endTime",
+                    "details.status",
+                    "details.timeStatus"
+                ]
+            }
         ],
         displayCell: (rowData, DisplayTag, isDesktop) => {
             const { remarks, details } = rowData;

@@ -60,6 +60,8 @@ const Customgrid = (props: {
     theme: string,
     managableColumns: Array<Object>,
     columnsAccessorList: any,
+    expandedRowData: Object,
+    expandedRowDataAccessorList: any,
     parentColumn: Object,
     parentIdAttribute: string,
     parentRowExpandable: boolean,
@@ -67,6 +69,7 @@ const Customgrid = (props: {
     managableSubComponentColumnns: Array<Object>,
     subComponentColumnsAccessorList: any,
     managableSubComponentAdditionalColumn: Object,
+    subComponentAdditionalColumnAccessorList: any,
     loadChildData: Function,
     isParentGrid: boolean,
     gridData: Array<Object>,
@@ -85,7 +88,6 @@ const Customgrid = (props: {
     getSortedData: Function,
     getToggleAllRowsSelectedProps?: Function,
     row?: Array<Object>,
-    expandedRowData: Object,
     rowActions: any,
     CustomPanel: any,
     multiRowSelection: boolean,
@@ -111,6 +113,7 @@ const Customgrid = (props: {
         managableColumns,
         columnsAccessorList,
         expandedRowData,
+        expandedRowDataAccessorList,
         parentColumn,
         parentIdAttribute,
         parentRowExpandable,
@@ -118,6 +121,7 @@ const Customgrid = (props: {
         managableSubComponentColumnns,
         subComponentColumnsAccessorList,
         managableSubComponentAdditionalColumn,
+        subComponentAdditionalColumnAccessorList,
         loadChildData,
         isParentGrid,
         gridData,
@@ -355,7 +359,7 @@ const Customgrid = (props: {
     const [expandedParentRows, setExpandedParentRows] = useState([]);
 
     // Create a list of accessors to be searched from columns array
-    let accessorList = [...columnsAccessorList];
+    let accessorList = [...columnsAccessorList, ...expandedRowDataAccessorList];
 
     // Append accessors if sub component is present
     if (
@@ -363,7 +367,11 @@ const Customgrid = (props: {
         managableSubComponentColumnns &&
         managableSubComponentColumnns.length > 0
     ) {
-        accessorList = [...accessorList, ...subComponentColumnsAccessorList];
+        accessorList = [
+            ...accessorList,
+            ...subComponentColumnsAccessorList,
+            ...subComponentAdditionalColumnAccessorList
+        ];
     }
 
     // Global Search Filter Logic - React table wants all parameters passed into useTable function to be memoized

@@ -237,42 +237,47 @@ export const extractAdditionalColumn = (
     isDesktop: boolean,
     isSubComponentColumns: boolean
 ): ?Object => {
-    if (additionalColumn) {
-        const { innerCells } = additionalColumn;
-        const isInnerCellsPresent = innerCells && innerCells.length > 0;
-        const element = additionalColumn;
+    const { innerCells } = additionalColumn || {};
 
-        // Add column Id
-        element.columnId =
-            isSubComponentColumns === true
-                ? "subComponentRowExpand"
-                : `rowExpand`;
+    // If innerCells are defined
+    if (innerCells && innerCells.length > 0) {
+        // Remove iPad only inner cells from desktop and vice-versa
+        const filteredInnerCells = innerCells.filter(
+            (cell: Object): boolean => {
+                return isDesktop ? !cell.onlyInTablet : !cell.onlyInDesktop;
+            }
+        );
 
-        // Add flag to identify if this is subcomponent column
-        element.isSubComponentColumn = isSubComponentColumns === true;
+        // If valid inner cells are present
+        if (filteredInnerCells && filteredInnerCells.length > 0) {
+            const element = additionalColumn;
 
-        // Set display flag to true if not present
-        if (element.display !== false) {
-            element.display = true;
-        }
+            // Create a list of search keys that has to be used for global filtering
+            const columnToExpandAccessorList = [];
 
-        // Add an indentifier that this is a column for expanded region
-        element.isDisplayInExpandedRegion = true;
+            // Add column Id
+            element.columnId =
+                isSubComponentColumns === true
+                    ? "subComponentRowExpand"
+                    : `rowExpand`;
 
-        // Remove iPad only columns from desktop and vice-versa
-        if (isInnerCellsPresent) {
-            const filteredInnerCells = innerCells.filter(
-                (cell: Object): boolean => {
-                    return isDesktop ? !cell.onlyInTablet : !cell.onlyInDesktop;
-                }
-            );
+            // Add flag to identify if this is subcomponent column
+            element.isSubComponentColumn = isSubComponentColumns === true;
+
+            // Set display flag to true if not present
+            if (element.display !== false) {
+                element.display = true;
+            }
+
+            // Add an indentifier that this is a column for expanded region
+            element.isDisplayInExpandedRegion = true;
 
             // Loop through inner cells and set flag and Id
             filteredInnerCells.map(
                 (cell: Object, cellIndex: number): Object => {
                     const cellElem = cell;
 
-                    // Add column Id
+                    // Add cell Id
                     cellElem.cellId =
                         isSubComponentColumns === true
                             ? `subComponentRowExpand_cell_${cellIndex}`
@@ -286,6 +291,27 @@ export const extractAdditionalColumn = (
                     if (cellElem.display !== false) {
                         cellElem.display = true;
                     }
+
+                    // If searchableAccessorList is provided, use it for global filtering
+                    const { searchableAccessorList } = cell;
+                    if (
+                        searchableAccessorList &&
+                        searchableAccessorList.length > 0
+                    ) {
+                        // Loop through searchableAccessorList
+                        searchableAccessorList.forEach((item: string) => {
+                            // Create matchSorter search key object
+                            const searchKey = {
+                                threshold: matchSorter.rankings.CONTAINS,
+                                key: isSubComponentColumns
+                                    ? `original.subComponentData.*.${item}`
+                                    : `original.${item}`
+                            };
+                            // Push it to global filtering search keys list
+                            columnToExpandAccessorList.push(searchKey);
+                        });
+                    }
+
                     return cellElem;
                 }
             );
@@ -315,9 +341,14 @@ export const extractAdditionalColumn = (
 
             element.innerCells = filteredInnerCells;
 
-            return element;
+            return {
+                updatedColumnToExpandStructure: element,
+                columnToExpandAccessorList
+            };
         }
-        return null;
     }
-    return null;
+    return {
+        updatedColumnToExpandStructure: null,
+        columnToExpandAccessorList: []
+    };
 };

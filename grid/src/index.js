@@ -143,6 +143,12 @@ const Grid = (props: Object): ?React$Element<*> => {
     // Local state value for holding the additional column configuration
     const [additionalColumn, setAdditionalColumn] = useState(null);
 
+    // Local state value for holding additional column filter accessor configurations
+    const [
+        additionalColumnAccessorList,
+        setAdditionalColumnAccessorList
+    ] = useState([]);
+
     const isParentGrid = parentColumn !== null && parentColumn !== undefined;
 
     const [gridSubComponentColumns, setGridSubComponentColumns] = useState([]);
@@ -157,6 +163,12 @@ const Grid = (props: Object): ?React$Element<*> => {
         gridSubComponentAdditionalColumn,
         setGridSubComponentAdditionalColumn
     ] = useState(null);
+
+    // Local state value for holding sub component additional column filter accessor configurations
+    const [
+        gridSubComponentAdditionalColumnAccessorList,
+        setGridSubComponentAdditionalColumnAccessorList
+    ] = useState([]);
 
     // #region - Group sorting logic
     // Function to return sorting logic based on the user selected order of sort
@@ -475,6 +487,7 @@ const Grid = (props: Object): ?React$Element<*> => {
     }, [gridData, pageInfo]);
 
     useEffect(() => {
+        // Columns Config
         const columnsConfigData = extractColumns(
             columns,
             isDesktop,
@@ -489,12 +502,23 @@ const Grid = (props: Object): ?React$Element<*> => {
         } = columnsConfigData;
         setGridColumns(updatedColumnStructure);
         setGridColumnsAccessorList(columnsAccessorList);
-        setAdditionalColumn(
-            extractAdditionalColumn(columnToExpand, isDesktop, false)
+
+        // Column To Expand config
+        const columnToExpandConfigData = extractAdditionalColumn(
+            columnToExpand,
+            isDesktop,
+            false
         );
+        const {
+            updatedColumnToExpandStructure,
+            columnToExpandAccessorList
+        } = columnToExpandConfigData;
+        setAdditionalColumn(updatedColumnToExpandStructure);
+        setAdditionalColumnAccessorList(columnToExpandAccessorList);
     }, [columns, columnToExpand]);
 
     useEffect(() => {
+        // Sub Component Columns Config
         const columnsConfigData = extractColumns(
             subComponentColumnns,
             isDesktop,
@@ -509,8 +533,20 @@ const Grid = (props: Object): ?React$Element<*> => {
         } = columnsConfigData;
         setGridSubComponentColumns(updatedColumnStructure);
         setGridSubComponentColumnsAccessorList(columnsAccessorList);
-        setGridSubComponentAdditionalColumn(
-            extractAdditionalColumn(subComponentColumnToExpand, isDesktop, true)
+
+        // Sub Component Column To Expand config
+        const columnToExpandConfigData = extractAdditionalColumn(
+            subComponentColumnToExpand,
+            isDesktop,
+            true
+        );
+        const {
+            updatedColumnToExpandStructure,
+            columnToExpandAccessorList
+        } = columnToExpandConfigData;
+        setGridSubComponentAdditionalColumn(updatedColumnToExpandStructure);
+        setGridSubComponentAdditionalColumnAccessorList(
+            columnToExpandAccessorList
         );
     }, [subComponentColumnns, subComponentColumnToExpand]);
 
@@ -551,6 +587,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     managableColumns={gridColumns}
                     columnsAccessorList={gridColumnsAccessorList}
                     expandedRowData={additionalColumn}
+                    expandedRowDataAccessorList={additionalColumnAccessorList}
                     parentColumn={parentColumn}
                     parentIdAttribute={parentIdAttribute}
                     parentRowExpandable={parentRowExpandable}
@@ -561,6 +598,9 @@ const Grid = (props: Object): ?React$Element<*> => {
                     }
                     managableSubComponentAdditionalColumn={
                         gridSubComponentAdditionalColumn
+                    }
+                    subComponentAdditionalColumnAccessorList={
+                        gridSubComponentAdditionalColumnAccessorList
                     }
                     loadChildData={loadChildData}
                     isParentGrid={isParentGrid}
