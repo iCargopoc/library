@@ -149,11 +149,9 @@ const GridComponent = () => {
             width: 50,
             widthGrow: 1, // This is the factor that Grid uses to identify how to allocate the width of a hidden column to other columns.
             display: false, // False if this column has to be hidden by default. Default value for this property is true.
-            disableFilters: true,
             disableSortBy: true,
             disableResizing: true,
-            isSortable: true, // This column will appear in groupsort overlay only if 'isSortable' value is true.
-            isSearchable: true,
+            isSortable: true, // This column will appear in Sort By dropdown in groupsort overlay only if 'isSortable' value is true.
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 // rowData -> Entire row data from gridData
                 // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell
@@ -183,22 +181,18 @@ const GridComponent = () => {
             accessor: "flight",
             isArray: true, // Pass this as true, if the value of 'flight' node in the data is an array.
             width: 100,
-            isSortable: true, // This column will appear in groupsort overlay only if 'isSortable' value is true.
             innerCells: [
                 {
                     Header: "Flight No",
                     accessor: "flightno",
-                    isSortable: true,  // This inner cell will appear in groupsort overlay only if 'isSortable' value is true.
-                    isSearchable: true
+                    isSortable: true  // This column header will appear in Sort By dropdown and this innerCell header will appear in Sort On dropdown, of Group sort overlays
                 },
                 {
                     Header: "Date",
-                    accessor: "date",
-                    isSearchable: true
+                    accessor: "date"
                 }
             ],
             sortValue: "flightno",
-            isSearchable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 // rowData -> Entire row data from gridData
                 // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell
@@ -240,17 +234,14 @@ const GridComponent = () => {
             innerCells: [
                 {
                     Header: "From",
-                    accessor: "from",
-                    isSearchable: true
+                    accessor: "from"
                 },
                 {
                     Header: "To",
-                    accessor: "to",
-                    isSearchable: true
+                    accessor: "to"
                 }
             ],
             disableSortBy: true,
-            isSearchable: false,
             displayCell: (
                 rowData,
                 DisplayTag,
