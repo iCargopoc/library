@@ -26,7 +26,8 @@ const ExportData = (props: Object): any => {
         subComponentColumnns,
         subComponentAdditionalColumn,
         fileName,
-        pdfPaperSize
+        pdfPaperSize,
+        isDesktop
     } = props;
 
     const exportedFileName = fileName || "iCargo Neo Report";
@@ -257,7 +258,7 @@ const ExportData = (props: Object): any => {
             // If exportData is valid function
             if (typeof exportData === "function") {
                 // Get export content from the function
-                const exportContent = exportData(rowData, true);
+                const exportContent = exportData(rowData, isDesktop);
                 // If export content is valid
                 if (
                     typeof exportContent === "object" &&

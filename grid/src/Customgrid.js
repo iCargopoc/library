@@ -1339,6 +1339,7 @@ const Customgrid = (props: {
                                         }
                                         fileName={fileName}
                                         pdfPaperSize={pdfPaperSize}
+                                        isDesktop={isDesktop}
                                     />
                                 ) : null}
                             </div>
