@@ -239,7 +239,7 @@ const ExportData = (props: Object): any => {
     };
 
     const getExportDataFromColumns = (
-        columns: Array<Object>,
+        columnsList: Array<Object>,
         rowData: Object,
         isHeaderCreated: boolean,
         headersArray: any,
@@ -247,7 +247,7 @@ const ExportData = (props: Object): any => {
         headersCopyArray: any
     ) => {
         // Loop through available columns
-        columns.forEach((column: Object) => {
+        columnsList.forEach((column: Object) => {
             const { exportData } = column;
             // If exportData is valid function
             if (typeof exportData === "function") {
