@@ -13,7 +13,8 @@ const DetailsView = ({
         setIsClicked(!isClicked);
     };
 
-    if (rowData.details) {
+    const { travelId, details } = rowData;
+    if (details) {
         const {
             startTime,
             endTime,
@@ -23,8 +24,7 @@ const DetailsView = ({
             bodyType,
             type,
             timeStatus
-        } = rowData.details;
-        const { travelId } = rowData;
+        } = details;
         const repeatArray = Array.from(Array(fixedRowHeight ? 1 : 5).keys());
         const timeStatusArray = timeStatus ? timeStatus.split(" ") : [];
         const timeValue = timeStatusArray.shift();

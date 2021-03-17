@@ -243,142 +243,47 @@ const ExportData = (props: Object): any => {
         }
     };
 
-    const createInnerCellObjectData = (
-        currentInnerCells: Array<Object>,
-        cellData: any,
+    const getExportDataFromColumns = (
+        columns: Array<Object>,
+        rowData: Object,
         isHeaderCreated: boolean,
-        headerArray: any,
-        valuesArray: any
+        headersArray: any,
+        valuesArray: any,
+        headersCopyArray: any
     ) => {
-        if (cellData !== null && cellData !== undefined) {
-            // Loop through inner cells
-            currentInnerCells.forEach((cell: Object) => {
-                const { title, Header, accessor, display } = cell;
-
-                // If column is not hidden and accessor is present
+        // Loop through available columns
+        columns.forEach((column: Object) => {
+            const { exportData } = column;
+            // If exportData is valid function
+            if (typeof exportData === "function") {
+                // Get export content from the function
+                const exportContent = exportData(rowData, true);
+                // If export content is valid
                 if (
-                    accessor !== null &&
-                    accessor !== undefined &&
-                    display !== false
+                    typeof exportContent === "object" &&
+                    exportContent.length > 0
                 ) {
-                    const cellHeader = title || Header;
-                    const cellValue = cellData[accessor];
-
-                    // Push data to header array (only 1 time required)
-                    if (!isHeaderCreated) {
-                        headerArray.push(cellHeader);
-                    }
-                    // Push data to values array
-                    valuesArray.push(cellValue);
-                }
-            });
-        }
-    };
-
-    const createInnerCellArrayData = (
-        currentInnerCells: Array<Object>,
-        cellData: any,
-        isHeaderCreated: boolean,
-        headerArray: any,
-        valuesArray: any
-    ) => {
-        const arrayDataHeader = [];
-        const arrayDataValue = [];
-        let isCellHeaderCreated = false;
-
-        // Loop through array data
-        cellData.forEach((data: any) => {
-            if (data !== null && data !== undefined) {
-                // Loop through inner cells
-                currentInnerCells.forEach((cell: Object, index: number) => {
-                    const { title, Header, accessor, display } = cell;
-                    if (
-                        accessor !== null &&
-                        accessor !== undefined &&
-                        display !== false
-                    ) {
-                        if (!isCellHeaderCreated) {
-                            const cellHeader = title || Header;
-                            arrayDataHeader.push(cellHeader);
-                            arrayDataValue.push(data[accessor]);
-                        } else {
-                            const currentValue = [arrayDataValue[index]];
-                            currentValue.push(data[accessor]);
-                            arrayDataValue[index] = currentValue.join(" | ");
+                    // Loop through export content
+                    exportContent.forEach((content: Object) => {
+                        // Get header and body values
+                        const { header, body } = content;
+                        // If header is not already created, push it to the header array
+                        if (!isHeaderCreated) {
+                            headersArray.push(header || "");
+                            // If headers copy array is present, push data into it
+                            if (
+                                headersCopyArray !== null &&
+                                headersCopyArray !== undefined
+                            ) {
+                                headersCopyArray.push(header || "");
+                            }
                         }
-                    }
-                });
-                if (arrayDataHeader.length > 0) {
-                    isCellHeaderCreated = true;
+                        // Push body to the values array
+                        valuesArray.push(body || "");
+                    });
                 }
             }
         });
-
-        // Push data to header array (only 1 time required)
-        if (!isHeaderCreated && arrayDataHeader.length > 0) {
-            arrayDataHeader.forEach((head: string) => {
-                headerArray.push(head);
-            });
-        }
-        // Push data to values array
-        arrayDataValue.forEach((value: string) => {
-            valuesArray.push(value);
-        });
-    };
-
-    const createDataFromColumns = (
-        columnsList: Array<Object>,
-        data: any,
-        isGridHeaderCreated: boolean,
-        headerArray: any,
-        valuesArray: any
-    ) => {
-        // Add entry only if data is present
-        if (data !== null && data !== undefined) {
-            // Loop through columns array
-            columnsList.forEach((column: any) => {
-                // If inner cells are present
-                const { title, Header, innerCells, accessor } = column;
-                // Add entry only if accessor is presnet
-                if (accessor !== null && accessor !== undefined) {
-                    if (innerCells && innerCells.length > 0) {
-                        const columnValue = data[accessor];
-                        if (
-                            typeof columnValue === "object" &&
-                            columnValue.length > 0
-                        ) {
-                            // Format and push value into header and value arrays or grid, if column value is an array
-                            createInnerCellArrayData(
-                                innerCells,
-                                columnValue,
-                                isGridHeaderCreated,
-                                headerArray,
-                                valuesArray
-                            );
-                        } else {
-                            // Format and push value into header and value arrays or grid, if column value is an object
-                            createInnerCellObjectData(
-                                innerCells,
-                                columnValue,
-                                isGridHeaderCreated,
-                                headerArray,
-                                valuesArray
-                            );
-                        }
-                    } else {
-                        const columnHeader = title || Header;
-                        const columnValue = data[accessor];
-
-                        // Push data to header array (only 1 time required)
-                        if (!isGridHeaderCreated) {
-                            headerArray.push(columnHeader);
-                        }
-                        // Push data to values array
-                        valuesArray.push(columnValue);
-                    }
-                }
-            });
-        }
     };
 
     const prepareExportData = () => {
@@ -406,112 +311,89 @@ const ExportData = (props: Object): any => {
             filteredManagedColumns.length > 0 &&
             downloadTypes.length > 0
         ) {
-            // Variables for row header and row values
-            let rowHeaders = [];
-            const rowValues = [];
-
             // Variables to check if header entries are already created
             let isParentHeaderCreated = false;
             let isGridHeaderCreated = false;
             let isSubCompHeaderCreated = false;
 
             // A copy of parent column header, which can be used to create empty values in child rows, corresponding to parent columns
-            let parentHeadersCopy = [];
+            const parentHeadersCopy = [];
             // A copy of grid column header, which can be used to create empty values in subcomponent rows, corresponding to columns
-            let gridHeadersCopy = [];
+            const gridHeadersCopy = [];
+
+            // Variable to store final Export data
+            const headerValues = [];
+            const rowValues = [];
 
             // Loop through all rows
-            rows.forEach((rowDetails: Object) => {
-                const { original } = rowDetails;
+            rows.forEach((row: Object) => {
+                const { original } = row;
                 const { isParent } = original;
+
                 // If tree grid and row is parent row
                 if (isParentGrid === true && isParent === true) {
+                    // #region - parent row - Tree Grid
+
                     // Variables to hold column header and values of tree grid
-                    const parentHeaders = [];
-                    const parentValues = [];
-
-                    // If inner cells are present
-                    const { innerCells } = parentColumn;
-                    if (innerCells && innerCells.length > 0) {
-                        // Format and push value into header and value arrays or tree grid
-                        createDataFromColumns(
-                            innerCells,
-                            original,
-                            isParentHeaderCreated,
-                            parentHeaders,
-                            parentValues
-                        );
-
-                        // Push formatted data into main array
-                        if (!isParentHeaderCreated) {
-                            rowHeaders.push(parentHeaders);
-                            parentHeadersCopy = parentHeaders;
-                        }
-                        rowValues.push(parentValues);
-
-                        // Update header data enry flag value to false
+                    const parentRowValues = [];
+                    // Get export data from parent column
+                    getExportDataFromColumns(
+                        [parentColumn],
+                        original,
+                        isParentHeaderCreated,
+                        headerValues,
+                        parentRowValues,
+                        parentHeadersCopy
+                    );
+                    if (parentRowValues.length > 0) {
                         isParentHeaderCreated = true;
                     }
+                    rowValues.push(parentRowValues);
+
+                    // #endregion
                 } else {
-                    // If the row is not parent row
+                    // #region - grid columns
+
                     // Check if entries for parent row is already present
                     const isParentRowPresent =
                         isParentGrid === true && parentHeadersCopy.length > 0;
 
-                    // If parent row exist, create a copy from parent header array and push data into it
-                    // Else start with a new array
-                    const gridHeaders = isParentRowPresent
-                        ? [...parentHeadersCopy]
-                        : [];
                     // If parent row exist, create values array with empty values for parent columns, and push data into it.
-                    // Else start with empty array and push data into it.
-                    let gridValues = [];
+                    let gridRowValues = [];
                     if (isParentRowPresent) {
-                        gridValues = parentHeadersCopy.map((): string => {
+                        gridRowValues = parentHeadersCopy.map((): string => {
                             return "";
                         });
                     }
 
-                    // Create rows based on columns
-                    createDataFromColumns(
-                        filteredManagedColumns,
-                        original,
-                        isGridHeaderCreated,
-                        gridHeaders,
-                        gridValues
-                    );
-
-                    // Loop through additional columns
-                    if (
+                    // Columns from which export data has to be collected
+                    const gridColumnsList =
                         managedAdditionalColumn &&
                         managedAdditionalColumn.display === true
-                    ) {
-                        // If inner cells are present
-                        const additionalColumns =
-                            managedAdditionalColumn.innerCells;
-                        if (additionalColumns && additionalColumns.length > 0) {
-                            // Create rows based on columns
-                            createDataFromColumns(
-                                additionalColumns,
-                                original,
-                                isGridHeaderCreated,
-                                gridHeaders,
-                                gridValues
-                            );
-                        }
+                            ? [
+                                  ...filteredManagedColumns,
+                                  managedAdditionalColumn
+                              ]
+                            : [...filteredManagedColumns];
+
+                    // Get export data from parent column
+                    getExportDataFromColumns(
+                        gridColumnsList,
+                        original,
+                        isGridHeaderCreated,
+                        headerValues,
+                        gridRowValues,
+                        gridHeadersCopy
+                    );
+                    if (gridRowValues.length > 0) {
+                        isGridHeaderCreated = true;
                     }
+                    rowValues.push(gridRowValues);
 
-                    // Push formatted data into main array
-                    if (!isGridHeaderCreated) {
-                        rowHeaders = [gridHeaders];
-                        gridHeadersCopy = gridHeaders;
-                    }
-                    rowValues.push(gridValues);
+                    // #endregion
 
-                    // Update header data enry flag value to false
-                    isGridHeaderCreated = true;
+                    // #region - Sub component grid
 
-                    // For sub component Grid
                     if (isSubComponentGrid) {
                         // Check if grid has sub component column provided and corresponding row has sub component data
                         const { subComponentData } = original;
@@ -523,68 +405,58 @@ const ExportData = (props: Object): any => {
                         ) {
                             // Loop through sub component data
                             subComponentData.forEach((subCompRow: Object) => {
-                                // Create a copy from grid header array and push data into it
-                                const subCompHeaders = [...gridHeadersCopy];
-                                // Create values array with empty values for columns, and push data into it.
-                                let subCompValues = [];
-                                subCompValues = gridHeadersCopy.map(
-                                    (): string => {
-                                        return "";
-                                    }
-                                );
+                                // Check if entries for grid row is already present
+                                const isGridRowPresent =
+                                    gridHeadersCopy.length > 0;
 
-                                // Create rows based on subcomponent columns
-                                createDataFromColumns(
-                                    filteredManagedSubComponentColumns,
-                                    subCompRow,
-                                    isSubCompHeaderCreated,
-                                    subCompHeaders,
-                                    subCompValues
-                                );
+                                // If grid row exist, create values array with empty values for grid columns, and push data into it.
+                                let subCompRowValues = [];
+                                if (isGridRowPresent) {
+                                    subCompRowValues = gridHeadersCopy.map(
+                                        (): string => {
+                                            return "";
+                                        }
+                                    );
+                                }
 
-                                // Loop through additional columns
-                                if (
+                                // Columns from which export data has to be collected
+                                const subCompColumnsList =
                                     managedSubComponentAdditionalColumn &&
                                     managedSubComponentAdditionalColumn.display ===
                                         true
-                                ) {
-                                    // If inner cells are present
-                                    const subCompAdditionalColumns =
-                                        managedSubComponentAdditionalColumn.innerCells;
-                                    if (
-                                        subCompAdditionalColumns &&
-                                        subCompAdditionalColumns.length > 0
-                                    ) {
-                                        // Create rows based on columns
-                                        createDataFromColumns(
-                                            subCompAdditionalColumns,
-                                            subCompRow,
-                                            isSubCompHeaderCreated,
-                                            subCompHeaders,
-                                            subCompValues
-                                        );
-                                    }
-                                }
+                                        ? [
+                                              ...filteredManagedSubComponentColumns,
+                                              managedSubComponentAdditionalColumn
+                                          ]
+                                        : [
+                                              ...filteredManagedSubComponentColumns
+                                          ];
 
-                                // Push formatted data into main array
-                                if (!isSubCompHeaderCreated) {
-                                    rowHeaders = [subCompHeaders];
+                                // Get export data from parent column
+                                getExportDataFromColumns(
+                                    subCompColumnsList,
+                                    subCompRow,
+                                    isSubCompHeaderCreated,
+                                    headerValues,
+                                    subCompRowValues
+                                );
+                                if (subCompRowValues.length > 0) {
+                                    isSubCompHeaderCreated = true;
                                 }
-                                rowValues.push(subCompValues);
-
-                                // Update header data enry flag value to false
-                                isSubCompHeaderCreated = true;
+                                rowValues.push(subCompRowValues);
                             });
                         }
                     }
+                    // #endregion
                 }
             });
 
+            // Call functions corresponding to selected download type
             downloadTypes.forEach((item: Object) => {
                 if (item === "pdf") {
-                    downloadPDF(rowValues, rowHeaders);
+                    downloadPDF(rowValues, [headerValues]);
                 } else {
-                    downloadSheetFile(rowValues, rowHeaders, item);
+                    downloadSheetFile(rowValues, [headerValues], item);
                 }
             });
         } else if (!(rows && rows.length > 0)) {

@@ -344,6 +344,13 @@ const GridComponent = (props) => {
         "ZZZ"
     ];
 
+    const validateData = (value: any): string => {
+        if (value !== null && value !== undefined) {
+            return value.toString();
+        }
+        return "";
+    };
+
     const originalColumns = [
         {
             Header: "Id",
@@ -362,6 +369,15 @@ const GridComponent = (props) => {
                     );
                 }
                 return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { travelId } = rowData;
+                return [
+                    {
+                        header: "Travel Id",
+                        body: validateData(travelId)
+                    }
+                ];
             }
         },
         {
@@ -391,56 +407,14 @@ const GridComponent = (props) => {
                     Header: "Date",
                     accessor: "date",
                     isSearchable: true
-                },
-                {
-                    Header: "Flight Details",
-                    accessor: "flightdetails",
-                    isSearchable: true,
-                    innerCells: [
-                        {
-                            Header: "Connection Flights",
-                            accessor: "connectionflights",
-                            isSearchable: true,
-                            isArray: true,
-                            innerCells: [
-                                {
-                                    Header: "Airline Name",
-                                    accessor: "airlinename",
-                                    isSearchable: true
-                                },
-                                {
-                                    Header: "Airline Numbers",
-                                    accessor: "airlinenumbers",
-                                    isSearchable: true,
-                                    innerCells: [
-                                        {
-                                            Header: "Code",
-                                            accessor: "code",
-                                            isSearchable: true
-                                        },
-                                        {
-                                            Header: "Number",
-                                            accessor: "number",
-                                            isSearchable: true
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            Header: "Flight Class",
-                            accessor: "flightclass",
-                            isSearchable: true
-                        }
-                    ]
                 }
             ],
             sortValue: "flightno",
             isSearchable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
-                if (rowData.flight) {
-                    const { flightno, date, flightdetails } = rowData.flight;
-                    const { flightclass, connectionflights } = flightdetails;
+                const { flight } = rowData;
+                if (flight) {
+                    const { flightno, date } = flight;
                     return (
                         <div className="flight-details">
                             <DisplayTag columnKey="flight" cellKey="flightno">
@@ -449,22 +423,6 @@ const GridComponent = (props) => {
                             <DisplayTag columnKey="flight" cellKey="date">
                                 <span>{getValueOfDate(date, "cell")}</span>
                             </DisplayTag>
-                            <br />
-                            <span>{flightclass} Class</span>
-                            <br />
-                            {connectionflights.map((item, index) => {
-                                const { airlinename, airlinenumbers } = item;
-                                const { code, number } = airlinenumbers;
-                                return (
-                                    <React.Fragment key={index}>
-                                        <span>
-                                            {index + 1}) {airlinename}: {code}-
-                                            {number}
-                                        </span>
-                                        <br />
-                                    </React.Fragment>
-                                );
-                            })}
                         </div>
                     );
                 }
@@ -487,6 +445,20 @@ const GridComponent = (props) => {
                     );
                 }
                 return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { flight } = rowData;
+                const { flightno, date } = flight || {};
+                return [
+                    {
+                        header: "Flight No",
+                        body: validateData(flightno)
+                    },
+                    {
+                        header: "Flight Date",
+                        body: validateData(date)
+                    }
+                ];
             }
         },
         {
@@ -512,8 +484,9 @@ const GridComponent = (props) => {
             disableSortBy: true,
             isSearchable: false,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
-                if (rowData.segment) {
-                    const { from, to } = rowData.segment;
+                const { segment } = rowData;
+                if (segment) {
+                    const { from, to } = segment;
                     return (
                         <div className="segment-details">
                             <DisplayTag columnKey="segment" cellKey="from">
@@ -548,6 +521,20 @@ const GridComponent = (props) => {
                     );
                 }
                 return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { segment } = rowData;
+                const { from, to } = segment || {};
+                return [
+                    {
+                        header: "Origin",
+                        body: validateData(from)
+                    },
+                    {
+                        header: "Destination",
+                        body: validateData(to)
+                    }
+                ];
             }
         },
         {
@@ -610,6 +597,53 @@ const GridComponent = (props) => {
                         fixedRowHeight={fixedRowHeight}
                     />
                 );
+            },
+            exportData: (rowData, isDesktop) => {
+                const { details } = rowData;
+                const {
+                    startTime,
+                    endTime,
+                    status,
+                    additionalStatus,
+                    flightModel,
+                    bodyType,
+                    type,
+                    timeStatus
+                } = details || {};
+                return [
+                    {
+                        header: "Departure Time",
+                        body: validateData(startTime)
+                    },
+                    {
+                        header: "Arrival Time",
+                        body: validateData(endTime)
+                    },
+                    {
+                        header: "Flight Status",
+                        body: validateData(status)
+                    },
+                    {
+                        header: "Flight Additional Status",
+                        body: validateData(additionalStatus)
+                    },
+                    {
+                        header: "Flight Model",
+                        body: validateData(flightModel)
+                    },
+                    {
+                        header: "Body Type",
+                        body: validateData(bodyType)
+                    },
+                    {
+                        header: "Flight Type",
+                        body: validateData(type)
+                    },
+                    {
+                        header: "Time Status",
+                        body: validateData(timeStatus)
+                    }
+                ];
             }
         },
         {
@@ -634,8 +668,9 @@ const GridComponent = (props) => {
             sortValue: "percentage",
             isSearchable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
-                if (rowData.weight) {
-                    const { percentage, value } = rowData.weight;
+                const { weight } = rowData;
+                if (weight) {
+                    const { percentage, value } = weight;
                     const splitValue = value ? value.split("/") : [];
                     let valuePrefix;
                     let valueSuffix = "";
@@ -658,6 +693,20 @@ const GridComponent = (props) => {
                     );
                 }
                 return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { weight } = rowData;
+                const { percentage, value } = weight || {};
+                return [
+                    {
+                        header: "Weight %",
+                        body: validateData(percentage)
+                    },
+                    {
+                        header: "Weight",
+                        body: validateData(value)
+                    }
+                ];
             }
         },
         {
@@ -680,8 +729,9 @@ const GridComponent = (props) => {
             sortValue: "percentage",
             isSearchable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
-                if (rowData.volume) {
-                    const { percentage, value } = rowData.volume;
+                const { volume } = rowData;
+                if (volume) {
+                    const { percentage, value } = volume;
                     const splitValue = value ? value.split("/") : [];
                     let valuePrefix;
                     let valueSuffix = "";
@@ -704,6 +754,20 @@ const GridComponent = (props) => {
                     );
                 }
                 return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { volume } = rowData;
+                const { percentage, value } = volume || {};
+                return [
+                    {
+                        header: "Volume %",
+                        body: validateData(percentage)
+                    },
+                    {
+                        header: "Volume",
+                        body: validateData(value)
+                    }
+                ];
             }
         },
         {
@@ -727,7 +791,7 @@ const GridComponent = (props) => {
             isSearchable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { uldPositions } = rowData;
-                if (uldPositions) {
+                if (uldPositions && uldPositions.length > 0) {
                     return (
                         <div className="uld-details">
                             <ul>
@@ -739,17 +803,13 @@ const GridComponent = (props) => {
                                                 columnKey="uldPositions"
                                                 cellKey="position"
                                             >
-                                                <span>
-                                                    {positions.position}
-                                                </span>
+                                                <span>{position}</span>
                                             </DisplayTag>
                                             <DisplayTag
                                                 columnKey="uldPositions"
                                                 cellKey="value"
                                             >
-                                                <strong>
-                                                    {positions.value}
-                                                </strong>
+                                                <strong>{value}</strong>
                                             </DisplayTag>
                                         </li>
                                     );
@@ -759,6 +819,26 @@ const GridComponent = (props) => {
                     );
                 }
                 return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { uldPositions } = rowData;
+                const positionArray = [];
+                const valueArray = [];
+                uldPositions.forEach((uld) => {
+                    const { position, value } = uld;
+                    positionArray.push(validateData(position));
+                    valueArray.push(validateData(value));
+                });
+                return [
+                    {
+                        header: "ULD Position",
+                        body: positionArray.join(" | ")
+                    },
+                    {
+                        header: "ULD Value",
+                        body: valueArray.join(" | ")
+                    }
+                ];
             }
         },
         {
@@ -777,6 +857,8 @@ const GridComponent = (props) => {
                     isSearchable: true
                 }
             ],
+            sortValue: "revenue",
+            isSearchable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 if (rowData.revenue) {
                     const { revenue, yeild } = rowData.revenue;
@@ -793,8 +875,20 @@ const GridComponent = (props) => {
                 }
                 return null;
             },
-            sortValue: "revenue",
-            isSearchable: true
+            exportData: (rowData, isDesktop) => {
+                const revenueData = rowData ? rowData.revenue : {};
+                const { revenue, yeild } = revenueData;
+                return [
+                    {
+                        header: "Revenue",
+                        body: validateData(revenue)
+                    },
+                    {
+                        header: "Yeild",
+                        body: validateData(yeild)
+                    }
+                ];
+            }
         },
         {
             Header: "SR",
@@ -829,6 +923,15 @@ const GridComponent = (props) => {
                     );
                 }
                 return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { sr } = rowData;
+                return [
+                    {
+                        header: "SR",
+                        body: validateData(sr)
+                    }
+                ];
             }
         },
         {
@@ -850,8 +953,9 @@ const GridComponent = (props) => {
             disableSortBy: true,
             isSearchable: false,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
-                if (rowData.queuedBooking) {
-                    const { sr, volume } = rowData.queuedBooking;
+                const { queuedBooking } = rowData;
+                if (queuedBooking) {
+                    const { sr, volume } = queuedBooking;
                     return (
                         <div className="queued-details">
                             <DisplayTag columnKey="queuedBooking" cellKey="sr">
@@ -871,6 +975,20 @@ const GridComponent = (props) => {
                     );
                 }
                 return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { queuedBooking } = rowData;
+                const { sr, volume } = queuedBooking || {};
+                return [
+                    {
+                        header: "Queued Booking SR",
+                        body: validateData(sr)
+                    },
+                    {
+                        header: "Queued Booking Volume",
+                        body: validateData(volume)
+                    }
+                ];
             }
         }
     ];
@@ -932,6 +1050,62 @@ const GridComponent = (props) => {
                     </DisplayTag>
                 </div>
             );
+        },
+        exportData: (rowData, isDesktop) => {
+            const dataToReturn = [];
+            const { remarks } = rowData;
+            dataToReturn.push({
+                header: "Remarks",
+                body: validateData(remarks)
+            });
+            if (!isDesktop) {
+                const { details } = rowData;
+                const {
+                    startTime,
+                    endTime,
+                    status,
+                    additionalStatus,
+                    flightModel,
+                    bodyType,
+                    type,
+                    timeStatus
+                } = details || {};
+                dataToReturn.push(
+                    {
+                        header: "Departure Time",
+                        body: validateData(startTime)
+                    },
+                    {
+                        header: "Arrival Time",
+                        body: validateData(endTime)
+                    },
+                    {
+                        header: "Flight Status",
+                        body: validateData(status)
+                    },
+                    {
+                        header: "Flight Additional Status",
+                        body: validateData(additionalStatus)
+                    },
+                    {
+                        header: "Flight Model",
+                        body: validateData(flightModel)
+                    },
+                    {
+                        header: "Body Type",
+                        body: validateData(bodyType)
+                    },
+                    {
+                        header: "Flight Type",
+                        body: validateData(type)
+                    },
+                    {
+                        header: "Time Status",
+                        body: validateData(timeStatus)
+                    }
+                );
+            }
+            return dataToReturn;
         }
     };
     const [columnToExpand, setColumnToExpand] = useState(null);
@@ -972,6 +1146,23 @@ const GridComponent = (props) => {
                     </div>
                 </div>
             );
+        },
+        exportData: (rowData, isDesktop) => {
+            const { titleId, title, count } = rowData;
+            return [
+                {
+                    header: "Title ID",
+                    body: validateData(titleId)
+                },
+                {
+                    header: "Title",
+                    body: validateData(title)
+                },
+                {
+                    header: "Total Count",
+                    body: validateData(count)
+                }
+            ];
         }
     };
     const [parentColumn, setParentColumn] = useState(null);
@@ -994,6 +1185,15 @@ const GridComponent = (props) => {
                     );
                 }
                 return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { hawbId } = rowData;
+                return [
+                    {
+                        header: "HAWB ID",
+                        body: validateData(hawbId)
+                    }
+                ];
             }
         },
         {
@@ -1033,30 +1233,6 @@ const GridComponent = (props) => {
                 {
                     Header: "Type",
                     accessor: "type"
-                },
-                {
-                    Header: "STD",
-                    accessor: "std",
-                    isSearchable: true,
-                    innerCells: [
-                        {
-                            Header: "Item1",
-                            accessor: "item1",
-                            isSearchable: true
-                        },
-                        {
-                            Header: "Item2",
-                            accessor: "item2"
-                        },
-                        {
-                            Header: "Item3",
-                            accessor: "item3"
-                        },
-                        {
-                            Header: "Item4",
-                            accessor: "item4"
-                        }
-                    ]
                 }
             ],
             disableSortBy: true,
@@ -1195,6 +1371,66 @@ const GridComponent = (props) => {
                         </ul>
                     </div>
                 );
+            },
+            exportData: (rowData, isDesktop) => {
+                const { hawb } = rowData;
+                const {
+                    from,
+                    to,
+                    goodsType,
+                    hawbNo,
+                    ports,
+                    status,
+                    std,
+                    type
+                } = hawb;
+                const { item1, item2, item3, item4 } = std;
+                return [
+                    {
+                        header: "HAWB Origin",
+                        body: validateData(from)
+                    },
+                    {
+                        header: "HAWB Destination",
+                        body: validateData(to)
+                    },
+                    {
+                        header: "Goods Type",
+                        body: validateData(goodsType)
+                    },
+                    {
+                        header: "HAWB No",
+                        body: validateData(hawbNo)
+                    },
+                    {
+                        header: "HAWB Ports",
+                        body: validateData(ports)
+                    },
+                    {
+                        header: "HAWB Status",
+                        body: validateData(status)
+                    },
+                    {
+                        header: "Standard Item 1",
+                        body: validateData(item1)
+                    },
+                    {
+                        header: "Standard Item 2",
+                        body: validateData(item2)
+                    },
+                    {
+                        header: "Standard Item 3",
+                        body: validateData(item3)
+                    },
+                    {
+                        header: "Standard Item 4",
+                        body: validateData(item4)
+                    },
+                    {
+                        header: "HAWB Type",
+                        body: validateData(type)
+                    }
+                ];
             }
         },
         {
@@ -1262,6 +1498,24 @@ const GridComponent = (props) => {
                     );
                 }
                 return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { scr } = rowData;
+                const { ack, num, status } = scr;
+                return [
+                    {
+                        header: "SCR Acknowledgement",
+                        body: validateData(ack)
+                    },
+                    {
+                        header: "SCR Number",
+                        body: validateData(num)
+                    },
+                    {
+                        header: "SCR Status",
+                        body: validateData(status)
+                    }
+                ];
             }
         }
     ];
@@ -1281,6 +1535,15 @@ const GridComponent = (props) => {
                     </DisplayTag>
                 </div>
             );
+        },
+        exportData: (rowData, isDesktop) => {
+            const { remarks } = rowData;
+            return [
+                {
+                    header: "HAWB Remarks",
+                    body: validateData(remarks)
+                }
+            ];
         }
     };
     const [
