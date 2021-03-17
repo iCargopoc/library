@@ -28,6 +28,13 @@ describe("render Index file ", () => {
         });
     }
 
+    const validateData = (value: any): string => {
+        if (value !== null && value !== undefined) {
+            return value.toString();
+        }
+        return "";
+    };
+
     const mockDisplayCell = jest.fn(() => {
         return (
             <div className="flight-details">
@@ -67,7 +74,15 @@ describe("render Index file ", () => {
             accessor: "travelId",
             width: 50,
             isSortable: true,
-            disableFilters: true
+            exportData: (rowData, isDesktop) => {
+                const { travelId } = rowData;
+                return [
+                    {
+                        header: "Travel Id",
+                        content: validateData(travelId)
+                    }
+                ];
+            }
         },
         {
             Header: () => {
@@ -81,17 +96,14 @@ describe("render Index file ", () => {
                 {
                     Header: "Flight No",
                     accessor: "flightno",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 },
                 {
                     Header: "Date",
                     accessor: "date",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 }
             ],
-            isSearchable: true,
             sortValue: "flightno",
             displayCell: mockDisplayCell,
             editCell: mockEditCell
@@ -100,8 +112,7 @@ describe("render Index file ", () => {
             Header: "SR",
             accessor: "sr",
             width: 90,
-            isSortable: true,
-            isSearchable: true
+            isSortable: true
         },
         {
             Header: "ULD Positions",
@@ -112,14 +123,12 @@ describe("render Index file ", () => {
                 {
                     Header: "Position",
                     accessor: "position",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 },
                 {
                     Header: "Value",
                     accessor: "value",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 }
             ],
             displayCell: (rowData, DisplayTag) => {
@@ -149,7 +158,26 @@ describe("render Index file ", () => {
                     </div>
                 );
             },
-            isSearchable: true
+            exportData: (rowData, isDesktop) => {
+                const { uldPositions } = rowData;
+                const positionArray = [];
+                const valueArray = [];
+                uldPositions.forEach((uld) => {
+                    const { position, value } = uld;
+                    positionArray.push(validateData(position));
+                    valueArray.push(validateData(value));
+                });
+                return [
+                    {
+                        header: "ULD Position",
+                        content: positionArray.join(" | ")
+                    },
+                    {
+                        header: "ULD Value",
+                        content: valueArray.join(" | ")
+                    }
+                ];
+            }
         }
     ];
 
@@ -177,27 +205,6 @@ describe("render Index file ", () => {
 
     const parentColumn = {
         Header: "ParentColumn",
-        displayCell: (rowData) => {
-            const { title, count, lastModified, date, time } = rowData;
-            return (
-                <div className="parentRow">
-                    <h2 className="parentRowHead">
-                        {title} ({count})
-                    </h2>
-                    <div className="parentRowInfo">
-                        <span className="parentRowInfoType">
-                            Last Modified : {lastModified}
-                        </span>
-                        <span className="parentRowInfoType">{date}</span>
-                        <span className="parentRowInfoType">{time}</span>
-                    </div>
-                </div>
-            );
-        }
-    };
-
-    const parentColumnWithInnerCell = {
-        Header: "ParentColumn",
         innerCells: [
             {
                 Header: "Title Id",
@@ -205,7 +212,7 @@ describe("render Index file ", () => {
             },
             {
                 Header: "Title",
-                accessor: "title"
+                accessor: "parentTitle"
             },
             {
                 Header: "Count",
@@ -228,33 +235,50 @@ describe("render Index file ", () => {
                     </div>
                 </div>
             );
+        },
+        exportData: (rowData, isDesktop) => {
+            const { titleId, parentTitle, count } = rowData;
+            return [
+                {
+                    header: "Title ID",
+                    content: validateData(titleId)
+                },
+                {
+                    header: "Title",
+                    content: validateData(parentTitle)
+                },
+                {
+                    header: "Total Count",
+                    content: validateData(count)
+                }
+            ];
         }
     };
 
     const parentData = [
         {
             titleId: 0,
-            title: "EXCVGRATES",
-            count: 3,
-            lastModified: "User name",
-            date: "21 Jul 2020",
+            parentTitle: "EXCVGRATES 1",
+            count: 300,
+            lastModified: "User name 1",
+            date: "10 Jul 2020",
             time: "18:39"
         },
         {
             titleId: 1,
-            title: "EXCVGRATES",
-            count: 3,
-            lastModified: "User name",
-            date: "21 Jul 2020",
-            time: "18:39"
+            parentTitle: "EXCVGRATES 2",
+            count: 300,
+            lastModified: "User name 2",
+            date: "10 Sep 2020",
+            time: "03:59"
         },
         {
             titleId: 2,
-            title: "EXCVGRATES",
-            count: 1,
-            lastModified: "User name",
-            date: "21 Jul 2020",
-            time: "18:39"
+            parentTitle: "EXCVGRATES 3",
+            count: 300,
+            lastModified: "User name 3",
+            date: "10 Nov 2020",
+            time: "12:10"
         }
     ];
 
@@ -449,7 +473,7 @@ describe("render Index file ", () => {
     const parentDataWithAllChildData = [
         {
             titleId: 0,
-            title: "EXCVGRATES",
+            parentTitle: "EXCVGRATES",
             count: 3,
             lastModified: "User name",
             date: "21 Jul 2020",
@@ -463,7 +487,7 @@ describe("render Index file ", () => {
         },
         {
             titleId: 1,
-            title: "EXCVGRATES",
+            parentTitle: "EXCVGRATES",
             count: 3,
             lastModified: "User name",
             date: "21 Jul 2020",
@@ -477,7 +501,7 @@ describe("render Index file ", () => {
         },
         {
             titleId: 2,
-            title: "EXCVGRATES",
+            parentTitle: "EXCVGRATES",
             count: 1,
             lastModified: "User name",
             date: "21 Jul 2020",
@@ -494,7 +518,7 @@ describe("render Index file ", () => {
     const parentDataWithOnlyLastChildData = [
         {
             titleId: 0,
-            title: "EXCVGRATES",
+            parentTitle: "EXCVGRATES",
             count: 3,
             lastModified: "User name",
             date: "21 Jul 2020",
@@ -502,7 +526,7 @@ describe("render Index file ", () => {
         },
         {
             titleId: 1,
-            title: "EXCVGRATES",
+            parentTitle: "EXCVGRATES",
             count: 3,
             lastModified: "User name",
             date: "21 Jul 2020",
@@ -510,7 +534,7 @@ describe("render Index file ", () => {
         },
         {
             titleId: 2,
-            title: "EXCVGRATES",
+            parentTitle: "EXCVGRATES",
             count: 1,
             lastModified: "User name",
             date: "21 Jul 2020",
@@ -833,7 +857,7 @@ describe("render Index file ", () => {
                 loadMoreData={mockLoadMoreData}
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
-                parentColumn={parentColumnWithInnerCell}
+                parentColumn={parentColumn}
                 parentIdAttribute={parentIdAttribute}
                 parentRowExpandable={false}
                 rowActions={mockRowActions}
@@ -916,51 +940,6 @@ describe("render Index file ", () => {
             "[data-testid='groupsortoverlay']"
         );
         expect(sortOverlay.length).toBe(0);
-
-        // Open export overlay
-        const toggleExportDataOverlay = getByTestId("toggleExportDataOverlay");
-        act(() => {
-            toggleExportDataOverlay.dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        const exportOverlay = getByTestId("exportoverlay");
-        expect(exportOverlay).toBeInTheDocument();
-
-        // Select excel file type
-        const selectPdf = getByTestId("chk_pdf_test");
-        fireEvent.click(selectPdf);
-        expect(selectPdf.checked).toEqual(true);
-
-        // Click export data button
-        fireEvent.click(getByTestId("export_button"));
-    });
-
-    it("test grid with parent data and child data and parentRowExpandable as false - export without inner cells", () => {
-        mockOffsetSize(600, 600);
-        const { container, getByTestId } = render(
-            <Grid
-                title={mockTitle}
-                gridWidth={mockGridWidth}
-                gridData={parentDataWithAllChildData}
-                idAttribute="travelId"
-                paginationType="index"
-                loadMoreData={mockLoadMoreData}
-                columns={gridColumns}
-                columnToExpand={mockAdditionalColumn}
-                parentColumn={parentColumn}
-                parentIdAttribute={parentIdAttribute}
-                parentRowExpandable={false}
-                rowActions={mockRowActions}
-                onRowUpdate={mockUpdateRowData}
-                onRowSelect={mockSelectBulkData}
-                rowsToDeselect={mockRowsToDeselect}
-            />
-        );
-        const gridContainer = container;
-
-        // Check if Grid id rendered.
-        expect(gridContainer).toBeInTheDocument();
 
         // Open export overlay
         const toggleExportDataOverlay = getByTestId("toggleExportDataOverlay");

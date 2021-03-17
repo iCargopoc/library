@@ -11,7 +11,6 @@ describe("CellDisplayAndEditTag unit test", () => {
             Header: "Id",
             accessor: "travelId",
             width: 50,
-            disableFilters: true,
             columnId: "column_0",
             isDisplayInExpandedRegion: false,
             display: true
@@ -25,22 +24,19 @@ describe("CellDisplayAndEditTag unit test", () => {
                     Header: "Flight No",
                     accessor: "flightno",
                     display: true,
-                    isSearchable: true,
                     cellId: "column_1_cell_0"
                 },
                 {
                     Header: "Date",
                     accessor: "date",
                     display: true,
-                    isSearchable: true,
                     cellId: "column_1_cell_1"
                 }
             ],
             sortValue: "flightno",
             columnId: "column_1",
             isDisplayInExpandedRegion: false,
-            display: true,
-            isSearchable: true
+            display: true
         }
     ];
     const columnMockData = {

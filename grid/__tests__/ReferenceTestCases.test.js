@@ -25,8 +25,7 @@ describe("Reference test cases", () => {
         {
             Header: "Id",
             accessor: "travelId",
-            width: 50,
-            disableFilters: true
+            width: 50
         },
         {
             Header: () => {
@@ -38,17 +37,14 @@ describe("Reference test cases", () => {
             innerCells: [
                 {
                     Header: "Flight No",
-                    accessor: "flightno",
-                    isSearchable: true
+                    accessor: "flightno"
                 },
                 {
                     Header: "Date",
-                    accessor: "date",
-                    isSearchable: true
+                    accessor: "date"
                 }
             ],
             sortValue: "flightno",
-            isSearchable: true,
             displayCell: (rowData, DisplayTag) => {
                 const { flightno } = rowData.flight;
                 return (
@@ -63,8 +59,7 @@ describe("Reference test cases", () => {
         {
             Header: "SR",
             accessor: "sr",
-            width: 90,
-            isSearchable: true
+            width: 90
         },
         {
             Header: "ULD Positions",
@@ -73,17 +68,14 @@ describe("Reference test cases", () => {
             innerCells: [
                 {
                     Header: "Position",
-                    accessor: "position",
-                    isSearchable: true
+                    accessor: "position"
                 },
                 {
                     Header: "Value",
-                    accessor: "value",
-                    isSearchable: true
+                    accessor: "value"
                 }
             ],
             disableSortBy: true,
-            isSearchable: true,
             displayCell: (rowData, DisplayTag) => {
                 const { uldPositions } = rowData;
                 return (

@@ -31,6 +31,13 @@ describe("Export data functionality test", () => {
         });
     };
 
+    const validateData = (value: any): string => {
+        if (value !== null && value !== undefined) {
+            return value.toString();
+        }
+        return "";
+    };
+
     const getColumns = (mockFlightEdit) => {
         return [
             {
@@ -42,14 +49,15 @@ describe("Export data functionality test", () => {
                     {
                         Header: "Null cell"
                     }
-                ]
+                ],
+                exportData: (rowData, isDesktop) => {
+                    return null;
+                }
             },
             {
                 Header: "Id",
                 accessor: "travelId",
                 width: 50,
-                disableFilters: true,
-                isSearchable: true,
                 isSortable: true,
                 displayCell: (
                     rowData,
@@ -69,6 +77,15 @@ describe("Export data functionality test", () => {
                         );
                     }
                     return null;
+                },
+                exportData: (rowData) => {
+                    const { travelId } = rowData;
+                    return [
+                        {
+                            header: "Travel Id",
+                            content: validateData(travelId)
+                        }
+                    ];
                 }
             },
             {
@@ -91,17 +108,14 @@ describe("Export data functionality test", () => {
                     {
                         Header: "Flight No",
                         accessor: "flightno",
-                        isSortable: true,
-                        isSearchable: true
+                        isSortable: true
                     },
                     {
                         Header: "Date",
-                        accessor: "date",
-                        isSearchable: true
+                        accessor: "date"
                     }
                 ],
                 sortValue: "flightno",
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -129,7 +143,22 @@ describe("Export data functionality test", () => {
                     }
                     return null;
                 },
-                editCell: mockFlightEdit
+                editCell: mockFlightEdit,
+                exportData: (rowData, isDesktop) => {
+                    const { flight } = rowData;
+                    const { flightno, date } = flight || {};
+
+                    return [
+                        {
+                            header: "Flight No",
+                            content: validateData(flightno)
+                        },
+                        {
+                            header: "Flight Date",
+                            content: validateData(date)
+                        }
+                    ];
+                }
             },
             {
                 groupHeader: "Flight & Segment",
@@ -141,18 +170,15 @@ describe("Export data functionality test", () => {
                     {
                         Header: "From",
                         accessor: "from",
-                        isSortable: true,
-                        isSearchable: true
+                        isSortable: true
                     },
                     {
                         Header: "To",
                         accessor: "to",
-                        isSortable: true,
-                        isSearchable: true
+                        isSortable: true
                     }
                 ],
                 disableSortBy: true,
-                isSearchable: false,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -176,6 +202,20 @@ describe("Export data functionality test", () => {
                         );
                     }
                     return null;
+                },
+                exportData: (rowData, isDesktop) => {
+                    const { segment } = rowData;
+                    const { from, to } = segment || {};
+                    return [
+                        {
+                            header: "Origin",
+                            content: validateData(from)
+                        },
+                        {
+                            header: "Destination",
+                            content: validateData(to)
+                        }
+                    ];
                 }
             },
             {
@@ -186,47 +226,38 @@ describe("Export data functionality test", () => {
                 innerCells: [
                     {
                         Header: "Flight Model",
-                        accessor: "flightModel",
-                        isSearchable: true
+                        accessor: "flightModel"
                     },
                     {
                         Header: "Body Type",
-                        accessor: "bodyType",
-                        isSearchable: true
+                        accessor: "bodyType"
                     },
                     {
                         Header: "Type",
-                        accessor: "type",
-                        isSearchable: true
+                        accessor: "type"
                     },
                     {
                         Header: "Start Time",
-                        accessor: "startTime",
-                        isSearchable: true
+                        accessor: "startTime"
                     },
                     {
                         Header: "End Time",
-                        accessor: "endTime",
-                        isSearchable: true
+                        accessor: "endTime"
                     },
                     {
                         Header: "Status",
-                        accessor: "status",
-                        isSearchable: true
+                        accessor: "status"
                     },
                     {
                         Header: "Additional Status",
-                        accessor: "additionalStatus",
-                        isSearchable: true
+                        accessor: "additionalStatus"
                     },
                     {
                         Header: "Time Status",
-                        accessor: "timeStatus",
-                        isSearchable: true
+                        accessor: "timeStatus"
                     }
                 ],
                 disableSortBy: true,
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -409,6 +440,53 @@ describe("Export data functionality test", () => {
                         );
                     }
                     return null;
+                },
+                exportData: (rowData, isDesktop) => {
+                    const { details } = rowData;
+                    const {
+                        startTime,
+                        endTime,
+                        status,
+                        additionalStatus,
+                        flightModel,
+                        bodyType,
+                        type,
+                        timeStatus
+                    } = details || {};
+                    return [
+                        {
+                            header: "Departure Time",
+                            content: validateData(startTime)
+                        },
+                        {
+                            header: "Arrival Time",
+                            content: validateData(endTime)
+                        },
+                        {
+                            header: "Flight Status",
+                            content: validateData(status)
+                        },
+                        {
+                            header: "Flight Additional Status",
+                            content: validateData(additionalStatus)
+                        },
+                        {
+                            header: "Flight Model",
+                            content: validateData(flightModel)
+                        },
+                        {
+                            header: "Body Type",
+                            content: validateData(bodyType)
+                        },
+                        {
+                            header: "Flight Type",
+                            content: validateData(type)
+                        },
+                        {
+                            header: "Time Status",
+                            content: validateData(timeStatus)
+                        }
+                    ];
                 }
             },
             {
@@ -420,18 +498,15 @@ describe("Export data functionality test", () => {
                     {
                         Header: "Percentage",
                         accessor: "percentage",
-                        isSortable: true,
-                        isSearchable: true
+                        isSortable: true
                     },
                     {
                         Header: "Value",
                         accessor: "value",
-                        isSortable: true,
-                        isSearchable: true
+                        isSortable: true
                     }
                 ],
                 sortValue: "percentage",
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -470,6 +545,20 @@ describe("Export data functionality test", () => {
                         );
                     }
                     return null;
+                },
+                exportData: (rowData, isDesktop) => {
+                    const { weight } = rowData;
+                    const { percentage, value } = weight || {};
+                    return [
+                        {
+                            header: "Weight %",
+                            content: validateData(percentage)
+                        },
+                        {
+                            header: "Weight",
+                            content: validateData(value)
+                        }
+                    ];
                 }
             },
             {
@@ -480,17 +569,14 @@ describe("Export data functionality test", () => {
                 innerCells: [
                     {
                         Header: "Percentage",
-                        accessor: "percentage",
-                        isSearchable: true
+                        accessor: "percentage"
                     },
                     {
                         Header: "Value",
-                        accessor: "value",
-                        isSearchable: true
+                        accessor: "value"
                     }
                 ],
                 sortValue: "percentage",
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -529,6 +615,20 @@ describe("Export data functionality test", () => {
                         );
                     }
                     return null;
+                },
+                exportData: (rowData, isDesktop) => {
+                    const { volume } = rowData;
+                    const { percentage, value } = volume || {};
+                    return [
+                        {
+                            header: "Volume %",
+                            content: validateData(percentage)
+                        },
+                        {
+                            header: "Volume",
+                            content: validateData(value)
+                        }
+                    ];
                 }
             },
             {
@@ -539,17 +639,14 @@ describe("Export data functionality test", () => {
                 innerCells: [
                     {
                         Header: "Position",
-                        accessor: "position",
-                        isSearchable: true
+                        accessor: "position"
                     },
                     {
                         Header: "Value",
-                        accessor: "value",
-                        isSearchable: true
+                        accessor: "value"
                     }
                 ],
                 disableSortBy: true,
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -592,6 +689,26 @@ describe("Export data functionality test", () => {
                         );
                     }
                     return null;
+                },
+                exportData: (rowData, isDesktop) => {
+                    const { uldPositions } = rowData;
+                    const positionArray = [];
+                    const valueArray = [];
+                    uldPositions.forEach((uld) => {
+                        const { position, value } = uld;
+                        positionArray.push(validateData(position));
+                        valueArray.push(validateData(value));
+                    });
+                    return [
+                        {
+                            header: "ULD Position",
+                            content: positionArray.join(" | ")
+                        },
+                        {
+                            header: "ULD Value",
+                            content: valueArray.join(" | ")
+                        }
+                    ];
                 }
             },
             {
@@ -601,13 +718,11 @@ describe("Export data functionality test", () => {
                 innerCells: [
                     {
                         Header: "Revenue",
-                        accessor: "revenue",
-                        isSearchable: true
+                        accessor: "revenue"
                     },
                     {
                         Header: "Yeild",
-                        accessor: "yeild",
-                        isSearchable: true
+                        accessor: "yeild"
                     }
                 ],
                 displayCell: (
@@ -638,14 +753,27 @@ describe("Export data functionality test", () => {
                     return null;
                 },
                 sortValue: "revenue",
-                isSearchable: true
+                exportData: (rowData, isDesktop) => {
+                    const revenueData = rowData ? rowData.revenue : {};
+                    const { revenue, yeild } = revenueData;
+                    return [
+                        {
+                            header: "Revenue",
+                            content: validateData(revenue)
+                        },
+                        {
+                            header: "Yeild",
+                            content: validateData(yeild)
+                        }
+                    ];
+                }
             },
             {
                 Header: "SR",
                 accessor: "sr",
+                searchKeys: ["sr"],
                 width: 90,
                 isSortable: true,
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -661,6 +789,15 @@ describe("Export data functionality test", () => {
                         );
                     }
                     return null;
+                },
+                exportData: (rowData, isDesktop) => {
+                    const { sr } = rowData;
+                    return [
+                        {
+                            header: "SR",
+                            content: validateData(sr)
+                        }
+                    ];
                 }
             },
             {
@@ -670,17 +807,14 @@ describe("Export data functionality test", () => {
                 innerCells: [
                     {
                         Header: "Sr",
-                        accessor: "sr",
-                        isSearchable: true
+                        accessor: "sr"
                     },
                     {
                         Header: "Volume",
-                        accessor: "volume",
-                        isSearchable: true
+                        accessor: "volume"
                     }
                 ],
                 disableSortBy: true,
-                isSearchable: false,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -714,6 +848,20 @@ describe("Export data functionality test", () => {
                         );
                     }
                     return null;
+                },
+                exportData: (rowData, isDesktop) => {
+                    const { queuedBooking } = rowData;
+                    const { sr, volume } = queuedBooking || {};
+                    return [
+                        {
+                            header: "Queued Booking SR",
+                            content: validateData(sr)
+                        },
+                        {
+                            header: "Queued Booking Volume",
+                            content: validateData(volume)
+                        }
+                    ];
                 }
             }
         ];
@@ -780,6 +928,62 @@ describe("Export data functionality test", () => {
                         </DisplayTag>
                     </div>
                 );
+            },
+            exportData: (rowData, isDesktop) => {
+                const dataToReturn = [];
+                const { remarks } = rowData;
+                dataToReturn.push({
+                    header: "Remarks",
+                    content: validateData(remarks)
+                });
+                if (!isDesktop) {
+                    const { details } = rowData;
+                    const {
+                        startTime,
+                        endTime,
+                        status,
+                        additionalStatus,
+                        flightModel,
+                        bodyType,
+                        type,
+                        timeStatus
+                    } = details || {};
+                    dataToReturn.push(
+                        {
+                            header: "Departure Time",
+                            content: validateData(startTime)
+                        },
+                        {
+                            header: "Arrival Time",
+                            content: validateData(endTime)
+                        },
+                        {
+                            header: "Flight Status",
+                            content: validateData(status)
+                        },
+                        {
+                            header: "Flight Additional Status",
+                            content: validateData(additionalStatus)
+                        },
+                        {
+                            header: "Flight Model",
+                            content: validateData(flightModel)
+                        },
+                        {
+                            header: "Body Type",
+                            content: validateData(bodyType)
+                        },
+                        {
+                            header: "Flight Type",
+                            content: validateData(type)
+                        },
+                        {
+                            header: "Time Status",
+                            content: validateData(timeStatus)
+                        }
+                    );
+                }
+                return dataToReturn;
             }
         };
     };
@@ -980,6 +1184,7 @@ describe("Export data functionality test", () => {
                 rows={[]}
                 columns={[]}
                 additionalColumn={null}
+                isDesktop
             />
         );
         const gridContainer = container;

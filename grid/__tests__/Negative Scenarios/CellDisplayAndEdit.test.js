@@ -53,21 +53,18 @@ describe("CellDisplayAndEdit unit test", () => {
             displayCell: mockDisplayCell,
             editCell: mockEditCell,
             display: true,
-            isSearchable: true,
             innerCells: [
                 {
                     Header: "Flight No",
                     accessor: "flightno",
                     display: true,
-                    cellId: "column_1_cell_0",
-                    isSearchable: true
+                    cellId: "column_1_cell_0"
                 },
                 {
                     Header: "Date",
                     accessor: "date",
                     display: true,
-                    cellId: "column_1_cell_1",
-                    isSearchable: true
+                    cellId: "column_1_cell_1"
                 }
             ],
             isVisible: true
@@ -100,21 +97,18 @@ describe("CellDisplayAndEdit unit test", () => {
             depth: 0,
             displayCell: mockDisplayCell,
             editCell: mockEditCell,
-            isSearchable: true,
             innerCells: [
                 {
                     Header: "Flight No",
                     accessor: "flightno",
                     display: true,
-                    cellId: "column_1_cell_0",
-                    isSearchable: true
+                    cellId: "column_1_cell_0"
                 },
                 {
                     Header: "Date",
                     accessor: "date",
                     display: true,
-                    cellId: "column_1_cell_1",
-                    isSearchable: true
+                    cellId: "column_1_cell_1"
                 }
             ],
             isVisible: true,
@@ -133,18 +127,15 @@ describe("CellDisplayAndEdit unit test", () => {
                     Header: "Flight No",
                     accessor: "flightno",
                     display: true,
-                    cellId: "column_1_cell_0",
-                    isSearchable: true
+                    cellId: "column_1_cell_0"
                 },
                 {
                     Header: "Date",
                     accessor: "date",
                     display: true,
-                    cellId: "column_1_cell_1",
-                    isSearchable: true
+                    cellId: "column_1_cell_1"
                 }
             ],
-            isSearchable: true,
             sortValue: "flightno",
             displayCell: mockDisplayCell,
             editCell: mockEditCell,

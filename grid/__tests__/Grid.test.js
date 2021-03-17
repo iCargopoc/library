@@ -63,8 +63,7 @@ describe("render Index file ", () => {
             Header: "Id",
             accessor: "travelId",
             width: 50,
-            isSortable: true,
-            disableFilters: true
+            isSortable: true
         },
         {
             Header: () => {
@@ -78,17 +77,15 @@ describe("render Index file ", () => {
                 {
                     Header: "Flight No",
                     accessor: "flightno",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 },
                 {
                     Header: "Date",
                     accessor: "date",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 }
             ],
-            isSearchable: true,
+            searchKeys: ["flight.flightno", "flight.date"],
             sortValue: "flightno",
             displayCell: mockDisplayCell,
             editCell: mockEditCell
@@ -96,9 +93,9 @@ describe("render Index file ", () => {
         {
             Header: "SR",
             accessor: "sr",
+            searchKeys: ["sr"],
             width: 90,
-            isSortable: true,
-            isSearchable: true
+            isSortable: true
         },
         {
             Header: "ULD Positions",
@@ -109,16 +106,15 @@ describe("render Index file ", () => {
                 {
                     Header: "Position",
                     accessor: "position",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 },
                 {
                     Header: "Value",
                     accessor: "value",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 }
             ],
+            searchKeys: ["uldPositions.*.position", "uldPositions.*.value"],
             displayCell: (rowData, DisplayTag) => {
                 const { uldPositions } = rowData;
                 return (
@@ -145,29 +141,25 @@ describe("render Index file ", () => {
                         </ul>
                     </div>
                 );
-            },
-            isSearchable: true
+            }
         },
         {
             Header: "Segment",
             accessor: "segment",
             width: 50,
-            disableFilters: false,
             display: false,
             innerCells: [
                 {
                     Header: "From",
                     accessor: "from",
                     display: false,
-                    isSortable: false,
-                    isSearchable: false
+                    isSortable: false
                 },
                 {
                     Header: "To",
                     accessor: "to",
                     display: false,
-                    isSortable: false,
-                    isSearchable: false
+                    isSortable: false
                 }
             ]
         },
@@ -197,19 +189,8 @@ describe("render Index file ", () => {
 
     const gridColumnsWithoutSearch = [...gridColumns].map((col) => {
         const updatedCol = { ...col };
-        const { isSearchable, innerCells } = col;
-        if (isSearchable === true) {
-            updatedCol.isSearchable = false;
-        }
-        if (innerCells && innerCells.length > 0) {
-            const updatedInnerCells = [...innerCells].map((cell) => {
-                const updatedCell = { ...cell };
-                if (cell.isSearchable === true) {
-                    updatedCell.isSearchable = false;
-                }
-                return updatedCell;
-            });
-            updatedCol.innerCells = updatedInnerCells;
+        if (col.searchKeys) {
+            delete updatedCol.searchKeys;
         }
         return updatedCol;
     });
@@ -219,7 +200,32 @@ describe("render Index file ", () => {
         innerCells: [
             {
                 Header: "Remarks",
-                accessor: "remarks"
+                accessor: "remarks",
+                searchKeys: ["remarks"]
+            }
+        ],
+        displayCell: (rowData, DisplayTag) => {
+            const { remarks } = rowData;
+            return (
+                <div className="details-wrap">
+                    <DisplayTag columnKey="remarks" cellKey="remarks">
+                        <ul>
+                            <li>{remarks}</li>
+                        </ul>
+                    </DisplayTag>
+                </div>
+            );
+        }
+    };
+
+    const mockAdditionalColumnWithInnerCellsInTablet = {
+        Header: "Remarks",
+        innerCells: [
+            {
+                Header: "Remarks",
+                accessor: "remarks",
+                searchKeys: ["remarks"],
+                onlyInTablet: true
             }
         ],
         displayCell: (rowData, DisplayTag) => {
@@ -445,7 +451,7 @@ describe("render Index file ", () => {
     });
     afterEach(cleanup);
 
-    it("test custom className, theme, row expand, column filter, Ascending group sort and Cell edit without row height calculation", () => {
+    it("test custom className, theme, row expand, column filter, Ascending group sort and Cell edit", () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId, getAllByTestId } = render(
             <Grid
@@ -593,7 +599,7 @@ describe("render Index file ", () => {
         expect(mockUpdateRowData).toHaveBeenCalled();
     });
 
-    it("test row options functionalities and column sort with row height calculation, custom panel and refresh button not passed", () => {
+    it("test row options functionalities and column sort, custom panel and refresh button not passed", () => {
         mockOffsetSize(1440, 900);
         const { getAllByTestId, container, getByTestId } = render(
             <Grid
@@ -699,7 +705,7 @@ describe("render Index file ", () => {
         expect(gridContainer).toBeInTheDocument();
     });
 
-    it("test Grid loading with row selector and all header icons hidden, custom panel and refresh button shown", () => {
+    it("test Grid loading with title, row selector and all header icons hidden, custom panel and refresh button shown", () => {
         mockOffsetSize(1440, 900);
         const { container } = render(
             <Grid
@@ -718,6 +724,7 @@ describe("render Index file ", () => {
                 onRowSelect={mockSelectBulkData}
                 onGridRefresh={mockGridRefresh}
                 CustomPanel={mockCustomPanel}
+                showTitle={false}
                 globalSearch={false}
                 columnFilter={false}
                 groupSort={false}
@@ -727,6 +734,12 @@ describe("render Index file ", () => {
         );
         const gridContainer = container;
         expect(gridContainer).toBeInTheDocument();
+
+        // Check if grid title is present
+        const gridTitleElementCount = gridContainer.querySelectorAll(
+            "[data-testid='grid-title-container']"
+        ).length;
+        expect(gridTitleElementCount).toBe(0);
 
         // Check if custom panel is present
         const customPanelElement = gridContainer.getElementsByClassName(
@@ -835,32 +848,23 @@ describe("render Index file ", () => {
         expect(errorElement).toBeInTheDocument();
     });
 
-    it("test Grid loading without grid title", () => {
+    it("test Grid in isDesktop - true mode, but all expand column innercells - onlyInTablet - true", () => {
         mockOffsetSize(1440, 900);
         const { container } = render(
             <Grid
                 gridData={data}
-                idAttribute="travelId"
-                paginationType="index"
-                pageInfo={pageInfo}
-                loadMoreData={mockLoadMoreData}
-                columnToExpand={mockAdditionalColumn}
-                rowActions={mockRowActions}
-                onRowUpdate={mockUpdateRowData}
-                onRowSelect={mockSelectBulkData}
-                onGridRefresh={mockGridRefresh}
-                CustomPanel={mockCustomPanel}
-                showTitle={false}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumnWithInnerCellsInTablet}
             />
         );
         const gridContainer = container;
         expect(gridContainer).toBeInTheDocument();
 
-        // Check if error message is present
-        const gridTitleElementCount = gridContainer.querySelectorAll(
-            "[data-testid='grid-title-container']"
+        // Check if row expander icon is present or not
+        const rowExpanderIconsList = gridContainer.querySelectorAll(
+            "[data-testid='rowExpanderIcon']"
         ).length;
-        expect(gridTitleElementCount).toBe(0);
+        expect(rowExpanderIconsList).toBe(0);
     });
 
     it("test row selection retained after applying group sort", () => {

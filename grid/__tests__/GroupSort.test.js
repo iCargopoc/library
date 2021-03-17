@@ -28,8 +28,6 @@ describe("Group sort functionality test", () => {
                 Header: "Id",
                 accessor: "travelId",
                 width: 50,
-                disableFilters: true,
-                isSearchable: true,
                 isSortable: true,
                 displayCell: (
                     rowData,
@@ -71,17 +69,14 @@ describe("Group sort functionality test", () => {
                     {
                         Header: "Flight No",
                         accessor: "flightno",
-                        isSortable: true,
-                        isSearchable: true
+                        isSortable: true
                     },
                     {
                         Header: "Date",
-                        accessor: "date",
-                        isSearchable: true
+                        accessor: "date"
                     }
                 ],
                 sortValue: "flightno",
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -121,18 +116,15 @@ describe("Group sort functionality test", () => {
                     {
                         Header: "From",
                         accessor: "from",
-                        isSortable: true,
-                        isSearchable: true
+                        isSortable: true
                     },
                     {
                         Header: "To",
                         accessor: "to",
-                        isSortable: true,
-                        isSearchable: true
+                        isSortable: true
                     }
                 ],
                 disableSortBy: true,
-                isSearchable: false,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -166,47 +158,38 @@ describe("Group sort functionality test", () => {
                 innerCells: [
                     {
                         Header: "Flight Model",
-                        accessor: "flightModel",
-                        isSearchable: true
+                        accessor: "flightModel"
                     },
                     {
                         Header: "Body Type",
-                        accessor: "bodyType",
-                        isSearchable: true
+                        accessor: "bodyType"
                     },
                     {
                         Header: "Type",
-                        accessor: "type",
-                        isSearchable: true
+                        accessor: "type"
                     },
                     {
                         Header: "Start Time",
-                        accessor: "startTime",
-                        isSearchable: true
+                        accessor: "startTime"
                     },
                     {
                         Header: "End Time",
-                        accessor: "endTime",
-                        isSearchable: true
+                        accessor: "endTime"
                     },
                     {
                         Header: "Status",
-                        accessor: "status",
-                        isSearchable: true
+                        accessor: "status"
                     },
                     {
                         Header: "Additional Status",
-                        accessor: "additionalStatus",
-                        isSearchable: true
+                        accessor: "additionalStatus"
                     },
                     {
                         Header: "Time Status",
-                        accessor: "timeStatus",
-                        isSearchable: true
+                        accessor: "timeStatus"
                     }
                 ],
                 disableSortBy: true,
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -400,18 +383,15 @@ describe("Group sort functionality test", () => {
                     {
                         Header: "Percentage",
                         accessor: "percentage",
-                        isSortable: true,
-                        isSearchable: true
+                        isSortable: true
                     },
                     {
                         Header: "Value",
                         accessor: "value",
-                        isSortable: true,
-                        isSearchable: true
+                        isSortable: true
                     }
                 ],
                 sortValue: "percentage",
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -460,17 +440,14 @@ describe("Group sort functionality test", () => {
                 innerCells: [
                     {
                         Header: "Percentage",
-                        accessor: "percentage",
-                        isSearchable: true
+                        accessor: "percentage"
                     },
                     {
                         Header: "Value",
-                        accessor: "value",
-                        isSearchable: true
+                        accessor: "value"
                     }
                 ],
                 sortValue: "percentage",
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -518,17 +495,14 @@ describe("Group sort functionality test", () => {
                 innerCells: [
                     {
                         Header: "Position",
-                        accessor: "position",
-                        isSearchable: true
+                        accessor: "position"
                     },
                     {
                         Header: "Value",
-                        accessor: "value",
-                        isSearchable: true
+                        accessor: "value"
                     }
                 ],
                 disableSortBy: true,
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -580,13 +554,11 @@ describe("Group sort functionality test", () => {
                 innerCells: [
                     {
                         Header: "Revenue",
-                        accessor: "revenue",
-                        isSearchable: true
+                        accessor: "revenue"
                     },
                     {
                         Header: "Yeild",
-                        accessor: "yeild",
-                        isSearchable: true
+                        accessor: "yeild"
                     }
                 ],
                 displayCell: (
@@ -616,15 +588,13 @@ describe("Group sort functionality test", () => {
                     }
                     return null;
                 },
-                sortValue: "revenue",
-                isSearchable: true
+                sortValue: "revenue"
             },
             {
                 Header: "SR",
                 accessor: "sr",
                 width: 90,
                 isSortable: true,
-                isSearchable: true,
                 displayCell: (
                     rowData,
                     DisplayTag,
@@ -649,17 +619,14 @@ describe("Group sort functionality test", () => {
                 innerCells: [
                     {
                         Header: "Sr",
-                        accessor: "sr",
-                        isSearchable: true
+                        accessor: "sr"
                     },
                     {
                         Header: "Volume",
-                        accessor: "volume",
-                        isSearchable: true
+                        accessor: "volume"
                     }
                 ],
                 disableSortBy: true,
-                isSearchable: false,
                 displayCell: (
                     rowData,
                     DisplayTag,

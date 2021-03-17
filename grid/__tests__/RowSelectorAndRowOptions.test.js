@@ -29,8 +29,7 @@ describe("render Index file ", () => {
         {
             Header: "Id",
             accessor: "travelId",
-            width: 50,
-            disableFilters: true
+            width: 50
         },
         {
             Header: "Flight",
@@ -39,24 +38,20 @@ describe("render Index file ", () => {
             innerCells: [
                 {
                     Header: "Flight No",
-                    accessor: "flightno",
-                    isSearchable: true
+                    accessor: "flightno"
                 },
                 {
                     Header: "Date",
-                    accessor: "date",
-                    isSearchable: true
+                    accessor: "date"
                 }
             ],
-            isSearchable: true,
             sortValue: "flightno",
             Cell: mockDisplayCell
         },
         {
             Header: "SR",
             accessor: "sr",
-            width: 90,
-            isSearchable: true
+            width: 90
         },
         {
             Header: "ULD Positions",
@@ -65,13 +60,11 @@ describe("render Index file ", () => {
             innerCells: [
                 {
                     Header: "Position",
-                    accessor: "position",
-                    isSearchable: true
+                    accessor: "position"
                 },
                 {
                     Header: "Value",
-                    accessor: "value",
-                    isSearchable: true
+                    accessor: "value"
                 }
             ],
             disableSortBy: true,
@@ -102,8 +95,7 @@ describe("render Index file ", () => {
                     </div>
                 );
             },
-            columnId: "column_3",
-            isSearchable: true
+            columnId: "column_3"
         }
     ];
 

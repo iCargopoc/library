@@ -30,6 +30,13 @@ describe("render Index file ", () => {
         });
     }
 
+    const validateData = (value: any): string => {
+        if (value !== null && value !== undefined) {
+            return value.toString();
+        }
+        return "";
+    };
+
     let mockGridData = [
         {
             travelId: 60,
@@ -459,7 +466,15 @@ describe("render Index file ", () => {
             accessor: "travelId",
             width: 50,
             isSortable: true,
-            disableFilters: true
+            exportData: (rowData, isDesktop) => {
+                const { travelId } = rowData;
+                return [
+                    {
+                        header: "Travel Id",
+                        content: validateData(travelId)
+                    }
+                ];
+            }
         },
         {
             Header: () => {
@@ -473,17 +488,14 @@ describe("render Index file ", () => {
                 {
                     Header: "Flight No",
                     accessor: "flightno",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 },
                 {
                     Header: "Date",
                     accessor: "date",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 }
             ],
-            isSearchable: true,
             sortValue: "flightno",
             displayCell: mockDisplayCell,
             editCell: mockEditCell
@@ -492,8 +504,7 @@ describe("render Index file ", () => {
             Header: "SR",
             accessor: "sr",
             width: 90,
-            isSortable: true,
-            isSearchable: true
+            isSortable: true
         },
         {
             Header: "ULD Positions",
@@ -504,14 +515,12 @@ describe("render Index file ", () => {
                 {
                     Header: "Position",
                     accessor: "position",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 },
                 {
                     Header: "Value",
                     accessor: "value",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 }
             ],
             displayCell: (rowData, DisplayTag) => {
@@ -541,7 +550,26 @@ describe("render Index file ", () => {
                     </div>
                 );
             },
-            isSearchable: true
+            exportData: (rowData, isDesktop) => {
+                const { uldPositions } = rowData;
+                const positionArray = [];
+                const valueArray = [];
+                uldPositions.forEach((uld) => {
+                    const { position, value } = uld;
+                    positionArray.push(validateData(position));
+                    valueArray.push(validateData(value));
+                });
+                return [
+                    {
+                        header: "ULD Position",
+                        content: positionArray.join(" | ")
+                    },
+                    {
+                        header: "ULD Value",
+                        content: valueArray.join(" | ")
+                    }
+                ];
+            }
         }
     ];
 
@@ -574,7 +602,7 @@ describe("render Index file ", () => {
             accessor: "hawbId",
             width: 250,
             isSortable: true,
-            isSearchable: true,
+            searchKeys: ["hawbId"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawbId } = rowData;
                 if (hawbId !== null && hawbId !== undefined) {
@@ -585,6 +613,15 @@ describe("render Index file ", () => {
                     );
                 }
                 return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { hawbId } = rowData;
+                return [
+                    {
+                        header: "HAWB ID",
+                        content: validateData(hawbId)
+                    }
+                ];
             }
         },
         {
@@ -631,6 +668,26 @@ describe("render Index file ", () => {
                         </ul>
                     </div>
                 );
+            },
+            exportData: (rowData, isDesktop) => {
+                const { subCompUldPositions } = rowData;
+                const positionArray = [];
+                const valueArray = [];
+                subCompUldPositions.forEach((uld) => {
+                    const { subCompPosition, subCompValue } = uld;
+                    positionArray.push(validateData(subCompPosition));
+                    valueArray.push(validateData(subCompValue));
+                });
+                return [
+                    {
+                        header: "ULD Position",
+                        content: positionArray.join(" | ")
+                    },
+                    {
+                        header: "ULD Value",
+                        content: valueArray.join(" | ")
+                    }
+                ];
             }
         },
         {
@@ -724,6 +781,66 @@ describe("render Index file ", () => {
                         </ul>
                     </div>
                 );
+            },
+            exportData: (rowData, isDesktop) => {
+                const { hawb } = rowData;
+                const {
+                    from,
+                    to,
+                    goodsType,
+                    hawbNo,
+                    ports,
+                    status,
+                    std,
+                    type
+                } = hawb;
+                const { item1, item2, item3, item4 } = std;
+                return [
+                    {
+                        header: "HAWB Origin",
+                        content: validateData(from)
+                    },
+                    {
+                        header: "HAWB Destination",
+                        content: validateData(to)
+                    },
+                    {
+                        header: "Goods Type",
+                        content: validateData(goodsType)
+                    },
+                    {
+                        header: "HAWB No",
+                        content: validateData(hawbNo)
+                    },
+                    {
+                        header: "HAWB Ports",
+                        content: validateData(ports)
+                    },
+                    {
+                        header: "HAWB Status",
+                        content: validateData(status)
+                    },
+                    {
+                        header: "Standard Item 1",
+                        content: validateData(item1)
+                    },
+                    {
+                        header: "Standard Item 2",
+                        content: validateData(item2)
+                    },
+                    {
+                        header: "Standard Item 3",
+                        content: validateData(item3)
+                    },
+                    {
+                        header: "Standard Item 4",
+                        content: validateData(item4)
+                    },
+                    {
+                        header: "HAWB Type",
+                        content: validateData(type)
+                    }
+                ];
             }
         },
         {
@@ -731,7 +848,6 @@ describe("render Index file ", () => {
             title: "SCR Details",
             accessor: "scr",
             width: 200,
-            isSearchable: true,
             isSortable: true,
             innerCells: [
                 {
@@ -742,7 +858,6 @@ describe("render Index file ", () => {
                     Header: "NUM",
                     accessor: "num",
                     display: false,
-                    isSearchable: true,
                     isSortable: true
                 },
                 {
@@ -789,6 +904,25 @@ describe("render Index file ", () => {
                         );
                     }
                 }
+                return null;
+            },
+            exportData: (rowData, isDesktop) => {
+                const { scr } = rowData;
+                const { ack, num, status } = scr;
+                return [
+                    {
+                        header: "SCR Acknowledgement",
+                        content: validateData(ack)
+                    },
+                    {
+                        header: "SCR Number",
+                        content: validateData(num)
+                    },
+                    {
+                        header: "SCR Status",
+                        content: validateData(status)
+                    }
+                ];
             }
         },
         {
@@ -799,6 +933,14 @@ describe("render Index file ", () => {
                 return (
                     <div className="travelId-details">This is null column</div>
                 );
+            },
+            exportData: (rowData, isDesktop) => {
+                return [
+                    {
+                        header: "Empty Column",
+                        content: validateData("Empty")
+                    }
+                ];
             }
         },
         {
@@ -812,6 +954,14 @@ describe("render Index file ", () => {
                         This is hidden column
                     </div>
                 );
+            },
+            exportData: (rowData, isDesktop) => {
+                return [
+                    {
+                        header: "Hidden Column",
+                        content: validateData("Hidden")
+                    }
+                ];
             }
         }
     ];
@@ -819,7 +969,7 @@ describe("render Index file ", () => {
     const mockSubComponentAdditionalColumn = {
         Header: "Additional Column",
         innerCells: [
-            { Header: "Remarks", accessor: "remarks" },
+            { Header: "Remarks", accessor: "remarks", searchKeys: ["remarks"] },
             {
                 Header: "sub Comp Uld Positions Additional",
                 accessor: "subCompUldPositions"
@@ -845,6 +995,14 @@ describe("render Index file ", () => {
                     </DisplayTag>
                 </div>
             );
+        },
+        exportData: (rowData, isDesktop) => {
+            return [
+                {
+                    header: "Subcomponent Expand Column",
+                    content: validateData("Subcomponent Expand Column")
+                }
+            ];
         }
     };
 
@@ -1706,7 +1864,7 @@ describe("render Index file ", () => {
 
     it("test export overlay grid with sub component data and without sub component row expand", () => {
         mockOffsetSize(600, 600);
-        const { container, getAllByTestId, getByTestId, getAllByText } = render(
+        const { container, getAllByTestId, getByTestId } = render(
             <Grid
                 title={mockTitle}
                 gridWidth={mockGridWidth}

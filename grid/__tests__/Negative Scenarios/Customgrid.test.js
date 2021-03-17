@@ -34,7 +34,6 @@ describe("render Customgrid", () => {
             Header: "Id",
             accessor: "travelId",
             width: 50,
-            disableFilters: true,
             columnId: "column_0",
             display: true,
             isSortable: true,
@@ -55,22 +54,19 @@ describe("render Customgrid", () => {
                     accessor: "flightno",
                     display: true,
                     cellId: "column_1_cell_0",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 },
                 {
                     Header: "Date",
                     accessor: "date",
                     display: true,
                     cellId: "column_1_cell_1",
-                    isSortable: true,
-                    isSearchable: true
+                    isSortable: true
                 }
             ],
             sortValue: "flightno",
             Cell: mockDisplayCell,
             display: false,
-            isSearchable: true,
             isGroupHeader: false
         },
         {
@@ -80,7 +76,6 @@ describe("render Customgrid", () => {
             columnId: "column_2",
             isSortable: true,
             display: true,
-            isSearchable: true,
             isGroupHeader: false
         }
     ];
@@ -370,6 +365,7 @@ describe("render Customgrid", () => {
                 managableColumns={gridColumns}
                 columnsAccessorList={[]}
                 expandedRowData={mockAdditionalColumn}
+                expandedRowDataAccessorList={[]}
                 gridData={gridData}
                 idAttribute="travelId"
                 updateRowInGrid={mockUpdateRowInGrid}
@@ -398,6 +394,7 @@ describe("render Customgrid", () => {
                 managableColumns={gridColumns}
                 columnsAccessorList={[]}
                 expandedRowData={mockAdditionalColumn}
+                expandedRowDataAccessorList={[]}
                 gridData={gridData}
                 idAttribute="travelId"
                 updateRowInGrid={mockUpdateRowInGrid}
