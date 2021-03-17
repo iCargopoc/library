@@ -446,14 +446,19 @@ const ExportData = (props: Object): any => {
                 }
             });
 
-            // Call functions corresponding to selected download type
-            downloadTypes.forEach((item: Object) => {
-                if (item === "pdf") {
-                    downloadPDF(rowValues, [headerValues]);
-                } else {
-                    downloadSheetFile(rowValues, [headerValues], item);
-                }
-            });
+            // If row data and header data has been collected
+            if (rowValues.length > 0 && headerValues.length > 0) {
+                // Call functions corresponding to selected download type
+                downloadTypes.forEach((item: Object) => {
+                    if (item === "pdf") {
+                        downloadPDF(rowValues, [headerValues]);
+                    } else {
+                        downloadSheetFile(rowValues, [headerValues], item);
+                    }
+                });
+            } else {
+                setWarning("No data has been configured to export");
+            }
         } else if (!(rows && rows.length > 0)) {
             // If no rows available to export
             setWarning("No rows available to export");
