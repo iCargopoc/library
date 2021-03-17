@@ -392,7 +392,6 @@ const GridComponent = (props) => {
             },
             title: "Flight",
             accessor: "flight",
-            isSortable: true,
             innerCells: [
                 {
                     Header: "Flight No",
@@ -475,7 +474,6 @@ const GridComponent = (props) => {
             ],
             searchableAccessorList: ["segment.from", "segment.to"],
             width: 10,
-            isSortable: true,
             disableSortBy: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { segment } = rowData;
@@ -656,7 +654,6 @@ const GridComponent = (props) => {
                 }
             ],
             width: 10,
-            isSortable: true,
             sortValue: "percentage",
             searchableAccessorList: ["weight.percentage", "weight.value"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
@@ -1222,7 +1219,6 @@ const GridComponent = (props) => {
             ],
             onlyInDesktop: true,
             width: 800,
-            isSortable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawb } = rowData;
                 const {
@@ -1439,7 +1435,6 @@ const GridComponent = (props) => {
                 }
             ],
             width: 200,
-            isSortable: true,
             searchableAccessorList: ["scr.num"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { scr } = rowData;
