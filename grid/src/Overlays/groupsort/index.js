@@ -41,11 +41,9 @@ const GroupSort = (props: {
         );
         if (defaultSortBy) {
             let defaultSortOn = "value";
-            if (
-                defaultSortBy.innerCells &&
-                defaultSortBy.innerCells.length > 0
-            ) {
-                const sortableInnerCell = defaultSortBy.innerCells.find(
+            const { innerCells } = defaultSortBy;
+            if (innerCells && innerCells.length > 0) {
+                const sortableInnerCell = innerCells.find(
                     (cell: Object): boolean => cell.isSortable
                 );
                 if (sortableInnerCell && sortableInnerCell.accessor) {

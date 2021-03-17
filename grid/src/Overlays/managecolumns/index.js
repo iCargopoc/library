@@ -42,20 +42,13 @@ const ColumnReordering = (props: any): any => {
 
     // Check if additional Column is present or not
     const isAdditionalColumnPresent =
-        additionalColumn !== null &&
-        additionalColumn !== undefined &&
-        Object.keys(additionalColumn).length > 0 &&
-        additionalColumn.innerCells &&
-        additionalColumn.innerCells.length > 0;
+        additionalColumn !== null && additionalColumn !== undefined;
 
     // Check if sub component additional Column is present or not
     const isSubComponentAdditionalColumnPresent =
         isSubComponentGrid &&
         subComponentAdditionalColumn !== null &&
-        subComponentAdditionalColumn !== undefined &&
-        Object.keys(subComponentAdditionalColumn).length > 0 &&
-        subComponentAdditionalColumn.innerCells &&
-        subComponentAdditionalColumn.innerCells.length > 0;
+        subComponentAdditionalColumn !== undefined;
 
     // Set state variables for:
     // managedColumns - main columns displayed in colum setting region
@@ -461,8 +454,6 @@ const ColumnReordering = (props: any): any => {
     if (managedColumns && managedColumns.length > 0) {
         const isAdditionalColumnSelected =
             managedAdditionalColumn !== null &&
-            managedAdditionalColumn.innerCells &&
-            managedAdditionalColumn.innerCells.length > 0 &&
             managedAdditionalColumn.display === true;
         const additionalColumnHeader = isAdditionalColumnPresent
             ? additionalColumn.Header
@@ -483,8 +474,6 @@ const ColumnReordering = (props: any): any => {
         const isSubComponentAdditionalColumnSelected =
             isSubComponentGrid &&
             managedSubComponentAdditionalColumn !== null &&
-            managedSubComponentAdditionalColumn.innerCells &&
-            managedSubComponentAdditionalColumn.innerCells.length > 0 &&
             managedSubComponentAdditionalColumn.display === true;
         const subComponentAdditionalColumnHeader = isSubComponentAdditionalColumnPresent
             ? subComponentAdditionalColumn.Header

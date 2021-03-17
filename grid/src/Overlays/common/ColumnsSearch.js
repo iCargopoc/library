@@ -41,10 +41,8 @@ const ColumnsSearch = ({
             allCoulmns = [...columnsList];
         }
         if (
-            additionalColumnItem &&
-            Object.keys(additionalColumnItem).length > 0 &&
-            additionalColumnItem.innerCells &&
-            additionalColumnItem.innerCells.length > 0
+            additionalColumnItem !== null &&
+            additionalColumnItem !== undefined
         ) {
             allCoulmns.push(additionalColumnItem);
         }

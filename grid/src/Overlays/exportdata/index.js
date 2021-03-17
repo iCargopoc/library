@@ -35,19 +35,13 @@ const ExportData = (props: Object): any => {
 
     // Check if additional Column is present or not
     const isAdditionalColumnPresent =
-        additionalColumn &&
-        Object.keys(additionalColumn).length > 0 &&
-        additionalColumn.innerCells &&
-        additionalColumn.innerCells.length > 0;
+        additionalColumn !== null && additionalColumn !== undefined;
 
     // Check if sub component additional Column is present or not
     const isSubComponentAdditionalColumnPresent =
         isSubComponentGrid &&
         subComponentAdditionalColumn !== null &&
-        subComponentAdditionalColumn !== undefined &&
-        Object.keys(subComponentAdditionalColumn).length > 0 &&
-        subComponentAdditionalColumn.innerCells &&
-        subComponentAdditionalColumn.innerCells.length > 0;
+        subComponentAdditionalColumn !== undefined;
 
     // Set state variables for:
     // managedColumns - main columns displayed in colum setting region
