@@ -255,6 +255,8 @@ const ExportData = (props: Object): any => {
                 const dataToExport = exportData(rowData, isDesktop);
                 // If export content is valid
                 if (
+                    dataToExport !== null &&
+                    dataToExport !== undefined &&
                     typeof dataToExport === "object" &&
                     dataToExport.length > 0
                 ) {
