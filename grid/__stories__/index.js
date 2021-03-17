@@ -1566,7 +1566,13 @@ const GridComponent = (props) => {
 
     const originalSubComponentColumnToExpand = {
         Header: "Additional Column",
-        innerCells: [{ Header: "Remarks", accessor: "remarks" }],
+        innerCells: [
+            {
+                Header: "Remarks",
+                accessor: "remarks",
+                searchableAccessorList: ["remarks"]
+            }
+        ],
         displayCell: (rowData, DisplayTag, isDesktop) => {
             const { remarks } = rowData;
             return (
