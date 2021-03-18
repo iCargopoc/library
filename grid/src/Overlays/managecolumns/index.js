@@ -343,9 +343,7 @@ const ColumnReordering = (props: any): any => {
                 update(managedSubComponentAdditionalColumn, {
                     innerCells: {
                         $set: changeInnerCellSelection(
-                            managedSubComponentAdditionalColumn != null
-                                ? managedSubComponentAdditionalColumn.innerCells
-                                : null,
+                            managedSubComponentAdditionalColumn.innerCells,
                             cellid,
                             checked
                         )
@@ -357,9 +355,7 @@ const ColumnReordering = (props: any): any => {
                 update(managedAdditionalColumn, {
                     innerCells: {
                         $set: changeInnerCellSelection(
-                            managedAdditionalColumn != null
-                                ? managedAdditionalColumn.innerCells
-                                : null,
+                            managedAdditionalColumn.innerCells,
                             cellid,
                             checked
                         )
