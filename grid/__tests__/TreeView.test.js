@@ -956,7 +956,7 @@ describe("render Index file ", () => {
         expect(exportOverlay).toBeInTheDocument();
 
         // Select excel file type
-        const selectPdf = getByTestId("chk_pdf_test");
+        const selectPdf = getByTestId("chk_csv_test");
         fireEvent.click(selectPdf);
         expect(selectPdf.checked).toEqual(true);
 
