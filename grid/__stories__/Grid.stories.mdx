@@ -18,7 +18,7 @@ import CustomPanel from "./panels/CustomPanel";
 
 ### Grid properties
 
-````jsx
+```jsx
 
 // Normal Grid
 const gridData = [ // Should be Array of Objects, where each object represents each row.
@@ -451,6 +451,7 @@ const subComponentColumnToExpand // Same as columnToExpand
         fileName={fileName}
         pdfPaperSize={pdfPaperSize}
     />
+```
 
 ### Variants
 
@@ -561,7 +562,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     columnToExpand={columnToExpand}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
-/>;
+/>
 ```
 
 #### With column expansion
@@ -599,7 +600,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     rowActions={rowActions}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
-/>;
+/>
 ```
 
 #### With grid refresh
@@ -617,7 +618,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     onGridRefresh={onGridRefresh}
-/>;
+/>
 ```
 
 #### With custom header panel
@@ -719,7 +720,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
-/>;
+/>
 ```
 
 #### With server side sorting
@@ -1440,4 +1441,3 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     previousPageRefresh
 />
 ```
-````
