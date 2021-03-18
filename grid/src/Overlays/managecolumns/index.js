@@ -219,7 +219,7 @@ const ColumnReordering = (props: any): any => {
 
     // Updates the inner cell display value accordingly
     const changeInnerCellSelection = (
-        innerCells: Object,
+        innerCells: Array<Object>,
         cellid: string,
         flag: boolean
     ): any => {
@@ -338,7 +338,10 @@ const ColumnReordering = (props: any): any => {
                     return updatedColumn;
                 });
             });
-        } else if (isSubComponentColumn) {
+        } else if (
+            isSubComponentColumn &&
+            managedSubComponentAdditionalColumn
+        ) {
             setManagedSubComponentAdditionalColumn(
                 update(managedSubComponentAdditionalColumn, {
                     innerCells: {
@@ -350,7 +353,7 @@ const ColumnReordering = (props: any): any => {
                     }
                 })
             );
-        } else {
+        } else if (managedAdditionalColumn) {
             setManagedAdditionalColumn(
                 update(managedAdditionalColumn, {
                     innerCells: {
