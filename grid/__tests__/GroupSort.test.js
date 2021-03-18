@@ -985,7 +985,7 @@ describe("Group sort functionality test", () => {
         // Check if grid has been loaded
         expect(gridContainer).toBeInTheDocument();
 
-        // Check if Group osrt icon is present
+        // Check if Group sort icon is present
         const groupSortIcon = getAllByTestId("toggleGroupSortOverLay");
         expect(groupSortIcon.length).toBe(1);
 
