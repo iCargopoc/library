@@ -1209,7 +1209,7 @@ describe("Export data functionality test", () => {
         expect(exportOverlay.length).toBe(0);
     });
 
-    it("test export data icon to be hidden as prop to hide group sort is passed", () => {
+    it("test export data icon to be hidden as prop to hide export data is passed", () => {
         mockOffsetSize(1280, 1024);
         const { container } = render(
             <Grid
