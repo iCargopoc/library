@@ -503,24 +503,26 @@ describe("render Index file ", () => {
                 new MouseEvent("click", { bubbles: true })
             );
         });
+
+        // Get the count of total rows present
+        const oldRowsCount = getAllByTestId("gridrow").length;
+
         // Flight Column Search
         const columnInput = getAllByTestId("columnFilter-textbox")[0];
         fireEvent.change(columnInput, { target: { value: "222" } });
         expect(columnInput.value).toBe("222");
+
+        // Check new rows count, it should not match with old rows count
+        let newRowsCount = getAllByTestId("gridrow").length;
+        expect(newRowsCount).not.toBe(oldRowsCount);
+
+        // Clear search
         fireEvent.change(columnInput, { target: { value: "" } });
         expect(columnInput.value).toBe("");
-        // SR Column Search
-        const SrInput = getAllByTestId("columnFilter-textbox")[1];
-        fireEvent.change(SrInput, { target: { value: "74" } });
-        expect(SrInput.value).toBe("74");
-        fireEvent.change(SrInput, { target: { value: "" } });
-        expect(SrInput.value).toBe("");
-        // ULD Positions column search
-        const positionInput = getAllByTestId("columnFilter-textbox")[2];
-        fireEvent.change(positionInput, { target: { value: "l1" } });
-        expect(positionInput.value).toBe("l1");
-        fireEvent.change(positionInput, { target: { value: "" } });
-        expect(positionInput.value).toBe("");
+
+        // Check new rows count, it should now match with old rows count
+        newRowsCount = getAllByTestId("gridrow").length;
+        expect(newRowsCount).toBe(oldRowsCount);
 
         // Apply Ascending Sort
         const toggleGroupSortOverLay = getByTestId("toggleGroupSortOverLay");

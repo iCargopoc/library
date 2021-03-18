@@ -1088,8 +1088,8 @@ describe("render Index file ", () => {
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
                 subComponentColumnns={subComponentColumns}
+                subComponentColumnToExpand={mockSubComponentAdditionalColumn}
                 getRowInfo={mockGetRowInfo}
-                rowActions={mockRowActions}
                 rowSelector={false}
                 onRowUpdate={mockUpdateRowData}
             />
@@ -2059,83 +2059,5 @@ describe("render Index file ", () => {
             "[data-testid='groupsortoverlay']"
         );
         expect(groupSortOverlay.length).toBe(0);
-    });
-
-    it("test global filter in Grid with sub component data and sub component row expand", async () => {
-        mockOffsetSize(600, 600);
-        const { container, getAllByTestId, getByTestId } = render(
-            <Grid
-                title={mockTitle}
-                gridWidth={mockGridWidth}
-                gridData={mockGridData}
-                idAttribute="travelId"
-                paginationType="index"
-                loadMoreData={mockLoadMoreData}
-                columns={gridColumns}
-                columnToExpand={mockAdditionalColumn}
-                subComponentColumnns={subComponentColumns}
-                subComponentColumnToExpand={mockSubComponentAdditionalColumn}
-                getRowInfo={mockGetRowInfo}
-                onRowUpdate={mockUpdateRowData}
-            />
-        );
-        const gridContainer = container;
-
-        // Check if Grid id rendered.
-        expect(gridContainer).toBeInTheDocument();
-
-        // Check if expand/collapse icons are present
-        let subComponentExpandCollpase = getAllByTestId(
-            "subComponent-header-expand-collapse"
-        );
-        expect(subComponentExpandCollpase.length).toBeGreaterThan(0);
-
-        // Open 1 subComponent
-        act(() => {
-            subComponentExpandCollpase[0].dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        // Check if subComponent section is opened
-        let subComponentContent = getAllByTestId("subcomponent-content");
-        expect(subComponentContent.length).toBe(1);
-
-        // Close that sub component
-        subComponentExpandCollpase = getAllByTestId(
-            "subComponent-header-expand-collapse"
-        );
-        act(() => {
-            subComponentExpandCollpase[0].dispatchEvent(
-                new MouseEvent("click", { bubbles: true })
-            );
-        });
-        // Check if that subComponent section is closed
-        subComponentContent = gridContainer.querySelectorAll(
-            "[data-testid='subcomponent-content']"
-        );
-        expect(subComponentContent.length).toBe(0);
-
-        // Check total rows count
-        expect(getAllByTestId("gridrow").length).toBeGreaterThan(1);
-
-        // Global Filter Search with invalid value "60"
-        let input = getByTestId("globalFilter-textbox");
-        expect(input.value).toBe("");
-        fireEvent.change(input, { target: { value: "6001" } });
-        expect(input.value).toBe("6001");
-
-        // There should not be any records
-        await waitFor(() => expect(getAllByTestId("gridrow").length).toBe(1));
-
-        // Clear filter value "asd"
-        input = getByTestId("globalFilter-textbox");
-        expect(input.value).toBe("6001");
-        fireEvent.change(input, { target: { value: "" } });
-        expect(input.value).toBe("");
-
-        // Rows should be present
-        await waitFor(() =>
-            expect(getAllByTestId("gridrow").length).toBeGreaterThan(1)
-        );
     });
 });
