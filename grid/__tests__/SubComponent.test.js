@@ -468,9 +468,12 @@ describe("render Index file ", () => {
             isSortable: true,
             exportData: (rowData, isDesktop) => {
                 const { travelId } = rowData;
+                if (travelId === 60) {
+                    return [];
+                }
                 return [
                     {
-                        header: "Travel Id",
+                        header: null,
                         content: validateData(travelId)
                     }
                 ];
@@ -551,7 +554,10 @@ describe("render Index file ", () => {
                 );
             },
             exportData: (rowData, isDesktop) => {
-                const { uldPositions } = rowData;
+                const { uldPositions, travelId } = rowData;
+                if (travelId === 60) {
+                    return [];
+                }
                 const positionArray = [];
                 const valueArray = [];
                 uldPositions.forEach((uld) => {
@@ -616,6 +622,10 @@ describe("render Index file ", () => {
             },
             exportData: (rowData, isDesktop) => {
                 const { hawbId } = rowData;
+                // To create an empty entry in the export content
+                if (hawbId === 6001) {
+                    return [];
+                }
                 return [
                     {
                         header: "HAWB ID",
@@ -670,7 +680,11 @@ describe("render Index file ", () => {
                 );
             },
             exportData: (rowData, isDesktop) => {
-                const { subCompUldPositions } = rowData;
+                const { subCompUldPositions, hawbId } = rowData;
+                // To create an empty entry in the export content
+                if (hawbId === 6001) {
+                    return [];
+                }
                 const positionArray = [];
                 const valueArray = [];
                 subCompUldPositions.forEach((uld) => {
@@ -783,7 +797,11 @@ describe("render Index file ", () => {
                 );
             },
             exportData: (rowData, isDesktop) => {
-                const { hawb } = rowData;
+                const { hawb, hawbId } = rowData;
+                // To create an empty entry in the export content
+                if (hawbId === 6001) {
+                    return [];
+                }
                 const {
                     from,
                     to,
@@ -907,7 +925,11 @@ describe("render Index file ", () => {
                 return null;
             },
             exportData: (rowData, isDesktop) => {
-                const { scr } = rowData;
+                const { scr, hawbId } = rowData;
+                // To create an empty entry in the export content
+                if (hawbId === 6001) {
+                    return [];
+                }
                 const { ack, num, status } = scr;
                 return [
                     {
@@ -935,6 +957,11 @@ describe("render Index file ", () => {
                 );
             },
             exportData: (rowData, isDesktop) => {
+                const { hawbId } = rowData;
+                // To create an empty entry in the export content
+                if (hawbId === 6001) {
+                    return [];
+                }
                 return [
                     {
                         header: "Empty Column",
@@ -956,6 +983,11 @@ describe("render Index file ", () => {
                 );
             },
             exportData: (rowData, isDesktop) => {
+                const { hawbId } = rowData;
+                // To create an empty entry in the export content
+                if (hawbId === 6001) {
+                    return [];
+                }
                 return [
                     {
                         header: "Hidden Column",
@@ -997,6 +1029,11 @@ describe("render Index file ", () => {
             );
         },
         exportData: (rowData, isDesktop) => {
+            const { hawbId } = rowData;
+            // To create an empty entry in the export content
+            if (hawbId === 6001) {
+                return [];
+            }
             return [
                 {
                     header: "Subcomponent Expand Column",

@@ -238,6 +238,10 @@ describe("render Index file ", () => {
         },
         exportData: (rowData, isDesktop) => {
             const { titleId, parentTitle, count } = rowData;
+            // To create an empty entry in the export content
+            if (titleId === 0) {
+                return [];
+            }
             return [
                 {
                     header: "Title ID",

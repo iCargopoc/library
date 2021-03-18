@@ -82,7 +82,7 @@ describe("Export data functionality test", () => {
                     const { travelId } = rowData;
                     return [
                         {
-                            header: "Travel Id",
+                            header: null, // To create an empty header entry in the export content
                             content: validateData(travelId)
                         }
                     ];
@@ -694,21 +694,24 @@ describe("Export data functionality test", () => {
                     const { uldPositions } = rowData;
                     const positionArray = [];
                     const valueArray = [];
-                    uldPositions.forEach((uld) => {
-                        const { position, value } = uld;
-                        positionArray.push(validateData(position));
-                        valueArray.push(validateData(value));
-                    });
-                    return [
-                        {
-                            header: "ULD Position",
-                            content: positionArray.join(" | ")
-                        },
-                        {
-                            header: "ULD Value",
-                            content: valueArray.join(" | ")
-                        }
-                    ];
+                    if (uldPositions && uldPositions.length > 0) {
+                        uldPositions.forEach((uld) => {
+                            const { position, value } = uld;
+                            positionArray.push(validateData(position));
+                            valueArray.push(validateData(value));
+                        });
+                        return [
+                            {
+                                header: "ULD Position",
+                                content: positionArray.join(" | ")
+                            },
+                            {
+                                header: "ULD Value",
+                                content: valueArray.join(" | ")
+                            }
+                        ];
+                    }
+                    return [];
                 }
             },
             {
@@ -755,7 +758,7 @@ describe("Export data functionality test", () => {
                 sortValue: "revenue",
                 exportData: (rowData, isDesktop) => {
                     const revenueData = rowData ? rowData.revenue : {};
-                    const { revenue, yeild } = revenueData;
+                    const { revenue, yeild } = revenueData || {};
                     return [
                         {
                             header: "Revenue",
@@ -1166,6 +1169,14 @@ describe("Export data functionality test", () => {
     };
 
     const mockGridColumns = getColumns();
+    const mockGridColumnsWithoutExportProp = [...getColumns()].map((col) => {
+        const updatedCol = { ...col };
+        if (col.exportData) {
+            delete updatedCol.exportData;
+        }
+        return updatedCol;
+    });
+
     const mockAdditionalColumn = getColumnToExpand();
     const mockData = getGridData();
 
@@ -1401,6 +1412,68 @@ describe("Export data functionality test", () => {
         });
 
         // Check if overlay is opened now
+        exportDataOverlayCount = gridContainer.querySelectorAll(
+            "[data-testid='exportoverlay']"
+        ).length;
+        expect(exportDataOverlayCount).toBe(0);
+    });
+
+    it("test export data warning - columns without exportData property", () => {
+        mockOffsetSize(1280, 1024);
+        const { container, getByTestId, getAllByTestId, getAllByText } = render(
+            <Grid
+                gridData={mockData}
+                idAttribute="travelId"
+                columns={mockGridColumnsWithoutExportProp}
+            />
+        );
+        const gridContainer = container;
+        // Check if grid has been loaded
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open Export overlay
+        const exportDataIcon = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            exportDataIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        let exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        expect(exportDataOverlayCount).toBe(1);
+
+        // Select a file type
+        const selectExcel = getByTestId("chk_excel_test");
+        expect(selectExcel.checked).toEqual(false);
+        fireEvent.click(selectExcel);
+        expect(selectExcel.checked).toEqual(true);
+
+        // Click export data button
+        const exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        console.log(getAllByTestId("exportoverlay").innerHTML);
+
+        // Check for error
+        const errorMessage = getAllByText(
+            "No data has been configured to export"
+        );
+        expect(errorMessage.length).toBe(1);
+
+        // Close overlay
+        const cancelButton = getByTestId("cancel_button");
+        act(() => {
+            cancelButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is closed now
         exportDataOverlayCount = gridContainer.querySelectorAll(
             "[data-testid='exportoverlay']"
         ).length;
