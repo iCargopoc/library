@@ -1457,8 +1457,6 @@ describe("Export data functionality test", () => {
             );
         });
 
-        console.log(getAllByTestId("exportoverlay").innerHTML);
-
         // Check for error
         const errorMessage = getAllByText(
             "No data has been configured to export"
