@@ -14,19 +14,217 @@ import CustomPanel from "./panels/CustomPanel";
 
 # Grid
 
-## Business component for showing large list of data in tabular view
+## Business component for showing large list of data in grid view
 
-`Grid` component consists of list of props.
+### Grid properties
 
-### Props
+````jsx
 
-<Props of={Grid} />
+// Normal Grid
+const gridData = [ // Should be Array of Objects, where each object represents each row.
+        {...}, // Each row data should contain a unique property (like PrimaryKey) - idAttribute
+        {...}
+    ];
 
-### Code
+const idAttribute = "travelId"; // String - node value of primary key value from gridData
 
-```jsx
-const GridComponent = () => {
-    // By default grid will consider paginationType value as "index".
+const columns = [
+        {
+            Header:() => <div> Header </div>, // String or jsx - used to display in the gid column heading and other overlays.
+            title: "Header:, // String, Optional - This has to be given if Header is returning jsx, to display in overlays.
+            accessor: "flight", // String - corresponding to the node name in the grid data.
+            isSortable: true, // Boolean, Optional - If this column has to be included in the group sort options (Sort By).
+            innerCells: [ // If value of accessor node is object or array (multiple data to be displayed in single column)
+                {
+                    Header: "Cell Header", // String - Cell header to be displayed in overlays
+                    accessor: "flightno", // String - Child node of accessor mentioned above ("flight")
+                    isSortable: true // Boolean, Optional - If this cell has to be included in the group sort options (Sort On).
+                },
+                {...}
+            ],
+            width: 50, // Number - For single-line Grid, pass width % allocated for each column, for multi line pass pixel value.
+            widthGrow: 1, // Number, Optional - This is the factor that Grid uses to identify how to allocate the width of a hidden column to other columns.
+            display: false, // Boolean, Optional - To hide a column by default. Default value for this property is true.
+            disableSortBy: true, // Boolean, Optional - To disable column sorting for a column.
+            sortValue: "flightno", // Boolean, Optional - Use only if inner cells are present, to decide on which cell column sort should happen.
+            disableResizing: true, // Boolean, Optional - To disable column resizing by dragging.
+            searchKeys: [  // Array<String>, Optional - Mention all node paths from Grid data, that have to be incldued in column filtering and global filtering.
+                "flight.flightno", // For Object structure - flight: {flightno: "value"}
+                "flight.connectionflights.*.airlinename"  // For Array structure - flight: {connectionflights: [{airlinename: "value"}]}
+            ],
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => { // JSx - content to be displayed in a column.
+                // rowData -> Single row data from gridData.
+                // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell.
+                // isDesktop -> Whether Grid considers this screen as desktop or tablet.
+                // isColumnExpanded -> If the row of this data is in expanded state or not.
+                const { travelId } = rowData;
+                return (
+                    <div> {travelId} </div>
+                );
+            },
+            editCell: (rowData, DisplayTag, rowUpdateCallBack, isDesktop, isColumnExpanded) => { // JSx, Optional - content to be displayed in edit overlay of a column.
+                // Other parameters are same as mentioned in displayCell
+                // rowUpdateCallBack -> This is a function that has to be called with updated rowData, each time when user makes any changes to the content.
+            },
+            exportData: (rowData, isDesktop) => { // Array<Object>, Optional - content to be exported from column.
+                // parameters are same as mentioned above.
+                // This should list of columns to be displayed in the PDF/Excel/CSV export file.
+                return [
+                    { // Each object corresponds to each column.
+                        header: "Flight No", // String - Heading of each export column.
+                        content: {flightno} // String - Value of a row corresponding to each column.
+                    },
+                    {...}
+                ];
+                /** NOTE: Number of objects in the returned array should be same for all rows. Else, the report will go wrong.   **/
+            }
+        },
+        {...}
+    ]
+
+const columnToExpand = {
+        Header: "Remarks",
+        innerCells: [
+            {
+                Header: "Remarks",
+                accessor: "remarks",
+                searchKeys: ["remarks"]
+            }
+        ],
+        displayCell: (rowData, DisplayTag, isDesktop) => {
+            const { remarks } = rowData;
+            return (
+                <div>{remarks}</div>
+            );
+        },
+        exportData: (rowData, isDesktop) => { // Array<Object>, Optional - content to be exported from column.
+            // parameters are same as mentioned above.
+            // This should list of columns to be displayed in the PDF/Excel/CSV export file.
+            const { remarks } = rowData;
+            return [
+                { // Each object corresponds to each column.
+                    header: "Remarks", // String - Heading of each export column.
+                    content: {remarks} // String - Value of a row corresponding to each column.
+                },
+                {...}
+            ];
+            /** NOTE: Number of objects in the returned array should be same for all rows. Else, the report will go wrong.   **/
+        }
+    };
+
+// Tree Grid
+const treeGridData = [ // Should be Array of Objects, where each object represents each parent row, and children of each parent row should come under the property childData
+        {
+            ... // Each parent row data should contain a unique property (like PrimaryKey) - parentIdAttribute
+            childData:{
+                lastPage: false, // Page Info details of each parent row should be present in childData
+                pageNum: 1,
+                pageSize: 50,
+                data: [{...}, {...}] // Should be same as gridData mentioned above
+            }
+        },
+        {...}
+    ];
+
+const parentIdAttribute = "titleId"; // String - node value of primary key value from treeGridData
+
+const parentColumn = {
+        Header: "Parent Header", // String
+        innerCells: [ // If value of accessor node is object or array (multiple data to be displayed in single column)
+                {
+                    Header: "Cell Header", // String - Cell header to be displayed in overlays
+                    accessor: "flightno" // String - Child node of accessor mentioned above ("flight")
+                },
+                {...}
+            ],
+        displayCell: (rowData, isExpanded) => { // JSx - content to be displayed in a column.
+            // rowData -> Single row data from gridData.
+            // isExpanded -> If the parent row is in expanded state or not.
+            return (
+                <div> Parent Header </div>
+            );
+        },
+        exportData: (rowData, isDesktop) => { // Array<Object>, Optional - content to be exported from column.
+            // parameters are same as mentioned above.
+            // This should list of columns to be displayed in the PDF/Excel/CSV export file.
+            return [
+                { // Each object corresponds to each column.
+                    header: "Flight No", // String - Heading of each export column.
+                    content: {flightno} // String - Value of a row corresponding to each column.
+                },
+                {...}
+            ];
+            /** NOTE: Number of objects in the returned array should be same for all rows. Else, the report will go wrong.   **/
+        }
+    };
+
+// Sub Component Grid
+const subComponentGridData = [
+        {
+            ..., // Normal JSON data same as gridData mentioned above
+            subComponentData: [ // This property holds the row data to be displayed in the sub component section.
+                    {...}, // Similar to gridData, where each sub component row data should contain a unique property (like PrimaryKey) - subComponentIdAttribute
+                ]
+        },
+        {...}
+    ];
+
+const subComponentIdAttribute = "hawbId";  // String - node value of primary key value from subComponentGridData
+
+const subComponentColumns = [
+        {
+            Header:() => <div> Header </div>, // String or jsx - used to display in the gid column heading and other overlays.
+            title: "Header:, // String, Optional - This has to be given if Header is returning jsx, to display in overlays.
+            accessor: "flight", // String - corresponding to the node name in the grid data.
+            isSortable: true, // Boolean, Optional - If this column has to be included in the group sort options (Sort By).
+            innerCells: [ // If value of accessor node is object or array (multiple data to be displayed in single column)
+                {
+                    Header: "Cell Header", // String - Cell header to be displayed in overlays
+                    accessor: "flightno", // String - Child node of accessor mentioned above ("flight")
+                    isSortable: true // Boolean, Optional - If this cell has to be included in the group sort options (Sort On).
+                },
+                {...}
+            ],
+            width: 50, // Number - For single-line Grid, pass width % allocated for each column, for multi line pass pixel value.
+            widthGrow: 1, // Number, Optional - This is the factor that Grid uses to identify how to allocate the width of a hidden column to other columns.
+            display: false, // Boolean, Optional - To hide a column by default. Default value for this property is true.
+            searchKeys: [  // Array<String>, Optional - Mention all node paths from Grid data, that have to be incldued in column filtering and global filtering.
+                "flight.flightno", // For Object structure - flight: {flightno: "value"}
+                "flight.connectionflights.*.airlinename"  // For Array structure - flight: {connectionflights: [{airlinename: "value"}]}
+            ],
+            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => { // JSx - content to be displayed in a column.
+                // rowData -> Single row data from gridData.
+                // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell.
+                // isDesktop -> Whether Grid considers this screen as desktop or tablet.
+                // isColumnExpanded -> If the row of this data is in expanded state or not.
+                const { travelId } = rowData;
+                return (
+                    <div> {travelId} </div>
+                );
+            },
+            editCell: (rowData, DisplayTag, rowUpdateCallBack, isDesktop, isColumnExpanded) => { // JSx, Optional - content to be displayed in edit overlay of a column.
+                // Other parameters are same as mentioned in displayCell
+                // rowUpdateCallBack -> This is a function that has to be called with updated rowData, each time when user makes any changes to the content.
+            },
+            exportData: (rowData, isDesktop) => { // Array<Object>, Optional - content to be exported from column.
+                // parameters are same as mentioned above.
+                // This should list of columns to be displayed in the PDF/Excel/CSV export file.
+                return [
+                    { // Each object corresponds to each column.
+                        header: "Flight No", // String - Heading of each export column.
+                        content: {flightno} // String - Value of a row corresponding to each column.
+                    },
+                    {...}
+                ];
+                /** NOTE: Number of objects in the returned array should be same for all rows. Else, the report will go wrong.   **/
+            }
+        },
+        {...}
+    ]
+
+const subComponentColumnToExpand // Same as columnToExpand
+
+// By default grid will consider paginationType value as "index".
     const paginationType = "index"; // or - paginationType = "cursor".
 
     // If paginationType = "index"
@@ -43,255 +241,6 @@ const GridComponent = () => {
         total: 20000,
         lastPage: false // or - true
     };
-
-    // The accessor value of the row identifier (primary key) in the gridData.
-    // This is required for all functionalities of row selection and row deselection.
-    const idAttribute = "travelId";
-
-    // The accessor value of the row identifier (primary key) in the parent data.
-    // This is required only if tree view is required.
-    const parentIdAttribute = "titleId"
-
-    // JSON Data
-    const gridData = [
-            {...}, // Should contain an property that has the unique value for each row - idAttribute
-            {...}
-        ];
-
-    // In tree view, this is the structure of grid data
-    const parentData = [
-        {
-            titleId: 0, // parentIdAttribute
-            title: "EXCVGRATES",
-            count: 3,
-            lastModified: "User name",
-            date: "21 Jul 2020",
-            time: "18:39",
-            childData:{
-                lastPage: false,
-                pageNum: 1,
-                pageSize: 50,
-                data: [{...}, {...}] // JSON Data which has idAttribute
-            }
-        },
-        {
-            titleId: 1,
-            title: "EXCVGRATES",
-            count: 3,
-            lastModified: "User name",
-            date: "21 Jul 2020",
-            time: "18:39",
-            childData:{
-                lastPage: false,
-                pageNum: 11,
-                pageSize: 50,
-                data: [{...}, {...}] // JSON Data
-            }
-        },
-        {
-            titleId: 2,
-            title: "EXCVGRATES",
-            count: 1,
-            lastModified: "User name",
-            date: "21 Jul 2020",
-            time: "18:39",
-            childData:{
-                lastPage: false,
-                pageNum: 21,
-                pageSize: 50,
-                data: [{...}, {...}] // JSON Data
-            }
-        }
-    ];
-
-    // In tree view, this is the column configuration for parent rows in Grid.
-    // Parent columns will not be displayd anywhere in the Grid.
-    const originalParentColumn = {
-        displayCell: (rowData) => {
-            const { titleId, title, count, lastModified, date, time } = rowData;
-            return (
-                <div>
-                    <p className="parentRow">{titleId}</p>
-                    <p className="parentRow">{title}</p>
-                    <p className="parentRow">{count}</p>
-                    <p className="parentRow">{lastModified}</p>
-                    <p className="parentRow">{date}</p>
-                    <p className="parentRow">{time}</p>
-                </div>
-            );
-        }
-    };
-
-    // JSON Data with sub components
-    const gridData =
-    [
-        {
-            ..., // Normal JSON data which has idAttribute
-            subComponentData: [
-                    {...}, // Should contain the same idAttribute in all subcomponent rows.
-                    {...} // Should contain the same idAttribute in all subcomponent rows.
-                ]
-        },
-        {
-            ..., // Normal JSON data which has idAttribute
-            subComponentData: [
-                    {...}, // Should contain the same idAttribute in all subcomponent rows.
-                    {...} // Should contain the same idAttribute in all subcomponent rows.
-                ]
-        }
-    ];
-
-    // The column configuration for grid based on gridData
-    const columns = [
-        {
-            Header: "Id",
-            accessor: "travelId",
-            width: 50,
-            widthGrow: 1, // This is the factor that Grid uses to identify how to allocate the width of a hidden column to other columns.
-            display: false, // False if this column has to be hidden by default. Default value for this property is true.
-            disableSortBy: true,
-            disableResizing: true,
-            isSortable: true, // This column will appear in Sort By dropdown in groupsort overlay only if 'isSortable' value is true.
-            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
-                // rowData -> Entire row data from gridData
-                // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell
-                // isDesktop -> Whether Grid considers this screen as desktop or tablet
-                // isColumnExpanded -> If the row of this data is in expanded state or not
-                const { travelId } = rowData;
-                return (
-                    <div className="travelId-details">
-                        <span>{travelId}</span>
-                    </div>
-                );
-            }
-        },
-        {
-            groupHeader: "Flight & Segment", // Required only if a group header has to be displayed for columns. Columns with same groupHeader property value will be grouped under one column
-            Header: () => { // If a jsx element is passed as Header, use below prop 'title' which should be string value that can be used in group sort, manage columns and export overlays.
-                return (
-                    <div className="flightHeader">
-                        <i className="flightIcon">
-                            <img src={FlightIcon} alt="Flight Info" />
-                        </i>
-                        <span className="flightText">Info</span>
-                    </div>
-                );
-            },
-            title: "Flight", // Use this if Header is a jsx element.
-            accessor: "flight",
-            isArray: true, // Pass this as true, if the value of 'flight' node in the data is an array.
-            width: 100,
-            innerCells: [
-                {
-                    Header: "Flight No",
-                    accessor: "flightno",
-                    isSortable: true  // This column header will appear in Sort By dropdown and this innerCell header will appear in Sort On dropdown, of Group sort overlays
-                },
-                {
-                    Header: "Date",
-                    accessor: "date"
-                }
-            ],
-            sortValue: "flightno",
-            displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
-                // rowData -> Entire row data from gridData
-                // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell
-                // isDesktop -> Whether Grid considers this screen as desktop or tablet
-                // isColumnExpanded -> If the row of this data is in expanded state or not
-                const { flightno, date } = rowData.flight;
-                return (
-                    <div className="flight-details">
-                        <DisplayTag columnKey="flight" cellKey="flightno">
-                            <strong>{flightno}</strong>
-                        </DisplayTag>
-                        <DisplayTag columnKey="flight" cellKey="date">
-                            <span>{getValueOfDate(date, "cell")}</span>
-                        </DisplayTag>
-                    </div>
-                );
-            },
-            editCell: (rowData, DisplayTag, rowUpdateCallBack, isDesktop, isColumnExpanded) => {
-                // rowData -> Entire row data from gridData
-                // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell
-                // rowUpdateCallBack -> Callback method provided by Grid, which has to be called whenever user edits any field in edit form
-                // isDesktop -> Whether Grid considers this screen as desktop or tablet
-                // isColumnExpanded -> If the row of this data is in expanded state or not
-                return (
-                    <FlightEdit
-                        rowData={rowData}
-                        DisplayTag={DisplayTag}
-                        rowUpdateCallBack={rowUpdateCallBack}
-                    />
-                );
-            }
-        },
-        {
-            groupHeader: "Flight & Segment",  // Required only if a group header has to be displayed for columns. Columns with same groupHeader property value will be grouped under one column
-            Header: "Segment",
-            accessor: "segment",
-            width: 100,
-            isSortable: true, // Column will not appear in groupsort overlay if atleast 1 inner cell have 'isSortable' value as true (Applicable only if column is having innerCells).
-            innerCells: [
-                {
-                    Header: "From",
-                    accessor: "from"
-                },
-                {
-                    Header: "To",
-                    accessor: "to"
-                }
-            ],
-            disableSortBy: true,
-            displayCell: (
-                rowData,
-                DisplayTag,
-                isDesktop,
-                isColumnExpanded
-            ) => {
-                // rowData -> Entire row data from gridData
-                // DisplayTag -> HOC provided by Grid, to control the show/hide of data inside each cell
-                // rowUpdateCallBack -> Callback method provided by Grid, which has to be called whenever user edits any field in edit form
-                // isDesktop -> Whether Grid considers this screen as desktop or tablet
-                // isColumnExpanded -> If the row of this data is in expanded state or not
-                const { from, to } = rowData.segment;
-                return (
-                    <div className="segment-details">
-                        <DisplayTag columnKey="segment" cellKey="from">
-                            <span>{from}</span>
-                        </DisplayTag>
-                        <i>
-                            <img src={FlightIcon} alt="segment" />
-                        </i>
-                        <DisplayTag columnKey="segment" cellKey="to">
-                            <span>{to}</span>
-                        </DisplayTag>
-                    </div>
-                );
-            }
-        }
-    ];
-
-    // Configuration for data (from gridData) that has to be displayed in the row expanded region
-    const columnToExpand = {
-        Header: "Remarks",
-        innerCells: [{ Header: "Remarks", accessor: "remarks" }],
-        displayCell: (rowData, DisplayTag, isDesktop) => {
-            const { remarks } = rowData;
-            return (
-                <div className="remarks-wrap details-wrap">
-                    <DisplayTag columnKey="remarks" cellKey="remarks">
-                        <ul>
-                            <li>{remarks}</li>
-                        </ul>
-                    </DisplayTag>
-                </div>
-            );
-        }
-    };
-
-    // The column configuration and columnToExpand configuration for sub components are exactly same as above (columns & columnToExpand)
-    const subComponentColumnns = [{...}, {...}];
-    const subComponentColumnToExpand = {...};
 
     const getRowInfo = (rowData, isSubComponentRow) => {
         // Grid calls this function for each row, to check:
@@ -443,69 +392,65 @@ const GridComponent = () => {
         // This function should re-render the Grid with sorted gridData prop.
         // groupSortOptions is the Object representation of the sorting options that user has selected.
         // Example:
-        // [
-        //     {
-        //         "sortBy": "segment", // This will be the accessor value of the column
-        //         "sortOn": "from", // This will be the accessor value of the innerCell, or just string "value" if no innerCells are present
-        //         "order": "Ascending" // Either "Ascending" or "Descending"
-        //     },
-        //     {
-        //         "sortBy": "flight",
-        //         "sortOn": "flightno",
-        //         "order": "Descending"
-        //     },
-        //     {
-        //         "sortBy": "travelId",
-        //         "sortOn": "value",
-        //         "order": "Ascending"
-        //     }
-        // ]
+        [
+            {
+                "sortBy": "segment", // This will be the accessor value of the column
+                "sortOn": "from", // This will be the accessor value of the innerCell, or just string "value" if no innerCells are present
+                "order": "Ascending" // Either "Ascending" or "Descending"
+            },
+            {
+                "sortBy": "flight",
+                "sortOn": "flightno",
+                "order": "Descending"
+            },
+            {
+                "sortBy": "travelId",
+                "sortOn": "value",
+                "order": "Ascending"
+            }
+        ]
     }
 
-    return (
-        <Grid
-            className="icargoCustomClass"
-            theme={theme}
-            title="AWBs"
-            gridWidth="100%"
-            gridData={gridData} // *Required
-            rowsToOverscan={rowsToOverscan}
-            idAttribute={idAttribute}
-            paginationType={paginationType}
-            pageInfo={pageInfo}
-            loadMoreData={loadMoreData}
-            serverSideSorting={serverSideSorting}
-            columns={columns} // *Required
-            columnToExpand={columnToExpand}
-            parentColumn={parentColumn} // Only for tree view
-            parentIdAttribute={parentIdAttribute} // Only for tree view
-            parentRowExpandable={parentRowExpandable} // Only for tree view
-            parentRowsToExpand={parentRowsToExpand} // Only for tree view
-            rowActions={rowActions}
-            expandableColumn={expandableColumn}
-            onRowUpdate={onRowUpdate}
-            onRowSelect={onRowSelect}
-            getRowInfo={getRowInfo}
-            onGridRefresh={onGridRefresh}
-            CustomPanel={CustomPanel}
-            rowsToSelect={rowsToSelect}
-            rowsToDeselect={rowsToDeselect}
-            fixedRowHeight={fixedRowHeight}
-            multiRowSelection={multiRowSelection}
-            gridHeader={gridHeader}
-            showTitle={showTitle}
-            rowSelector={rowSelector}
-            globalSearch={globalSearch}
-            columnFilter={columnFilter}
-            groupSort={groupSort}
-            columnChooser={columnChooser}
-            exportData={exportData}
-            fileName={fileName}
-            pdfPaperSize={pdfPaperSize}
-        />
-    );
-};
-```
+    <Grid
+        className="icargoCustomClass"
+        theme={theme}
+        title="AWBs"
+        gridWidth="100%"
+        gridData={gridData}
+        rowsToOverscan={rowsToOverscan}
+        idAttribute={idAttribute}
+        paginationType={paginationType}
+        pageInfo={pageInfo}
+        loadMoreData={loadMoreData}
+        serverSideSorting={serverSideSorting}
+        columns={columns} // *Required
+        columnToExpand={columnToExpand}
+        parentColumn={parentColumn} // Only for tree view
+        parentIdAttribute={parentIdAttribute} // Only for tree view
+        parentRowExpandable={parentRowExpandable} // Only for tree view
+        parentRowsToExpand={parentRowsToExpand} // Only for tree view
+        rowActions={rowActions}
+        expandableColumn={expandableColumn}
+        onRowUpdate={onRowUpdate}
+        onRowSelect={onRowSelect}
+        getRowInfo={getRowInfo}
+        onGridRefresh={onGridRefresh}
+        CustomPanel={CustomPanel}
+        rowsToSelect={rowsToSelect}
+        rowsToDeselect={rowsToDeselect}
+        fixedRowHeight={fixedRowHeight}
+        multiRowSelection={multiRowSelection}
+        gridHeader={gridHeader}
+        showTitle={showTitle}
+        rowSelector={rowSelector}
+        globalSearch={globalSearch}
+        columnFilter={columnFilter}
+        groupSort={groupSort}
+        columnChooser={columnChooser}
+        exportData={exportData}
+        fileName={fileName}
+        pdfPaperSize={pdfPaperSize}
+    />
 
 ### Variants
 
@@ -537,7 +482,7 @@ const GridComponent = () => {
 // Grid will be loaded with design matching 'portal' theme.
 
 <Grid
-    theme={theme}
+    theme="portal"
     gridData={gridData}
     columns={columns}
     onRowUpdate={onRowUpdate}
@@ -607,28 +552,8 @@ const GridComponent = () => {
 </Story>
 
 ```jsx
+// Refer columnToExpand in the 'Grid properties' section (top).
 // Row expand icon will be displayed in a separate column in Grid (Last column).
-// Values from gridData corresponding to all accessors specified in the innerCells will be displayed in the expanded region.
-
-const columnToExpand = {
-    Header: "Remarks",
-    innerCells: [
-        { Header: "Remarks", accessor: "remarks" },
-        { Header: "Details", onlyInTablet: true, accessor: "details" }
-    ],
-    displayCell: (rowData, DisplayTag) => {
-        const { remarks } = rowData;
-        return (
-            <div className="remarks-wrap details-wrap">
-                <DisplayTag columnKey="remarks" cellKey="remarks">
-                    <ul>
-                        <li>{remarks}</li>
-                    </ul>
-                </DisplayTag>
-            </div>
-        );
-    }
-};
 
 <Grid
     gridData={gridData}
@@ -665,16 +590,8 @@ const columnToExpand = {
 </Story>
 
 ```jsx
+// Refer rowActions in the 'Grid properties' section (top).
 // Passed JSX element will be displayed inside the kebab menu against each row.
-
-const rowActions = (rowData, closeOverlay) => {
-    // Grid will call this function for all rows while binding data on to Grid.
-    // Corresponding 'rowData' is passed as one of the parameters.
-    // Another parameter is the 'closeOverlay', which is a method that can be called to close the Kebab overlay.
-    // Return a JSX from this function, which will be bound to the row actions Kebab overlay.
-    // All functionalities of the row actions should be handelled outside the Grid.
-    return <RowAction />;
-};
 
 <Grid
     gridData={gridData}
@@ -692,10 +609,7 @@ const rowActions = (rowData, closeOverlay) => {
 </Story>
 
 ```jsx
-const onGridRefresh = () => {
-    // Grid will show a refresh icon in the Grid header region if this function is passed as prop to the Grid.
-    // Grid will call this function when user cliks that icon.
-};
+// Refer onGridRefresh in the 'Grid properties' section (top).
 
 <Grid
     gridData={gridData}
@@ -752,19 +666,9 @@ const multiRowSelection = false;
 </Story>
 
 ```jsx
+// Refer onRowSelect in the 'Grid properties' section (top).
 // This should be an array of idAttribute values of rows that has to be selected by default from the Grid.
 const rowsToSelect = [1, 7, 17];
-
-const onRowSelect = (selectedRows, deSelectedRows) => {
-    // Grid will call this function when user selects or deselects a row.
-    // An array of all selected row data will be passed in as the first parameter.
-    // An array of deSelectedRow(s) will be passed in as the second parameter.
-    /************
-        Make sure:
-        * If a row is selected, remove that row details from 'rowsToDeselect' prop value (if present).
-        * If a row is deselected, remove that row details from 'rowsToSelect' prop value (if present).
-    ************/
-};
 
 <Grid
     gridData={gridData}
@@ -783,19 +687,9 @@ const onRowSelect = (selectedRows, deSelectedRows) => {
 </Story>
 
 ```jsx
+// Refer onRowSelect in the 'Grid properties' section (top).
 // This should be an array of idAttribute values of rows that has to be deselected from the Grid.
 const rowsToDeselect = []; // [1] or [1, 7]
-
-const onRowSelect = (selectedRows, deSelectedRows) => {
-    // Grid will call this function when user selects or deselects a row.
-    // An array of all selected row data will be passed in as the first parameter.
-    // An array of deSelectedRow(s) will be passed in as the second parameter.
-    /************
-        Make sure:
-        * If a row is selected, remove that row details from 'rowsToDeselect' prop value (if present).
-        * If a row is deselected, remove that row details from 'rowsToSelect' prop value (if present).
-    ************/
-};
 
 <Grid
     gridData={gridData}
@@ -814,32 +708,8 @@ const onRowSelect = (selectedRows, deSelectedRows) => {
 </Story>
 
 ```jsx
+// Refer paginationType, pageInfo and loadMoreData in the 'Grid properties' section (top).
 // By default grid will consider paginationType value as "index".
-const paginationType = "index"; // or - paginationType = "cursor".
-
-// If paginationType = "index"
-const pageInfo = {
-    pageNum: 1,
-    pageSize: 300,
-    total: 20000,
-    lastPage: false // or - lastPage: true
-};
-// Else if paginationType = "cursor"
-const pageInfo = {
-    endCursor: 299,
-    pageSize: 300,
-    total: 20000,
-    lastPage: false // or - lastPage: true
-};
-
-const loadMoreData = (updatedPageInfo) => {
-    // Grid will call this function only if pageInfo is passed a prop to Grid and the value of lastPage in the pageInfo is false.
-    // This function is called when user reaches bottom row of the grid by scrolling down.
-    // Grid passes in a parameter updatedPageInfo.
-    // If paginationType is "index", updatedPageInfo will be { (pageNum + 1), pageSize}
-    // Else if paginationType is "cursor", updatedPageInfo will be { endCursor, pageSize}
-    // Based on the updatedPageInfo, make API call and re-render grid with updated data.
-};
 
 <Grid
     gridData={gridData}
@@ -933,10 +803,7 @@ const loadMoreData = (updatedPageInfo) => {
 </Story>
 
 ```jsx
-// getRowInfo function will be called against each row, which should return an object.
-// isRowExpandable value in the returned object will decide whether that row should display expand icon.
-// isRowSelectable value in the returned object will decide whether that row should display row selector checkbox.
-// className value in the returned object will be used as the class name of the outer div of that row.
+// Refer getRowInfo in the 'Grid properties' section (top).
 
 <Grid
     gridData={gridData}
@@ -1573,3 +1440,4 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     previousPageRefresh
 />
 ```
+````
