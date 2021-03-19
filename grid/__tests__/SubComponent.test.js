@@ -174,11 +174,7 @@ describe("render Index file ", () => {
                         },
                         goodsType: "Dangerous Goods"
                     },
-                    scr: {
-                        status: "Not ready to send",
-                        ack: "Call",
-                        num: 639
-                    },
+                    scr: null,
                     remarks:
                         "Laboris enim non do esse aliquip adipisicing eiusmod officia quis commodo sit. Voluptate ullamco occaecat incididunt amet ad dolor nisi ad consectetur. Laboris nulla esse do occaecat tempor cupidatat labore."
                 },
@@ -930,7 +926,7 @@ describe("render Index file ", () => {
                 if (hawbId === 6001) {
                     return [];
                 }
-                const { ack, num, status } = scr;
+                const { ack, num, status } = scr || {};
                 return [
                     {
                         header: "SCR Acknowledgement",

@@ -671,10 +671,7 @@ describe("Group sort functionality test", () => {
             {
                 travelId: null,
                 flight: null,
-                segment: {
-                    from: null,
-                    to: null
-                },
+                segment: null,
                 details: {
                     flightModel: null,
                     bodyType: null,

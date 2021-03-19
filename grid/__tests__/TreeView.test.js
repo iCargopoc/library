@@ -763,6 +763,46 @@ describe("render Index file ", () => {
         expect(mockLoadMoreData).toHaveBeenCalled();
     });
 
+    it("test next page without providing parentIdAttribute", () => {
+        mockOffsetSize(600, 900);
+        const { container, getAllByTestId, getByTestId } = render(
+            <Grid
+                title={mockTitle}
+                gridWidth={mockGridWidth}
+                gridData={parentDataWithAllChildData}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                parentColumn={parentColumn}
+                parentRowExpandable={false}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                rowsToDeselect={mockRowsToDeselect}
+                fixedRowHeight
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Find load more buttons
+        const loadMoreButttons = getAllByTestId("load-more-childdata");
+        expect(loadMoreButttons.length).toBe(3);
+
+        // Click first parent's load more
+        act(() => {
+            loadMoreButttons[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Call for child data fetching has to be fired
+        expect(mockLoadMoreData).toHaveBeenCalled();
+    });
+
     it("test grid with parent data and child data and parentRowExpandable as false - load more - cursor pagination", () => {
         mockOffsetSize(600, 900);
         const { container, getAllByTestId } = render(

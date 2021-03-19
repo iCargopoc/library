@@ -141,10 +141,7 @@ const RowItem = ({
                         </div>
                     ) : null}
                     {isLoadMoreChildRowsRequiredForRow(index, lastPage) ? (
-                        <div
-                            className="ng-loadmore"
-                            data-testid="loadMoreChild"
-                        >
+                        <div className="ng-loadmore">
                             <button
                                 type="button"
                                 className="neo-btn neo-btn-default btn btn-secondary"
