@@ -45,7 +45,7 @@ describe("render Index file ", () => {
     });
     const mockUpdateDateValue = jest.fn();
     const mockEditCell = jest.fn((rowData, DisplayTag, rowUpdateCallBack) => {
-        const { flightno, date } = rowData.flight;
+        const { flightno, date } = rowData.flight || {};
         return (
             <div>
                 <DisplayTag columnKey="flight" cellKey="flightno">
@@ -416,10 +416,7 @@ describe("render Index file ", () => {
     for (let i = 6000; i < 6005; i++) {
         thirdChildData.push({
             travelId: i,
-            flight: {
-                flightno: "XX2225",
-                date: "31-Aug-2016"
-            },
+            flight: null,
             segment: {
                 from: "BCC",
                 to: "ZZY"
@@ -855,7 +852,7 @@ describe("render Index file ", () => {
             <Grid
                 title={mockTitle}
                 gridWidth={mockGridWidth}
-                gridData={parentDataWithAllChildData}
+                gridData={parentDataWithOnlyLastChildData}
                 idAttribute="travelId"
                 paginationType="index"
                 loadMoreData={mockLoadMoreData}
