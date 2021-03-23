@@ -426,22 +426,29 @@ const GridComponent = (props) => {
                             <DisplayTag columnKey="flight" cellKey="date">
                                 <span>{getValueOfDate(date, "cell")}</span>
                             </DisplayTag>
-                            <br />
-                            <span>{flightclass} Class</span>
-                            <br />
-                            {connectionflights.map((item, index) => {
-                                const { airlinename, airlinenumbers } = item;
-                                const { code, number } = airlinenumbers;
-                                return (
-                                    <React.Fragment key={index}>
-                                        <span>
-                                            {index + 1}) {airlinename}: {code}-
-                                            {number}
-                                        </span>
-                                        <br />
-                                    </React.Fragment>
-                                );
-                            })}
+                            {fixedRowHeight !== true ? (
+                                <>
+                                    <br />
+                                    <span>{flightclass} Class</span>
+                                    <br />
+                                    {connectionflights.map((item, index) => {
+                                        const {
+                                            airlinename,
+                                            airlinenumbers
+                                        } = item;
+                                        const { code, number } = airlinenumbers;
+                                        return (
+                                            <React.Fragment key={index}>
+                                                <span>
+                                                    {index + 1}) {airlinename}:{" "}
+                                                    {code}-{number}
+                                                </span>
+                                                <br />
+                                            </React.Fragment>
+                                        );
+                                    })}
+                                </>
+                            ) : null}
                         </div>
                     );
                 }
