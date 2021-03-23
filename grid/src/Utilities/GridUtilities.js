@@ -1,24 +1,4 @@
 // @flow
-export const updatedActionsHeaderClass = (isDesktop: boolean) => {
-    if (isDesktop) {
-        const tableContainerList = document.getElementsByClassName(
-            "neo-grid__tbody-list"
-        );
-        if (tableContainerList && tableContainerList.length > 0) {
-            const tableContainer = tableContainerList[0];
-            const tableHeaders = document.getElementsByClassName(
-                "neo-grid__thead"
-            );
-            const tableHeader = tableHeaders[0];
-            if (tableContainer.offsetHeight < tableContainer.scrollHeight) {
-                tableHeader.classList.add("withScroll");
-            } else {
-                tableHeader.classList.remove("withScroll");
-            }
-        }
-    }
-};
-
 export const setColumnWidths = (gridColumns: any[]): any[] => {
     let updatedColumns = [...gridColumns];
 

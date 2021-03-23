@@ -144,7 +144,7 @@ const RowsList = ({
                 }
             }}
             style={{
-                overflowX: "hidden"
+                height: "100%"
             }}
             height={isGroupedColumnsGrid ? height - 55 : height - 34}
             itemCount={rows.length}

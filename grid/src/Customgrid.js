@@ -17,6 +17,7 @@ import {
     useGlobalFilter,
     useExpanded
 } from "react-table";
+import { WindowScroller } from "react-virtualized";
 import AutoSizer from "react-virtualized-auto-sizer";
 import InfiniteLoader from "react-window-infinite-loader";
 import { matchSorter } from "match-sorter";
@@ -45,7 +46,6 @@ import {
     findSelectedRowIdAttributes,
     findSelectedRowIdFromIdAttribute,
     findDeSelectedRows,
-    updatedActionsHeaderClass,
     checkdisplayOfGroupedColumns,
     checkIfGroupsortIsApplicable,
     findAllChildRows,
@@ -845,13 +845,6 @@ const Customgrid = (props: {
         toggleAllRowsSelected(checked);
     };
 
-    // Add class to last table column header (for actions) if table body is having scroll
-    useEffect(() => {
-        if (gridHeader !== false) {
-            updatedActionsHeaderClass(isDesktop);
-        }
-    });
-
     // Update state, when user is updating columns configuration from outside Grid
     useEffect(() => {
         if (managableColumns && managableColumns.length > 0) {
@@ -1171,6 +1164,12 @@ const Customgrid = (props: {
         return index === rows.length - 1 && isNextPageLoading;
     };
 
+    const handleScroll = ({ scrollTop }) => {
+        if (listRef && listRef.current) {
+            listRef.current.scrollTo(scrollTop);
+        }
+    };
+
     if (!isFirstRendering && gridColumns && gridColumns.length > 0) {
         // Check if atleast 1 column has group sort option enabled, and display group sort icon only if there is atleast 1.
         const isGroupSortNeeded = checkIfGroupsortIsApplicable(
@@ -1184,6 +1183,9 @@ const Customgrid = (props: {
         // React window list is used for implementing virtualization, specifying the item count in a frame and height of each rows in it.
         return (
             <div className="neo-grid__wrapper">
+                <WindowScroller onScroll={handleScroll}>
+                    {() => <div className="ng-windowScroller" />}
+                </WindowScroller>
                 <div
                     className={`neo-grid__header ${
                         gridHeader === false

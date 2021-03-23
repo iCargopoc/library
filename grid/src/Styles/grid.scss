@@ -49,15 +49,6 @@
         &:last-child {
             margin-bottom: rem(50);
         }
-        &.withScroll {
-            .neo-grid__tr {
-                overflow-y: scroll;
-                overflow-x: hidden;
-                &::-webkit-scrollbar {
-                    visibility: hidden;
-                }
-            }
-        }
         .ng-accordion__icon {
             margin: 0;
         }
@@ -196,7 +187,6 @@
         display: flex;
         flex-direction: column;
         flex-grow: 1;
-        overflow: auto hidden;
         position: relative;
         &--parent {
             .ng-accordion__icon {
