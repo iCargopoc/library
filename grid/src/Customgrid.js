@@ -1384,44 +1384,17 @@ const Customgrid = (props: {
                                 autoHeight
                                 autoHeightMin={height}
                                 autoHeightMax={height}
-                                renderTrackHorizontal={(
-                                    scrollProps: Object
-                                ): any => (
-                                    <div
-                                        {...scrollProps}
-                                        className="ng-scrolltrack ng-scrolltrack--horizontal"
-                                    />
-                                )}
-                                renderTrackVertical={(
-                                    scrollProps: Object
-                                ): any => (
-                                    <div
-                                        {...scrollProps}
-                                        className="ng-scrolltrack ng-scrolltrack--vertical"
-                                    />
-                                )}
-                                renderThumbHorizontal={(
-                                    scrollProps: Object
-                                ): any => (
-                                    <div
-                                        {...scrollProps}
-                                        className="ng-scrollthumb ng-scrollthumb--horizontal"
-                                    />
-                                )}
-                                renderThumbVertical={(
-                                    scrollProps: Object
-                                ): any => (
-                                    <div
-                                        {...scrollProps}
-                                        className="ng-scrollthumb ng-scrollthumb--vertical"
-                                    />
-                                )}
-                                renderView={(scrollProps: Object): any => (
-                                    <div
-                                        {...scrollProps}
-                                        className="neo-grid__scrollView"
-                                    />
-                                )}
+                                classes={{
+                                    view: "neo-grid__scrollView",
+                                    trackHorizontal:
+                                        "ng-scrolltrack ng-scrolltrack--horizontal",
+                                    trackVertical:
+                                        "ng-scrolltrack ng-scrolltrack--vertical",
+                                    thumbHorizontal:
+                                        "ng-scrollthumb ng-scrollthumb--horizontal",
+                                    thumbVertical:
+                                        "ng-scrollthumb ng-scrollthumb--vertical"
+                                }}
                                 onScroll={handleScroll}
                             >
                                 <div

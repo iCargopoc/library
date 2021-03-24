@@ -168,7 +168,7 @@
         .neo-grid__tr {
             border-bottom: rem(1) solid var(--light-grey);
             flex-wrap: wrap;
-        }
+            }
         .ng-loadmore {
             width: 100%;
             text-align: center;
@@ -306,21 +306,21 @@
             }
         }
         .ng-scrolltrack {
-            right: 2px;
-            bottom: 2px;
-            border-radius: 3px;
+            right: 2px !important;
+            bottom: 2px !important;
+            border-radius: 3px !important;
             &--horizontal {
-                left: 2px;
+                left: 2px !important;
             }
             &--vertical {
-                top: 2px;
+                top: 2px !important;
             }
         }
         .ng-scrollthumb {
-            cursor: pointer;
-            border-radius: inherit;
-            background-color: var(--border);
-            z-index: 10;
+            cursor: pointer !important;
+            border-radius: inherit !important;
+            background-color: var(--border) !important;
+            z-index: 10 !important;
         }
     }
 
