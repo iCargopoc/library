@@ -465,7 +465,7 @@ li {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    height: 90vh;
+    height: 100vh;
 }
 .flightHeader {
     color: var(--focus);

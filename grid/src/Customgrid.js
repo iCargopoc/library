@@ -17,7 +17,7 @@ import {
     useGlobalFilter,
     useExpanded
 } from "react-table";
-import { WindowScroller } from "react-virtualized";
+import { Scrollbars } from "react-custom-scrollbars";
 import AutoSizer from "react-virtualized-auto-sizer";
 import InfiniteLoader from "react-window-infinite-loader";
 import { matchSorter } from "match-sorter";
@@ -48,8 +48,7 @@ import {
     findDeSelectedRows,
     checkdisplayOfGroupedColumns,
     checkIfGroupsortIsApplicable,
-    findAllChildRows,
-    checkIfGridHasGroupedColumns
+    findAllChildRows
 } from "./Utilities/GridUtilities";
 
 const listRef = createRef();
@@ -1164,9 +1163,13 @@ const Customgrid = (props: {
         return index === rows.length - 1 && isNextPageLoading;
     };
 
-    const handleScroll = ({ scrollTop }) => {
-        if (listRef && listRef.current) {
-            listRef.current.scrollTo(scrollTop);
+    const handleScroll = ({ target }: Object) => {
+        if (listRef) {
+            const { current } = listRef;
+            if (current) {
+                const { scrollTop } = target;
+                listRef.current.scrollTo(scrollTop);
+            }
         }
     };
 
@@ -1183,9 +1186,6 @@ const Customgrid = (props: {
         // React window list is used for implementing virtualization, specifying the item count in a frame and height of each rows in it.
         return (
             <div className="neo-grid__wrapper">
-                <WindowScroller onScroll={handleScroll}>
-                    {() => <div className="ng-windowScroller" />}
-                </WindowScroller>
                 <div
                     className={`neo-grid__header ${
                         gridHeader === false
@@ -1378,356 +1378,372 @@ const Customgrid = (props: {
                 >
                     <AutoSizer disableWidth className="neo-grid__autosizer">
                         {({ height }: Object): Object => (
-                            <div
-                                {...getTableProps()}
-                                className="neo-grid__content"
+                            <Scrollbars
+                                autoHeight={true}
+                                autoHeightMin={height}
+                                autoHeightMax={height}
+                                onScroll={handleScroll}
                             >
-                                {gridHeader === false ? null : (
-                                    <div className="neo-grid__thead">
-                                        {headerGroups.map(
-                                            (
-                                                headerGroup: Object,
-                                                index: number
-                                            ): Object => {
-                                                // If there are morthan 1 headerGroups, we consider 1st one as group header row
-                                                const isGroupHeader =
-                                                    headerGroups.length > 1
-                                                        ? index === 0
-                                                        : false;
-                                                return (
-                                                    <div
-                                                        {...headerGroup.getHeaderGroupProps()}
-                                                        className="neo-grid__tr"
-                                                    >
-                                                        {headerGroup.headers.map(
-                                                            (
-                                                                column: Object
-                                                            ): Object => {
-                                                                const {
-                                                                    display,
-                                                                    isSorted,
-                                                                    isSortedDesc,
-                                                                    filter,
-                                                                    canResize
-                                                                } = column;
-                                                                const isExpandCollapseDisabled =
-                                                                    (column.isGroupHeader ===
-                                                                        false &&
-                                                                        column.columnId ===
-                                                                            "column_custom_2" &&
-                                                                        isSubComponentGrid ===
-                                                                            false) ||
-                                                                    (column.isGroupHeader !==
-                                                                        false &&
-                                                                        column.placeholderOf &&
-                                                                        column
-                                                                            .placeholderOf
-                                                                            .columnId ===
-                                                                            "column_custom_2" &&
-                                                                        isSubComponentGrid ===
-                                                                            false);
-                                                                if (
-                                                                    !isExpandCollapseDisabled &&
-                                                                    (checkdisplayOfGroupedColumns(
-                                                                        column
-                                                                    ) ||
-                                                                        display ===
-                                                                            true)
-                                                                ) {
-                                                                    // If header is group header only render header value and not sort/filter/resize
-                                                                    return (
-                                                                        <div
-                                                                            {...column.getHeaderProps()}
-                                                                            className={`neo-grid__th ${
-                                                                                isGroupHeader ===
-                                                                                true
-                                                                                    ? "neo-grid__th-group"
-                                                                                    : ""
-                                                                            }`}
-                                                                            data-testid={
-                                                                                isGroupHeader ===
-                                                                                true
-                                                                                    ? "grid-group-header"
-                                                                                    : "grid-header"
-                                                                            }
-                                                                        >
+                                <div
+                                    {...getTableProps()}
+                                    className="neo-grid__content"
+                                >
+                                    {gridHeader === false ? null : (
+                                        <div className="neo-grid__thead">
+                                            {headerGroups.map(
+                                                (
+                                                    headerGroup: Object,
+                                                    index: number
+                                                ): Object => {
+                                                    // If there are morthan 1 headerGroups, we consider 1st one as group header row
+                                                    const isGroupHeader =
+                                                        headerGroups.length > 1
+                                                            ? index === 0
+                                                            : false;
+                                                    return (
+                                                        <div
+                                                            {...headerGroup.getHeaderGroupProps()}
+                                                            className="neo-grid__tr"
+                                                        >
+                                                            {headerGroup.headers.map(
+                                                                (
+                                                                    column: Object
+                                                                ): Object => {
+                                                                    const {
+                                                                        display,
+                                                                        isSorted,
+                                                                        isSortedDesc,
+                                                                        filter,
+                                                                        canResize
+                                                                    } = column;
+                                                                    const isExpandCollapseDisabled =
+                                                                        (column.isGroupHeader ===
+                                                                            false &&
+                                                                            column.columnId ===
+                                                                                "column_custom_2" &&
+                                                                            isSubComponentGrid ===
+                                                                                false) ||
+                                                                        (column.isGroupHeader !==
+                                                                            false &&
+                                                                            column.placeholderOf &&
+                                                                            column
+                                                                                .placeholderOf
+                                                                                .columnId ===
+                                                                                "column_custom_2" &&
+                                                                            isSubComponentGrid ===
+                                                                                false);
+                                                                    if (
+                                                                        !isExpandCollapseDisabled &&
+                                                                        (checkdisplayOfGroupedColumns(
+                                                                            column
+                                                                        ) ||
+                                                                            display ===
+                                                                                true)
+                                                                    ) {
+                                                                        // If header is group header only render header value and not sort/filter/resize
+                                                                        return (
                                                                             <div
-                                                                                className="neo-grid__th-title"
-                                                                                data-testid="column-header-sort"
-                                                                                {...column.getSortByToggleProps()}
+                                                                                {...column.getHeaderProps()}
+                                                                                className={`neo-grid__th ${
+                                                                                    isGroupHeader ===
+                                                                                    true
+                                                                                        ? "neo-grid__th-group"
+                                                                                        : ""
+                                                                                }`}
+                                                                                data-testid={
+                                                                                    isGroupHeader ===
+                                                                                    true
+                                                                                        ? "grid-group-header"
+                                                                                        : "grid-header"
+                                                                                }
                                                                             >
-                                                                                {column.render(
-                                                                                    "Header"
-                                                                                )}
-                                                                                {isGroupHeader ===
-                                                                                false ? (
-                                                                                    <span>
-                                                                                        {isSorted ? (
-                                                                                            <i className="neo-grid__th-icon">
-                                                                                                <IconSort
-                                                                                                    className={`ng-icon neo-grid__sort-desc ${
-                                                                                                        isSortedDesc
-                                                                                                            ? "is-active"
-                                                                                                            : ""
-                                                                                                    }`}
-                                                                                                />
-                                                                                                <IconSort
-                                                                                                    className={`ng-icon neo-grid__sort-asc ${
-                                                                                                        isSortedDesc
-                                                                                                            ? ""
-                                                                                                            : "is-active"
-                                                                                                    }`}
-                                                                                                />
-                                                                                            </i>
-                                                                                        ) : (
-                                                                                            ""
-                                                                                        )}
-                                                                                    </span>
-                                                                                ) : null}
-                                                                            </div>
-                                                                            {/* Don't render filter if header is group header or if column filter is disabled */}
-                                                                            {/* If atleast 1 column filter is present, below div wrap has to be present, to maintain the alignment of header text in header cell */}
-                                                                            {isGroupHeader ===
-                                                                                false &&
-                                                                            columnFilter !==
-                                                                                false ? (
                                                                                 <div
-                                                                                    className={`ng-txt-wrap ${
-                                                                                        isFilterOpen
-                                                                                            ? "ng-txt-wrap__open"
-                                                                                            : ""
-                                                                                    }`}
+                                                                                    className="neo-grid__th-title"
+                                                                                    data-testid="column-header-sort"
+                                                                                    {...column.getSortByToggleProps()}
                                                                                 >
-                                                                                    {/* column.canFilter - should be used to identify if column is filterable */}
-                                                                                    {/* But bug of react-table will set canFilter to true (even if it is false) after doing a global search */}
-                                                                                    {/* Hence checking if filter logic is present as a function for a column */}
-                                                                                    {typeof filter ===
-                                                                                    "function"
-                                                                                        ? column.render(
-                                                                                              "Filter"
-                                                                                          )
-                                                                                        : null}
+                                                                                    {column.render(
+                                                                                        "Header"
+                                                                                    )}
+                                                                                    {isGroupHeader ===
+                                                                                    false ? (
+                                                                                        <span>
+                                                                                            {isSorted ? (
+                                                                                                <i className="neo-grid__th-icon">
+                                                                                                    <IconSort
+                                                                                                        className={`ng-icon neo-grid__sort-desc ${
+                                                                                                            isSortedDesc
+                                                                                                                ? "is-active"
+                                                                                                                : ""
+                                                                                                        }`}
+                                                                                                    />
+                                                                                                    <IconSort
+                                                                                                        className={`ng-icon neo-grid__sort-asc ${
+                                                                                                            isSortedDesc
+                                                                                                                ? ""
+                                                                                                                : "is-active"
+                                                                                                        }`}
+                                                                                                    />
+                                                                                                </i>
+                                                                                            ) : (
+                                                                                                ""
+                                                                                            )}
+                                                                                        </span>
+                                                                                    ) : null}
                                                                                 </div>
-                                                                            ) : null}
-                                                                            {isGroupHeader ===
-                                                                                false &&
-                                                                                canResize && (
+                                                                                {/* Don't render filter if header is group header or if column filter is disabled */}
+                                                                                {/* If atleast 1 column filter is present, below div wrap has to be present, to maintain the alignment of header text in header cell */}
+                                                                                {isGroupHeader ===
+                                                                                    false &&
+                                                                                columnFilter !==
+                                                                                    false ? (
                                                                                     <div
-                                                                                        className="neo-grid__th-resizer"
-                                                                                        {...column.getResizerProps()}
-                                                                                    />
-                                                                                )}
-                                                                        </div>
-                                                                    );
+                                                                                        className={`ng-txt-wrap ${
+                                                                                            isFilterOpen
+                                                                                                ? "ng-txt-wrap__open"
+                                                                                                : ""
+                                                                                        }`}
+                                                                                    >
+                                                                                        {/* column.canFilter - should be used to identify if column is filterable */}
+                                                                                        {/* But bug of react-table will set canFilter to true (even if it is false) after doing a global search */}
+                                                                                        {/* Hence checking if filter logic is present as a function for a column */}
+                                                                                        {typeof filter ===
+                                                                                        "function"
+                                                                                            ? column.render(
+                                                                                                  "Filter"
+                                                                                              )
+                                                                                            : null}
+                                                                                    </div>
+                                                                                ) : null}
+                                                                                {isGroupHeader ===
+                                                                                    false &&
+                                                                                    canResize && (
+                                                                                        <div
+                                                                                            className="neo-grid__th-resizer"
+                                                                                            {...column.getResizerProps()}
+                                                                                        />
+                                                                                    )}
+                                                                            </div>
+                                                                        );
+                                                                    }
+                                                                    return null;
                                                                 }
-                                                                return null;
+                                                            )}
+                                                        </div>
+                                                    );
+                                                }
+                                            )}
+                                        </div>
+                                    )}
+                                    {rows && rows.length > 0 ? (
+                                        <div
+                                            {...getTableBodyProps()}
+                                            className={`neo-grid__tbody ${
+                                                gridHeader === false
+                                                    ? "neo-grid__tbody--nohead"
+                                                    : ""
+                                            }`}
+                                        >
+                                            {isPaginationNeeded &&
+                                            !isParentGrid ? (
+                                                <InfiniteLoader
+                                                    isItemLoaded={isItemLoaded}
+                                                    itemCount={itemCount}
+                                                    loadMoreItems={
+                                                        loadMoreItems
+                                                    }
+                                                >
+                                                    {({
+                                                        onItemsRendered,
+                                                        ref
+                                                    }: Object): Object => (
+                                                        <RowsList
+                                                            onItemsRendered={
+                                                                onItemsRendered
                                                             }
-                                                        )}
-                                                    </div>
-                                                );
-                                            }
-                                        )}
-                                    </div>
-                                )}
-                                {rows && rows.length > 0 ? (
-                                    <div
-                                        {...getTableBodyProps()}
-                                        className={`neo-grid__tbody ${
-                                            gridHeader === false
-                                                ? "neo-grid__tbody--nohead"
-                                                : ""
-                                        }`}
-                                    >
-                                        {isPaginationNeeded && !isParentGrid ? (
-                                            <InfiniteLoader
-                                                isItemLoaded={isItemLoaded}
-                                                itemCount={itemCount}
-                                                loadMoreItems={loadMoreItems}
-                                            >
-                                                {({
-                                                    onItemsRendered,
-                                                    ref
-                                                }: Object): Object => (
-                                                    <RowsList
-                                                        onItemsRendered={
-                                                            onItemsRendered
-                                                        }
-                                                        infiniteLoaderRef={ref}
-                                                        listRef={listRef}
-                                                        height={height}
-                                                        theme={theme}
-                                                        isGroupedColumnsGrid={checkIfGridHasGroupedColumns(
-                                                            gridColumns
-                                                        )}
-                                                        rows={rows}
-                                                        idAttribute={
-                                                            idAttribute
-                                                        }
-                                                        overScanCount={
-                                                            overScanCount
-                                                        }
-                                                        prepareRow={prepareRow}
-                                                        isParentGrid={
-                                                            isParentGrid
-                                                        }
-                                                        multiRowSelection={
-                                                            multiRowSelection
-                                                        }
-                                                        parentRowExpandable={
-                                                            parentRowExpandable
-                                                        }
-                                                        isRowExpandEnabled={
-                                                            isRowExpandEnabled
-                                                        }
-                                                        subComponentColumnns={
-                                                            subComponentColumnns
-                                                        }
-                                                        subComponentAdditionalColumn={
-                                                            subComponentAdditionalColumn
-                                                        }
-                                                        isSubComponentGrid={
-                                                            isSubComponentGrid
-                                                        }
-                                                        rowsWithExpandedSubComponents={
-                                                            rowsWithExpandedSubComponents
-                                                        }
-                                                        isParentRowSelected={
-                                                            isParentRowSelected
-                                                        }
-                                                        isParentRowCollapsed={
-                                                            isParentRowCollapsed
-                                                        }
-                                                        toggleParentRowSelection={
-                                                            toggleParentRowSelection
-                                                        }
-                                                        toggleParentRow={
-                                                            toggleParentRow
-                                                        }
-                                                        isParentRowOpen={
-                                                            isParentRowOpen
-                                                        }
-                                                        isLoadMoreChildRowsRequiredForRow={
-                                                            isLoadMoreChildRowsRequiredForRow
-                                                        }
-                                                        loadMoreChildData={
-                                                            loadMoreChildData
-                                                        }
-                                                        parentColumn={
-                                                            parentColumn
-                                                        }
-                                                        additionalColumn={
-                                                            additionalColumn
-                                                        }
-                                                        getRowInfo={getRowInfo}
-                                                        expandedParentRows={
-                                                            expandedParentRows
-                                                        }
-                                                        reRenderListData={
-                                                            reRenderListData
-                                                        }
-                                                        fixedRowHeight={
-                                                            fixedRowHeight
-                                                        }
-                                                        isLoadMoreRequiredForNormalRow={
-                                                            isLoadMoreRequiredForNormalRow
-                                                        }
-                                                        rowSelector={
-                                                            rowSelector
-                                                        }
-                                                        rowActions={rowActions}
-                                                        expandableColumn={
-                                                            expandableColumn
-                                                        }
-                                                    />
-                                                )}
-                                            </InfiniteLoader>
-                                        ) : (
-                                            <RowsList
-                                                listRef={listRef}
-                                                height={height}
-                                                theme={theme}
-                                                isGroupedColumnsGrid={checkIfGridHasGroupedColumns(
-                                                    gridColumns
-                                                )}
-                                                rows={rows}
-                                                idAttribute={idAttribute}
-                                                overScanCount={overScanCount}
-                                                prepareRow={prepareRow}
-                                                isParentGrid={isParentGrid}
-                                                multiRowSelection={
-                                                    multiRowSelection
-                                                }
-                                                parentRowExpandable={
-                                                    parentRowExpandable
-                                                }
-                                                isRowExpandEnabled={
-                                                    isRowExpandEnabled
-                                                }
-                                                isParentRowSelected={
-                                                    isParentRowSelected
-                                                }
-                                                isParentRowCollapsed={
-                                                    isParentRowCollapsed
-                                                }
-                                                subComponentColumnns={
-                                                    subComponentColumnns
-                                                }
-                                                subComponentAdditionalColumn={
-                                                    subComponentAdditionalColumn
-                                                }
-                                                isSubComponentGrid={
-                                                    isSubComponentGrid
-                                                }
-                                                rowsWithExpandedSubComponents={
-                                                    rowsWithExpandedSubComponents
-                                                }
-                                                toggleParentRowSelection={
-                                                    toggleParentRowSelection
-                                                }
-                                                toggleParentRow={
-                                                    toggleParentRow
-                                                }
-                                                isParentRowOpen={
-                                                    isParentRowOpen
-                                                }
-                                                isLoadMoreChildRowsRequiredForRow={
-                                                    isLoadMoreChildRowsRequiredForRow
-                                                }
-                                                loadMoreChildData={
-                                                    loadMoreChildData
-                                                }
-                                                parentColumn={parentColumn}
-                                                additionalColumn={
-                                                    additionalColumn
-                                                }
-                                                getRowInfo={getRowInfo}
-                                                expandedParentRows={
-                                                    expandedParentRows
-                                                }
-                                                reRenderListData={
-                                                    reRenderListData
-                                                }
-                                                fixedRowHeight={fixedRowHeight}
-                                                isLoadMoreRequiredForNormalRow={
-                                                    isLoadMoreRequiredForNormalRow
-                                                }
-                                                rowSelector={rowSelector}
-                                                rowActions={rowActions}
-                                                expandableColumn={
-                                                    expandableColumn
-                                                }
-                                            />
-                                        )}
-                                    </div>
-                                ) : (
-                                    <h2
-                                        data-testid="nodataerror"
-                                        className="ng-error"
-                                    >
-                                        No Records Found
-                                    </h2>
-                                )}
-                            </div>
+                                                            infiniteLoaderRef={
+                                                                ref
+                                                            }
+                                                            listRef={listRef}
+                                                            height={height}
+                                                            theme={theme}
+                                                            rows={rows}
+                                                            idAttribute={
+                                                                idAttribute
+                                                            }
+                                                            overScanCount={
+                                                                overScanCount
+                                                            }
+                                                            prepareRow={
+                                                                prepareRow
+                                                            }
+                                                            isParentGrid={
+                                                                isParentGrid
+                                                            }
+                                                            multiRowSelection={
+                                                                multiRowSelection
+                                                            }
+                                                            parentRowExpandable={
+                                                                parentRowExpandable
+                                                            }
+                                                            isRowExpandEnabled={
+                                                                isRowExpandEnabled
+                                                            }
+                                                            subComponentColumnns={
+                                                                subComponentColumnns
+                                                            }
+                                                            subComponentAdditionalColumn={
+                                                                subComponentAdditionalColumn
+                                                            }
+                                                            isSubComponentGrid={
+                                                                isSubComponentGrid
+                                                            }
+                                                            rowsWithExpandedSubComponents={
+                                                                rowsWithExpandedSubComponents
+                                                            }
+                                                            isParentRowSelected={
+                                                                isParentRowSelected
+                                                            }
+                                                            isParentRowCollapsed={
+                                                                isParentRowCollapsed
+                                                            }
+                                                            toggleParentRowSelection={
+                                                                toggleParentRowSelection
+                                                            }
+                                                            toggleParentRow={
+                                                                toggleParentRow
+                                                            }
+                                                            isParentRowOpen={
+                                                                isParentRowOpen
+                                                            }
+                                                            isLoadMoreChildRowsRequiredForRow={
+                                                                isLoadMoreChildRowsRequiredForRow
+                                                            }
+                                                            loadMoreChildData={
+                                                                loadMoreChildData
+                                                            }
+                                                            parentColumn={
+                                                                parentColumn
+                                                            }
+                                                            additionalColumn={
+                                                                additionalColumn
+                                                            }
+                                                            getRowInfo={
+                                                                getRowInfo
+                                                            }
+                                                            expandedParentRows={
+                                                                expandedParentRows
+                                                            }
+                                                            reRenderListData={
+                                                                reRenderListData
+                                                            }
+                                                            fixedRowHeight={
+                                                                fixedRowHeight
+                                                            }
+                                                            isLoadMoreRequiredForNormalRow={
+                                                                isLoadMoreRequiredForNormalRow
+                                                            }
+                                                            rowSelector={
+                                                                rowSelector
+                                                            }
+                                                            rowActions={
+                                                                rowActions
+                                                            }
+                                                            expandableColumn={
+                                                                expandableColumn
+                                                            }
+                                                        />
+                                                    )}
+                                                </InfiniteLoader>
+                                            ) : (
+                                                <RowsList
+                                                    listRef={listRef}
+                                                    height={height}
+                                                    theme={theme}
+                                                    rows={rows}
+                                                    idAttribute={idAttribute}
+                                                    overScanCount={
+                                                        overScanCount
+                                                    }
+                                                    prepareRow={prepareRow}
+                                                    isParentGrid={isParentGrid}
+                                                    multiRowSelection={
+                                                        multiRowSelection
+                                                    }
+                                                    parentRowExpandable={
+                                                        parentRowExpandable
+                                                    }
+                                                    isRowExpandEnabled={
+                                                        isRowExpandEnabled
+                                                    }
+                                                    isParentRowSelected={
+                                                        isParentRowSelected
+                                                    }
+                                                    isParentRowCollapsed={
+                                                        isParentRowCollapsed
+                                                    }
+                                                    subComponentColumnns={
+                                                        subComponentColumnns
+                                                    }
+                                                    subComponentAdditionalColumn={
+                                                        subComponentAdditionalColumn
+                                                    }
+                                                    isSubComponentGrid={
+                                                        isSubComponentGrid
+                                                    }
+                                                    rowsWithExpandedSubComponents={
+                                                        rowsWithExpandedSubComponents
+                                                    }
+                                                    toggleParentRowSelection={
+                                                        toggleParentRowSelection
+                                                    }
+                                                    toggleParentRow={
+                                                        toggleParentRow
+                                                    }
+                                                    isParentRowOpen={
+                                                        isParentRowOpen
+                                                    }
+                                                    isLoadMoreChildRowsRequiredForRow={
+                                                        isLoadMoreChildRowsRequiredForRow
+                                                    }
+                                                    loadMoreChildData={
+                                                        loadMoreChildData
+                                                    }
+                                                    parentColumn={parentColumn}
+                                                    additionalColumn={
+                                                        additionalColumn
+                                                    }
+                                                    getRowInfo={getRowInfo}
+                                                    expandedParentRows={
+                                                        expandedParentRows
+                                                    }
+                                                    reRenderListData={
+                                                        reRenderListData
+                                                    }
+                                                    fixedRowHeight={
+                                                        fixedRowHeight
+                                                    }
+                                                    isLoadMoreRequiredForNormalRow={
+                                                        isLoadMoreRequiredForNormalRow
+                                                    }
+                                                    rowSelector={rowSelector}
+                                                    rowActions={rowActions}
+                                                    expandableColumn={
+                                                        expandableColumn
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <h2
+                                            data-testid="nodataerror"
+                                            className="ng-error"
+                                        >
+                                            No Records Found
+                                        </h2>
+                                    )}
+                                </div>
+                            </Scrollbars>
                         )}
                     </AutoSizer>
                 </div>

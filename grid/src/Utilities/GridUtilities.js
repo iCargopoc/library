@@ -228,13 +228,3 @@ export const findAllChildRows = (allRows: [Object]): any[] => {
     }
     return [];
 };
-
-export const checkIfGridHasGroupedColumns = (gridColumns: any): boolean => {
-    let isGroupedColumns = false;
-    gridColumns.forEach((col: Object) => {
-        if (col && col.isGroupHeader === true) {
-            isGroupedColumns = true;
-        }
-    });
-    return isGroupedColumns;
-};

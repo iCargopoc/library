@@ -11,7 +11,6 @@ const RowsList = ({
     listRef,
     height,
     theme,
-    isGroupedColumnsGrid,
     rows,
     idAttribute,
     overScanCount,
@@ -47,7 +46,6 @@ const RowsList = ({
     listRef: any,
     height: number,
     theme: string,
-    isGroupedColumnsGrid: boolean,
     rows: Array<Object>,
     idAttribute: string,
     overScanCount: number,
@@ -146,7 +144,7 @@ const RowsList = ({
             style={{
                 height: "100%"
             }}
-            height={isGroupedColumnsGrid ? height - 55 : height - 34}
+            height={height}
             itemCount={rows.length}
             itemSize={getSize}
             onItemsRendered={onItemsRendered}
