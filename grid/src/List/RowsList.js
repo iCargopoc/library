@@ -82,7 +82,7 @@ const RowsList = ({
         const currentSize = sizeMap.current[index];
         if (currentSize !== size) {
             sizeMap.current = { ...sizeMap.current, [index]: size };
-            reRenderListData(index);
+            reRenderListData(index); // For fixing row height issue while scrolling down fast
         }
     };
 
@@ -122,7 +122,7 @@ const RowsList = ({
     };
 
     useEffect((): Object => {
-        reRenderListData();
+        reRenderListData(); // Without this, rows will be distorted during the initial load
         return () => {
             if (infiniteLoaderRef) {
                 infiniteLoaderRef(null);

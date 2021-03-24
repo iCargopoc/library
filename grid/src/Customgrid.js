@@ -953,10 +953,10 @@ const Customgrid = (props: {
     }, [rowsToSelect, rowsToDeselect, gridData, groupSortOptions]);
 
     useEffect(() => {
-        if (!isFirstRendering && isParentGrid && fixedRowHeight === true) {
+        if (!isFirstRendering) {
             reRenderListData();
         }
-    }, [gridData, groupSortOptions]);
+    }, [gridData, groupSortOptions, rowsWithExpandedSubComponents]);
 
     useEffect(() => {
         if (!isFirstRendering && paginationType !== "cursor") {
