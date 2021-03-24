@@ -438,109 +438,114 @@ const Customgrid = (props: {
         useFlexLayout,
         useResizeColumns,
         (hooks: Object): Object => {
-            hooks.allColumns.push(
-                (hookColumns: Object, instanceObj: Object): Object => [
-                    {
-                        id: "expand_collapse",
-                        columnId: "column_custom_2", // *** Never change this id. It is used in other places ***
-                        disableResizing: true,
-                        disableFilters: true,
-                        disableSortBy: true,
-                        display: true,
-                        isGroupHeader: false,
-                        minWidth: 35,
-                        width: 35,
-                        maxWidth: 35,
-                        Header: (headerSelectProps: Object): Object => {
-                            const { instance } = instanceObj;
-                            const expandedRowIds = [
-                                ...instance.rowsWithExpandedSubComponents
-                            ];
-                            const totalRowIds = findSelectedRowIdAttributes(
-                                headerSelectProps.data,
-                                idAttribute
-                            );
-                            const isAllRowsExpanded =
-                                expandedRowIds.length === totalRowIds.length;
-                            return (
-                                <i
-                                    role="presentation"
-                                    className="ng-accordion__icon"
-                                    onClick={() => {
-                                        if (isAllRowsExpanded) {
-                                            setRowsWithExpandedSubComponents(
-                                                []
-                                            );
-                                        } else {
-                                            setRowsWithExpandedSubComponents(
-                                                totalRowIds
-                                            );
-                                        }
-                                    }}
-                                    data-testid="subComponent-header-expand-collapse-all"
-                                >
-                                    {isAllRowsExpanded ? (
-                                        <IconCollapse className="ng-icon" />
-                                    ) : (
-                                        <IconExpand className="ng-icon" />
-                                    )}
-                                </i>
-                            );
-                        },
-                        Cell: (cellSelectProps: Object): Object => {
-                            const { row } = cellSelectProps;
-                            const { original } = row;
-                            const { subComponentData } = original;
-                            const isSubComponentRowsPresent =
-                                subComponentData !== null &&
-                                subComponentData !== undefined &&
-                                subComponentData.length > 0;
-                            if (isSubComponentRowsPresent) {
+            if (isSubComponentGrid) {
+                hooks.allColumns.push(
+                    (hookColumns: Object, instanceObj: Object): Object => [
+                        {
+                            id: "expand_collapse",
+                            columnId: "column_custom_2", // *** Never change this id. It is used in other places ***
+                            disableResizing: true,
+                            disableFilters: true,
+                            disableSortBy: true,
+                            display: true,
+                            isGroupHeader: false,
+                            minWidth: 35,
+                            width: 35,
+                            maxWidth: 35,
+                            Header: (headerSelectProps: Object): Object => {
                                 const { instance } = instanceObj;
-                                const rowIdAttr = original[idAttribute];
-                                const expandedRows =
-                                    instance.rowsWithExpandedSubComponents;
-                                const isSubComponentsExpanded = expandedRows.includes(
-                                    rowIdAttr
+                                const expandedRowIds = [
+                                    ...instance.rowsWithExpandedSubComponents
+                                ];
+                                const totalRowIds = findSelectedRowIdAttributes(
+                                    headerSelectProps.data,
+                                    idAttribute
                                 );
+                                const isAllRowsExpanded =
+                                    expandedRowIds.length ===
+                                    totalRowIds.length;
                                 return (
                                     <i
                                         role="presentation"
                                         className="ng-accordion__icon"
                                         onClick={() => {
-                                            let currentRowsWithExpandedSubComponents = [
-                                                ...expandedRows
-                                            ];
-                                            if (isSubComponentsExpanded) {
-                                                currentRowsWithExpandedSubComponents = currentRowsWithExpandedSubComponents.filter(
-                                                    (rowId: string): Object =>
-                                                        rowId !== rowIdAttr
+                                            if (isAllRowsExpanded) {
+                                                setRowsWithExpandedSubComponents(
+                                                    []
                                                 );
                                             } else {
-                                                currentRowsWithExpandedSubComponents.push(
-                                                    rowIdAttr
+                                                setRowsWithExpandedSubComponents(
+                                                    totalRowIds
                                                 );
                                             }
-                                            setRowsWithExpandedSubComponents(
-                                                currentRowsWithExpandedSubComponents
-                                            );
                                         }}
-                                        data-testid="subComponent-header-expand-collapse"
+                                        data-testid="subComponent-header-expand-collapse-all"
                                     >
-                                        {isSubComponentsExpanded ? (
+                                        {isAllRowsExpanded ? (
                                             <IconCollapse className="ng-icon" />
                                         ) : (
                                             <IconExpand className="ng-icon" />
                                         )}
                                     </i>
                                 );
+                            },
+                            Cell: (cellSelectProps: Object): Object => {
+                                const { row } = cellSelectProps;
+                                const { original } = row;
+                                const { subComponentData } = original;
+                                const isSubComponentRowsPresent =
+                                    subComponentData !== null &&
+                                    subComponentData !== undefined &&
+                                    subComponentData.length > 0;
+                                if (isSubComponentRowsPresent) {
+                                    const { instance } = instanceObj;
+                                    const rowIdAttr = original[idAttribute];
+                                    const expandedRows =
+                                        instance.rowsWithExpandedSubComponents;
+                                    const isSubComponentsExpanded = expandedRows.includes(
+                                        rowIdAttr
+                                    );
+                                    return (
+                                        <i
+                                            role="presentation"
+                                            className="ng-accordion__icon"
+                                            onClick={() => {
+                                                let currentRowsWithExpandedSubComponents = [
+                                                    ...expandedRows
+                                                ];
+                                                if (isSubComponentsExpanded) {
+                                                    currentRowsWithExpandedSubComponents = currentRowsWithExpandedSubComponents.filter(
+                                                        (
+                                                            rowId: string
+                                                        ): Object =>
+                                                            rowId !== rowIdAttr
+                                                    );
+                                                } else {
+                                                    currentRowsWithExpandedSubComponents.push(
+                                                        rowIdAttr
+                                                    );
+                                                }
+                                                setRowsWithExpandedSubComponents(
+                                                    currentRowsWithExpandedSubComponents
+                                                );
+                                            }}
+                                            data-testid="subComponent-header-expand-collapse"
+                                        >
+                                            {isSubComponentsExpanded ? (
+                                                <IconCollapse className="ng-icon" />
+                                            ) : (
+                                                <IconExpand className="ng-icon" />
+                                            )}
+                                        </i>
+                                    );
+                                }
+                                return null;
                             }
-                            return null;
-                        }
-                    },
-                    ...hookColumns
-                ]
-            );
+                        },
+                        ...hookColumns
+                    ]
+                );
+            }
 
             // Add checkbox for all rows in grid, with different properties for header row and body rows, only if required
             if (rowSelector !== false) {
@@ -1451,29 +1456,12 @@ const Customgrid = (props: {
                                                                         filter,
                                                                         canResize
                                                                     } = column;
-                                                                    const isExpandCollapseDisabled =
-                                                                        (column.isGroupHeader ===
-                                                                            false &&
-                                                                            column.columnId ===
-                                                                                "column_custom_2" &&
-                                                                            isSubComponentGrid ===
-                                                                                false) ||
-                                                                        (column.isGroupHeader !==
-                                                                            false &&
-                                                                            column.placeholderOf &&
-                                                                            column
-                                                                                .placeholderOf
-                                                                                .columnId ===
-                                                                                "column_custom_2" &&
-                                                                            isSubComponentGrid ===
-                                                                                false);
                                                                     if (
-                                                                        !isExpandCollapseDisabled &&
-                                                                        (checkdisplayOfGroupedColumns(
+                                                                        display ===
+                                                                            true ||
+                                                                        checkdisplayOfGroupedColumns(
                                                                             column
-                                                                        ) ||
-                                                                            display ===
-                                                                                true)
+                                                                        )
                                                                     ) {
                                                                         // If header is group header only render header value and not sort/filter/resize
                                                                         return (

@@ -87,12 +87,7 @@ const RowItem = ({
                         }`}
                     >
                         {cells.map((cell: Object): Object => {
-                            if (
-                                (cell.column.columnId === "column_custom_2" &&
-                                    isSubComponentGrid) ||
-                                (cell.column.columnId !== "column_custom_2" &&
-                                    cell.column.display === true)
-                            ) {
+                            if (cell.column.display === true) {
                                 return (
                                     <div
                                         {...cell.getCellProps()}
