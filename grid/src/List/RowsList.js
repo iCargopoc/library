@@ -142,6 +142,7 @@ const RowsList = ({
                 }
             }}
             style={{
+                overflow: false,
                 height: "100%"
             }}
             height={height}
