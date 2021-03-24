@@ -1379,7 +1379,7 @@ const Customgrid = (props: {
                     <AutoSizer disableWidth className="neo-grid__autosizer">
                         {({ height }: Object): Object => (
                             <Scrollbars
-                                autoHeight={true}
+                                autoHeight
                                 autoHeightMin={height}
                                 autoHeightMax={height}
                                 onScroll={handleScroll}

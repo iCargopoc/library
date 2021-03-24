@@ -46,6 +46,10 @@
         background: var(--light-grey);
         border-bottom: rem(1) solid var(--border);
         flex-wrap: wrap;
+        position: sticky;
+        z-index: 10;
+        top: 0;
+        left: 0;
         &:last-child {
             margin-bottom: rem(50);
         }
