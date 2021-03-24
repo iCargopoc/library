@@ -51,8 +51,6 @@ import {
     findAllChildRows
 } from "./Utilities/GridUtilities";
 
-const listRef = createRef();
-
 const Customgrid = (props: {
     isDesktop: boolean,
     title: string,
@@ -154,6 +152,8 @@ const Customgrid = (props: {
         rowsToDeselect,
         fixedRowHeight
     } = props;
+
+    const listRef = createRef();
 
     // Over scan count for react-window list
     const overScanCount =
