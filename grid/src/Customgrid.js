@@ -17,7 +17,7 @@ import {
     useGlobalFilter,
     useExpanded
 } from "react-table";
-import { Scrollbars } from "react-custom-scrollbars";
+import { Scrollbars } from "rc-scrollbars";
 import AutoSizer from "react-virtualized-auto-sizer";
 import InfiniteLoader from "react-window-infinite-loader";
 import { matchSorter } from "match-sorter";
