@@ -1164,12 +1164,9 @@ const Customgrid = (props: {
     };
 
     const handleScroll = ({ target }: Object) => {
-        if (listRef) {
-            const { current } = listRef;
-            if (current) {
-                const { scrollTop } = target;
-                listRef.current.scrollTo(scrollTop);
-            }
+        if (listRef && listRef.current && listRef.current.scrollTo) {
+            const { scrollTop } = target || {};
+            listRef.current.scrollTo(scrollTop);
         }
     };
 
@@ -1382,33 +1379,41 @@ const Customgrid = (props: {
                                 autoHeight
                                 autoHeightMin={height}
                                 autoHeightMax={height}
-                                renderTrackHorizontal={(props: Object): any => (
+                                renderTrackHorizontal={(
+                                    scrollProps: Object
+                                ): any => (
                                     <div
-                                        {...props}
+                                        {...scrollProps}
                                         className="ng-scrolltrack ng-scrolltrack--horizontal"
                                     />
                                 )}
-                                renderTrackVertical={(props: Object): any => (
+                                renderTrackVertical={(
+                                    scrollProps: Object
+                                ): any => (
                                     <div
-                                        {...props}
+                                        {...scrollProps}
                                         className="ng-scrolltrack ng-scrolltrack--vertical"
                                     />
                                 )}
-                                renderThumbHorizontal={(props: Object): any => (
+                                renderThumbHorizontal={(
+                                    scrollProps: Object
+                                ): any => (
                                     <div
-                                        {...props}
+                                        {...scrollProps}
                                         className="ng-scrollthumb ng-scrollthumb--horizontal"
                                     />
                                 )}
-                                renderThumbVertical={(props: Object): any => (
+                                renderThumbVertical={(
+                                    scrollProps: Object
+                                ): any => (
                                     <div
-                                        {...props}
+                                        {...scrollProps}
                                         className="ng-scrollthumb ng-scrollthumb--vertical"
                                     />
                                 )}
-                                renderView={(props: Object): any => (
+                                renderView={(scrollProps: Object): any => (
                                     <div
-                                        {...props}
+                                        {...scrollProps}
                                         className="neo-grid__scrollView"
                                     />
                                 )}
