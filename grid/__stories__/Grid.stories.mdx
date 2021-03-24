@@ -386,16 +386,16 @@ const subComponentColumnToExpand // Same as columnToExpand
     // And then uses this row height for all other rows.
     const fixedRowHeight = true;
 
-    // Pass this function as a prop to Grid, then Grid will callback this function if user has selected group sorting
+    // Pass this function as a prop to Grid, then Grid will callback this function when user applies group sorting.
     const serverSideSorting = (groupSortOptions) => {
-        // Sort grid data ( or, child data of each parent in case of tree view) based on the sort parameters passed in.
+        // Sort gridData prop value based on the sort parameters passed in.
         // This function should re-render the Grid with sorted gridData prop.
         // groupSortOptions is the Object representation of the sorting options that user has selected.
         // Example:
         [
             {
                 "sortBy": "segment", // This will be the accessor value of the column
-                "sortOn": "from", // This will be the accessor value of the innerCell, or just string "value" if no innerCells are present
+                "sortOn": "from", // This will be the accessor value of the innerCell (or just string "value" if no innerCells are present)
                 "order": "Ascending" // Either "Ascending" or "Descending"
             },
             {
