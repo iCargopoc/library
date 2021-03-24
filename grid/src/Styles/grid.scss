@@ -47,7 +47,7 @@
         border-bottom: rem(1) solid var(--border);
         flex-wrap: wrap;
         position: sticky;
-        z-index: 10;
+        z-index: 5;
         top: 0;
         left: 0;
         &:last-child {
@@ -120,7 +120,7 @@
             height: 100%;
             position: absolute;
             top: 0;
-            z-index: 1;
+            z-index: 15;
             touch-action: none;
             -moz-user-select: none; /* Firefox */
             -ms-user-select: none; /* Internet Explorer */
@@ -267,7 +267,7 @@
                 top: 0;
                 padding: rem(16) rem(10);
                 margin-bottom: rem(40);
-                z-index: 9;
+                z-index: 5;
                 white-space: nowrap;
             }
             &__close {
@@ -292,7 +292,7 @@
         .neo-grid__content-edit {
             display: flex;
             position: absolute;
-            z-index: 9;
+            z-index: 5;
             background: var(--white);
             border: var(--light-grey) solid rem(1);
             top: rem(5);
@@ -304,6 +304,23 @@
             .ng-icon--tick {
                 fill: var(--white);
             }
+        }
+        .ng-scrolltrack {
+            right: 2px;
+            bottom: 2px;
+            border-radius: 3px;
+            &--horizontal {
+                left: 2px;
+            }
+            &--vertical {
+                top: 2px;
+            }
+        }
+        .ng-scrollthumb {
+            cursor: pointer;
+            border-radius: inherit;
+            background-color: rgba(0, 0, 0, 0.2);
+            z-index: 10;
         }
     }
 

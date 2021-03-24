@@ -1382,6 +1382,36 @@ const Customgrid = (props: {
                                 autoHeight
                                 autoHeightMin={height}
                                 autoHeightMax={height}
+                                renderTrackHorizontal={(props: Object): any => (
+                                    <div
+                                        {...props}
+                                        className="ng-scrolltrack ng-scrolltrack--horizontal"
+                                    />
+                                )}
+                                renderTrackVertical={(props: Object): any => (
+                                    <div
+                                        {...props}
+                                        className="ng-scrolltrack ng-scrolltrack--vertical"
+                                    />
+                                )}
+                                renderThumbHorizontal={(props: Object): any => (
+                                    <div
+                                        {...props}
+                                        className="ng-scrollthumb ng-scrollthumb--horizontal"
+                                    />
+                                )}
+                                renderThumbVertical={(props: Object): any => (
+                                    <div
+                                        {...props}
+                                        className="ng-scrollthumb ng-scrollthumb--vertical"
+                                    />
+                                )}
+                                renderView={(props: Object): any => (
+                                    <div
+                                        {...props}
+                                        className="neo-grid__scrollView"
+                                    />
+                                )}
                                 onScroll={handleScroll}
                             >
                                 <div
