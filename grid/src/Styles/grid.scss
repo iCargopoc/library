@@ -168,7 +168,7 @@
         .neo-grid__tr {
             border-bottom: rem(1) solid var(--light-grey);
             flex-wrap: wrap;
-            }
+        }
         .ng-loadmore {
             width: 100%;
             text-align: center;
@@ -203,6 +203,10 @@
             &--sub {
                 .neo-grid__thead {
                     background: var(--light-grey);
+                    position: static;
+                    z-index: auto;
+                    top: auto;
+                    left: auto;
                     .neo-grid__row-selector {
                         padding: 0;
                     }
