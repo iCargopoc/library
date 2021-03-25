@@ -412,7 +412,7 @@ const Customgrid = (props: {
         rows,
         prepareRow,
         preFilteredRows,
-        state: { globalFilter, selectedRowIds, expanded },
+        state: { globalFilter, selectedRowIds },
         setGlobalFilter,
         toggleRowSelected,
         toggleAllRowsSelected
@@ -962,7 +962,7 @@ const Customgrid = (props: {
         if (!isFirstRendering) {
             reRenderListData();
         }
-    }, [gridData, groupSortOptions, rowsWithExpandedSubComponents, expanded]);
+    }, [rows]);
 
     useEffect(() => {
         if (!isFirstRendering && paginationType !== "cursor") {
