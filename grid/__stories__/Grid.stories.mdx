@@ -30,6 +30,7 @@ const idAttribute = "travelId"; // String - node value of primary key value from
 
 const columns = [
         {
+            groupHeader: "Group Header", // String, Optional - If different columns have to be grouped under single column heading.
             Header:() => <div> Header </div>, // String or jsx - used to display in the gid column heading and other overlays.
             title: "Header:, // String, Optional - This has to be given if Header is returning jsx, to display in overlays.
             accessor: "flight", // String - corresponding to the node name in the grid data.
@@ -768,7 +769,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
 
 ```jsx
 // If a property 'groupHeader' is present in the column configuration. Grid will combine all columns with same 'groupHeader' value under a column heading.
-// All column based functionalities such as sorting, filtering etc. will depend on the 'Header' value and not 'groupHeader' value.
+// But, all column based functionalities such as sorting, filtering etc. will depend on the 'Header' value and not 'groupHeader' value.
 
 <Grid
     gridData={gridData}

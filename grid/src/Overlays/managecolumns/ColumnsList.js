@@ -18,10 +18,15 @@ const ColumnsList = (props: {
         isSubComponentColumn
     } = props;
 
-    const findColumn = (columnId: string): Object => {
-        const column = managedColumns.filter(
-            (c: Object): boolean => `${c.columnId}` === columnId
-        )[0];
+    const findColumn = (movedColumnId: string): Object => {
+        const column = managedColumns.filter((c: Object): boolean => {
+            const { isColumnGrouped, columns } = c;
+            const { columnId } =
+                isColumnGrouped !== true && columns && columns.length > 0
+                    ? columns[0]
+                    : c;
+            return columnId === movedColumnId;
+        })[0];
         return {
             column,
             index: managedColumns.indexOf(column)
@@ -63,15 +68,20 @@ const ColumnsList = (props: {
                 }
             >
                 {filteredManagedColumns.map((column: Object): Object => {
+                    const { isColumnGrouped, columns } = column;
                     const {
                         columnId,
                         Header,
                         title,
                         isDisplayInExpandedRegion,
                         innerCells,
-                        isGroupHeader,
-                        columns
-                    } = column;
+                        isGroupHeader
+                    } =
+                        isColumnGrouped !== true &&
+                        columns &&
+                        columns.length > 0
+                            ? columns[0]
+                            : column;
                     return (
                         <ColumnItem
                             key={columnId}

@@ -1554,9 +1554,9 @@ describe("render Index file ", () => {
         expect(subComponentColumn[0].checked).toBeFalsy();
 
         // Hide sub component expand region column
-        expect(subComponentColumn[3].checked).toBeTruthy();
-        fireEvent.click(subComponentColumn[3]);
-        expect(subComponentColumn[3].checked).toBeFalsy();
+        expect(subComponentColumn[6].checked).toBeTruthy();
+        fireEvent.click(subComponentColumn[6]);
+        expect(subComponentColumn[6].checked).toBeFalsy();
 
         // Save changes
         let saveButton = getByTestId("save_columnsManage");
@@ -1624,7 +1624,7 @@ describe("render Index file ", () => {
             );
         });
 
-        // Hide sub component column Inner cell with group header
+        // Hide sub component column Inner cell without group header
         const subComponentInnerCell = getAllByTestId(
             "selectInnerCell_subComponentColumn_1_subComponentColumn_1_cell_0"
         );
@@ -1641,7 +1641,7 @@ describe("render Index file ", () => {
         fireEvent.click(subComponentInnerCell2[0]);
         expect(subComponentInnerCell2[0].checked).toBeFalsy();
 
-        // Hide sub component column Inner cell
+        // Hide sub component expand column Inner cell
         const subComponentAdditionalColumnInnerCell = getAllByTestId(
             "selectSubComponentInnerCell_subComponentRowExpand_subComponentRowExpand_cell_0"
         );

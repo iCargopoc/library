@@ -340,7 +340,7 @@ describe("render Index file ", () => {
 
         // Check if group header is present or not
         let groupHeader = getAllByTestId("grid-group-header");
-        expect(groupHeader.length).toBe(6); // 1 row selector + 1 row option + 3 normal columns + 1 grouped collumn (inside that 2 normal columns)
+        expect(groupHeader.length).toBe(5); // 1 row selector + 1 grouped column for 1st column + 1 grouped collumn (inside that 2 grouped columns) + 1 grouped column for 4th and 5th column + 1 for row actions
         // Check total number of original columns
         let gridHeader = getAllByTestId("grid-header");
         expect(gridHeader.length).toBe(7); // 1 row selector + 1 row option + 5 normal columns (including 2 columns that comes under group header)
@@ -384,7 +384,7 @@ describe("render Index file ", () => {
         });
         // Check if group header is still present or not
         groupHeader = getAllByTestId("grid-group-header");
-        expect(groupHeader.length).toBe(6); // 1 row selector + 1 row option + 3 normal columns + 1 grouped collumn (inside that 1 normal column and 1 hidden column)
+        expect(groupHeader.length).toBe(5); // 1 row selector + 1 grouped column for 1st column + 1 grouped collumn (inside that 2 grouped columns) + 1 grouped column for 4th and 5th column + 1 for row actions
         // Check total number of original columns
         gridHeader = getAllByTestId("grid-header");
         expect(gridHeader.length).toBe(6); // 1 row selector + 1 row option + 4 normal columns (including 2 columns that comes under group header and excluding hidden column)
@@ -408,7 +408,7 @@ describe("render Index file ", () => {
         });
         // Check if group header is still present or not
         groupHeader = getAllByTestId("grid-group-header");
-        expect(groupHeader.length).toBe(6); // 1 row selector + 1 row option + 3 normal columns + 1 grouped collumn (inside that 2 normal columns)
+        expect(groupHeader.length).toBe(5); // 1 row selector + 1 grouped column for 1st column + 1 grouped collumn (inside that 2 grouped columns) + 1 grouped column for 4th and 5th column + 1 for row actions
         // Check total number of original columns
         gridHeader = getAllByTestId("grid-header");
         expect(gridHeader.length).toBe(7); // 1 row selector + 1 row option + 5 normal columns (including 2 columns that comes under group header)

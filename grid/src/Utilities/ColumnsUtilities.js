@@ -199,33 +199,51 @@ export const extractColumns = (
             modifiedColumns.push(elem);
         });
 
-        const updatedColumnStructure = [];
-        modifiedColumns.forEach((modifiedColumn: Object, index: number) => {
-            if (!modifiedColumn.groupHeader) {
-                updatedColumnStructure.push(modifiedColumn);
-            } else {
+        const columnWithGroupHeader = modifiedColumns.find(
+            (column: Object): boolean => {
+                const { groupHeader } = column;
+                return groupHeader !== null && groupHeader !== undefined;
+            }
+        );
+        const isGroupedColumnsPresent =
+            columnWithGroupHeader !== null &&
+            columnWithGroupHeader !== undefined;
+
+        if (isGroupedColumnsPresent) {
+            const updatedColumnStructure = [];
+            modifiedColumns.forEach((modifiedColumn: Object, index: number) => {
+                const { groupHeader, display } = modifiedColumn;
+                const isColumnGrouped =
+                    groupHeader !== null && groupHeader !== undefined;
                 const existingGroupHeaderColumn = updatedColumnStructure.find(
                     (colStructure: Object): boolean => {
-                        return (
-                            colStructure.Header === modifiedColumn.groupHeader
-                        );
+                        return colStructure.Header === groupHeader;
                     }
                 );
-                if (!existingGroupHeaderColumn) {
+                if (
+                    existingGroupHeaderColumn !== null &&
+                    existingGroupHeaderColumn !== undefined
+                ) {
+                    existingGroupHeaderColumn.display = display !== false;
+                    existingGroupHeaderColumn.columns.push(modifiedColumn);
+                } else {
                     updatedColumnStructure.push({
-                        Header: modifiedColumn.groupHeader,
+                        Header: isColumnGrouped ? groupHeader : " ",
+                        isColumnGrouped,
                         columnId: `groupedColumn_${index}`,
                         isGroupHeader: true,
-                        display: true,
+                        display: display !== false,
                         columns: [modifiedColumn]
                     });
-                } else {
-                    existingGroupHeaderColumn.columns.push(modifiedColumn);
                 }
-            }
-        });
+            });
+            return {
+                updatedColumnStructure,
+                columnsAccessorList
+            };
+        }
         return {
-            updatedColumnStructure,
+            updatedColumnStructure: [...modifiedColumns],
             columnsAccessorList
         };
     }
