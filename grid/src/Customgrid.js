@@ -458,6 +458,7 @@ const Customgrid = (props: {
                                     ...instance.rowsWithExpandedSubComponents
                                 ];
                                 const totalRowIds = findSelectedRowIdAttributes(
+                                    // eslint-disable-next-line react/destructuring-assignment
                                     headerSelectProps.data,
                                     idAttribute
                                 );
