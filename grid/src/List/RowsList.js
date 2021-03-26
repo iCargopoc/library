@@ -122,7 +122,6 @@ const RowsList = ({
     };
 
     useEffect((): Object => {
-        reRenderListData(); // Without this, rows will be distorted during the initial load
         return () => {
             if (infiniteLoaderRef) {
                 infiniteLoaderRef(null);
