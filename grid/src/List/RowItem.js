@@ -5,6 +5,7 @@ import SubComponent from "./SubComponent";
 import { getLeftOfColumn } from "../Utilities/GridUtilities";
 
 const RowItem = ({
+    gridRef,
     row,
     idAttribute,
     theme,
@@ -28,6 +29,7 @@ const RowItem = ({
     rowSelector,
     multiRowSelection
 }: {
+    gridRef: any,
     row: Object,
     idAttribute: string,
     theme: string,
@@ -101,6 +103,7 @@ const RowItem = ({
                                                               position:
                                                                   "sticky",
                                                               left: getLeftOfColumn(
+                                                                  gridRef,
                                                                   cellIndex,
                                                                   false,
                                                                   false
@@ -134,6 +137,7 @@ const RowItem = ({
                     ) : null}
                     {isSubComponentRowsPresent ? (
                         <SubComponent
+                            gridRef={gridRef}
                             subComponentData={subComponentData}
                             subComponentColumnns={subComponentColumnns}
                             subComponentAdditionalColumn={

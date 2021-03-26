@@ -6,6 +6,7 @@ import { VariableSizeList as List } from "react-window";
 import ListItem from "./ListItem";
 
 const RowsList = ({
+    gridRef,
     onItemsRendered,
     infiniteLoaderRef,
     listRef,
@@ -41,6 +42,7 @@ const RowsList = ({
     rowActions,
     expandableColumn
 }: {
+    gridRef: any,
     onItemsRendered?: Function,
     infiniteLoaderRef?: any,
     listRef: any,
@@ -158,6 +160,7 @@ const RowsList = ({
                     prepareRow(row);
                     return (
                         <ListItem
+                            gridRef={gridRef}
                             row={row}
                             idAttribute={idAttribute}
                             style={style}

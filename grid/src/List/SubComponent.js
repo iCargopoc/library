@@ -16,6 +16,7 @@ import {
 } from "../Utilities/GridUtilities";
 
 const SubComponent = (props: {
+    gridRef: any,
     subComponentData: Array<Object>,
     subComponentColumnns: Array<Object>,
     subComponentAdditionalColumn: Object,
@@ -26,6 +27,7 @@ const SubComponent = (props: {
     multiRowSelection: boolean
 }): React$Element<*> => {
     const {
+        gridRef,
         subComponentData,
         subComponentColumnns,
         subComponentAdditionalColumn,
@@ -257,6 +259,7 @@ const SubComponent = (props: {
                                                                       position:
                                                                           "sticky",
                                                                       left: getLeftOfColumn(
+                                                                          gridRef,
                                                                           headerIndex,
                                                                           true,
                                                                           isGroupHeader
@@ -340,6 +343,7 @@ const SubComponent = (props: {
                                                                           position:
                                                                               "sticky",
                                                                           left: getLeftOfColumn(
+                                                                              gridRef,
                                                                               cellIndex,
                                                                               true,
                                                                               false

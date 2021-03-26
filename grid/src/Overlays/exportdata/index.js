@@ -16,6 +16,7 @@ import { convertToIndividualColumns } from "../../Utilities/GridUtilities";
 
 const ExportData = (props: Object): any => {
     const {
+        gridRef,
         toggleExportDataOverlay,
         rows,
         columns,
@@ -199,6 +200,8 @@ const ExportData = (props: Object): any => {
         rowFilteredHeader: Object,
         extensionType: string
     ) => {
+        const gridElement =
+            gridRef && gridRef.current ? gridRef.current : document;
         const updatedRowFilteredValues = [...rowFilteredValues];
         const updatedRowFilteredHeader = [...rowFilteredHeader];
         updatedRowFilteredValues.unshift(updatedRowFilteredHeader[0]);
@@ -221,15 +224,19 @@ const ExportData = (props: Object): any => {
             : "csv-file-download-link";
         link.href = href;
         link.download = exportedFileName + fileExtension;
-        const exportOverlay = document.querySelector(
+        const exportOverlay = gridElement.querySelector(
             "[data-testid='exportoverlay']"
         );
         if (exportOverlay != null) {
             exportOverlay.appendChild(link);
         }
         const linkToDownload = isExcelFile
-            ? document.querySelector("[data-testid='excel-file-download-link']")
-            : document.querySelector("[data-testid='csv-file-download-link']");
+            ? gridElement.querySelector(
+                  "[data-testid='excel-file-download-link']"
+              )
+            : gridElement.querySelector(
+                  "[data-testid='csv-file-download-link']"
+              );
         if (linkToDownload != null) {
             linkToDownload.click();
         }

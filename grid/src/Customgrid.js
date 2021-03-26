@@ -54,6 +54,7 @@ import {
 } from "./Utilities/GridUtilities";
 
 const Customgrid = (props: {
+    gridRef: any,
     isDesktop: boolean,
     title: string,
     theme: string,
@@ -106,6 +107,7 @@ const Customgrid = (props: {
     pdfPaperSize: string
 }): any => {
     const {
+        gridRef,
         isDesktop,
         title,
         theme,
@@ -1355,6 +1357,7 @@ const Customgrid = (props: {
                                 </div>
                                 {isExportOverlayOpen ? (
                                     <ExportData
+                                        gridRef={gridRef}
                                         toggleExportDataOverlay={
                                             toggleExportDataOverlay
                                         }
@@ -1484,6 +1487,7 @@ const Customgrid = (props: {
                                                                                                   position:
                                                                                                       "sticky",
                                                                                                   left: getLeftOfColumn(
+                                                                                                      gridRef,
                                                                                                       headerIndex,
                                                                                                       false,
                                                                                                       isGroupHeader
@@ -1610,6 +1614,7 @@ const Customgrid = (props: {
                                                         ref
                                                     }: Object): Object => (
                                                         <RowsList
+                                                            gridRef={gridRef}
                                                             onItemsRendered={
                                                                 onItemsRendered
                                                             }
@@ -1709,6 +1714,7 @@ const Customgrid = (props: {
                                                 </InfiniteLoader>
                                             ) : (
                                                 <RowsList
+                                                    gridRef={gridRef}
                                                     listRef={listRef}
                                                     height={height}
                                                     theme={theme}

@@ -4,6 +4,7 @@ import ParentItem from "./ParentItem";
 import RowItem from "./RowItem";
 
 const ListItem = ({
+    gridRef,
     row,
     idAttribute,
     style,
@@ -34,6 +35,7 @@ const ListItem = ({
     rowActions,
     expandableColumn
 }: {
+    gridRef: any,
     row: Object,
     idAttribute: string,
     style: Object,
@@ -108,6 +110,7 @@ const ListItem = ({
             } ${rowClassName}`}
         >
             <RowItem
+                gridRef={gridRef}
                 row={row}
                 idAttribute={idAttribute}
                 theme={theme}

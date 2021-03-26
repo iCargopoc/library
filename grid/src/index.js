@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import memoize from "lodash.memoize";
 import {
     extractColumns,
@@ -64,6 +64,8 @@ const Grid = (props: Object): ?React$Element<*> => {
             }
         };
     }, []);
+
+    const gridRef = createRef();
 
     const {
         className,
@@ -551,6 +553,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         if (!(gridColumns && gridColumns.length > 0)) {
             return (
                 <div
+                    ref={gridRef}
                     data-testid="gridComponent"
                     className={`neo-grid ${className || ""}`}
                 >
@@ -562,6 +565,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         }
         return (
             <div
+                ref={gridRef}
                 data-testid="gridComponent"
                 className={`neo-grid ${className || ""} ${
                     theme === "portal" ? "neo-grid--portal" : ""
@@ -569,6 +573,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                 style={{ width: gridWidth || "100%" }}
             >
                 <Customgrid
+                    gridRef={gridRef}
                     isDesktop={isDesktop}
                     title={title}
                     theme={theme}

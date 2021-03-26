@@ -246,30 +246,37 @@ export const findAllChildRows = (allRows: [Object]): any[] => {
 };
 
 export const getLeftOfColumn = (
+    gridRef: any,
     index: number,
     isSubComponent: boolean,
     isGroupHeader: boolean
 ): number => {
     let leftToPass = 0;
     if (index > 0) {
+        const gridElement =
+            gridRef && gridRef.current ? gridRef.current : document;
         let columnElements = [];
         if (isSubComponent) {
             columnElements = isGroupHeader
-                ? document.querySelectorAll(
+                ? gridElement.querySelectorAll(
                       "[data-testid='subCompGrid-group-header']"
                   )
-                : document.querySelectorAll(
+                : gridElement.querySelectorAll(
                       "[data-testid='subCompGrid-header']"
                   );
         } else {
             columnElements = isGroupHeader
-                ? document.querySelectorAll("[data-testid='grid-group-header']")
-                : document.querySelectorAll("[data-testid='grid-header']");
+                ? gridElement.querySelectorAll(
+                      "[data-testid='grid-group-header']"
+                  )
+                : gridElement.querySelectorAll("[data-testid='grid-header']");
         }
         if (columnElements.length === 0) {
             const rowElement = isSubComponent
-                ? document.querySelector("[data-testid='subcontentrow_wrap']")
-                : document.querySelector("[data-testid='gridrowWrap']");
+                ? gridElement.querySelector(
+                      "[data-testid='subcontentrow_wrap']"
+                  )
+                : gridElement.querySelector("[data-testid='gridrowWrap']");
             if (rowElement !== null && rowElement !== undefined) {
                 columnElements = isSubComponent
                     ? rowElement.querySelectorAll(
