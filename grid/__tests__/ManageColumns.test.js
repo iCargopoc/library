@@ -61,6 +61,7 @@ describe("Column manage functionality test", () => {
                 }
             },
             {
+                groupHeader: "Flight & Segment",
                 Header: () => {
                     return (
                         <div
@@ -118,6 +119,7 @@ describe("Column manage functionality test", () => {
                 editCell: mockFlightEdit
             },
             {
+                groupHeader: "Flight & Segment",
                 Header: "Segment",
                 accessor: "segment",
                 width: 100,
@@ -1008,21 +1010,21 @@ describe("Column manage functionality test", () => {
             .length;
         expect(columnChooserOverlayCount).toBe(1);
 
-        // Check column and additional column boxes count in the column setting portion (should be 11 and 1)
+        // Check column and additional column boxes count in the column setting portion (should be 10 and 1)
         let columnsCount = getAllByTestId("column-box").length;
         let additionalColumnsCount = getAllByTestId("additional-column-box")
             .length;
-        expect(columnsCount).toBe(11);
+        expect(columnsCount).toBe(10);
         expect(additionalColumnsCount).toBe(1);
 
         // Un check Id column checkbox
         let idCheckbox = getAllByTestId("selectSingleSearchableColumn")[2];
         fireEvent.click(idCheckbox);
 
-        // Check column and additional column boxes count in the column setting portion (should be 10 and 1)
+        // Check column and additional column boxes count in the column setting portion (should be 9 and 1)
         columnsCount = getAllByTestId("column-box").length;
         additionalColumnsCount = getAllByTestId("additional-column-box").length;
-        expect(columnsCount).toBe(10);
+        expect(columnsCount).toBe(9);
         expect(additionalColumnsCount).toBe(1);
 
         // Un check Flight column checkbox (One from grouped columns)
@@ -1122,22 +1124,22 @@ describe("Column manage functionality test", () => {
         segmentCheckbox = getAllByTestId("selectSingleSearchableColumn")[4];
         fireEvent.click(segmentCheckbox);
 
-        // Check column and additional column boxes count in the column setting portion (should be 11 and 0)
+        // Check column and additional column boxes count in the column setting portion (should be 10 and 0)
         columnsCount = getAllByTestId("column-box").length;
         additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
-        expect(columnsCount).toBe(11);
+        expect(columnsCount).toBe(10);
         expect(additionalColumnsCount).toBe(0);
 
         // Check Remarks column checkbox
         remarksCheckbox = getAllByTestId("selectSingleSearchableColumn")[11];
         fireEvent.click(remarksCheckbox);
 
-        // Check column and additional column boxes count in the column setting portion (should be 11 and 1)
+        // Check column and additional column boxes count in the column setting portion (should be 10 and 1)
         columnsCount = getAllByTestId("column-box").length;
         additionalColumnsCount = getAllByTestId("additional-column-box").length;
-        expect(columnsCount).toBe(11);
+        expect(columnsCount).toBe(10);
         expect(additionalColumnsCount).toBe(1);
 
         // Try to apply changes
@@ -1575,7 +1577,7 @@ describe("Column manage functionality test", () => {
         additionalColumnsCount = gridContainer.querySelectorAll(
             "[data-testid='additional-column-box']"
         ).length;
-        expect(columnsCount).toBe(11);
+        expect(columnsCount).toBe(10);
         expect(additionalColumnsCount).toBe(0);
 
         // Reset Changes
@@ -1652,11 +1654,11 @@ describe("Column manage functionality test", () => {
             .length;
         expect(columnCheckboxes).toBe(12);
 
-        // Check column and additional column boxes count in the column setting portion (should be 11 and 1)
+        // Check column and additional column boxes count in the column setting portion (should be 10 and 1)
         let columnsCount = getAllByTestId("column-box").length;
         let additionalColumnsCount = getAllByTestId("additional-column-box")
             .length;
-        expect(columnsCount).toBe(11);
+        expect(columnsCount).toBe(10);
         expect(additionalColumnsCount).toBe(1);
 
         // Un check select all columns checkbox
@@ -1691,7 +1693,7 @@ describe("Column manage functionality test", () => {
         // Check column and additional column boxes count
         columnsCount = getAllByTestId("column-box").length;
         additionalColumnsCount = getAllByTestId("additional-column-box").length;
-        expect(columnsCount).toBe(11);
+        expect(columnsCount).toBe(10);
         expect(additionalColumnsCount).toBe(1);
 
         // Try to apply changes
@@ -1811,7 +1813,7 @@ describe("Column manage functionality test", () => {
 
         // Check DnD options
         const columnDnds = getAllByTestId("columnItemDnd");
-        expect(columnDnds).toHaveLength(11);
+        expect(columnDnds).toHaveLength(10);
         const firstNode = columnDnds[0];
         const secondNode = columnDnds[1];
         const lastNode = columnDnds[2];

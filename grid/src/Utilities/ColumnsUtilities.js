@@ -199,51 +199,33 @@ export const extractColumns = (
             modifiedColumns.push(elem);
         });
 
-        const columnWithGroupHeader = modifiedColumns.find(
-            (column: Object): boolean => {
-                const { groupHeader } = column;
-                return groupHeader !== null && groupHeader !== undefined;
-            }
-        );
-        const isGroupedColumnsPresent =
-            columnWithGroupHeader !== null &&
-            columnWithGroupHeader !== undefined;
-
-        if (isGroupedColumnsPresent) {
-            const updatedColumnStructure = [];
-            modifiedColumns.forEach((modifiedColumn: Object, index: number) => {
-                const { groupHeader, display } = modifiedColumn;
-                const isColumnGrouped =
-                    groupHeader !== null && groupHeader !== undefined;
+        const updatedColumnStructure = [];
+        modifiedColumns.forEach((modifiedColumn: Object, index: number) => {
+            if (!modifiedColumn.groupHeader) {
+                updatedColumnStructure.push(modifiedColumn);
+            } else {
                 const existingGroupHeaderColumn = updatedColumnStructure.find(
                     (colStructure: Object): boolean => {
-                        return colStructure.Header === groupHeader;
+                        return (
+                            colStructure.Header === modifiedColumn.groupHeader
+                        );
                     }
                 );
-                if (
-                    existingGroupHeaderColumn !== null &&
-                    existingGroupHeaderColumn !== undefined
-                ) {
-                    existingGroupHeaderColumn.display = display !== false;
-                    existingGroupHeaderColumn.columns.push(modifiedColumn);
-                } else {
+                if (!existingGroupHeaderColumn) {
                     updatedColumnStructure.push({
-                        Header: isColumnGrouped ? groupHeader : " ",
-                        isColumnGrouped,
+                        Header: modifiedColumn.groupHeader,
                         columnId: `groupedColumn_${index}`,
                         isGroupHeader: true,
-                        display: display !== false,
+                        display: true,
                         columns: [modifiedColumn]
                     });
+                } else {
+                    existingGroupHeaderColumn.columns.push(modifiedColumn);
                 }
-            });
-            return {
-                updatedColumnStructure,
-                columnsAccessorList
-            };
-        }
+            }
+        });
         return {
-            updatedColumnStructure: [...modifiedColumns],
+            updatedColumnStructure,
             columnsAccessorList
         };
     }
