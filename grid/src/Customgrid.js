@@ -1442,7 +1442,7 @@ const Customgrid = (props: {
                                                             {headerGroup.headers.map(
                                                                 (
                                                                     column: Object,
-                                                                    index: number
+                                                                    headerIndex: number
                                                                 ): Object => {
                                                                     const {
                                                                         display,
@@ -1484,7 +1484,7 @@ const Customgrid = (props: {
                                                                                                   position:
                                                                                                       "sticky",
                                                                                                   left: getLeftOfColumn(
-                                                                                                      index,
+                                                                                                      headerIndex,
                                                                                                       false,
                                                                                                       isGroupHeader
                                                                                                   )

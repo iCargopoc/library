@@ -102,6 +102,7 @@ const RowItem = ({
                                                                   "sticky",
                                                               left: getLeftOfColumn(
                                                                   cellIndex,
+                                                                  false,
                                                                   false
                                                               )
                                                           }

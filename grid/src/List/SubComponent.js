@@ -226,7 +226,10 @@ const SubComponent = (props: {
                                 className="neo-grid__tr"
                             >
                                 {headerGroup.headers.map(
-                                    (column: Object, index: number): Object => {
+                                    (
+                                        column: Object,
+                                        headerIndex: number
+                                    ): Object => {
                                         const {
                                             display,
                                             pinColumn,
@@ -254,7 +257,7 @@ const SubComponent = (props: {
                                                                       position:
                                                                           "sticky",
                                                                       left: getLeftOfColumn(
-                                                                          index,
+                                                                          headerIndex,
                                                                           true,
                                                                           isGroupHeader
                                                                       )
@@ -338,7 +341,8 @@ const SubComponent = (props: {
                                                                               "sticky",
                                                                           left: getLeftOfColumn(
                                                                               cellIndex,
-                                                                              true
+                                                                              true,
+                                                                              false
                                                                           )
                                                                       }
                                                                   }
