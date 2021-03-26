@@ -48,7 +48,8 @@ import {
     findDeSelectedRows,
     checkdisplayOfGroupedColumns,
     checkIfGroupsortIsApplicable,
-    findAllChildRows
+    findAllChildRows,
+    hideColumns
 } from "./Utilities/GridUtilities";
 
 const Customgrid = (props: {
@@ -411,6 +412,7 @@ const Customgrid = (props: {
         headerGroups,
         rows,
         prepareRow,
+        allColumns,
         preFilteredRows,
         state: { globalFilter, selectedRowIds },
         setGlobalFilter,
@@ -856,6 +858,12 @@ const Customgrid = (props: {
             setGridColumns(managableColumns);
         }
     }, [managableColumns]);
+
+    useEffect(() => {
+        if (!isFirstRendering) {
+            hideColumns(allColumns, gridColumns);
+        }
+    }, [gridColumns]);
 
     // Update state, when user is updating additional column configuration from outside Grid
     useEffect(() => {

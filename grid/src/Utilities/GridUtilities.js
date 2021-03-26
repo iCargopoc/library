@@ -216,6 +216,22 @@ export const checkIfGroupsortIsApplicable = (columns: any): boolean => {
     return false;
 };
 
+export const hideColumns = (allColumns: any, gridColumns: any) => {
+    const currentColumns = convertToIndividualColumns(gridColumns);
+    allColumns.forEach((column: Object) => {
+        const { columnId } = column;
+        const hiddenColumn = currentColumns.find((col: Object): boolean => {
+            const { display } = col;
+            return columnId === col.columnId && display === false;
+        });
+        if (hiddenColumn !== null && hiddenColumn !== undefined) {
+            column.toggleHidden(true);
+        } else {
+            column.toggleHidden(false);
+        }
+    });
+};
+
 export const findAllChildRows = (allRows: [Object]): any[] => {
     if (allRows && allRows.length > 0) {
         return allRows.filter((row: Object): Object => {

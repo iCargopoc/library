@@ -1,5 +1,5 @@
 // @flow
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import {
     useTable,
     useFlexLayout,
@@ -9,6 +9,10 @@ import {
 import RowSelector from "../Functions/RowSelector";
 import RowOptions from "../Functions/RowOptions";
 import { IconAngle } from "../Utilities/SvgUtilities";
+import {
+    checkdisplayOfGroupedColumns,
+    hideColumns
+} from "../Utilities/GridUtilities";
 
 const SubComponent = (props: {
     subComponentData: Array<Object>,
@@ -47,7 +51,8 @@ const SubComponent = (props: {
         getTableBodyProps,
         headerGroups,
         rows,
-        prepareRow
+        prepareRow,
+        allColumns
     } = useTable(
         {
             columns,
@@ -188,6 +193,10 @@ const SubComponent = (props: {
         }
     );
 
+    useEffect(() => {
+        hideColumns(allColumns, subComponentColumnns);
+    }, [subComponentColumnns]);
+
     return (
         <div
             {...getTableProps()}
@@ -195,33 +204,47 @@ const SubComponent = (props: {
             data-testid="subcomponent-content"
         >
             <div className="neo-grid__thead">
-                {headerGroups.map((headerGroup: Object): Object => {
-                    return (
-                        <div
-                            {...headerGroup.getHeaderGroupProps()}
-                            className="neo-grid__tr"
-                        >
-                            {headerGroup.headers.map(
-                                (column: Object): Object => {
-                                    const { display } = column;
-                                    if (display === true) {
-                                        return (
-                                            <div
-                                                {...column.getHeaderProps()}
-                                                className="neo-grid__th"
-                                            >
-                                                <div className="neo-grid__th-title">
-                                                    {column.render("Header")}
+                {headerGroups.map(
+                    (headerGroup: Object, index: number): Object => {
+                        // If there are morthan 1 headerGroups, we consider 1st one as group header row
+                        const isGroupHeader =
+                            headerGroups.length > 1 ? index === 0 : false;
+                        return (
+                            <div
+                                {...headerGroup.getHeaderGroupProps()}
+                                className="neo-grid__tr"
+                            >
+                                {headerGroup.headers.map(
+                                    (column: Object): Object => {
+                                        const { display } = column;
+                                        if (
+                                            display === true ||
+                                            checkdisplayOfGroupedColumns(column)
+                                        ) {
+                                            return (
+                                                <div
+                                                    {...column.getHeaderProps()}
+                                                    className={`neo-grid__th ${
+                                                        isGroupHeader === true
+                                                            ? "neo-grid__th-group"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    <div className="neo-grid__th-title">
+                                                        {column.render(
+                                                            "Header"
+                                                        )}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        );
+                                            );
+                                        }
+                                        return null;
                                     }
-                                    return null;
-                                }
-                            )}
-                        </div>
-                    );
-                })}
+                                )}
+                            </div>
+                        );
+                    }
+                )}
             </div>
             <div {...getTableBodyProps()} className="neo-grid__tbody">
                 {rows.map((row: Object): Object => {
