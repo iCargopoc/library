@@ -252,9 +252,9 @@ export const getLeftOfColumn = (
 ): number => {
     let leftToPass = 0;
     if (index > 0) {
-        let headerElements = [];
+        let columnElements = [];
         if (isSubComponent) {
-            headerElements = isGroupHeader
+            columnElements = isGroupHeader
                 ? document.querySelectorAll(
                       "[data-testid='subCompGrid-group-header']"
                   )
@@ -262,12 +262,26 @@ export const getLeftOfColumn = (
                       "[data-testid='subCompGrid-header']"
                   );
         } else {
-            headerElements = isGroupHeader
+            columnElements = isGroupHeader
                 ? document.querySelectorAll("[data-testid='grid-group-header']")
                 : document.querySelectorAll("[data-testid='grid-header']");
         }
-        if (headerElements && headerElements.length > 0) {
-            headerElements.forEach((elem: Object, elemIndex: number) => {
+        if (columnElements.length === 0) {
+            const rowElement = isSubComponent
+                ? document.querySelector("[data-testid='subcontentrow_wrap']")
+                : document.querySelector("[data-testid='gridrowWrap']");
+            if (rowElement !== null && rowElement !== undefined) {
+                columnElements = isSubComponent
+                    ? rowElement.querySelectorAll(
+                          "[data-testid='subcontentrow_cell']"
+                      )
+                    : rowElement.querySelectorAll(
+                          "[data-testid='gridrowcell']"
+                      );
+            }
+        }
+        if (columnElements.length > 0) {
+            columnElements.forEach((elem: Object, elemIndex: number) => {
                 if (elemIndex < index) {
                     const { offsetWidth } = elem;
                     leftToPass += offsetWidth || 0;
