@@ -217,6 +217,66 @@ const ColumnReordering = (props: any): any => {
         }
     };
 
+    // Update 'pinColumn value of column based on columnId
+    const updatedPinOfColumn = (
+        column: Object,
+        columnidToUpdate: string,
+        flag: boolean
+    ): Object => {
+        const updatedColumn = { ...column };
+        const { isGroupHeader, columnId } = column;
+        if (columnidToUpdate === columnId) {
+            const groupedColumns = column.columns;
+            if (
+                isGroupHeader === true &&
+                groupedColumns &&
+                groupedColumns.length > 0
+            ) {
+                const updatedColumns = [...groupedColumns].map(
+                    (col: Object): any => {
+                        const updatedCol = { ...col };
+                        updatedCol.pinColumn = flag;
+                        return updatedCol;
+                    }
+                );
+                updatedColumn.columns = updatedColumns;
+            }
+            updatedColumn.pinColumn = flag;
+        }
+        return updatedColumn;
+    };
+
+    // update the display flag value of column or all columns in managedColumns and managedAdditionalColumn state, based on the selection
+    const onPinColumnChange = (
+        event: Object,
+        isSubComponentColumn: boolean
+    ): any => {
+        const { checked, dataset } = event.currentTarget;
+        const { columnid } = dataset;
+        // Update columns 'pinColumn' state based on selection and columnid
+        const columnToUpdate = isSubComponentColumn
+            ? [...managedSubComponentColumns]
+            : [...managedColumns];
+        const updatedManagedColumns = columnToUpdate.map(
+            (column: Object): any => {
+                return updatedPinOfColumn(column, columnid, checked);
+            }
+        );
+        if (isSubComponentColumn) {
+            setManagedSubComponentColumns(
+                update(managedSubComponentColumns, {
+                    $set: updatedManagedColumns
+                })
+            );
+        } else {
+            setManagedColumns(
+                update(managedColumns, {
+                    $set: updatedManagedColumns
+                })
+            );
+        }
+    };
+
     // Updates the inner cell display value accordingly
     const changeInnerCellSelection = (
         innerCells: Array<Object>,
@@ -425,10 +485,33 @@ const ColumnReordering = (props: any): any => {
         ) {
             setWarning("Select at least one sub component column");
         } else {
+            const pinnedManagedColumns = managedColumns.filter(
+                (column: Object): any => {
+                    return column.pinColumn === true;
+                }
+            );
+            const unpinnedManagedColumns = managedColumns.filter(
+                (column: Object): any => {
+                    return column.pinColumn !== true;
+                }
+            );
+            const pinnedManagedSubComponentColumns = managedSubComponentColumns.filter(
+                (column: Object): any => {
+                    return column.pinColumn === true;
+                }
+            );
+            const unpinnedManagedSubComponentColumns = managedSubComponentColumns.filter(
+                (column: Object): any => {
+                    return column.pinColumn !== true;
+                }
+            );
             updateColumnStructure(
-                managedColumns,
+                [...pinnedManagedColumns, ...unpinnedManagedColumns],
                 managedAdditionalColumn,
-                managedSubComponentColumns,
+                [
+                    ...pinnedManagedSubComponentColumns,
+                    ...unpinnedManagedSubComponentColumns
+                ],
                 managedSubComponentAdditionalColumn
             );
             toggleManageColumnsOverlay();
@@ -554,6 +637,7 @@ const ColumnReordering = (props: any): any => {
                             <ColumnsList
                                 managedColumns={managedColumns}
                                 onColumnReorder={onColumnReorder}
+                                onPinColumnChange={onPinColumnChange}
                                 onInnerCellChange={onInnerCellChange}
                                 isSubComponentColumn={false}
                             />
@@ -641,6 +725,7 @@ const ColumnReordering = (props: any): any => {
                                             managedSubComponentColumns
                                         }
                                         onColumnReorder={onColumnReorder}
+                                        onPinColumnChange={onPinColumnChange}
                                         onInnerCellChange={onInnerCellChange}
                                         isSubComponentColumn
                                     />

@@ -11,7 +11,8 @@ import RowOptions from "../Functions/RowOptions";
 import { IconAngle } from "../Utilities/SvgUtilities";
 import {
     checkdisplayOfGroupedColumns,
-    hideColumns
+    hideColumns,
+    getLeftOfColumn
 } from "../Utilities/GridUtilities";
 
 const SubComponent = (props: {
@@ -46,6 +47,14 @@ const SubComponent = (props: {
     const columns = useMemo((): Object => subComponentColumnns);
     const data = useMemo((): Object => [...subComponentData]);
 
+    let isAtleastOneColumnPinned = false;
+    subComponentColumnns.forEach((col: Object) => {
+        const { pinColumn } = col;
+        if (pinColumn === true) {
+            isAtleastOneColumnPinned = true;
+        }
+    });
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -57,6 +66,7 @@ const SubComponent = (props: {
         {
             columns,
             data,
+            isAtleastOneColumnPinned,
             autoResetExpanded: false,
             autoResetSelectedRows: false
         },
@@ -74,6 +84,7 @@ const SubComponent = (props: {
                         disableFilters: true,
                         disableSortBy: true,
                         display: true,
+                        pinColumn: isAtleastOneColumnPinned,
                         isGroupHeader: false,
                         minWidth: 62,
                         width: 62,
@@ -215,20 +226,56 @@ const SubComponent = (props: {
                                 className="neo-grid__tr"
                             >
                                 {headerGroup.headers.map(
-                                    (column: Object): Object => {
-                                        const { display } = column;
+                                    (column: Object, index: number): Object => {
+                                        const {
+                                            display,
+                                            pinColumn,
+                                            headers
+                                        } = column;
+                                        let isColumnPinned = pinColumn === true;
+                                        if (
+                                            isGroupHeader &&
+                                            headers &&
+                                            headers.length > 0
+                                        ) {
+                                            isColumnPinned =
+                                                headers[0].pinColumn === true;
+                                        }
                                         if (
                                             display === true ||
                                             checkdisplayOfGroupedColumns(column)
                                         ) {
                                             return (
                                                 <div
-                                                    {...column.getHeaderProps()}
+                                                    {...column.getHeaderProps(
+                                                        isColumnPinned
+                                                            ? {
+                                                                  style: {
+                                                                      position:
+                                                                          "sticky",
+                                                                      left: getLeftOfColumn(
+                                                                          index,
+                                                                          true,
+                                                                          isGroupHeader
+                                                                      )
+                                                                  }
+                                                              }
+                                                            : {}
+                                                    )}
                                                     className={`neo-grid__th ${
                                                         isGroupHeader === true
                                                             ? "neo-grid__th-group"
                                                             : ""
+                                                    } ${
+                                                        isColumnPinned
+                                                            ? "sticky"
+                                                            : ""
                                                     }`}
+                                                    data-testid={
+                                                        isGroupHeader === true
+                                                            ? "subCompGrid-group-header"
+                                                            : "subCompGrid-header"
+                                                    }
                                                 >
                                                     <div className="neo-grid__th-title">
                                                         {column.render(
@@ -270,20 +317,47 @@ const SubComponent = (props: {
                                     data-testid="subcontentrow_wrap"
                                     className="neo-grid__row-wrap"
                                 >
-                                    {cells.map((cell: Object): Object => {
-                                        if (cell.column.display === true) {
-                                            return (
-                                                <div
-                                                    {...cell.getCellProps()}
-                                                    className="neo-grid__td"
-                                                    data-testid="subcontentrow_cell"
-                                                >
-                                                    {cell.render("Cell")}
-                                                </div>
-                                            );
+                                    {cells.map(
+                                        (
+                                            cell: Object,
+                                            cellIndex: number
+                                        ): Object => {
+                                            const { column } = cell;
+                                            const {
+                                                display,
+                                                pinColumn
+                                            } = column;
+                                            if (display === true) {
+                                                return (
+                                                    <div
+                                                        {...cell.getCellProps(
+                                                            pinColumn === true
+                                                                ? {
+                                                                      style: {
+                                                                          position:
+                                                                              "sticky",
+                                                                          left: getLeftOfColumn(
+                                                                              cellIndex,
+                                                                              true
+                                                                          )
+                                                                      }
+                                                                  }
+                                                                : {}
+                                                        )}
+                                                        className={`neo-grid__td ${
+                                                            pinColumn
+                                                                ? "sticky"
+                                                                : ""
+                                                        }`}
+                                                        data-testid="subcontentrow_cell"
+                                                    >
+                                                        {cell.render("Cell")}
+                                                    </div>
+                                                );
+                                            }
+                                            return null;
                                         }
-                                        return null;
-                                    })}
+                                    )}
                                 </div>
 
                                 {isExpanded ? (

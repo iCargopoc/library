@@ -244,3 +244,36 @@ export const findAllChildRows = (allRows: [Object]): any[] => {
     }
     return [];
 };
+
+export const getLeftOfColumn = (
+    index: number,
+    isSubComponent: boolean,
+    isGroupHeader: boolean
+): number => {
+    let leftToPass = 0;
+    if (index > 0) {
+        let headerElements = [];
+        if (isSubComponent) {
+            headerElements = isGroupHeader
+                ? document.querySelectorAll(
+                      "[data-testid='subCompGrid-group-header']"
+                  )
+                : document.querySelectorAll(
+                      "[data-testid='subCompGrid-header']"
+                  );
+        } else {
+            headerElements = isGroupHeader
+                ? document.querySelectorAll("[data-testid='grid-group-header']")
+                : document.querySelectorAll("[data-testid='grid-header']");
+        }
+        if (headerElements && headerElements.length > 0) {
+            headerElements.forEach((elem: Object, elemIndex: number) => {
+                if (elemIndex < index) {
+                    const { offsetWidth } = elem;
+                    leftToPass += offsetWidth || 0;
+                }
+            });
+        }
+    }
+    return leftToPass;
+};

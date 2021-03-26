@@ -9,12 +9,14 @@ const ColumnsList = (props: {
     onColumnReorder: Function,
     managedColumns: Array<Object>,
     onInnerCellChange: Function,
+    onPinColumnChange: Function,
     isSubComponentColumn: boolean
 }): React$Element<*> => {
     const {
         onColumnReorder,
         managedColumns,
         onInnerCellChange,
+        onPinColumnChange,
         isSubComponentColumn
     } = props;
 
@@ -70,6 +72,7 @@ const ColumnsList = (props: {
                         isDisplayInExpandedRegion,
                         innerCells,
                         isGroupHeader,
+                        pinColumn,
                         columns
                     } = column;
                     return (
@@ -80,11 +83,13 @@ const ColumnsList = (props: {
                             findColumn={findColumn}
                             columnHeader={Header}
                             columnTitle={title}
+                            pinColumn={pinColumn}
                             isadditionalcolumn={isDisplayInExpandedRegion}
                             isGroupHeader={isGroupHeader}
                             columns={columns}
                             innerCells={innerCells}
                             isSubComponentColumn={isSubComponentColumn}
+                            onPinColumnChange={onPinColumnChange}
                             onInnerCellChange={onInnerCellChange}
                         />
                     );

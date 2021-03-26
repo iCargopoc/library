@@ -9,6 +9,7 @@ const ColumnItem = ({
     id,
     columnHeader,
     columnTitle,
+    pinColumn,
     moveColumn,
     findColumn,
     isadditionalcolumn,
@@ -16,11 +17,13 @@ const ColumnItem = ({
     columns,
     innerCells,
     isSubComponentColumn,
+    onPinColumnChange,
     onInnerCellChange
 }: {
     id: string,
     columnHeader: any,
     columnTitle: string,
+    pinColumn: boolean,
     moveColumn: Function,
     findColumn: Function,
     isadditionalcolumn: boolean,
@@ -28,6 +31,7 @@ const ColumnItem = ({
     columns: Array<Object>,
     innerCells: Array<Object>,
     isSubComponentColumn: boolean,
+    onPinColumnChange: Function,
     onInnerCellChange: Function
 }): React$Element<*> => {
     const originalIndex = findColumn(id).index;
@@ -81,6 +85,26 @@ const ColumnItem = ({
                     </i>
                 </div>
                 <span>{columnTitle || columnHeader}</span>
+                <br />
+                <div className="neo-form-check">
+                    <input
+                        type="checkbox"
+                        id={`chk_pinColumn_${id}`}
+                        className="neo-checkbox form-check-input"
+                        data-testid={`pinColumn_${id}`}
+                        data-columnid={id}
+                        checked={pinColumn}
+                        onChange={(event: Object): Object =>
+                            onPinColumnChange(event, isSubComponentColumn)
+                        }
+                    />
+                    <label
+                        htmlFor={`chk_pinColumn_${id}`}
+                        className="neo-form-check__label"
+                    >
+                        Pin Column
+                    </label>
+                </div>
                 {isGroupHeader === true && columns && columns.length > 0 ? (
                     columns.map((col: Object): Object => {
                         const {

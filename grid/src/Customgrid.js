@@ -49,7 +49,8 @@ import {
     checkdisplayOfGroupedColumns,
     checkIfGroupsortIsApplicable,
     findAllChildRows,
-    hideColumns
+    hideColumns,
+    getLeftOfColumn
 } from "./Utilities/GridUtilities";
 
 const Customgrid = (props: {
@@ -405,6 +406,14 @@ const Customgrid = (props: {
                   getSortedData([...gridData], groupSortOptions)
               );
 
+    let isAtleastOneColumnPinned = false;
+    gridColumns.forEach((col: Object) => {
+        const { pinColumn } = col;
+        if (pinColumn === true) {
+            isAtleastOneColumnPinned = true;
+        }
+    });
+
     // Initialize react-table instance with the values received through properties
     const {
         getTableProps,
@@ -424,6 +433,7 @@ const Customgrid = (props: {
             data,
             defaultColumn,
             isSubComponentGrid,
+            isAtleastOneColumnPinned,
             rowsWithExpandedSubComponents,
             globalFilter: globalFilterLogic,
             autoResetFilters: false,
@@ -450,6 +460,7 @@ const Customgrid = (props: {
                             disableFilters: true,
                             disableSortBy: true,
                             display: true,
+                            pinColumn: isAtleastOneColumnPinned,
                             isGroupHeader: false,
                             minWidth: 35,
                             width: 35,
@@ -560,6 +571,7 @@ const Customgrid = (props: {
                         disableFilters: true,
                         disableSortBy: true,
                         display: true,
+                        pinColumn: isAtleastOneColumnPinned,
                         isGroupHeader: false,
                         minWidth: isParentGrid ? 65 : 35,
                         width: isParentGrid ? 65 : 35,
@@ -1429,15 +1441,32 @@ const Customgrid = (props: {
                                                         >
                                                             {headerGroup.headers.map(
                                                                 (
-                                                                    column: Object
+                                                                    column: Object,
+                                                                    index: number
                                                                 ): Object => {
                                                                     const {
                                                                         display,
                                                                         isSorted,
                                                                         isSortedDesc,
                                                                         filter,
-                                                                        canResize
+                                                                        canResize,
+                                                                        pinColumn,
+                                                                        headers
                                                                     } = column;
+                                                                    let isColumnPinned =
+                                                                        pinColumn ===
+                                                                        true;
+                                                                    if (
+                                                                        isGroupHeader &&
+                                                                        headers &&
+                                                                        headers.length >
+                                                                            0
+                                                                    ) {
+                                                                        isColumnPinned =
+                                                                            headers[0]
+                                                                                .pinColumn ===
+                                                                            true;
+                                                                    }
                                                                     if (
                                                                         display ===
                                                                             true ||
@@ -1448,11 +1477,29 @@ const Customgrid = (props: {
                                                                         // If header is group header only render header value and not sort/filter/resize
                                                                         return (
                                                                             <div
-                                                                                {...column.getHeaderProps()}
+                                                                                {...column.getHeaderProps(
+                                                                                    isColumnPinned
+                                                                                        ? {
+                                                                                              style: {
+                                                                                                  position:
+                                                                                                      "sticky",
+                                                                                                  left: getLeftOfColumn(
+                                                                                                      index,
+                                                                                                      false,
+                                                                                                      isGroupHeader
+                                                                                                  )
+                                                                                              }
+                                                                                          }
+                                                                                        : {}
+                                                                                )}
                                                                                 className={`neo-grid__th ${
                                                                                     isGroupHeader ===
                                                                                     true
                                                                                         ? "neo-grid__th-group"
+                                                                                        : ""
+                                                                                } ${
+                                                                                    isColumnPinned
+                                                                                        ? "sticky"
                                                                                         : ""
                                                                                 }`}
                                                                                 data-testid={

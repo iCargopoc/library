@@ -61,6 +61,11 @@ export const extractColumns = (
                 elem.display = true;
             }
 
+            // Set pin column flag
+            if (elem.pinColumn !== true) {
+                elem.pinColumn = false;
+            }
+
             // If innerCells are present, loop through inner cells and set flag and Id
             if (isInnerCellsPresent) {
                 // Set isSortable for column as false if that column is having innercells and none are sortable
@@ -214,7 +219,10 @@ export const extractColumns = (
                 if (!existingGroupHeaderColumn) {
                     updatedColumnStructure.push({
                         Header: modifiedColumn.groupHeader,
-                        columnId: `groupedColumn_${index}`,
+                        columnId:
+                            isSubComponentColumns === true
+                                ? `subComponentGroupedColumn_${index}`
+                                : `groupedColumn_${index}`,
                         isGroupHeader: true,
                         display: true,
                         columns: [modifiedColumn]

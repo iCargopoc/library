@@ -2,6 +2,7 @@
 import React from "react";
 import Measure from "react-measure";
 import SubComponent from "./SubComponent";
+import { getLeftOfColumn } from "../Utilities/GridUtilities";
 
 const RowItem = ({
     row,
@@ -86,20 +87,39 @@ const RowItem = ({
                                 : ""
                         }`}
                     >
-                        {cells.map((cell: Object): Object => {
-                            if (cell.column.display === true) {
-                                return (
-                                    <div
-                                        {...cell.getCellProps()}
-                                        className="neo-grid__td"
-                                        data-testid="gridrowcell"
-                                    >
-                                        {cell.render("Cell")}
-                                    </div>
-                                );
+                        {cells.map(
+                            (cell: Object, cellIndex: number): Object => {
+                                const { column } = cell;
+                                const { display, pinColumn } = column;
+                                if (display === true) {
+                                    return (
+                                        <div
+                                            {...cell.getCellProps(
+                                                pinColumn === true
+                                                    ? {
+                                                          style: {
+                                                              position:
+                                                                  "sticky",
+                                                              left: getLeftOfColumn(
+                                                                  cellIndex,
+                                                                  false
+                                                              )
+                                                          }
+                                                      }
+                                                    : {}
+                                            )}
+                                            className={`neo-grid__td ${
+                                                pinColumn ? "sticky" : ""
+                                            }`}
+                                            data-testid="gridrowcell"
+                                        >
+                                            {cell.render("Cell")}
+                                        </div>
+                                    );
+                                }
+                                return null;
                             }
-                            return null;
-                        })}
+                        )}
                     </div>
 
                     {/* Check if row eapand icon is clicked, and if yes, call function to bind content to the expanded region */}
