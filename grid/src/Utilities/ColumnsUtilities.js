@@ -225,6 +225,7 @@ export const extractColumns = (
                                 : `groupedColumn_${index}`,
                         isGroupHeader: true,
                         display: true,
+                        pinLeft: false,
                         columns: [modifiedColumn]
                     });
                 } else {
