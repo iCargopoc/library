@@ -411,8 +411,8 @@ const Customgrid = (props: {
 
     let isAtleastOneColumnPinned = false;
     gridColumns.forEach((col: Object) => {
-        const { pinColumn } = col;
-        if (pinColumn === true) {
+        const { pinLeft } = col;
+        if (pinLeft === true) {
             isAtleastOneColumnPinned = true;
         }
     });
@@ -463,7 +463,7 @@ const Customgrid = (props: {
                             disableFilters: true,
                             disableSortBy: true,
                             display: true,
-                            pinColumn: isAtleastOneColumnPinned,
+                            pinLeft: isAtleastOneColumnPinned,
                             isGroupHeader: false,
                             minWidth: 35,
                             width: 35,
@@ -574,7 +574,7 @@ const Customgrid = (props: {
                         disableFilters: true,
                         disableSortBy: true,
                         display: true,
-                        pinColumn: isAtleastOneColumnPinned,
+                        pinLeft: isAtleastOneColumnPinned,
                         isGroupHeader: false,
                         minWidth: isParentGrid ? 65 : 35,
                         width: isParentGrid ? 65 : 35,
@@ -1454,11 +1454,11 @@ const Customgrid = (props: {
                                                                         isSortedDesc,
                                                                         filter,
                                                                         canResize,
-                                                                        pinColumn,
+                                                                        pinLeft,
                                                                         headers
                                                                     } = column;
                                                                     let isColumnPinned =
-                                                                        pinColumn ===
+                                                                        pinLeft ===
                                                                         true;
                                                                     if (
                                                                         isGroupHeader &&
@@ -1468,7 +1468,7 @@ const Customgrid = (props: {
                                                                     ) {
                                                                         isColumnPinned =
                                                                             headers[0]
-                                                                                .pinColumn ===
+                                                                                .pinLeft ===
                                                                             true;
                                                                     }
                                                                     if (

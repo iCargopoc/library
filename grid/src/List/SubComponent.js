@@ -53,8 +53,8 @@ const SubComponent = (props: {
 
     let isAtleastOneColumnPinned = false;
     subComponentColumnns.forEach((col: Object) => {
-        const { pinColumn } = col;
-        if (pinColumn === true) {
+        const { pinLeft } = col;
+        if (pinLeft === true) {
             isAtleastOneColumnPinned = true;
         }
     });
@@ -88,7 +88,7 @@ const SubComponent = (props: {
                         disableFilters: true,
                         disableSortBy: true,
                         display: true,
-                        pinColumn: isAtleastOneColumnPinned,
+                        pinLeft: isAtleastOneColumnPinned,
                         isGroupHeader: false,
                         minWidth: 62,
                         width: 62,
@@ -236,17 +236,17 @@ const SubComponent = (props: {
                                     ): Object => {
                                         const {
                                             display,
-                                            pinColumn,
+                                            pinLeft,
                                             headers
                                         } = column;
-                                        let isColumnPinned = pinColumn === true;
+                                        let isColumnPinned = pinLeft === true;
                                         if (
                                             isGroupHeader &&
                                             headers &&
                                             headers.length > 0
                                         ) {
                                             isColumnPinned =
-                                                headers[0].pinColumn === true;
+                                                headers[0].pinLeft === true;
                                         }
                                         if (
                                             display === true ||
@@ -341,15 +341,12 @@ const SubComponent = (props: {
                                             cellIndex: number
                                         ): Object => {
                                             const { column } = cell;
-                                            const {
-                                                display,
-                                                pinColumn
-                                            } = column;
+                                            const { display, pinLeft } = column;
                                             if (display === true) {
                                                 return (
                                                     <div
                                                         {...cell.getCellProps(
-                                                            pinColumn === true
+                                                            pinLeft === true
                                                                 ? {
                                                                       style: {
                                                                           position:
@@ -365,11 +362,11 @@ const SubComponent = (props: {
                                                                 : {}
                                                         )}
                                                         className={`neo-grid__td ${
-                                                            pinColumn
+                                                            pinLeft
                                                                 ? "sticky"
                                                                 : ""
                                                         } ${
-                                                            pinColumn &&
+                                                            pinLeft &&
                                                             isLastPinnedColumn(
                                                                 gridRef,
                                                                 cellIndex,

@@ -9,7 +9,7 @@ const ColumnItem = ({
     id,
     columnHeader,
     columnTitle,
-    pinColumn,
+    pinLeft,
     moveColumn,
     findColumn,
     isadditionalcolumn,
@@ -23,7 +23,7 @@ const ColumnItem = ({
     id: string,
     columnHeader: any,
     columnTitle: string,
-    pinColumn: boolean,
+    pinLeft: boolean,
     moveColumn: Function,
     findColumn: Function,
     isadditionalcolumn: boolean,
@@ -95,7 +95,7 @@ const ColumnItem = ({
                         className="neo-checkbox form-check-input"
                         data-testid={`pinColumn_${id}`}
                         data-columnid={id}
-                        checked={pinColumn}
+                        checked={pinLeft}
                         onChange={(event: Object): Object =>
                             onPinColumnChange(event, isSubComponentColumn)
                         }

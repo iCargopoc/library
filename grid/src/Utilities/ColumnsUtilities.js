@@ -62,8 +62,8 @@ export const extractColumns = (
             }
 
             // Set pin column flag
-            if (elem.pinColumn !== true) {
-                elem.pinColumn = false;
+            if (elem.pinLeft !== true) {
+                elem.pinLeft = false;
             }
 
             // If innerCells are present, loop through inner cells and set flag and Id

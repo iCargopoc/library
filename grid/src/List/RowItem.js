@@ -98,12 +98,12 @@ const RowItem = ({
                         {cells.map(
                             (cell: Object, cellIndex: number): Object => {
                                 const { column } = cell;
-                                const { display, pinColumn } = column;
+                                const { display, pinLeft } = column;
                                 if (display === true) {
                                     return (
                                         <div
                                             {...cell.getCellProps(
-                                                pinColumn === true
+                                                pinLeft === true
                                                     ? {
                                                           style: {
                                                               position:
@@ -119,9 +119,9 @@ const RowItem = ({
                                                     : {}
                                             )}
                                             className={`neo-grid__td ${
-                                                pinColumn ? "sticky" : ""
+                                                pinLeft ? "sticky" : ""
                                             } ${
-                                                pinColumn &&
+                                                pinLeft &&
                                                 isLastPinnedColumn(
                                                     gridRef,
                                                     cellIndex,

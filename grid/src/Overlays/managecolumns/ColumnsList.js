@@ -72,7 +72,7 @@ const ColumnsList = (props: {
                         isDisplayInExpandedRegion,
                         innerCells,
                         isGroupHeader,
-                        pinColumn,
+                        pinLeft,
                         columns
                     } = column;
                     return (
@@ -83,7 +83,7 @@ const ColumnsList = (props: {
                             findColumn={findColumn}
                             columnHeader={Header}
                             columnTitle={title}
-                            pinColumn={pinColumn}
+                            pinLeft={pinLeft}
                             isadditionalcolumn={isDisplayInExpandedRegion}
                             isGroupHeader={isGroupHeader}
                             columns={columns}

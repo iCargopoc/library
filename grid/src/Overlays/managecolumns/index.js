@@ -217,7 +217,7 @@ const ColumnReordering = (props: any): any => {
         }
     };
 
-    // Update 'pinColumn value of column based on columnId
+    // Update 'pinLeft value of column based on columnId
     const updatedPinOfColumn = (
         column: Object,
         columnidToUpdate: string,
@@ -235,13 +235,13 @@ const ColumnReordering = (props: any): any => {
                 const updatedColumns = [...groupedColumns].map(
                     (col: Object): any => {
                         const updatedCol = { ...col };
-                        updatedCol.pinColumn = flag;
+                        updatedCol.pinLeft = flag;
                         return updatedCol;
                     }
                 );
                 updatedColumn.columns = updatedColumns;
             }
-            updatedColumn.pinColumn = flag;
+            updatedColumn.pinLeft = flag;
         }
         return updatedColumn;
     };
@@ -253,7 +253,7 @@ const ColumnReordering = (props: any): any => {
     ): any => {
         const { checked, dataset } = event.currentTarget;
         const { columnid } = dataset;
-        // Update columns 'pinColumn' state based on selection and columnid
+        // Update columns 'pinLeft' state based on selection and columnid
         const columnToUpdate = isSubComponentColumn
             ? [...managedSubComponentColumns]
             : [...managedColumns];
@@ -487,22 +487,22 @@ const ColumnReordering = (props: any): any => {
         } else {
             const pinnedManagedColumns = managedColumns.filter(
                 (column: Object): any => {
-                    return column.pinColumn === true;
+                    return column.pinLeft === true;
                 }
             );
             const unpinnedManagedColumns = managedColumns.filter(
                 (column: Object): any => {
-                    return column.pinColumn !== true;
+                    return column.pinLeft !== true;
                 }
             );
             const pinnedManagedSubComponentColumns = managedSubComponentColumns.filter(
                 (column: Object): any => {
-                    return column.pinColumn === true;
+                    return column.pinLeft === true;
                 }
             );
             const unpinnedManagedSubComponentColumns = managedSubComponentColumns.filter(
                 (column: Object): any => {
-                    return column.pinColumn !== true;
+                    return column.pinLeft !== true;
                 }
             );
             updateColumnStructure(
