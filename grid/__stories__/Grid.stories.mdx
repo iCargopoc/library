@@ -412,6 +412,13 @@ const subComponentColumnToExpand // Same as columnToExpand
         ]
     }
 
+    // Pass this property if 'Pin Left' feature has to be enabled for grid columns.
+    // User can use this functionality from manage column overlay.
+    const enablePinLeft = true;
+
+    // Pass this property if last column (with row actions and expand row/columns icons) has to be pinned to the right.
+    const enablePinRight = true;
+
     <Grid
         className="icargoCustomClass"
         theme={theme}
@@ -451,6 +458,8 @@ const subComponentColumnToExpand // Same as columnToExpand
         exportData={exportData}
         fileName={fileName}
         pdfPaperSize={pdfPaperSize}
+        enablePinLeft={enablePinLeft}
+        enablePinRight={enablePinRight}
     />
 ```
 
@@ -601,6 +610,40 @@ const subComponentColumnToExpand // Same as columnToExpand
     rowActions={rowActions}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+/>
+```
+
+#### With pin left
+
+<Story name="With pin left">
+    <GridComponent passRowActions isHorizontalGrid passPinLeft />;
+</Story>
+
+```jsx
+<Grid
+    gridData={gridData}
+    columns={columns}
+    rowActions={rowActions}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    enablePinLeft={true}
+/>
+```
+
+#### With pin right
+
+<Story name="With pin right">
+    <GridComponent passRowActions isHorizontalGrid passPinRight />;
+</Story>
+
+```jsx
+<Grid
+    gridData={gridData}
+    columns={columns}
+    rowActions={rowActions}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    enablePinRight={true}
 />
 ```
 

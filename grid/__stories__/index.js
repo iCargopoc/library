@@ -51,7 +51,10 @@ const GridComponent = (props) => {
         parentRowExpandable,
         parentRowsToExpand,
         previousPageRefresh,
-        pdfPaperSize
+        pdfPaperSize,
+        isHorizontalGrid,
+        passPinLeft,
+        passPinRight
     } = props;
 
     const idAttribute = "travelId";
@@ -355,7 +358,7 @@ const GridComponent = (props) => {
         {
             Header: "Id",
             accessor: "travelId",
-            width: 5,
+            width: isHorizontalGrid ? 100 : 5,
             isSortable: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { travelId } = rowData;
@@ -412,7 +415,7 @@ const GridComponent = (props) => {
                 "flight.flightdetails.connectionflights.*.airlinenumbers.number",
                 "flight.flightdetails.flightclass"
             ],
-            width: 10,
+            width: isHorizontalGrid ? 250 : 10,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { flight } = rowData;
                 if (flight) {
@@ -525,7 +528,7 @@ const GridComponent = (props) => {
                 }
             ],
             searchKeys: ["segment.from", "segment.to"],
-            width: 10,
+            width: isHorizontalGrid ? 250 : 10,
             disableSortBy: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { segment } = rowData;
@@ -619,7 +622,7 @@ const GridComponent = (props) => {
                 }
             ],
             onlyInDesktop: true,
-            width: 15,
+            width: isHorizontalGrid ? 450 : 15,
             widthGrow: 1,
             disableSortBy: true,
             searchKeys: [
@@ -705,7 +708,7 @@ const GridComponent = (props) => {
                     isSortable: true
                 }
             ],
-            width: 10,
+            width: isHorizontalGrid ? 250 : 10,
             sortValue: "percentage",
             searchKeys: ["weight.percentage", "weight.value"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
@@ -763,7 +766,7 @@ const GridComponent = (props) => {
                     accessor: "value"
                 }
             ],
-            width: 10,
+            width: isHorizontalGrid ? 250 : 10,
             isSortable: true,
             sortValue: "percentage",
             searchKeys: ["volume.percentage", "volume.value"],
@@ -822,7 +825,7 @@ const GridComponent = (props) => {
                     accessor: "value"
                 }
             ],
-            width: 10,
+            width: isHorizontalGrid ? 250 : 10,
             disableSortBy: true,
             searchKeys: ["uldPositions.*.position", "uldPositions.*.value"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
@@ -890,7 +893,7 @@ const GridComponent = (props) => {
                     accessor: "yeild"
                 }
             ],
-            width: 10,
+            width: isHorizontalGrid ? 250 : 10,
             sortValue: "revenue",
             searchKeys: ["revenue.revenue"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
@@ -927,7 +930,7 @@ const GridComponent = (props) => {
         {
             Header: "SR",
             accessor: "sr",
-            width: 10,
+            width: isHorizontalGrid ? 100 : 10,
             isSortable: true,
             searchKeys: ["sr"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
@@ -982,7 +985,7 @@ const GridComponent = (props) => {
                 }
             ],
             searchKeys: ["queuedBooking.sr", "queuedBooking.volume"],
-            width: 10,
+            width: isHorizontalGrid ? 250 : 10,
             disableSortBy: true,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { queuedBooking } = rowData;
@@ -1246,6 +1249,7 @@ const GridComponent = (props) => {
             }
         },
         {
+            groupHeader: "Other Details",
             Header: "AWB Details",
             accessor: "hawb",
             innerCells: [
@@ -1480,6 +1484,7 @@ const GridComponent = (props) => {
             }
         },
         {
+            groupHeader: "Other Details",
             Header: "SCR Details",
             accessor: "scr",
             innerCells: [
@@ -2698,6 +2703,8 @@ const GridComponent = (props) => {
                     exportData={allProps || exportData}
                     fileName={fileName || null}
                     pdfPaperSize={pdfPaperSize || null}
+                    enablePinLeft={passPinLeft || false}
+                    enablePinRight={passPinRight || false}
                 />
             </div>
         );
