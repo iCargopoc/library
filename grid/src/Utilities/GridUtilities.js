@@ -255,15 +255,20 @@ export const getLeftOfColumn = (
     if (index > 0) {
         const gridElement =
             gridRef && gridRef.current ? gridRef.current : document;
+        const subCompElement = gridElement.querySelector(
+            "[data-testid='subcomponent-content']"
+        );
         let columnElements = [];
         if (isSubComponent) {
-            columnElements = isGroupHeader
-                ? gridElement.querySelectorAll(
-                      "[data-testid='subCompGrid-group-header']"
-                  )
-                : gridElement.querySelectorAll(
-                      "[data-testid='subCompGrid-header']"
-                  );
+            if (subCompElement !== null && subCompElement !== undefined) {
+                columnElements = isGroupHeader
+                    ? subCompElement.querySelectorAll(
+                          "[data-testid='subCompGrid-group-header']"
+                      )
+                    : subCompElement.querySelectorAll(
+                          "[data-testid='subCompGrid-header']"
+                      );
+            }
         } else {
             columnElements = isGroupHeader
                 ? gridElement.querySelectorAll(
@@ -272,19 +277,33 @@ export const getLeftOfColumn = (
                 : gridElement.querySelectorAll("[data-testid='grid-header']");
         }
         if (columnElements.length === 0) {
-            const rowElement = isSubComponent
-                ? gridElement.querySelector(
-                      "[data-testid='subcontentrow_wrap']"
-                  )
-                : gridElement.querySelector("[data-testid='gridrowWrap']");
+            let rowElement = null;
+            if (isSubComponent) {
+                if (subCompElement !== null && subCompElement !== undefined) {
+                    rowElement = subCompElement.querySelector(
+                        "[data-testid='subcontentrow_wrap']"
+                    );
+                }
+            } else {
+                rowElement = gridElement.querySelector(
+                    "[data-testid='gridrowWrap']"
+                );
+            }
             if (rowElement !== null && rowElement !== undefined) {
-                columnElements = isSubComponent
-                    ? rowElement.querySelectorAll(
-                          "[data-testid='subcontentrow_cell']"
-                      )
-                    : rowElement.querySelectorAll(
-                          "[data-testid='gridrowcell']"
-                      );
+                if (isSubComponent) {
+                    if (
+                        subCompElement !== null &&
+                        subCompElement !== undefined
+                    ) {
+                        columnElements = rowElement.querySelectorAll(
+                            "[data-testid='subcontentrow_cell']"
+                        );
+                    }
+                } else {
+                    columnElements = rowElement.querySelectorAll(
+                        "[data-testid='gridrowcell']"
+                    );
+                }
             }
         }
         if (columnElements.length > 0) {
