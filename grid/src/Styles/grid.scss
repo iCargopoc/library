@@ -7,18 +7,18 @@
     flex-direction: column;
     flex-grow: 1;
     position: relative;
-    .stickyLeft {
+    .ng-sticky {
         position: sticky !important;
         z-index: 1;
-    }
-    .sticky-last {
-        box-shadow: -13px 4px 5px -11px inset var(--border-default);
-    }
-    .stickyRight {
-        position: sticky !important;
-        right: 0;
-        z-index: 1;
-        box-shadow: 13px 4px 5px -11px inset var(--border-default);
+        &--left {
+            &__last {
+                box-shadow: -13px 4px 5px -11px inset var(--border-default);
+            }
+        }
+        &--right {
+            right: 0;
+            box-shadow: 13px 4px 5px -11px inset var(--border-default);
+        }
     }
     .ng-accordion {
         display: flex;
@@ -63,10 +63,7 @@
         z-index: 5;
         top: 0;
         left: 0;
-        .stickyLeft {
-            background: var(--light-grey);
-        }
-        .stickyRight {
+        .ng-sticky {
             background: var(--light-grey);
         }
         .ng-accordion__icon {
@@ -167,10 +164,7 @@
             .neo-grid__row-wrap {
                 background-color: var(--box-shadow);
                 .neo-grid__td {
-                    &.stickyLeft {
-                        background-color: var(--box-shadow);
-                    }
-                    &.stickyRight {
+                    &.ng-sticky {
                         background-color: var(--box-shadow);
                     }
                     .neo-grid__cell-edit {
@@ -184,13 +178,14 @@
             }
             .neo-grid__row-expand {
                 background-color: var(--box-shadow);
-                .stickyLeft {
-                    left: 0;
+                .ng-sticky {
                     background-color: var(--box-shadow);
-                }
-                .stickyRight {
-                    right: 0;
-                    background-color: var(--box-shadow);
+                    &--left {
+                        left: 0;
+                    }
+                    &--right {
+                        right: 0;
+                    }
                 }
             }
         }
@@ -210,10 +205,7 @@
     }
     &__td {
         position: relative;
-        &.stickyLeft {
-            background-color: var(--bodyBg);
-        }
-        &.stickyRight {
+        &.ng-sticky {
             background-color: var(--bodyBg);
         }
     }
@@ -269,13 +261,14 @@
         .neo-grid__row-expand {
             width: 100%;
             display: flex;
-            .stickyLeft {
-                left: 0;
+            .ng-sticky {
                 background-color: var(--bodyBg);
-            }
-            .stickyRight {
-                right: 0;
-                background-color: var(--bodyBg);
+                &--left {
+                    left: 0;
+                }
+                &--right {
+                    right: 0;
+                }
             }
         }
         .ng-action {

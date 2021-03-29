@@ -288,7 +288,7 @@ const SubComponent = (props: {
                                                             : ""
                                                     } ${
                                                         isColumnPinnedLeft
-                                                            ? "stickyLeft"
+                                                            ? "ng-sticky ng-sticky--left"
                                                             : ""
                                                     } ${
                                                         isColumnPinnedLeft &&
@@ -298,11 +298,11 @@ const SubComponent = (props: {
                                                             true,
                                                             isGroupHeader
                                                         )
-                                                            ? "sticky-last"
+                                                            ? "ng-sticky--left__last"
                                                             : ""
                                                     } ${
                                                         isColumnPinnedRight
-                                                            ? "stickyRight"
+                                                            ? "ng-sticky ng-sticky--right"
                                                             : ""
                                                     }`}
                                                     data-testid={
@@ -384,7 +384,7 @@ const SubComponent = (props: {
                                                         )}
                                                         className={`neo-grid__td ${
                                                             pinLeft
-                                                                ? "stickyLeft"
+                                                                ? "ng-sticky ng-sticky--left"
                                                                 : ""
                                                         } ${
                                                             pinLeft &&
@@ -394,11 +394,11 @@ const SubComponent = (props: {
                                                                 true,
                                                                 false
                                                             )
-                                                                ? "sticky-last"
+                                                                ? "ng-sticky--left__last"
                                                                 : ""
                                                         } ${
                                                             isColumnPinnedRight
-                                                                ? "stickyRight"
+                                                                ? "ng-sticky ng-sticky--right"
                                                                 : ""
                                                         }`}
                                                         data-testid="subcontentrow_cell"
@@ -419,7 +419,7 @@ const SubComponent = (props: {
                                     >
                                         {isAtleastOneColumnPinned ? (
                                             <div
-                                                className="stickyLeft sticky-last"
+                                                className="ng-sticky ng-sticky--left ng-sticky--left__last"
                                                 style={{
                                                     width: getTotalWidthOfPinnedColumns(
                                                         "left",
@@ -437,7 +437,7 @@ const SubComponent = (props: {
                                         {enablePinRight &&
                                         isRowActionsColumnNeeded ? (
                                             <div
-                                                className="stickyRight"
+                                                className="ng-sticky ng-sticky--right"
                                                 style={{
                                                     width: getTotalWidthOfPinnedColumns(
                                                         "right",

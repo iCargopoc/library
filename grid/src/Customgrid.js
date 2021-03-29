@@ -1519,7 +1519,7 @@ const Customgrid = (props: {
                                                                                         : ""
                                                                                 } ${
                                                                                     isColumnPinnedLeft
-                                                                                        ? "stickyLeft"
+                                                                                        ? "ng-sticky ng-sticky--left"
                                                                                         : ""
                                                                                 }  ${
                                                                                     isColumnPinnedLeft &&
@@ -1529,11 +1529,11 @@ const Customgrid = (props: {
                                                                                         false,
                                                                                         isGroupHeader
                                                                                     )
-                                                                                        ? "sticky-last"
+                                                                                        ? "ng-sticky--left__last"
                                                                                         : ""
                                                                                 } ${
                                                                                     isColumnPinnedRight
-                                                                                        ? "stickyRight"
+                                                                                        ? "ng-sticky ng-sticky--right"
                                                                                         : ""
                                                                                 }`}
                                                                                 data-testid={

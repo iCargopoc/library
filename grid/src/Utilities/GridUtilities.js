@@ -341,9 +341,12 @@ export const getTotalWidthOfPinnedColumns = (
     if (columnElements.length > 0) {
         columnElements.forEach((elem: Object) => {
             const { classList, offsetWidth } = elem;
-            if (type === "left" && classList.contains("stickyLeft")) {
+            if (type === "left" && classList.contains("ng-sticky--left")) {
                 totalWidth += offsetWidth;
-            } else if (type === "right" && classList.contains("stickyRight")) {
+            } else if (
+                type === "right" &&
+                classList.contains("ng-sticky--right")
+            ) {
                 totalWidth += offsetWidth;
             }
         });
@@ -367,7 +370,7 @@ export const isLastPinnedColumn = (
         columnElements.forEach((elem: Object, elemIndex: number) => {
             if (elemIndex > index) {
                 const { classList } = elem;
-                if (classList.contains("stickyLeft")) {
+                if (classList.contains("ng-sticky--left")) {
                     isLast = false;
                 }
             }
