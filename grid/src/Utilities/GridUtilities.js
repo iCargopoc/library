@@ -327,6 +327,7 @@ export const getLeftOfColumn = (
 };
 
 export const getTotalWidthOfPinnedColumns = (
+    type: string,
     gridRef: any,
     isSubComponent: boolean,
     isGroupHeader: boolean
@@ -340,7 +341,9 @@ export const getTotalWidthOfPinnedColumns = (
     if (columnElements.length > 0) {
         columnElements.forEach((elem: Object) => {
             const { classList, offsetWidth } = elem;
-            if (classList.contains("sticky")) {
+            if (type === "left" && classList.contains("sticky")) {
+                totalWidth += offsetWidth;
+            } else if (type === "right" && classList.contains("stickyRight")) {
                 totalWidth += offsetWidth;
             }
         });

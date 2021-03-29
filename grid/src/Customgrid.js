@@ -105,7 +105,8 @@ const Customgrid = (props: {
     rowsToSelect: Array<Object>,
     rowsToDeselect: Array<Object>,
     fixedRowHeight: boolean,
-    pdfPaperSize: string
+    pdfPaperSize: string,
+    enablePinRight: boolean
 }): any => {
     const {
         gridRef,
@@ -155,7 +156,8 @@ const Customgrid = (props: {
         onGridRefresh,
         rowsToSelect,
         rowsToDeselect,
-        fixedRowHeight
+        fixedRowHeight,
+        enablePinRight
     } = props;
 
     const listRef = createRef();
@@ -401,6 +403,13 @@ const Customgrid = (props: {
         expandedRowData.Cell &&
         typeof expandedRowData.Cell === "function"
     );
+    const isRowActionsAvailable = !!(
+        rowActions && typeof rowActions === "function"
+    ); // If row actions are available
+    const isRowExpandAvailable = isRowExpandEnabled || expandableColumn; // If row expand option is available
+    const isRowActionsColumnNeeded =
+        isRowActionsAvailable || isRowExpandAvailable;
+
     const columns = useMemo((): Object => gridColumns);
     const data =
         serverSideSorting && typeof serverSideSorting === "function"
@@ -436,6 +445,7 @@ const Customgrid = (props: {
             data,
             defaultColumn,
             isSubComponentGrid,
+            enablePinRight,
             isAtleastOneColumnPinned,
             rowsWithExpandedSubComponents,
             globalFilter: globalFilterLogic,
@@ -653,11 +663,7 @@ const Customgrid = (props: {
             }
 
             // Add last column only if required
-            const isRowActionsAvailable = !!(
-                rowActions && typeof rowActions === "function"
-            ); // If row actions are available
-            const isRowExpandAvailable = isRowExpandEnabled || expandableColumn; // If row expand option is available
-            if (isRowActionsAvailable || isRowExpandAvailable) {
+            if (isRowActionsColumnNeeded) {
                 hooks.allColumns.push((hookColumns: Object): Object => [
                     ...hookColumns,
                     {
@@ -667,6 +673,7 @@ const Customgrid = (props: {
                         disableFilters: true,
                         disableSortBy: true,
                         display: true,
+                        pinRight: enablePinRight === true,
                         isGroupHeader: false,
                         minWidth: 35,
                         width: 35,
@@ -1455,11 +1462,16 @@ const Customgrid = (props: {
                                                                         filter,
                                                                         canResize,
                                                                         pinLeft,
+                                                                        pinRight,
                                                                         headers
                                                                     } = column;
                                                                     let isColumnPinnedLeft =
                                                                         pinLeft ===
                                                                         true;
+                                                                    let isColumnPinnedRight =
+                                                                        !isColumnPinnedLeft &&
+                                                                        pinRight ===
+                                                                            true;
                                                                     if (
                                                                         isGroupHeader &&
                                                                         headers &&
@@ -1470,6 +1482,11 @@ const Customgrid = (props: {
                                                                             headers[0]
                                                                                 .pinLeft ===
                                                                             true;
+                                                                        isColumnPinnedRight =
+                                                                            !isColumnPinnedLeft &&
+                                                                            headers[0]
+                                                                                .pinRight ===
+                                                                                true;
                                                                     }
                                                                     if (
                                                                         display ===
@@ -1515,6 +1532,10 @@ const Customgrid = (props: {
                                                                                         isGroupHeader
                                                                                     )
                                                                                         ? "sticky-last"
+                                                                                        : ""
+                                                                                } ${
+                                                                                    isColumnPinnedRight
+                                                                                        ? "stickyRight"
                                                                                         : ""
                                                                                 }`}
                                                                                 data-testid={
@@ -1723,6 +1744,12 @@ const Customgrid = (props: {
                                                             expandableColumn={
                                                                 expandableColumn
                                                             }
+                                                            isRowActionsColumnNeeded={
+                                                                isRowActionsColumnNeeded
+                                                            }
+                                                            enablePinRight={
+                                                                enablePinRight
+                                                            }
                                                         />
                                                     )}
                                                 </InfiniteLoader>
@@ -1805,6 +1832,12 @@ const Customgrid = (props: {
                                                     rowActions={rowActions}
                                                     expandableColumn={
                                                         expandableColumn
+                                                    }
+                                                    isRowActionsColumnNeeded={
+                                                        isRowActionsColumnNeeded
+                                                    }
+                                                    enablePinRight={
+                                                        enablePinRight
                                                     }
                                                 />
                                             )}

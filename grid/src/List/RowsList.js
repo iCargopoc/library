@@ -41,7 +41,9 @@ const RowsList = ({
     isLoadMoreRequiredForNormalRow,
     rowSelector,
     rowActions,
-    expandableColumn
+    expandableColumn,
+    isRowActionsColumnNeeded,
+    enablePinRight
 }: {
     gridRef: any,
     onItemsRendered?: Function,
@@ -78,7 +80,9 @@ const RowsList = ({
     rowsWithExpandedSubComponents: Array<Object>,
     rowSelector: boolean,
     rowActions: Function,
-    expandableColumn: boolean
+    expandableColumn: boolean,
+    isRowActionsColumnNeeded: boolean,
+    enablePinRight: boolean
 }): any => {
     const sizeMap = useRef({});
 
@@ -201,6 +205,8 @@ const RowsList = ({
                             rowSelector={rowSelector}
                             rowActions={rowActions}
                             expandableColumn={expandableColumn}
+                            isRowActionsColumnNeeded={isRowActionsColumnNeeded}
+                            enablePinRight={enablePinRight}
                         />
                     );
                 },

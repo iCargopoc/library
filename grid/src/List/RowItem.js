@@ -32,7 +32,9 @@ const RowItem = ({
     rowActions,
     expandableColumn,
     rowSelector,
-    multiRowSelection
+    multiRowSelection,
+    isRowActionsColumnNeeded,
+    enablePinRight
 }: {
     gridRef: any,
     row: Object,
@@ -57,7 +59,9 @@ const RowItem = ({
     rowActions: Function,
     expandableColumn: boolean,
     rowSelector: boolean,
-    multiRowSelection: boolean
+    multiRowSelection: boolean,
+    isRowActionsColumnNeeded: boolean,
+    enablePinRight: boolean
 }): React$Element<*> => {
     const { isExpanded, cells, original } = row;
     const { subComponentData } = original;
@@ -98,7 +102,9 @@ const RowItem = ({
                         {cells.map(
                             (cell: Object, cellIndex: number): Object => {
                                 const { column } = cell;
-                                const { display, pinLeft } = column;
+                                const { display, pinLeft, pinRight } = column;
+                                const isColumnPinnedRight =
+                                    pinLeft !== true && pinRight === true;
                                 if (display === true) {
                                     return (
                                         <div
@@ -130,6 +136,10 @@ const RowItem = ({
                                                 )
                                                     ? "sticky-last"
                                                     : ""
+                                            } ${
+                                                isColumnPinnedRight
+                                                    ? "stickyRight"
+                                                    : ""
                                             }`}
                                             data-testid="gridrowcell"
                                         >
@@ -153,6 +163,7 @@ const RowItem = ({
                                     className="sticky sticky-last"
                                     style={{
                                         width: getTotalWidthOfPinnedColumns(
+                                            "left",
                                             gridRef,
                                             false,
                                             false
@@ -161,6 +172,19 @@ const RowItem = ({
                                 />
                             ) : null}
                             {additionalColumn.Cell(row, additionalColumn)}
+                            {enablePinRight && isRowActionsColumnNeeded ? (
+                                <div
+                                    className="stickyRight"
+                                    style={{
+                                        width: getTotalWidthOfPinnedColumns(
+                                            "right",
+                                            gridRef,
+                                            false,
+                                            false
+                                        )
+                                    }}
+                                />
+                            ) : null}
                         </div>
                     ) : null}
                     {isSubComponentRowsPresent ? (
@@ -176,6 +200,7 @@ const RowItem = ({
                             expandableColumn={expandableColumn}
                             rowSelector={rowSelector}
                             multiRowSelection={multiRowSelection}
+                            enablePinRight={enablePinRight}
                         />
                     ) : null}
                     {isLoadMoreRequiredForNormalRow(index) ? (

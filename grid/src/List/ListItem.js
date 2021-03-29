@@ -34,7 +34,9 @@ const ListItem = ({
     isLoadMoreRequiredForNormalRow,
     rowSelector,
     rowActions,
-    expandableColumn
+    expandableColumn,
+    isRowActionsColumnNeeded,
+    enablePinRight
 }: {
     gridRef: any,
     row: Object,
@@ -66,7 +68,9 @@ const ListItem = ({
     isLoadMoreRequiredForNormalRow: Function,
     rowSelector: boolean,
     rowActions: Function,
-    expandableColumn: boolean
+    expandableColumn: boolean,
+    isRowActionsColumnNeeded: boolean,
+    enablePinRight: boolean
 }): any => {
     if (isParentRowCollapsed(row)) {
         return null;
@@ -138,6 +142,8 @@ const ListItem = ({
                 expandableColumn={expandableColumn}
                 rowSelector={rowSelector}
                 multiRowSelection={multiRowSelection}
+                isRowActionsColumnNeeded={isRowActionsColumnNeeded}
+                enablePinRight={enablePinRight}
             />
         </div>
     );

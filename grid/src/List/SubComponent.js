@@ -26,7 +26,8 @@ const SubComponent = (props: {
     rowActions: Function,
     expandableColumn: boolean,
     rowSelector: boolean,
-    multiRowSelection: boolean
+    multiRowSelection: boolean,
+    enablePinRight: boolean
 }): React$Element<*> => {
     const {
         gridRef,
@@ -37,7 +38,8 @@ const SubComponent = (props: {
         rowActions,
         expandableColumn,
         rowSelector,
-        multiRowSelection
+        multiRowSelection,
+        enablePinRight
     } = props;
 
     const isRowExpandEnabled = !!(
@@ -47,6 +49,12 @@ const SubComponent = (props: {
         subComponentAdditionalColumn.Cell &&
         typeof subComponentAdditionalColumn.Cell === "function"
     );
+    const isRowActionsAvailable = !!(
+        rowActions && typeof rowActions === "function"
+    ); // If row actions are available
+    const isRowExpandAvailable = isRowExpandEnabled || expandableColumn; // If row expand option is available
+    const isRowActionsColumnNeeded =
+        isRowActionsAvailable || isRowExpandAvailable;
 
     const columns = useMemo((): Object => subComponentColumnns);
     const data = useMemo((): Object => [...subComponentData]);
@@ -71,6 +79,7 @@ const SubComponent = (props: {
             columns,
             data,
             isAtleastOneColumnPinned,
+            enablePinRight,
             autoResetExpanded: false,
             autoResetSelectedRows: false
         },
@@ -139,11 +148,7 @@ const SubComponent = (props: {
             }
 
             // Add last column only if required
-            const isRowActionsAvailable = !!(
-                rowActions && typeof rowActions === "function"
-            ); // If row actions are available
-            const isRowExpandAvailable = isRowExpandEnabled || expandableColumn; // If row expand option is available
-            if (isRowActionsAvailable || isRowExpandAvailable) {
+            if (isRowActionsColumnNeeded) {
                 hooks.allColumns.push((hookColumns: Object): Object => [
                     ...hookColumns,
                     {
@@ -153,6 +158,7 @@ const SubComponent = (props: {
                         disableFilters: true,
                         disableSortBy: true,
                         display: true,
+                        pinRight: enablePinRight === true,
                         isGroupHeader: false,
                         minWidth: 35,
                         width: 35,
@@ -237,10 +243,14 @@ const SubComponent = (props: {
                                         const {
                                             display,
                                             pinLeft,
+                                            pinRight,
                                             headers
                                         } = column;
                                         let isColumnPinnedLeft =
                                             pinLeft === true;
+                                        let isColumnPinnedRight =
+                                            !isColumnPinnedLeft &&
+                                            pinRight === true;
                                         if (
                                             isGroupHeader &&
                                             headers &&
@@ -248,6 +258,9 @@ const SubComponent = (props: {
                                         ) {
                                             isColumnPinnedLeft =
                                                 headers[0].pinLeft === true;
+                                            isColumnPinnedRight =
+                                                !isColumnPinnedLeft &&
+                                                headers[0].pinRight === true;
                                         }
                                         if (
                                             display === true ||
@@ -288,6 +301,10 @@ const SubComponent = (props: {
                                                             isGroupHeader
                                                         )
                                                             ? "sticky-last"
+                                                            : ""
+                                                    } ${
+                                                        isColumnPinnedRight
+                                                            ? "stickyRight"
                                                             : ""
                                                     }`}
                                                     data-testid={
@@ -342,7 +359,14 @@ const SubComponent = (props: {
                                             cellIndex: number
                                         ): Object => {
                                             const { column } = cell;
-                                            const { display, pinLeft } = column;
+                                            const {
+                                                display,
+                                                pinLeft,
+                                                pinRight
+                                            } = column;
+                                            const isColumnPinnedRight =
+                                                pinLeft !== true &&
+                                                pinRight === true;
                                             if (display === true) {
                                                 return (
                                                     <div
@@ -376,6 +400,10 @@ const SubComponent = (props: {
                                                             )
                                                                 ? "sticky-last"
                                                                 : ""
+                                                        } ${
+                                                            isColumnPinnedRight
+                                                                ? "stickyRight"
+                                                                : ""
                                                         }`}
                                                         data-testid="subcontentrow_cell"
                                                     >
@@ -398,6 +426,7 @@ const SubComponent = (props: {
                                                 className="sticky sticky-last"
                                                 style={{
                                                     width: getTotalWidthOfPinnedColumns(
+                                                        "left",
                                                         gridRef,
                                                         true,
                                                         false
@@ -409,6 +438,20 @@ const SubComponent = (props: {
                                             row,
                                             subComponentAdditionalColumn
                                         )}
+                                        {enablePinRight &&
+                                        isRowActionsColumnNeeded ? (
+                                            <div
+                                                className="stickyRight"
+                                                style={{
+                                                    width: getTotalWidthOfPinnedColumns(
+                                                        "right",
+                                                        gridRef,
+                                                        true,
+                                                        false
+                                                    )
+                                                }}
+                                            />
+                                        ) : null}
                                     </div>
                                 ) : null}
                             </div>
