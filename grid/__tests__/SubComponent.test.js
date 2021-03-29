@@ -476,6 +476,7 @@ describe("render Index file ", () => {
             }
         },
         {
+            groupHeader: "Flight & Sr",
             Header: () => {
                 return <span className="flightHeader">Flight</span>;
             },
@@ -500,6 +501,7 @@ describe("render Index file ", () => {
             editCell: mockEditCell
         },
         {
+            groupHeader: "Flight & Sr",
             Header: "SR",
             accessor: "sr",
             width: 90,
@@ -2055,5 +2057,164 @@ describe("render Index file ", () => {
             "[data-testid='groupsortoverlay']"
         );
         expect(groupSortOverlay.length).toBe(0);
+    });
+
+    it("test pin column left for both sub component and normal grid", () => {
+        mockOffsetSize(600, 600);
+        const { container, getAllByTestId, getByTestId } = render(
+            <Grid
+                title={mockTitle}
+                gridWidth={mockGridWidth}
+                gridData={mockGridData}
+                idAttribute="travelId"
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                subComponentColumnns={subComponentColumns}
+                subComponentColumnToExpand={mockSubComponentAdditionalColumn}
+                getRowInfo={mockGetRowInfo}
+                onRowUpdate={mockUpdateRowData}
+                enablePinLeft
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open Column chooser overlay
+        let columnChooserIcon = getByTestId("toggleManageColumnsOverlay");
+        act(() => {
+            columnChooserIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        let columnChooserOverlayCount = getAllByTestId("managecolumnoverlay")
+            .length;
+        expect(columnChooserOverlayCount).toBe(1);
+
+        // Pin left - Id column from main grid columns
+        const idPinLeft = getByTestId("pinColumn_column_0");
+        expect(idPinLeft.checked).toBeFalsy();
+        fireEvent.click(idPinLeft);
+        expect(idPinLeft.checked).toBeTruthy();
+
+        // Pin left - grouped column from main grid columns
+        const pinGroupedLeft = getByTestId("pinColumn_groupedColumn_1");
+        expect(pinGroupedLeft.checked).toBeFalsy();
+        fireEvent.click(pinGroupedLeft);
+        expect(pinGroupedLeft.checked).toBeTruthy();
+
+        // Pin sub component group column
+        const subCompGroupCol = getByTestId(
+            "pinColumn_subComponentGroupedColumn_0"
+        );
+        expect(subCompGroupCol.checked).toBeFalsy();
+        fireEvent.click(subCompGroupCol);
+        expect(subCompGroupCol.checked).toBeTruthy();
+
+        const saveButton = getByTestId("save_columnsManage");
+        act(() => {
+            saveButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Open a row expansion
+        const expander = getAllByTestId("rowExpanderIcon")[0];
+        act(() => {
+            expander.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        });
+
+        // Check columns count with sticky left in group header
+        const gridGroupHeader = getByTestId("grid-groupHeadersList");
+        const stickyGroupHeaderColumns = gridGroupHeader.querySelectorAll(
+            ".ng-sticky--left"
+        );
+        expect(stickyGroupHeaderColumns.length).toBe(4); // 4 group header (row selector, expand/collapse, Id, Flight & SR)
+
+        // Check columns count with sticky left in normal header
+        const gridHeader = getByTestId("grid-headersList");
+        const stickyHeaderColumns = gridHeader.querySelectorAll(
+            ".ng-sticky--left"
+        );
+        expect(stickyHeaderColumns.length).toBe(5); // 4 group header (row selector, expand/collapse, Id, Flight and SR)
+
+        // Check columns count with sticky left in grid row
+        const gridRowItem = getAllByTestId("gridrowWrap");
+        const stickyRowColumns = gridRowItem[0].querySelectorAll(
+            ".ng-sticky--left"
+        );
+        expect(stickyRowColumns.length).toBe(5); // 4 group header (row selector, expand/collapse, Id, Flight and SR)
+
+        // Check sticky left class count in row expand region
+        const rowExpandedRegion = getByTestId("rowExpandedRegion");
+        const stickyExpandedCols = rowExpandedRegion.querySelectorAll(
+            ".ng-sticky--left"
+        );
+        expect(stickyExpandedCols.length).toBe(1); // 1 single div to maintain width for all pinned columns
+
+        // Check if expand/collapse icons for sub component grid are present
+        const subComponentExpandCollpase = getAllByTestId(
+            "subComponent-header-expand-collapse"
+        );
+        expect(subComponentExpandCollpase.length).toBeGreaterThan(0);
+
+        // Open 1 subComponent
+        act(() => {
+            subComponentExpandCollpase[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if subComponent section is opened
+        const subComponentContent = getAllByTestId("subcomponent-content");
+        expect(subComponentContent.length).toBe(1);
+
+        // Open a sub component row expansion
+        const subcompexpander = getAllByTestId("subcontentrow_expandericon")[0];
+        act(() => {
+            subcompexpander.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check columns count with sticky left in group header
+        const subcompgridGroupHeader = subComponentContent[0].querySelector(
+            "[data-testid='subcompgrid-groupHeadersList']"
+        );
+        const subcompStickyGroupHeaderColumns = subcompgridGroupHeader.querySelectorAll(
+            ".ng-sticky--left"
+        );
+        expect(subcompStickyGroupHeaderColumns.length).toBe(2); // 2 group header (row selector + Other details)
+
+        // Check columns count with sticky left in normal header
+        const subcompgridHeader = subComponentContent[0].querySelector(
+            "[data-testid='subcompgrid-headersList']"
+        );
+        const subcompstickyHeaderColumns = subcompgridHeader.querySelectorAll(
+            ".ng-sticky--left"
+        );
+        expect(subcompstickyHeaderColumns.length).toBe(3); // 3 group header (row selector, HAWB and AWB)
+
+        // Check columns count with sticky left in grid row
+        const subcompgridRowItem = subComponentContent[0].querySelectorAll(
+            "[data-testid='subcontentrow_wrap']"
+        );
+        const subcompstickyRowColumns = subcompgridRowItem[0].querySelectorAll(
+            ".ng-sticky--left"
+        );
+        expect(subcompstickyRowColumns.length).toBe(3); // 3 group header (row selector, HAWB and AWB)
+
+        // Check sticky left class count in row expand region
+        const subcomprowExpandedRegion = getByTestId(
+            "subcontentrow_expandedregion"
+        );
+        const subcompstickyExpandedCols = subcomprowExpandedRegion.querySelectorAll(
+            ".ng-sticky--left"
+        );
+        expect(subcompstickyExpandedCols.length).toBe(1); // 1 single div to maintain width for all pinned columns
+
+        // console.log(gridContainer.innerHTML);
     });
 });

@@ -234,6 +234,11 @@ const SubComponent = (props: {
                             <div
                                 {...headerGroup.getHeaderGroupProps()}
                                 className="neo-grid__tr"
+                                data-testid={
+                                    isGroupHeader
+                                        ? "subcompgrid-groupHeadersList"
+                                        : "subcompgrid-headersList"
+                                }
                             >
                                 {headerGroup.headers.map(
                                     (

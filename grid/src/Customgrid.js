@@ -1452,6 +1452,11 @@ const Customgrid = (props: {
                                                         <div
                                                             {...headerGroup.getHeaderGroupProps()}
                                                             className="neo-grid__tr"
+                                                            data-testid={
+                                                                isGroupHeader
+                                                                    ? "grid-groupHeadersList"
+                                                                    : "grid-headersList"
+                                                            }
                                                         >
                                                             {headerGroup.headers.map(
                                                                 (
