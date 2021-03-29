@@ -116,33 +116,6 @@ describe("CellDisplayAndEdit unit test", () => {
         }
     };
 
-    const columns = [
-        {
-            Header: "Flight",
-            accessor: "flight",
-            width: 100,
-            columnId: "column_1",
-            innerCells: [
-                {
-                    Header: "Flight No",
-                    accessor: "flightno",
-                    display: true,
-                    cellId: "column_1_cell_0"
-                },
-                {
-                    Header: "Date",
-                    accessor: "date",
-                    display: true,
-                    cellId: "column_1_cell_1"
-                }
-            ],
-            sortValue: "flightno",
-            displayCell: mockDisplayCell,
-            editCell: mockEditCell,
-            display: true
-        }
-    ];
-
     let mockContainer;
     beforeEach(() => {
         mockContainer = document.createElement("div");

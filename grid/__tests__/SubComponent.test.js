@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React from "react";
-import { render, cleanup, fireEvent, waitFor } from "@testing-library/react";
+import { render, cleanup, fireEvent } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
 /* eslint-disable no-unused-vars */
@@ -30,7 +30,7 @@ describe("render Index file ", () => {
         });
     }
 
-    const validateData = (value: any): string => {
+    const validateData = (value) => {
         if (value !== null && value !== undefined) {
             return value.toString();
         }

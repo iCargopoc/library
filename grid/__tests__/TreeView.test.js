@@ -28,7 +28,7 @@ describe("render Index file ", () => {
         });
     }
 
-    const validateData = (value: any): string => {
+    const validateData = (value) => {
         if (value !== null && value !== undefined) {
             return value.toString();
         }
@@ -765,7 +765,7 @@ describe("render Index file ", () => {
 
     it("test next page without providing parentIdAttribute", () => {
         mockOffsetSize(600, 900);
-        const { container, getAllByTestId, getByTestId } = render(
+        const { container, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
                 gridWidth={mockGridWidth}

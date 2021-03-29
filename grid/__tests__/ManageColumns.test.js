@@ -925,7 +925,7 @@ describe("Column manage functionality test", () => {
         Header: "Sample column",
         accessor: "remarks",
         disableSortBy: true,
-        displayCell: (rowData, DisplayTag, isDesktop, isExpandableColumn) => {
+        displayCell: () => {
             return <p>Remarks</p>;
         }
     });
