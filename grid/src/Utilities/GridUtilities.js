@@ -341,7 +341,7 @@ export const getTotalWidthOfPinnedColumns = (
     if (columnElements.length > 0) {
         columnElements.forEach((elem: Object) => {
             const { classList, offsetWidth } = elem;
-            if (type === "left" && classList.contains("sticky")) {
+            if (type === "left" && classList.contains("stickyLeft")) {
                 totalWidth += offsetWidth;
             } else if (type === "right" && classList.contains("stickyRight")) {
                 totalWidth += offsetWidth;
@@ -367,7 +367,7 @@ export const isLastPinnedColumn = (
         columnElements.forEach((elem: Object, elemIndex: number) => {
             if (elemIndex > index) {
                 const { classList } = elem;
-                if (classList.contains("sticky")) {
+                if (classList.contains("stickyLeft")) {
                     isLast = false;
                 }
             }

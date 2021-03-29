@@ -7,6 +7,10 @@
     flex-direction: column;
     flex-grow: 1;
     position: relative;
+    .stickyLeft {
+        position: sticky !important;
+        z-index: 1;
+    }
     .sticky-last {
         box-shadow: -13px 4px 5px -11px inset var(--border-default);
     }
@@ -59,9 +63,8 @@
         z-index: 5;
         top: 0;
         left: 0;
-        .sticky {
+        .stickyLeft {
             background: var(--light-grey);
-            z-index: 1;
         }
         .stickyRight {
             background: var(--light-grey);
@@ -164,9 +167,8 @@
             .neo-grid__row-wrap {
                 background-color: var(--box-shadow);
                 .neo-grid__td {
-                    &.sticky {
+                    &.stickyLeft {
                         background-color: var(--box-shadow);
-                        z-index: 1;
                     }
                     &.stickyRight {
                         background-color: var(--box-shadow);
@@ -182,13 +184,12 @@
             }
             .neo-grid__row-expand {
                 background-color: var(--box-shadow);
-                .sticky {
-                    position: sticky;
+                .stickyLeft {
                     left: 0;
                     background-color: var(--box-shadow);
-                    z-index: 1;
                 }
                 .stickyRight {
+                    right: 0;
                     background-color: var(--box-shadow);
                 }
             }
@@ -209,9 +210,8 @@
     }
     &__td {
         position: relative;
-        &.sticky {
+        &.stickyLeft {
             background-color: var(--bodyBg);
-            z-index: 1;
         }
         &.stickyRight {
             background-color: var(--bodyBg);
@@ -269,13 +269,12 @@
         .neo-grid__row-expand {
             width: 100%;
             display: flex;
-            .sticky {
-                position: sticky;
+            .stickyLeft {
                 left: 0;
                 background-color: var(--bodyBg);
-                z-index: 1;
             }
             .stickyRight {
+                right: 0;
                 background-color: var(--bodyBg);
             }
         }

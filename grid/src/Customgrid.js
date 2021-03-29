@@ -1502,8 +1502,6 @@ const Customgrid = (props: {
                                                                                     isColumnPinnedLeft
                                                                                         ? {
                                                                                               style: {
-                                                                                                  position:
-                                                                                                      "sticky",
                                                                                                   left: getLeftOfColumn(
                                                                                                       gridRef,
                                                                                                       headerIndex,
@@ -1521,7 +1519,7 @@ const Customgrid = (props: {
                                                                                         : ""
                                                                                 } ${
                                                                                     isColumnPinnedLeft
-                                                                                        ? "sticky"
+                                                                                        ? "stickyLeft"
                                                                                         : ""
                                                                                 }  ${
                                                                                     isColumnPinnedLeft &&

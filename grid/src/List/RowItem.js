@@ -112,8 +112,6 @@ const RowItem = ({
                                                 pinLeft === true
                                                     ? {
                                                           style: {
-                                                              position:
-                                                                  "sticky",
                                                               left: getLeftOfColumn(
                                                                   gridRef,
                                                                   cellIndex,
@@ -125,7 +123,7 @@ const RowItem = ({
                                                     : {}
                                             )}
                                             className={`neo-grid__td ${
-                                                pinLeft ? "sticky" : ""
+                                                pinLeft ? "stickyLeft" : ""
                                             } ${
                                                 pinLeft &&
                                                 isLastPinnedColumn(
@@ -160,7 +158,7 @@ const RowItem = ({
                         >
                             {isAtleastOneColumnPinned ? (
                                 <div
-                                    className="sticky sticky-last"
+                                    className="stickyLeft sticky-last"
                                     style={{
                                         width: getTotalWidthOfPinnedColumns(
                                             "left",

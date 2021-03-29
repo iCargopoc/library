@@ -272,8 +272,6 @@ const SubComponent = (props: {
                                                         isColumnPinnedLeft
                                                             ? {
                                                                   style: {
-                                                                      position:
-                                                                          "sticky",
                                                                       left: getLeftOfColumn(
                                                                           gridRef,
                                                                           headerIndex,
@@ -290,7 +288,7 @@ const SubComponent = (props: {
                                                             : ""
                                                     } ${
                                                         isColumnPinnedLeft
-                                                            ? "sticky"
+                                                            ? "stickyLeft"
                                                             : ""
                                                     } ${
                                                         isColumnPinnedLeft &&
@@ -374,8 +372,6 @@ const SubComponent = (props: {
                                                             pinLeft === true
                                                                 ? {
                                                                       style: {
-                                                                          position:
-                                                                              "sticky",
                                                                           left: getLeftOfColumn(
                                                                               gridRef,
                                                                               cellIndex,
@@ -388,7 +384,7 @@ const SubComponent = (props: {
                                                         )}
                                                         className={`neo-grid__td ${
                                                             pinLeft
-                                                                ? "sticky"
+                                                                ? "stickyLeft"
                                                                 : ""
                                                         } ${
                                                             pinLeft &&
@@ -423,7 +419,7 @@ const SubComponent = (props: {
                                     >
                                         {isAtleastOneColumnPinned ? (
                                             <div
-                                                className="sticky sticky-last"
+                                                className="stickyLeft sticky-last"
                                                 style={{
                                                     width: getTotalWidthOfPinnedColumns(
                                                         "left",
