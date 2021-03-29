@@ -108,7 +108,8 @@ const Grid = (props: Object): ?React$Element<*> => {
         fixedRowHeight,
         fileName,
         pdfPaperSize,
-        enablePinRight
+        enablePinRight,
+        enablePinLeft
     } = props;
 
     // Check if device is desktop
@@ -630,6 +631,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     fixedRowHeight={fixedRowHeight}
                     pdfPaperSize={pdfPaperSize}
                     enablePinRight={enablePinRight}
+                    enablePinLeft={enablePinLeft}
                 />
                 {pageReloadCount > 0 ? (
                     <>

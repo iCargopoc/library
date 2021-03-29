@@ -22,7 +22,8 @@ const ColumnReordering = (props: any): any => {
         originalSubComponentColumns,
         subComponentAdditionalColumn,
         originalSubComponentAdditionalColumn,
-        updateColumnStructure
+        updateColumnStructure,
+        enablePinLeft
     } = props;
 
     // D&D code
@@ -640,6 +641,7 @@ const ColumnReordering = (props: any): any => {
                                 onPinColumnChange={onPinColumnChange}
                                 onInnerCellChange={onInnerCellChange}
                                 isSubComponentColumn={false}
+                                enablePinLeft={enablePinLeft}
                             />
                         </DndProvider>
                         {isAdditionalColumnSelected ? (
@@ -728,6 +730,7 @@ const ColumnReordering = (props: any): any => {
                                         onPinColumnChange={onPinColumnChange}
                                         onInnerCellChange={onInnerCellChange}
                                         isSubComponentColumn
+                                        enablePinLeft={enablePinLeft}
                                     />
                                 </DndProvider>
                                 {isSubComponentAdditionalColumnSelected ? (

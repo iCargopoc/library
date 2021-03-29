@@ -18,7 +18,8 @@ const ColumnItem = ({
     innerCells,
     isSubComponentColumn,
     onPinColumnChange,
-    onInnerCellChange
+    onInnerCellChange,
+    enablePinLeft
 }: {
     id: string,
     columnHeader: any,
@@ -32,7 +33,8 @@ const ColumnItem = ({
     innerCells: Array<Object>,
     isSubComponentColumn: boolean,
     onPinColumnChange: Function,
-    onInnerCellChange: Function
+    onInnerCellChange: Function,
+    enablePinLeft: boolean
 }): React$Element<*> => {
     const originalIndex = findColumn(id).index;
 
@@ -84,29 +86,33 @@ const ColumnItem = ({
                         <IconDragHorizontal className="ng-icon" />
                     </i>
                 </div>
-                <div className="ng-popover--column__name">
-                    {columnTitle || columnHeader}
-                </div>
-                <br />
-                <div className="neo-form-check">
-                    <input
-                        type="checkbox"
-                        id={`chk_pinColumn_${id}`}
-                        className="neo-checkbox form-check-input"
-                        data-testid={`pinColumn_${id}`}
-                        data-columnid={id}
-                        checked={pinLeft}
-                        onChange={(event: Object): Object =>
-                            onPinColumnChange(event, isSubComponentColumn)
-                        }
-                    />
-                    <label
-                        htmlFor={`chk_pinColumn_${id}`}
-                        className="neo-form-check__label"
-                    >
-                        Pin Left
-                    </label>
-                </div>
+                <span>{columnTitle || columnHeader}</span>
+                {enablePinLeft ? (
+                    <div className="ng-popover--column__pin">
+                        <div className="neo-form-check">
+                            <input
+                                type="checkbox"
+                                id={`chk_pinColumn_${id}`}
+                                className="neo-checkbox form-check-input"
+                                data-testid={`pinColumn_${id}`}
+                                data-columnid={id}
+                                checked={pinLeft}
+                                onChange={(event: Object): Object =>
+                                    onPinColumnChange(
+                                        event,
+                                        isSubComponentColumn
+                                    )
+                                }
+                            />
+                            <label
+                                htmlFor={`chk_pinColumn_${id}`}
+                                className="neo-form-check__label"
+                            >
+                                Pin Left
+                            </label>
+                        </div>
+                    </div>
+                ) : null}
                 {isGroupHeader === true && columns && columns.length > 0 ? (
                     columns.map((col: Object): Object => {
                         const {

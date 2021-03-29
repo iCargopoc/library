@@ -106,7 +106,8 @@ const Customgrid = (props: {
     rowsToDeselect: Array<Object>,
     fixedRowHeight: boolean,
     pdfPaperSize: string,
-    enablePinRight: boolean
+    enablePinRight: boolean,
+    enablePinLeft: boolean
 }): any => {
     const {
         gridRef,
@@ -157,7 +158,8 @@ const Customgrid = (props: {
         rowsToSelect,
         rowsToDeselect,
         fixedRowHeight,
-        enablePinRight
+        enablePinRight,
+        enablePinLeft
     } = props;
 
     const listRef = createRef();
@@ -1347,6 +1349,7 @@ const Customgrid = (props: {
                                         updateColumnStructure={
                                             updateColumnStructure
                                         }
+                                        enablePinLeft={enablePinLeft}
                                     />
                                 ) : null}
                             </div>
