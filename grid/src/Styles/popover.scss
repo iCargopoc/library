@@ -263,6 +263,9 @@
                 margin-bottom: rem(10);
                 cursor: move;
             }
+            &__name {
+                margin-bottom: rem(10);
+            }
             &__wrap {
                 display: flex;
                 justify-content: left;

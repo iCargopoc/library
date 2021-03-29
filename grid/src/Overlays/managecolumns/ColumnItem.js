@@ -84,7 +84,9 @@ const ColumnItem = ({
                         <IconDragHorizontal className="ng-icon" />
                     </i>
                 </div>
-                <span>{columnTitle || columnHeader}</span>
+                <div className="ng-popover--column__name">
+                    {columnTitle || columnHeader}
+                </div>
                 <br />
                 <div className="neo-form-check">
                     <input
@@ -102,7 +104,7 @@ const ColumnItem = ({
                         htmlFor={`chk_pinColumn_${id}`}
                         className="neo-form-check__label"
                     >
-                        Pin Column
+                        Pin Left
                     </label>
                 </div>
                 {isGroupHeader === true && columns && columns.length > 0 ? (

@@ -245,6 +245,62 @@ export const findAllChildRows = (allRows: [Object]): any[] => {
     return [];
 };
 
+export const getColumnElementsForPinColumn = (
+    gridRef: any,
+    isSubComponent: boolean,
+    isGroupHeader: boolean
+): any => {
+    let columnElements = [];
+
+    const gridElement = gridRef && gridRef.current ? gridRef.current : document;
+    const subCompElement = gridElement.querySelector(
+        "[data-testid='subcomponent-content']"
+    );
+    if (isSubComponent) {
+        if (subCompElement !== null && subCompElement !== undefined) {
+            columnElements = isGroupHeader
+                ? subCompElement.querySelectorAll(
+                      "[data-testid='subCompGrid-group-header']"
+                  )
+                : subCompElement.querySelectorAll(
+                      "[data-testid='subCompGrid-header']"
+                  );
+        }
+    } else {
+        columnElements = isGroupHeader
+            ? gridElement.querySelectorAll("[data-testid='grid-group-header']")
+            : gridElement.querySelectorAll("[data-testid='grid-header']");
+    }
+    if (columnElements.length === 0) {
+        let rowElement = null;
+        if (isSubComponent) {
+            if (subCompElement !== null && subCompElement !== undefined) {
+                rowElement = subCompElement.querySelector(
+                    "[data-testid='subcontentrow_wrap']"
+                );
+            }
+        } else {
+            rowElement = gridElement.querySelector(
+                "[data-testid='gridrowWrap']"
+            );
+        }
+        if (rowElement !== null && rowElement !== undefined) {
+            if (isSubComponent) {
+                if (subCompElement !== null && subCompElement !== undefined) {
+                    columnElements = rowElement.querySelectorAll(
+                        "[data-testid='subcontentrow_cell']"
+                    );
+                }
+            } else {
+                columnElements = rowElement.querySelectorAll(
+                    "[data-testid='gridrowcell']"
+                );
+            }
+        }
+    }
+    return columnElements;
+};
+
 export const getLeftOfColumn = (
     gridRef: any,
     index: number,
@@ -253,59 +309,11 @@ export const getLeftOfColumn = (
 ): number => {
     let leftToPass = 0;
     if (index > 0) {
-        const gridElement =
-            gridRef && gridRef.current ? gridRef.current : document;
-        const subCompElement = gridElement.querySelector(
-            "[data-testid='subcomponent-content']"
+        const columnElements = getColumnElementsForPinColumn(
+            gridRef,
+            isSubComponent,
+            isGroupHeader
         );
-        let columnElements = [];
-        if (isSubComponent) {
-            if (subCompElement !== null && subCompElement !== undefined) {
-                columnElements = isGroupHeader
-                    ? subCompElement.querySelectorAll(
-                          "[data-testid='subCompGrid-group-header']"
-                      )
-                    : subCompElement.querySelectorAll(
-                          "[data-testid='subCompGrid-header']"
-                      );
-            }
-        } else {
-            columnElements = isGroupHeader
-                ? gridElement.querySelectorAll(
-                      "[data-testid='grid-group-header']"
-                  )
-                : gridElement.querySelectorAll("[data-testid='grid-header']");
-        }
-        if (columnElements.length === 0) {
-            let rowElement = null;
-            if (isSubComponent) {
-                if (subCompElement !== null && subCompElement !== undefined) {
-                    rowElement = subCompElement.querySelector(
-                        "[data-testid='subcontentrow_wrap']"
-                    );
-                }
-            } else {
-                rowElement = gridElement.querySelector(
-                    "[data-testid='gridrowWrap']"
-                );
-            }
-            if (rowElement !== null && rowElement !== undefined) {
-                if (isSubComponent) {
-                    if (
-                        subCompElement !== null &&
-                        subCompElement !== undefined
-                    ) {
-                        columnElements = rowElement.querySelectorAll(
-                            "[data-testid='subcontentrow_cell']"
-                        );
-                    }
-                } else {
-                    columnElements = rowElement.querySelectorAll(
-                        "[data-testid='gridrowcell']"
-                    );
-                }
-            }
-        }
         if (columnElements.length > 0) {
             columnElements.forEach((elem: Object, elemIndex: number) => {
                 if (elemIndex < index) {
@@ -316,4 +324,51 @@ export const getLeftOfColumn = (
         }
     }
     return leftToPass;
+};
+
+export const getTotalWidthOfPinnedColumns = (
+    gridRef: any,
+    isSubComponent: boolean,
+    isGroupHeader: boolean
+): number => {
+    let totalWidth = 0;
+    const columnElements = getColumnElementsForPinColumn(
+        gridRef,
+        isSubComponent,
+        isGroupHeader
+    );
+    if (columnElements.length > 0) {
+        columnElements.forEach((elem: Object) => {
+            const { classList, offsetWidth } = elem;
+            if (classList.contains("sticky")) {
+                totalWidth += offsetWidth;
+            }
+        });
+    }
+    return totalWidth;
+};
+
+export const isLastPinnedColumn = (
+    gridRef: any,
+    index: number,
+    isSubComponent: boolean,
+    isGroupHeader: boolean
+): boolean => {
+    let isLast = true;
+    const columnElements = getColumnElementsForPinColumn(
+        gridRef,
+        isSubComponent,
+        isGroupHeader
+    );
+    if (columnElements.length > 0) {
+        columnElements.forEach((elem: Object, elemIndex: number) => {
+            if (elemIndex > index) {
+                const { classList } = elem;
+                if (classList.contains("sticky")) {
+                    isLast = false;
+                }
+            }
+        });
+    }
+    return isLast;
 };

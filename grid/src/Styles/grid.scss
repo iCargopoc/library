@@ -7,6 +7,9 @@
     flex-direction: column;
     flex-grow: 1;
     position: relative;
+    .sticky-last {
+        box-shadow: -13px 4px 5px -11px inset var(--border-default);
+    }
     .ng-accordion {
         display: flex;
         border-bottom: rem(1) solid var(--border-default);
@@ -50,8 +53,9 @@
         z-index: 5;
         top: 0;
         left: 0;
-        &:last-child {
-            margin-bottom: rem(50);
+        .sticky {
+            background: var(--light-grey);
+            z-index: 1;
         }
         .ng-accordion__icon {
             margin: 0;
@@ -151,6 +155,10 @@
             .neo-grid__row-wrap {
                 background-color: var(--box-shadow);
                 .neo-grid__td {
+                    &.sticky {
+                        background-color: var(--box-shadow);
+                        z-index: 1;
+                    }
                     .neo-grid__cell-edit {
                         display: none;
                     }
@@ -162,6 +170,12 @@
             }
             .neo-grid__row-expand {
                 background-color: var(--box-shadow);
+                .sticky {
+                    position: sticky;
+                    left: 0;
+                    background-color: var(--box-shadow);
+                    z-index: 1;
+                }
             }
         }
         .neo-grid__tr {
@@ -180,6 +194,10 @@
     }
     &__td {
         position: relative;
+        &.sticky {
+            background-color: var(--bodyBg);
+            z-index: 1;
+        }
     }
     &__wrapper {
         display: flex;
@@ -228,9 +246,17 @@
         .neo-grid__row-wrap {
             width: 100%;
             display: flex;
+            padding-bottom: 1px;
         }
         .neo-grid__row-expand {
             width: 100%;
+            display: flex;
+            .sticky {
+                position: sticky;
+                left: 0;
+                background-color: var(--bodyBg);
+                z-index: 1;
+            }
         }
         .ng-action {
             display: flex;

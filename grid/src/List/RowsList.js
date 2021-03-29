@@ -13,6 +13,7 @@ const RowsList = ({
     height,
     theme,
     rows,
+    isAtleastOneColumnPinned,
     idAttribute,
     overScanCount,
     prepareRow,
@@ -49,6 +50,7 @@ const RowsList = ({
     height: number,
     theme: string,
     rows: Array<Object>,
+    isAtleastOneColumnPinned: boolean,
     idAttribute: string,
     overScanCount: number,
     prepareRow: Function,
@@ -162,6 +164,7 @@ const RowsList = ({
                         <ListItem
                             gridRef={gridRef}
                             row={row}
+                            isAtleastOneColumnPinned={isAtleastOneColumnPinned}
                             idAttribute={idAttribute}
                             style={style}
                             theme={theme}

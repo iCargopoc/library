@@ -2,11 +2,16 @@
 import React from "react";
 import Measure from "react-measure";
 import SubComponent from "./SubComponent";
-import { getLeftOfColumn } from "../Utilities/GridUtilities";
+import {
+    getLeftOfColumn,
+    isLastPinnedColumn,
+    getTotalWidthOfPinnedColumns
+} from "../Utilities/GridUtilities";
 
 const RowItem = ({
     gridRef,
     row,
+    isAtleastOneColumnPinned,
     idAttribute,
     theme,
     index,
@@ -31,6 +36,7 @@ const RowItem = ({
 }: {
     gridRef: any,
     row: Object,
+    isAtleastOneColumnPinned: boolean,
     idAttribute: string,
     theme: string,
     index: number,
@@ -114,6 +120,16 @@ const RowItem = ({
                                             )}
                                             className={`neo-grid__td ${
                                                 pinColumn ? "sticky" : ""
+                                            } ${
+                                                pinColumn &&
+                                                isLastPinnedColumn(
+                                                    gridRef,
+                                                    cellIndex,
+                                                    false,
+                                                    false
+                                                )
+                                                    ? "sticky-last"
+                                                    : ""
                                             }`}
                                             data-testid="gridrowcell"
                                         >
@@ -132,6 +148,18 @@ const RowItem = ({
                             className="neo-grid__row-expand"
                             data-testid="rowExpandedRegion"
                         >
+                            {isAtleastOneColumnPinned ? (
+                                <div
+                                    className="sticky sticky-last"
+                                    style={{
+                                        width: getTotalWidthOfPinnedColumns(
+                                            gridRef,
+                                            false,
+                                            false
+                                        )
+                                    }}
+                                />
+                            ) : null}
                             {additionalColumn.Cell(row, additionalColumn)}
                         </div>
                     ) : null}

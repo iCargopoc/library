@@ -42,6 +42,7 @@
     --danger_light: #f9eaea;
     --success_light: #eafaf3;
     --warning_light: #fef9ea;
+    --bodyBg: #fff;
     --focus: #199ed8;
     --form-label: #59839a;
     --font: "Roboto", sans-serif;
@@ -451,6 +452,7 @@ body {
     padding: 0 !important;
     font-family: "sans-serif", Arial, Segoe UI, serif;
     font-size: 12px !important;
+    background-color: var(--bodyBg);
 }
 ul,
 li {
@@ -485,7 +487,7 @@ li {
     padding: 10px 5px;
 }
 .remarks-wrap {
-    padding: 0 10px 10px 100px;
+    padding: 0 10px 10px 10px;
 }
 .flight-details strong {
     display: block;

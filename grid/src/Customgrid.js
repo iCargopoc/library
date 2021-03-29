@@ -50,7 +50,8 @@ import {
     checkIfGroupsortIsApplicable,
     findAllChildRows,
     hideColumns,
-    getLeftOfColumn
+    getLeftOfColumn,
+    isLastPinnedColumn
 } from "./Utilities/GridUtilities";
 
 const Customgrid = (props: {
@@ -1505,6 +1506,16 @@ const Customgrid = (props: {
                                                                                     isColumnPinned
                                                                                         ? "sticky"
                                                                                         : ""
+                                                                                }  ${
+                                                                                    isColumnPinned &&
+                                                                                    isLastPinnedColumn(
+                                                                                        gridRef,
+                                                                                        headerIndex,
+                                                                                        false,
+                                                                                        isGroupHeader
+                                                                                    )
+                                                                                        ? "sticky-last"
+                                                                                        : ""
                                                                                 }`}
                                                                                 data-testid={
                                                                                     isGroupHeader ===
@@ -1625,6 +1636,9 @@ const Customgrid = (props: {
                                                             height={height}
                                                             theme={theme}
                                                             rows={rows}
+                                                            isAtleastOneColumnPinned={
+                                                                isAtleastOneColumnPinned
+                                                            }
                                                             idAttribute={
                                                                 idAttribute
                                                             }
@@ -1719,6 +1733,9 @@ const Customgrid = (props: {
                                                     height={height}
                                                     theme={theme}
                                                     rows={rows}
+                                                    isAtleastOneColumnPinned={
+                                                        isAtleastOneColumnPinned
+                                                    }
                                                     idAttribute={idAttribute}
                                                     overScanCount={
                                                         overScanCount

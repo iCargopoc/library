@@ -6,6 +6,7 @@ import RowItem from "./RowItem";
 const ListItem = ({
     gridRef,
     row,
+    isAtleastOneColumnPinned,
     idAttribute,
     style,
     theme,
@@ -37,6 +38,7 @@ const ListItem = ({
 }: {
     gridRef: any,
     row: Object,
+    isAtleastOneColumnPinned: boolean,
     idAttribute: string,
     style: Object,
     theme: string,
@@ -112,6 +114,7 @@ const ListItem = ({
             <RowItem
                 gridRef={gridRef}
                 row={row}
+                isAtleastOneColumnPinned={isAtleastOneColumnPinned}
                 idAttribute={idAttribute}
                 theme={theme}
                 index={index}

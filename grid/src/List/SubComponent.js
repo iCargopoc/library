@@ -12,7 +12,9 @@ import { IconAngle } from "../Utilities/SvgUtilities";
 import {
     checkdisplayOfGroupedColumns,
     hideColumns,
-    getLeftOfColumn
+    getLeftOfColumn,
+    isLastPinnedColumn,
+    getTotalWidthOfPinnedColumns
 } from "../Utilities/GridUtilities";
 
 const SubComponent = (props: {
@@ -276,6 +278,16 @@ const SubComponent = (props: {
                                                         isColumnPinned
                                                             ? "sticky"
                                                             : ""
+                                                    } ${
+                                                        isColumnPinned &&
+                                                        isLastPinnedColumn(
+                                                            gridRef,
+                                                            headerIndex,
+                                                            true,
+                                                            isGroupHeader
+                                                        )
+                                                            ? "sticky-last"
+                                                            : ""
                                                     }`}
                                                     data-testid={
                                                         isGroupHeader === true
@@ -356,6 +368,16 @@ const SubComponent = (props: {
                                                             pinColumn
                                                                 ? "sticky"
                                                                 : ""
+                                                        } ${
+                                                            pinColumn &&
+                                                            isLastPinnedColumn(
+                                                                gridRef,
+                                                                cellIndex,
+                                                                true,
+                                                                false
+                                                            )
+                                                                ? "sticky-last"
+                                                                : ""
                                                         }`}
                                                         data-testid="subcontentrow_cell"
                                                     >
@@ -373,6 +395,18 @@ const SubComponent = (props: {
                                         className="neo-grid__row-expand"
                                         data-testid="subcontentrow_expandedregion"
                                     >
+                                        {isAtleastOneColumnPinned ? (
+                                            <div
+                                                className="sticky sticky-last"
+                                                style={{
+                                                    width: getTotalWidthOfPinnedColumns(
+                                                        gridRef,
+                                                        true,
+                                                        false
+                                                    )
+                                                }}
+                                            />
+                                        ) : null}
                                         {subComponentAdditionalColumn.Cell(
                                             row,
                                             subComponentAdditionalColumn
