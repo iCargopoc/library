@@ -1457,7 +1457,7 @@ const Customgrid = (props: {
                                                                         pinLeft,
                                                                         headers
                                                                     } = column;
-                                                                    let isColumnPinned =
+                                                                    let isColumnPinnedLeft =
                                                                         pinLeft ===
                                                                         true;
                                                                     if (
@@ -1466,7 +1466,7 @@ const Customgrid = (props: {
                                                                         headers.length >
                                                                             0
                                                                     ) {
-                                                                        isColumnPinned =
+                                                                        isColumnPinnedLeft =
                                                                             headers[0]
                                                                                 .pinLeft ===
                                                                             true;
@@ -1482,7 +1482,7 @@ const Customgrid = (props: {
                                                                         return (
                                                                             <div
                                                                                 {...column.getHeaderProps(
-                                                                                    isColumnPinned
+                                                                                    isColumnPinnedLeft
                                                                                         ? {
                                                                                               style: {
                                                                                                   position:
@@ -1503,11 +1503,11 @@ const Customgrid = (props: {
                                                                                         ? "neo-grid__th-group"
                                                                                         : ""
                                                                                 } ${
-                                                                                    isColumnPinned
+                                                                                    isColumnPinnedLeft
                                                                                         ? "sticky"
                                                                                         : ""
                                                                                 }  ${
-                                                                                    isColumnPinned &&
+                                                                                    isColumnPinnedLeft &&
                                                                                     isLastPinnedColumn(
                                                                                         gridRef,
                                                                                         headerIndex,

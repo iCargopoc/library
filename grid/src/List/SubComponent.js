@@ -239,13 +239,14 @@ const SubComponent = (props: {
                                             pinLeft,
                                             headers
                                         } = column;
-                                        let isColumnPinned = pinLeft === true;
+                                        let isColumnPinnedLeft =
+                                            pinLeft === true;
                                         if (
                                             isGroupHeader &&
                                             headers &&
                                             headers.length > 0
                                         ) {
-                                            isColumnPinned =
+                                            isColumnPinnedLeft =
                                                 headers[0].pinLeft === true;
                                         }
                                         if (
@@ -255,7 +256,7 @@ const SubComponent = (props: {
                                             return (
                                                 <div
                                                     {...column.getHeaderProps(
-                                                        isColumnPinned
+                                                        isColumnPinnedLeft
                                                             ? {
                                                                   style: {
                                                                       position:
@@ -275,11 +276,11 @@ const SubComponent = (props: {
                                                             ? "neo-grid__th-group"
                                                             : ""
                                                     } ${
-                                                        isColumnPinned
+                                                        isColumnPinnedLeft
                                                             ? "sticky"
                                                             : ""
                                                     } ${
-                                                        isColumnPinned &&
+                                                        isColumnPinnedLeft &&
                                                         isLastPinnedColumn(
                                                             gridRef,
                                                             headerIndex,
