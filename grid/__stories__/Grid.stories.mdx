@@ -342,6 +342,10 @@ const subComponentColumnToExpand // Same as columnToExpand
     // By default Grid considers gridHeader as true
     const gridHeader = true;
 
+    // False if Grid column headings in sub component section has to be hidden
+    // By default Grid considers subComponentHeader as true
+    const subComponentHeader = true;
+
     // False if Grid column title has to be hidden
     // By default Grid considers showTitle as true
     const showTitle = true
@@ -434,6 +438,9 @@ const subComponentColumnToExpand // Same as columnToExpand
         parentIdAttribute={parentIdAttribute} // Only for tree view
         parentRowExpandable={parentRowExpandable} // Only for tree view
         parentRowsToExpand={parentRowsToExpand} // Only for tree view
+        subComponentColumns={subComponentColumns} // Only for Sub component grid
+        subComponentColumnToExpand={subComponentColumnToExpand} // Only for Sub component grid
+        subComponentHeader={subComponentHeader} // Only for Sub component grid
         rowActions={rowActions}
         expandableColumn={expandableColumn}
         onRowUpdate={onRowUpdate}
@@ -1377,7 +1384,6 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 
 ```jsx
 <Grid
-    isSubComponentGrid
     className={className}
     title={title}
     gridWidth={gridWidth}
@@ -1391,6 +1397,9 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     columnToExpand={columnToExpand}
     rowActions={rowActions}
     expandableColumn={expandableColumn}
+    subComponentColumns={subComponentColumns}
+    subComponentColumnToExpand={subComponentColumnToExpand}
+    subComponentHeader={subComponentHeader}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     getRowInfo={getRowInfo}
@@ -1431,7 +1440,6 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 
 ```jsx
 <Grid
-    isSubComponentGrid
     subComponentHeader={false}
     className={className}
     title={title}
@@ -1446,6 +1454,9 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     columnToExpand={columnToExpand}
     rowActions={rowActions}
     expandableColumn={expandableColumn}
+    subComponentColumns={subComponentColumns}
+    subComponentColumnToExpand={subComponentColumnToExpand}
+    subComponentHeader={subComponentHeader}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     getRowInfo={getRowInfo}
@@ -1486,7 +1497,6 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 
 ```jsx
 <Grid
-    isSubComponentGrid
     className={className}
     title={title}
     gridWidth={gridWidth}
@@ -1500,6 +1510,9 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     columnToExpand={columnToExpand}
     rowActions={rowActions}
     expandableColumn={expandableColumn}
+    subComponentColumns={subComponentColumns}
+    subComponentColumnToExpand={subComponentColumnToExpand}
+    subComponentHeader={subComponentHeader}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     getRowInfo={getRowInfo}
