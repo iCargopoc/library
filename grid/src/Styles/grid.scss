@@ -178,7 +178,6 @@
             }
             .neo-grid__row-expand {
                 background-color: var(--box-shadow);
-                justify-content: space-between;
                 .ng-sticky {
                     background-color: var(--box-shadow);
                     &--left {
@@ -262,6 +261,7 @@
         .neo-grid__row-expand {
             width: 100%;
             display: flex;
+            justify-content: space-between;
             .ng-sticky {
                 background-color: var(--bodyBg);
                 &--left {

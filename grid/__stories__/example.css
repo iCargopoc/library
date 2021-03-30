@@ -487,7 +487,6 @@ li {
     padding: 10px 5px;
 }
 .remarks-wrap {
-    flex-grow: 1;
     padding: 0 10px 10px 10px;
 }
 .flight-details strong {
