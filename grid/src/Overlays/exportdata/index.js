@@ -224,12 +224,10 @@ const ExportData = (props: Object): any => {
             : "csv-file-download-link";
         link.href = href;
         link.download = exportedFileName + fileExtension;
-        const exportOverlay = gridElement.querySelector(
-            "[data-testid='exportoverlay']"
-        );
-        if (exportOverlay != null) {
-            exportOverlay.appendChild(link);
-        }
+        const exportOverlay =
+            gridElement.querySelector("[data-testid='exportoverlay']") ||
+            document;
+        exportOverlay.appendChild(link);
         const linkToDownload = isExcelFile
             ? gridElement.querySelector(
                   "[data-testid='excel-file-download-link']"
@@ -240,9 +238,7 @@ const ExportData = (props: Object): any => {
         if (linkToDownload != null) {
             linkToDownload.click();
         }
-        if (exportOverlay != null) {
-            exportOverlay.removeChild(link);
-        }
+        exportOverlay.removeChild(link);
     };
 
     const getExportDataFromColumns = (
