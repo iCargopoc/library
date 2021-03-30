@@ -81,6 +81,7 @@ const SubComponent = (props: {
             columns,
             data,
             isAtleastOneColumnPinned,
+            isRowActionsColumnNeeded,
             enablePinColumn,
             autoResetExpanded: false,
             autoResetSelectedRows: false

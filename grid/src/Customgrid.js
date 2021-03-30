@@ -450,6 +450,7 @@ const Customgrid = (props: {
             isSubComponentGrid,
             enablePinColumn,
             isAtleastOneColumnPinned,
+            isRowActionsColumnNeeded,
             rowsWithExpandedSubComponents,
             globalFilter: globalFilterLogic,
             autoResetFilters: false,
