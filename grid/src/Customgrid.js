@@ -106,8 +106,7 @@ const Customgrid = (props: {
     rowsToDeselect: Array<Object>,
     fixedRowHeight: boolean,
     pdfPaperSize: string,
-    enablePinRight: boolean,
-    enablePinLeft: boolean
+    enablePinColumn: boolean
 }): any => {
     const {
         gridRef,
@@ -158,8 +157,7 @@ const Customgrid = (props: {
         rowsToSelect,
         rowsToDeselect,
         fixedRowHeight,
-        enablePinRight,
-        enablePinLeft
+        enablePinColumn
     } = props;
 
     const listRef = createRef();
@@ -447,7 +445,7 @@ const Customgrid = (props: {
             data,
             defaultColumn,
             isSubComponentGrid,
-            enablePinRight,
+            enablePinColumn,
             isAtleastOneColumnPinned,
             rowsWithExpandedSubComponents,
             globalFilter: globalFilterLogic,
@@ -675,7 +673,7 @@ const Customgrid = (props: {
                         disableFilters: true,
                         disableSortBy: true,
                         display: true,
-                        pinRight: enablePinRight === true,
+                        pinRight: enablePinColumn === true,
                         isGroupHeader: false,
                         minWidth: 35,
                         width: 35,
@@ -1349,7 +1347,7 @@ const Customgrid = (props: {
                                         updateColumnStructure={
                                             updateColumnStructure
                                         }
-                                        enablePinLeft={enablePinLeft}
+                                        enablePinColumn={enablePinColumn}
                                     />
                                 ) : null}
                             </div>
@@ -1753,8 +1751,8 @@ const Customgrid = (props: {
                                                             isRowActionsColumnNeeded={
                                                                 isRowActionsColumnNeeded
                                                             }
-                                                            enablePinRight={
-                                                                enablePinRight
+                                                            enablePinColumn={
+                                                                enablePinColumn
                                                             }
                                                         />
                                                     )}
@@ -1842,8 +1840,8 @@ const Customgrid = (props: {
                                                     isRowActionsColumnNeeded={
                                                         isRowActionsColumnNeeded
                                                     }
-                                                    enablePinRight={
-                                                        enablePinRight
+                                                    enablePinColumn={
+                                                        enablePinColumn
                                                     }
                                                 />
                                             )}

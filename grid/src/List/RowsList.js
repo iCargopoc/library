@@ -43,7 +43,7 @@ const RowsList = ({
     rowActions,
     expandableColumn,
     isRowActionsColumnNeeded,
-    enablePinRight
+    enablePinColumn
 }: {
     gridRef: any,
     onItemsRendered?: Function,
@@ -82,7 +82,7 @@ const RowsList = ({
     rowActions: Function,
     expandableColumn: boolean,
     isRowActionsColumnNeeded: boolean,
-    enablePinRight: boolean
+    enablePinColumn: boolean
 }): any => {
     const sizeMap = useRef({});
 
@@ -206,7 +206,7 @@ const RowsList = ({
                             rowActions={rowActions}
                             expandableColumn={expandableColumn}
                             isRowActionsColumnNeeded={isRowActionsColumnNeeded}
-                            enablePinRight={enablePinRight}
+                            enablePinColumn={enablePinColumn}
                         />
                     );
                 },

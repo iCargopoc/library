@@ -36,7 +36,7 @@ const ListItem = ({
     rowActions,
     expandableColumn,
     isRowActionsColumnNeeded,
-    enablePinRight
+    enablePinColumn
 }: {
     gridRef: any,
     row: Object,
@@ -70,7 +70,7 @@ const ListItem = ({
     rowActions: Function,
     expandableColumn: boolean,
     isRowActionsColumnNeeded: boolean,
-    enablePinRight: boolean
+    enablePinColumn: boolean
 }): any => {
     if (isParentRowCollapsed(row)) {
         return null;
@@ -143,7 +143,7 @@ const ListItem = ({
                 rowSelector={rowSelector}
                 multiRowSelection={multiRowSelection}
                 isRowActionsColumnNeeded={isRowActionsColumnNeeded}
-                enablePinRight={enablePinRight}
+                enablePinColumn={enablePinColumn}
             />
         </div>
     );

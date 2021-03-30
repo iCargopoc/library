@@ -19,7 +19,7 @@ const ColumnItem = ({
     isSubComponentColumn,
     onPinColumnChange,
     onInnerCellChange,
-    enablePinLeft
+    enablePinColumn
 }: {
     id: string,
     columnHeader: any,
@@ -34,7 +34,7 @@ const ColumnItem = ({
     isSubComponentColumn: boolean,
     onPinColumnChange: Function,
     onInnerCellChange: Function,
-    enablePinLeft: boolean
+    enablePinColumn: boolean
 }): React$Element<*> => {
     const originalIndex = findColumn(id).index;
 
@@ -87,7 +87,7 @@ const ColumnItem = ({
                     </i>
                 </div>
                 <span>{columnTitle || columnHeader}</span>
-                {enablePinLeft ? (
+                {enablePinColumn ? (
                     <div className="ng-popover--column__pin">
                         <div className="neo-form-check">
                             <input

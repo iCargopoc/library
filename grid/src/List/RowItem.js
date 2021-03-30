@@ -34,7 +34,7 @@ const RowItem = ({
     rowSelector,
     multiRowSelection,
     isRowActionsColumnNeeded,
-    enablePinRight
+    enablePinColumn
 }: {
     gridRef: any,
     row: Object,
@@ -61,7 +61,7 @@ const RowItem = ({
     rowSelector: boolean,
     multiRowSelection: boolean,
     isRowActionsColumnNeeded: boolean,
-    enablePinRight: boolean
+    enablePinColumn: boolean
 }): React$Element<*> => {
     const { isExpanded, cells, original } = row;
     const { subComponentData } = original;
@@ -172,7 +172,7 @@ const RowItem = ({
                                 />
                             ) : null}
                             {additionalColumn.Cell(row, additionalColumn)}
-                            {enablePinRight && isRowActionsColumnNeeded ? (
+                            {enablePinColumn && isRowActionsColumnNeeded ? (
                                 <div
                                     className="ng-sticky ng-sticky--right"
                                     style={{
@@ -200,7 +200,7 @@ const RowItem = ({
                             expandableColumn={expandableColumn}
                             rowSelector={rowSelector}
                             multiRowSelection={multiRowSelection}
-                            enablePinRight={enablePinRight}
+                            enablePinColumn={enablePinColumn}
                         />
                     ) : null}
                     {isLoadMoreRequiredForNormalRow(index) ? (

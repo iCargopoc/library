@@ -11,7 +11,7 @@ const ColumnsList = (props: {
     onInnerCellChange: Function,
     onPinColumnChange: Function,
     isSubComponentColumn: boolean,
-    enablePinLeft: boolean
+    enablePinColumn: boolean
 }): React$Element<*> => {
     const {
         onColumnReorder,
@@ -19,7 +19,7 @@ const ColumnsList = (props: {
         onInnerCellChange,
         onPinColumnChange,
         isSubComponentColumn,
-        enablePinLeft
+        enablePinColumn
     } = props;
 
     const findColumn = (columnId: string): Object => {
@@ -93,7 +93,7 @@ const ColumnsList = (props: {
                             isSubComponentColumn={isSubComponentColumn}
                             onPinColumnChange={onPinColumnChange}
                             onInnerCellChange={onInnerCellChange}
-                            enablePinLeft={enablePinLeft}
+                            enablePinColumn={enablePinColumn}
                         />
                     );
                 })}

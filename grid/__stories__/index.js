@@ -53,8 +53,7 @@ const GridComponent = (props) => {
         previousPageRefresh,
         pdfPaperSize,
         isHorizontalGrid,
-        passPinLeft,
-        passPinRight
+        passPinColumn
     } = props;
 
     const idAttribute = "travelId";
@@ -2703,8 +2702,7 @@ const GridComponent = (props) => {
                     exportData={allProps || exportData}
                     fileName={fileName || null}
                     pdfPaperSize={pdfPaperSize || null}
-                    enablePinLeft={passPinLeft || false}
-                    enablePinRight={passPinRight || false}
+                    enablePinColumn={passPinColumn || false}
                 />
             </div>
         );

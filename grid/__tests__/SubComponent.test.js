@@ -2073,8 +2073,7 @@ describe("render Index file ", () => {
                 subComponentColumnToExpand={mockSubComponentAdditionalColumn}
                 getRowInfo={mockGetRowInfo}
                 onRowUpdate={mockUpdateRowData}
-                enablePinLeft
-                enablePinRight
+                enablePinColumn
             />
         );
         const gridContainer = container;
@@ -2285,8 +2284,7 @@ describe("render Index file ", () => {
                 getRowInfo={mockGetRowInfo}
                 onRowUpdate={mockUpdateRowData}
                 gridHeader={false}
-                enablePinLeft
-                enablePinRight
+                enablePinColumn
             />
         );
         const gridContainer = container;

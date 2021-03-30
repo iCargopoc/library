@@ -27,7 +27,7 @@ const SubComponent = (props: {
     expandableColumn: boolean,
     rowSelector: boolean,
     multiRowSelection: boolean,
-    enablePinRight: boolean
+    enablePinColumn: boolean
 }): React$Element<*> => {
     const {
         gridRef,
@@ -39,7 +39,7 @@ const SubComponent = (props: {
         expandableColumn,
         rowSelector,
         multiRowSelection,
-        enablePinRight
+        enablePinColumn
     } = props;
 
     const isRowExpandEnabled = !!(
@@ -79,7 +79,7 @@ const SubComponent = (props: {
             columns,
             data,
             isAtleastOneColumnPinned,
-            enablePinRight,
+            enablePinColumn,
             autoResetExpanded: false,
             autoResetSelectedRows: false
         },
@@ -158,7 +158,7 @@ const SubComponent = (props: {
                         disableFilters: true,
                         disableSortBy: true,
                         display: true,
-                        pinRight: enablePinRight === true,
+                        pinRight: enablePinColumn === true,
                         isGroupHeader: false,
                         minWidth: 35,
                         width: 35,
@@ -439,7 +439,7 @@ const SubComponent = (props: {
                                             row,
                                             subComponentAdditionalColumn
                                         )}
-                                        {enablePinRight &&
+                                        {enablePinColumn &&
                                         isRowActionsColumnNeeded ? (
                                             <div
                                                 className="ng-sticky ng-sticky--right"
