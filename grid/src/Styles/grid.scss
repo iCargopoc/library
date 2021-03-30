@@ -87,6 +87,7 @@
             height: 100%;
             display: flex;
             align-items: center;
+            justify-content: space-between;
         }
         .ng-txt-wrap {
             display: none;
@@ -99,8 +100,11 @@
         .ng-txt {
             width: 100%;
         }
+        .neo-grid__th-iconblock {
+            display: flex;
+        }
         .neo-grid__th-icon {
-            margin-left: rem(4);
+            margin-right: rem(4);
             display: flex;
             flex-direction: column;
             .ng-icon {
@@ -118,6 +122,12 @@
                     &.is-active {
                         fill: var(--default);
                     }
+                }
+                &.neo-grid__pin {
+                    margin-top: rem(2);
+                    height: rem(15);
+                    width: rem(15);
+                    fill: var(--danger);
                 }
             }
         }

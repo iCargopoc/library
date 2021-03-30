@@ -38,7 +38,8 @@ import {
     IconSort,
     IconRefresh,
     IconExpand,
-    IconCollapse
+    IconCollapse,
+    IconPinColumn
 } from "./Utilities/SvgUtilities";
 import {
     setColumnWidths,
@@ -476,6 +477,7 @@ const Customgrid = (props: {
                             disableSortBy: true,
                             display: true,
                             pinLeft: isAtleastOneColumnPinned,
+                            isAutoPinned: true,
                             isGroupHeader: false,
                             minWidth: 35,
                             width: 35,
@@ -587,6 +589,7 @@ const Customgrid = (props: {
                         disableSortBy: true,
                         display: true,
                         pinLeft: isAtleastOneColumnPinned,
+                        isAutoPinned: true,
                         isGroupHeader: false,
                         minWidth: isParentGrid ? 65 : 35,
                         width: isParentGrid ? 65 : 35,
@@ -1471,6 +1474,7 @@ const Customgrid = (props: {
                                                                         canResize,
                                                                         pinLeft,
                                                                         pinRight,
+                                                                        isAutoPinned,
                                                                         headers
                                                                     } = column;
                                                                     let isColumnPinnedLeft =
@@ -1561,7 +1565,7 @@ const Customgrid = (props: {
                                                                                     )}
                                                                                     {isGroupHeader ===
                                                                                     false ? (
-                                                                                        <span>
+                                                                                        <div className="neo-grid__th-iconblock">
                                                                                             {isSorted ? (
                                                                                                 <i className="neo-grid__th-icon">
                                                                                                     <IconSort
@@ -1579,10 +1583,15 @@ const Customgrid = (props: {
                                                                                                         }`}
                                                                                                     />
                                                                                                 </i>
-                                                                                            ) : (
-                                                                                                ""
-                                                                                            )}
-                                                                                        </span>
+                                                                                            ) : null}
+                                                                                            {!isAutoPinned &&
+                                                                                            (isColumnPinnedLeft ||
+                                                                                                isColumnPinnedRight) ? (
+                                                                                                <i className="neo-grid__th-icon">
+                                                                                                    <IconPinColumn className="ng-icon neo-grid__pin" />
+                                                                                                </i>
+                                                                                            ) : null}
+                                                                                        </div>
                                                                                     ) : null}
                                                                                 </div>
                                                                                 {/* Don't render filter if header is group header or if column filter is disabled */}
