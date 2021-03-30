@@ -25,6 +25,7 @@ const RowItem = ({
     fixedRowHeight,
     isLoadMoreRequiredForNormalRow,
     subComponentColumnns,
+    subComponentHeader,
     subComponentAdditionalColumn,
     isSubComponentGrid,
     rowsWithExpandedSubComponents,
@@ -54,6 +55,7 @@ const RowItem = ({
     subComponentColumnns: Array<Object>,
     subComponentAdditionalColumn: Object,
     isSubComponentGrid: boolean,
+    subComponentHeader: boolean,
     rowsWithExpandedSubComponents: Array<Object>,
     getRowInfo: Function,
     rowActions: Function,
@@ -195,6 +197,7 @@ const RowItem = ({
                             subComponentAdditionalColumn={
                                 subComponentAdditionalColumn
                             }
+                            subComponentHeader={subComponentHeader}
                             getRowInfo={getRowInfo}
                             rowActions={rowActions}
                             expandableColumn={expandableColumn}

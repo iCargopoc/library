@@ -28,6 +28,7 @@ const ListItem = ({
     subComponentColumnns,
     subComponentAdditionalColumn,
     isSubComponentGrid,
+    subComponentHeader,
     rowsWithExpandedSubComponents,
     getRowInfo,
     fixedRowHeight,
@@ -63,6 +64,7 @@ const ListItem = ({
     subComponentColumnns: Array<Object>,
     subComponentAdditionalColumn: Object,
     isSubComponentGrid: boolean,
+    subComponentHeader: boolean,
     rowsWithExpandedSubComponents: Array<Object>,
     fixedRowHeight: boolean,
     isLoadMoreRequiredForNormalRow: Function,
@@ -131,6 +133,7 @@ const ListItem = ({
                 subComponentColumnns={subComponentColumnns}
                 subComponentAdditionalColumn={subComponentAdditionalColumn}
                 isSubComponentGrid={isSubComponentGrid}
+                subComponentHeader={subComponentHeader}
                 rowsWithExpandedSubComponents={rowsWithExpandedSubComponents}
                 lastPage={lastPage}
                 loadMoreChildData={loadMoreChildData}

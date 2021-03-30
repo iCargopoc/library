@@ -29,6 +29,7 @@ const RowsList = ({
     subComponentColumnns,
     subComponentAdditionalColumn,
     isSubComponentGrid,
+    subComponentHeader,
     rowsWithExpandedSubComponents,
     isLoadMoreChildRowsRequiredForRow,
     loadMoreChildData,
@@ -77,6 +78,7 @@ const RowsList = ({
     subComponentColumnns: Array<Object>,
     subComponentAdditionalColumn: Object,
     isSubComponentGrid: boolean,
+    subComponentHeader: boolean,
     rowsWithExpandedSubComponents: Array<Object>,
     rowSelector: boolean,
     rowActions: Function,
@@ -194,6 +196,7 @@ const RowsList = ({
                                 subComponentAdditionalColumn
                             }
                             isSubComponentGrid={isSubComponentGrid}
+                            subComponentHeader={subComponentHeader}
                             rowsWithExpandedSubComponents={
                                 rowsWithExpandedSubComponents
                             }

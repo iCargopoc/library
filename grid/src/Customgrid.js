@@ -71,6 +71,7 @@ const Customgrid = (props: {
     subComponentColumnsAccessorList: any,
     managableSubComponentAdditionalColumn: Object,
     subComponentAdditionalColumnAccessorList: any,
+    subComponentHeader: boolean,
     loadChildData: Function,
     isParentGrid: boolean,
     gridData: Array<Object>,
@@ -125,6 +126,7 @@ const Customgrid = (props: {
         subComponentColumnsAccessorList,
         managableSubComponentAdditionalColumn,
         subComponentAdditionalColumnAccessorList,
+        subComponentHeader,
         loadChildData,
         isParentGrid,
         gridData,
@@ -1694,6 +1696,9 @@ const Customgrid = (props: {
                                                             isSubComponentGrid={
                                                                 isSubComponentGrid
                                                             }
+                                                            subComponentHeader={
+                                                                subComponentHeader
+                                                            }
                                                             rowsWithExpandedSubComponents={
                                                                 rowsWithExpandedSubComponents
                                                             }
@@ -1796,6 +1801,9 @@ const Customgrid = (props: {
                                                     }
                                                     isSubComponentGrid={
                                                         isSubComponentGrid
+                                                    }
+                                                    subComponentHeader={
+                                                        subComponentHeader
                                                     }
                                                     rowsWithExpandedSubComponents={
                                                         rowsWithExpandedSubComponents

@@ -22,6 +22,7 @@ const SubComponent = (props: {
     subComponentData: Array<Object>,
     subComponentColumnns: Array<Object>,
     subComponentAdditionalColumn: Object,
+    subComponentHeader: boolean,
     getRowInfo: Function,
     rowActions: Function,
     expandableColumn: boolean,
@@ -34,6 +35,7 @@ const SubComponent = (props: {
         subComponentData,
         subComponentColumnns,
         subComponentAdditionalColumn,
+        subComponentHeader,
         getRowInfo,
         rowActions,
         expandableColumn,
@@ -224,115 +226,129 @@ const SubComponent = (props: {
             className="neo-grid__content neo-grid__content--sub"
             data-testid="subcomponent-content"
         >
-            <div className="neo-grid__thead">
-                {headerGroups.map(
-                    (headerGroup: Object, index: number): Object => {
-                        // If there are morthan 1 headerGroups, we consider 1st one as group header row
-                        const isGroupHeader =
-                            headerGroups.length > 1 ? index === 0 : false;
-                        return (
-                            <div
-                                {...headerGroup.getHeaderGroupProps()}
-                                className="neo-grid__tr"
-                                data-testid={
-                                    isGroupHeader
-                                        ? "subcompgrid-groupHeadersList"
-                                        : "subcompgrid-headersList"
-                                }
-                            >
-                                {headerGroup.headers.map(
-                                    (
-                                        column: Object,
-                                        headerIndex: number
-                                    ): Object => {
-                                        const {
-                                            display,
-                                            pinLeft,
-                                            pinRight,
-                                            headers
-                                        } = column;
-                                        let isColumnPinnedLeft =
-                                            pinLeft === true;
-                                        let isColumnPinnedRight =
-                                            !isColumnPinnedLeft &&
-                                            pinRight === true;
-                                        if (
-                                            isGroupHeader &&
-                                            headers &&
-                                            headers.length > 0
-                                        ) {
-                                            isColumnPinnedLeft =
-                                                headers[0].pinLeft === true;
-                                            isColumnPinnedRight =
-                                                !isColumnPinnedLeft &&
-                                                headers[0].pinRight === true;
-                                        }
-                                        if (
-                                            display === true ||
-                                            checkdisplayOfGroupedColumns(column)
-                                        ) {
-                                            return (
-                                                <div
-                                                    {...column.getHeaderProps(
-                                                        isColumnPinnedLeft
-                                                            ? {
-                                                                  style: {
-                                                                      left: getLeftOfColumn(
-                                                                          gridRef,
-                                                                          headerIndex,
-                                                                          true,
-                                                                          isGroupHeader
-                                                                      )
-                                                                  }
-                                                              }
-                                                            : {}
-                                                    )}
-                                                    className={`neo-grid__th ${
-                                                        isGroupHeader === true
-                                                            ? "neo-grid__th-group"
-                                                            : ""
-                                                    } ${
-                                                        isColumnPinnedLeft
-                                                            ? "ng-sticky ng-sticky--left"
-                                                            : ""
-                                                    } ${
-                                                        isColumnPinnedLeft &&
-                                                        isLastPinnedColumn(
-                                                            gridRef,
-                                                            headerIndex,
-                                                            true,
-                                                            isGroupHeader
-                                                        )
-                                                            ? "ng-sticky--left__last"
-                                                            : ""
-                                                    } ${
-                                                        isColumnPinnedRight
-                                                            ? "ng-sticky ng-sticky--right"
-                                                            : ""
-                                                    }`}
-                                                    data-testid={
-                                                        isGroupHeader === true
-                                                            ? "subCompGrid-group-header"
-                                                            : "subCompGrid-header"
-                                                    }
-                                                >
-                                                    <div className="neo-grid__th-title">
-                                                        {column.render(
-                                                            "Header"
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            );
-                                        }
-                                        return null;
+            {subComponentHeader === false ? null : (
+                <div className="neo-grid__thead">
+                    {headerGroups.map(
+                        (headerGroup: Object, index: number): Object => {
+                            // If there are morthan 1 headerGroups, we consider 1st one as group header row
+                            const isGroupHeader =
+                                headerGroups.length > 1 ? index === 0 : false;
+                            return (
+                                <div
+                                    {...headerGroup.getHeaderGroupProps()}
+                                    className="neo-grid__tr"
+                                    data-testid={
+                                        isGroupHeader
+                                            ? "subcompgrid-groupHeadersList"
+                                            : "subcompgrid-headersList"
                                     }
-                                )}
-                            </div>
-                        );
-                    }
-                )}
-            </div>
-            <div {...getTableBodyProps()} className="neo-grid__tbody">
+                                >
+                                    {headerGroup.headers.map(
+                                        (
+                                            column: Object,
+                                            headerIndex: number
+                                        ): Object => {
+                                            const {
+                                                display,
+                                                pinLeft,
+                                                pinRight,
+                                                headers
+                                            } = column;
+                                            let isColumnPinnedLeft =
+                                                pinLeft === true;
+                                            let isColumnPinnedRight =
+                                                !isColumnPinnedLeft &&
+                                                pinRight === true;
+                                            if (
+                                                isGroupHeader &&
+                                                headers &&
+                                                headers.length > 0
+                                            ) {
+                                                isColumnPinnedLeft =
+                                                    headers[0].pinLeft === true;
+                                                isColumnPinnedRight =
+                                                    !isColumnPinnedLeft &&
+                                                    headers[0].pinRight ===
+                                                        true;
+                                            }
+                                            if (
+                                                display === true ||
+                                                checkdisplayOfGroupedColumns(
+                                                    column
+                                                )
+                                            ) {
+                                                return (
+                                                    <div
+                                                        {...column.getHeaderProps(
+                                                            isColumnPinnedLeft
+                                                                ? {
+                                                                      style: {
+                                                                          left: getLeftOfColumn(
+                                                                              gridRef,
+                                                                              headerIndex,
+                                                                              true,
+                                                                              isGroupHeader
+                                                                          )
+                                                                      }
+                                                                  }
+                                                                : {}
+                                                        )}
+                                                        className={`neo-grid__th ${
+                                                            isGroupHeader ===
+                                                            true
+                                                                ? "neo-grid__th-group"
+                                                                : ""
+                                                        } ${
+                                                            isColumnPinnedLeft
+                                                                ? "ng-sticky ng-sticky--left"
+                                                                : ""
+                                                        } ${
+                                                            isColumnPinnedLeft &&
+                                                            isLastPinnedColumn(
+                                                                gridRef,
+                                                                headerIndex,
+                                                                true,
+                                                                isGroupHeader
+                                                            )
+                                                                ? "ng-sticky--left__last"
+                                                                : ""
+                                                        } ${
+                                                            isColumnPinnedRight
+                                                                ? "ng-sticky ng-sticky--right"
+                                                                : ""
+                                                        }`}
+                                                        data-testid={
+                                                            isGroupHeader ===
+                                                            true
+                                                                ? "subCompGrid-group-header"
+                                                                : "subCompGrid-header"
+                                                        }
+                                                    >
+                                                        <div className="neo-grid__th-title">
+                                                            {column.render(
+                                                                "Header"
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }
+                                            return null;
+                                        }
+                                    )}
+                                </div>
+                            );
+                        }
+                    )}
+                </div>
+            )}
+            <div
+                {...getTableBodyProps()}
+                className={`neo-grid__tbody ${
+                    subComponentHeader === false
+                        ? "neo-grid__tbody--nohead"
+                        : ""
+                }`}
+            >
                 {rows.map((row: Object): Object => {
                     prepareRow(row);
 

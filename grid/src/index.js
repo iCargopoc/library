@@ -87,6 +87,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         parentRowsToExpand,
         subComponentColumnns,
         subComponentColumnToExpand,
+        subComponentHeader,
         rowActions,
         onRowUpdate,
         onRowSelect,
@@ -596,6 +597,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     subComponentAdditionalColumnAccessorList={
                         gridSubComponentAdditionalColumnAccessorList
                     }
+                    subComponentHeader={subComponentHeader}
                     loadChildData={loadChildData}
                     isParentGrid={isParentGrid}
                     gridData={processedGridData}

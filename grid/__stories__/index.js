@@ -33,6 +33,7 @@ const GridComponent = (props) => {
         enableGroupHeaders,
         enableJsxHeaders,
         gridHeader,
+        subComponentHeader,
         showTitle,
         rowSelector,
         globalSearch,
@@ -2676,6 +2677,7 @@ const GridComponent = (props) => {
                     }
                     subComponentColumnns={subComponentColumnns}
                     subComponentColumnToExpand={subComponentColumnToExpand}
+                    subComponentHeader={subComponentHeader}
                     rowActions={allProps || passRowActions ? rowActions : null}
                     expandableColumn={
                         (allProps && fixedRowHeight !== true) ||
