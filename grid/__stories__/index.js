@@ -1223,7 +1223,7 @@ const GridComponent = (props) => {
         {
             Header: "HAWB No",
             accessor: "hawbId",
-            width: 250,
+            width: isHorizontalGrid ? 200 : 100,
             widthGrow: 1,
             isSortable: true,
             searchKeys: ["hawbId"],
@@ -1285,7 +1285,7 @@ const GridComponent = (props) => {
                 }
             ],
             onlyInDesktop: true,
-            width: 800,
+            width: isHorizontalGrid ? 800 : 400,
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { hawb } = rowData;
                 const {
@@ -1502,7 +1502,7 @@ const GridComponent = (props) => {
                     accessor: "status"
                 }
             ],
-            width: 200,
+            width: isHorizontalGrid ? 600 : 300,
             searchKeys: ["scr.num"],
             displayCell: (rowData, DisplayTag, isDesktop, isColumnExpanded) => {
                 const { scr } = rowData;
