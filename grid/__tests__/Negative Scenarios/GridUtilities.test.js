@@ -4,7 +4,8 @@ import "@testing-library/jest-dom/extend-expect";
 import {
     findSelectedRows,
     findSelectedRowIdFromIdAttribute,
-    findDeSelectedRows
+    findDeSelectedRows,
+    getColumnElementsForPinColumn
 } from "../../src/Utilities/GridUtilities";
 
 describe("Grid utility file test", () => {
@@ -82,5 +83,10 @@ describe("Grid utility file test", () => {
     it("should test findDeSelectedRows with invalid deSelectedRow", () => {
         const value = findDeSelectedRows(mockGridRows, [5], [], "travelId");
         expect(value.length).toBe(0);
+    });
+
+    it("should test getColumnElementsForPinColumn with invalid parameters", () => {
+        const value = getColumnElementsForPinColumn();
+        expect(value.length).toBe(0); // Empty array should be returned
     });
 });

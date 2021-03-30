@@ -253,19 +253,17 @@ export const getColumnElementsForPinColumn = (
     let columnElements = [];
 
     const gridElement = gridRef && gridRef.current ? gridRef.current : document;
-    const subCompElement = gridElement.querySelector(
-        "[data-testid='subcomponent-content']"
-    );
+    const subCompElement =
+        gridElement.querySelector("[data-testid='subcomponent-content']") ||
+        document;
     if (isSubComponent) {
-        if (subCompElement !== null && subCompElement !== undefined) {
-            columnElements = isGroupHeader
-                ? subCompElement.querySelectorAll(
-                      "[data-testid='subCompGrid-group-header']"
-                  )
-                : subCompElement.querySelectorAll(
-                      "[data-testid='subCompGrid-header']"
-                  );
-        }
+        columnElements = isGroupHeader
+            ? subCompElement.querySelectorAll(
+                  "[data-testid='subCompGrid-group-header']"
+              )
+            : subCompElement.querySelectorAll(
+                  "[data-testid='subCompGrid-header']"
+              );
     } else {
         columnElements = isGroupHeader
             ? gridElement.querySelectorAll("[data-testid='grid-group-header']")
@@ -274,28 +272,20 @@ export const getColumnElementsForPinColumn = (
     if (columnElements.length === 0) {
         let rowElement = null;
         if (isSubComponent) {
-            if (subCompElement !== null && subCompElement !== undefined) {
-                rowElement = subCompElement.querySelector(
-                    "[data-testid='subcontentrow_wrap']"
-                );
-            }
+            rowElement = subCompElement.querySelector(
+                "[data-testid='subcontentrow_wrap']"
+            );
         } else {
             rowElement = gridElement.querySelector(
                 "[data-testid='gridrowWrap']"
             );
         }
         if (rowElement !== null && rowElement !== undefined) {
-            if (isSubComponent) {
-                if (subCompElement !== null && subCompElement !== undefined) {
-                    columnElements = rowElement.querySelectorAll(
-                        "[data-testid='subcontentrow_cell']"
-                    );
-                }
-            } else {
-                columnElements = rowElement.querySelectorAll(
-                    "[data-testid='gridrowcell']"
-                );
-            }
+            columnElements = isSubComponent
+                ? rowElement.querySelectorAll(
+                      "[data-testid='subcontentrow_cell']"
+                  )
+                : rowElement.querySelectorAll("[data-testid='gridrowcell']");
         }
     }
     return columnElements;
@@ -317,7 +307,7 @@ export const getLeftOfColumn = (
         columnElements.forEach((elem: Object, elemIndex: number) => {
             if (elemIndex < index) {
                 const { offsetWidth } = elem;
-                leftToPass += offsetWidth || 0;
+                leftToPass += offsetWidth;
             }
         });
     }
