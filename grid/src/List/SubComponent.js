@@ -8,7 +8,7 @@ import {
 } from "react-table";
 import RowSelector from "../Functions/RowSelector";
 import RowOptions from "../Functions/RowOptions";
-import { IconAngle } from "../Utilities/SvgUtilities";
+import { IconAngle, IconPinColumn } from "../Utilities/SvgUtilities";
 import {
     checkdisplayOfGroupedColumns,
     hideColumns,
@@ -100,6 +100,7 @@ const SubComponent = (props: {
                         disableSortBy: true,
                         display: true,
                         pinLeft: isAtleastOneColumnPinned,
+                        isAutoPinned: true,
                         isGroupHeader: false,
                         minWidth: 62,
                         width: 62,
@@ -252,6 +253,7 @@ const SubComponent = (props: {
                                                 display,
                                                 pinLeft,
                                                 pinRight,
+                                                isAutoPinned,
                                                 headers
                                             } = column;
                                             let isColumnPinnedLeft =
@@ -328,6 +330,18 @@ const SubComponent = (props: {
                                                             {column.render(
                                                                 "Header"
                                                             )}
+                                                            {isGroupHeader ===
+                                                            false ? (
+                                                                <div className="neo-grid__th-iconblock">
+                                                                    {!isAutoPinned &&
+                                                                    (isColumnPinnedLeft ||
+                                                                        isColumnPinnedRight) ? (
+                                                                        <i className="neo-grid__th-icon">
+                                                                            <IconPinColumn className="ng-icon neo-grid__pin" />
+                                                                        </i>
+                                                                    ) : null}
+                                                                </div>
+                                                            ) : null}
                                                         </div>
                                                     </div>
                                                 );
