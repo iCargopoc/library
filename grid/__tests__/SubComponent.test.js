@@ -2281,6 +2281,7 @@ describe("render Index file ", () => {
                 columnToExpand={mockAdditionalColumn}
                 subComponentColumnns={subComponentColumns}
                 subComponentColumnToExpand={mockSubComponentAdditionalColumn}
+                subComponentHeader={false}
                 getRowInfo={mockGetRowInfo}
                 onRowUpdate={mockUpdateRowData}
                 gridHeader={false}
