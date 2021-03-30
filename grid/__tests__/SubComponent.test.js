@@ -996,6 +996,14 @@ describe("render Index file ", () => {
         }
     ];
 
+    const subComponentColumnsWithoutGroupHeader = [...subComponentColumns].map(
+        (col) => {
+            const updatedCol = { ...col };
+            delete updatedCol.groupHeader;
+            return updatedCol;
+        }
+    );
+
     const mockSubComponentAdditionalColumn = {
         Header: "Additional Column",
         innerCells: [
@@ -1073,7 +1081,7 @@ describe("render Index file ", () => {
     });
     afterEach(cleanup);
 
-    it("test grid with sub component data without row selector", () => {
+    it("test grid with sub component data without group header and row selector", () => {
         mockOffsetSize(600, 600);
         const { container, getAllByTestId, getByTestId } = render(
             <Grid
@@ -1085,7 +1093,7 @@ describe("render Index file ", () => {
                 loadMoreData={mockLoadMoreData}
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
-                subComponentColumnns={subComponentColumns}
+                subComponentColumnns={subComponentColumnsWithoutGroupHeader}
                 subComponentColumnToExpand={mockSubComponentAdditionalColumn}
                 getRowInfo={mockGetRowInfo}
                 rowSelector={false}

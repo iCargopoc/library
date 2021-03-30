@@ -63,6 +63,7 @@ describe("render Index file ", () => {
             Header: "Id",
             accessor: "travelId",
             width: 50,
+            pinLeft: true,
             isSortable: true
         },
         {

@@ -314,14 +314,12 @@ export const getLeftOfColumn = (
             isSubComponent,
             isGroupHeader
         );
-        if (columnElements.length > 0) {
-            columnElements.forEach((elem: Object, elemIndex: number) => {
-                if (elemIndex < index) {
-                    const { offsetWidth } = elem;
-                    leftToPass += offsetWidth || 0;
-                }
-            });
-        }
+        columnElements.forEach((elem: Object, elemIndex: number) => {
+            if (elemIndex < index) {
+                const { offsetWidth } = elem;
+                leftToPass += offsetWidth || 0;
+            }
+        });
     }
     return leftToPass;
 };
@@ -338,19 +336,14 @@ export const getTotalWidthOfPinnedColumns = (
         isSubComponent,
         isGroupHeader
     );
-    if (columnElements.length > 0) {
-        columnElements.forEach((elem: Object) => {
-            const { classList, offsetWidth } = elem;
-            if (type === "left" && classList.contains("ng-sticky--left")) {
-                totalWidth += offsetWidth;
-            } else if (
-                type === "right" &&
-                classList.contains("ng-sticky--right")
-            ) {
-                totalWidth += offsetWidth;
-            }
-        });
-    }
+    columnElements.forEach((elem: Object) => {
+        const { classList, offsetWidth } = elem;
+        if (type === "left" && classList.contains("ng-sticky--left")) {
+            totalWidth += offsetWidth;
+        } else if (type === "right" && classList.contains("ng-sticky--right")) {
+            totalWidth += offsetWidth;
+        }
+    });
     return totalWidth;
 };
 
@@ -366,15 +359,13 @@ export const isLastPinnedColumn = (
         isSubComponent,
         isGroupHeader
     );
-    if (columnElements.length > 0) {
-        columnElements.forEach((elem: Object, elemIndex: number) => {
-            if (elemIndex > index) {
-                const { classList } = elem;
-                if (classList.contains("ng-sticky--left")) {
-                    isLast = false;
-                }
+    columnElements.forEach((elem: Object, elemIndex: number) => {
+        if (elemIndex > index) {
+            const { classList } = elem;
+            if (classList.contains("ng-sticky--left")) {
+                isLast = false;
             }
-        });
-    }
+        }
+    });
     return isLast;
 };
