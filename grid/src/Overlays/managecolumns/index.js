@@ -18,7 +18,7 @@ const ColumnReordering = (props: any): any => {
         additionalColumn,
         originalAdditionalColumn,
         isSubComponentGrid,
-        subComponentColumnns,
+        subComponentColumns,
         originalSubComponentColumns,
         subComponentAdditionalColumn,
         originalSubComponentAdditionalColumn,
@@ -525,7 +525,7 @@ const ColumnReordering = (props: any): any => {
             setManagedAdditionalColumn({ ...additionalColumn });
         }
         if (isSubComponentGrid) {
-            setManagedSubComponentColumns([...subComponentColumnns]);
+            setManagedSubComponentColumns([...subComponentColumns]);
             if (isSubComponentAdditionalColumnPresent) {
                 setManagedSubComponentAdditionalColumn({
                     ...subComponentAdditionalColumn
@@ -593,7 +593,7 @@ const ColumnReordering = (props: any): any => {
                         managedColumns={managedColumns}
                         managedAdditionalColumn={managedAdditionalColumn}
                         isSubComponentGrid={isSubComponentGrid}
-                        subComponentColumnns={[...subComponentColumnns]}
+                        subComponentColumns={[...subComponentColumns]}
                         subComponentAdditionalColumn={
                             subComponentAdditionalColumn
                         }

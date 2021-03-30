@@ -1568,7 +1568,7 @@ const GridComponent = (props) => {
             }
         }
     ];
-    const [subComponentColumnns, setSubComponentColumnns] = useState([]);
+    const [subComponentColumns, setSubComponentColumns] = useState([]);
 
     const originalSubComponentColumnToExpand = {
         Header: "Additional Column",
@@ -2508,7 +2508,7 @@ const GridComponent = (props) => {
                                 }
                                 setGridData(updatedData);
                                 setOriginalGridData(updatedData);
-                                setSubComponentColumnns(
+                                setSubComponentColumns(
                                     originalSubComponentColumns
                                 );
                                 setSubComponentColumnToExpand(
@@ -2675,7 +2675,7 @@ const GridComponent = (props) => {
                             ? parentRowsToExpand
                             : null
                     }
-                    subComponentColumnns={subComponentColumnns}
+                    subComponentColumns={subComponentColumns}
                     subComponentColumnToExpand={subComponentColumnToExpand}
                     subComponentHeader={subComponentHeader}
                     rowActions={allProps || passRowActions ? rowActions : null}

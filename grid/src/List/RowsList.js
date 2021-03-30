@@ -26,7 +26,7 @@ const RowsList = ({
     toggleParentRowSelection,
     toggleParentRow,
     isParentRowOpen,
-    subComponentColumnns,
+    subComponentColumns,
     subComponentAdditionalColumn,
     isSubComponentGrid,
     subComponentHeader,
@@ -75,7 +75,7 @@ const RowsList = ({
     reRenderListData: Function,
     fixedRowHeight: boolean,
     isLoadMoreRequiredForNormalRow: Function,
-    subComponentColumnns: Array<Object>,
+    subComponentColumns: Array<Object>,
     subComponentAdditionalColumn: Object,
     isSubComponentGrid: boolean,
     subComponentHeader: boolean,
@@ -191,7 +191,7 @@ const RowsList = ({
                             loadMoreChildData={loadMoreChildData}
                             parentColumn={parentColumn}
                             additionalColumn={additionalColumn}
-                            subComponentColumnns={subComponentColumnns}
+                            subComponentColumns={subComponentColumns}
                             subComponentAdditionalColumn={
                                 subComponentAdditionalColumn
                             }

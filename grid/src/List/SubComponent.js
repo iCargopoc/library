@@ -20,7 +20,7 @@ import {
 const SubComponent = (props: {
     gridRef: any,
     subComponentData: Array<Object>,
-    subComponentColumnns: Array<Object>,
+    subComponentColumns: Array<Object>,
     subComponentAdditionalColumn: Object,
     subComponentHeader: boolean,
     getRowInfo: Function,
@@ -33,7 +33,7 @@ const SubComponent = (props: {
     const {
         gridRef,
         subComponentData,
-        subComponentColumnns,
+        subComponentColumns,
         subComponentAdditionalColumn,
         subComponentHeader,
         getRowInfo,
@@ -58,11 +58,11 @@ const SubComponent = (props: {
     const isRowActionsColumnNeeded =
         isRowActionsAvailable || isRowExpandAvailable;
 
-    const columns = useMemo((): Object => subComponentColumnns);
+    const columns = useMemo((): Object => subComponentColumns);
     const data = useMemo((): Object => [...subComponentData]);
 
     let isAtleastOneColumnPinned = false;
-    subComponentColumnns.forEach((col: Object) => {
+    subComponentColumns.forEach((col: Object) => {
         const { pinLeft } = col;
         if (pinLeft === true) {
             isAtleastOneColumnPinned = true;
@@ -217,8 +217,8 @@ const SubComponent = (props: {
     );
 
     useEffect(() => {
-        hideColumns(allColumns, subComponentColumnns);
-    }, [subComponentColumnns]);
+        hideColumns(allColumns, subComponentColumns);
+    }, [subComponentColumns]);
 
     return (
         <div
@@ -447,6 +447,18 @@ const SubComponent = (props: {
                                                         gridRef,
                                                         true,
                                                         false
+                                                    ),
+                                                    minWidth: getTotalWidthOfPinnedColumns(
+                                                        "left",
+                                                        gridRef,
+                                                        true,
+                                                        false
+                                                    ),
+                                                    maxWidth: getTotalWidthOfPinnedColumns(
+                                                        "left",
+                                                        gridRef,
+                                                        true,
+                                                        false
                                                     )
                                                 }}
                                             />
@@ -461,6 +473,18 @@ const SubComponent = (props: {
                                                 className="ng-sticky ng-sticky--right"
                                                 style={{
                                                     width: getTotalWidthOfPinnedColumns(
+                                                        "right",
+                                                        gridRef,
+                                                        true,
+                                                        false
+                                                    ),
+                                                    minWidth: getTotalWidthOfPinnedColumns(
+                                                        "right",
+                                                        gridRef,
+                                                        true,
+                                                        false
+                                                    ),
+                                                    maxWidth: getTotalWidthOfPinnedColumns(
                                                         "right",
                                                         gridRef,
                                                         true,

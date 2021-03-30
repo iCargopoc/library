@@ -25,7 +25,7 @@ const ListItem = ({
     loadMoreChildData,
     parentColumn,
     additionalColumn,
-    subComponentColumnns,
+    subComponentColumns,
     subComponentAdditionalColumn,
     isSubComponentGrid,
     subComponentHeader,
@@ -61,7 +61,7 @@ const ListItem = ({
     parentColumn: Object,
     additionalColumn: Object,
     getRowInfo: Function,
-    subComponentColumnns: Array<Object>,
+    subComponentColumns: Array<Object>,
     subComponentAdditionalColumn: Object,
     isSubComponentGrid: boolean,
     subComponentHeader: boolean,
@@ -130,7 +130,7 @@ const ListItem = ({
                 isLoadMoreChildRowsRequiredForRow={
                     isLoadMoreChildRowsRequiredForRow
                 }
-                subComponentColumnns={subComponentColumnns}
+                subComponentColumns={subComponentColumns}
                 subComponentAdditionalColumn={subComponentAdditionalColumn}
                 isSubComponentGrid={isSubComponentGrid}
                 subComponentHeader={subComponentHeader}

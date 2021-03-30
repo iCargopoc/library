@@ -9,7 +9,7 @@ const ColumnsSearch = ({
     managedColumns,
     managedAdditionalColumn,
     isSubComponentGrid,
-    subComponentColumnns,
+    subComponentColumns,
     subComponentAdditionalColumn,
     managedSubComponentColumns,
     managedSubComponentAdditionalColumn,
@@ -20,7 +20,7 @@ const ColumnsSearch = ({
     managedColumns: any,
     managedAdditionalColumn: any,
     isSubComponentGrid: boolean,
-    subComponentColumnns: [],
+    subComponentColumns: [],
     subComponentAdditionalColumn: any,
     managedSubComponentColumns: any,
     managedSubComponentAdditionalColumn: any,
@@ -28,7 +28,7 @@ const ColumnsSearch = ({
 }): any => {
     const gridColumns = convertToIndividualColumns(columns);
     const gridSubComponentColumns = convertToIndividualColumns(
-        subComponentColumnns
+        subComponentColumns
     );
 
     // Returns a single array that contains main columns as well as the expanded columns

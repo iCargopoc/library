@@ -182,7 +182,7 @@ const Customgrid = (props: {
     const [additionalColumn, setAdditionalColumn] = useState(null);
 
     // Local state value for holding sub component columns
-    const [subComponentColumnns, setSubComponentColumnns] = useState([]);
+    const [subComponentColumns, setSubComponentColumns] = useState([]);
 
     // Local state value for holding whether grid has sub component structure
     const [isSubComponentGrid, setIsSubComponentGrid] = useState(false);
@@ -329,7 +329,7 @@ const Customgrid = (props: {
         setGridColumns([...setColumnWidths([...updatedColumns])]);
         setAdditionalColumn(updatedAdditionalColumn);
         if (isSubComponentGrid) {
-            setSubComponentColumnns([
+            setSubComponentColumns([
                 ...setColumnWidths([...updatedSubComponentColumns])
             ]);
             setSubComponentAdditionalColumn(
@@ -901,7 +901,7 @@ const Customgrid = (props: {
             managableSubComponentColumnns.length > 0
         ) {
             setIsSubComponentGrid(true);
-            setSubComponentColumnns(managableSubComponentColumnns);
+            setSubComponentColumns(managableSubComponentColumnns);
         }
     }, [managableSubComponentColumnns]);
 
@@ -1334,8 +1334,8 @@ const Customgrid = (props: {
                                             expandedRowData
                                         }
                                         isSubComponentGrid={isSubComponentGrid}
-                                        subComponentColumnns={
-                                            subComponentColumnns
+                                        subComponentColumns={
+                                            subComponentColumns
                                         }
                                         originalSubComponentColumns={
                                             managableSubComponentColumnns
@@ -1378,8 +1378,8 @@ const Customgrid = (props: {
                                         isParentGrid={isParentGrid}
                                         parentColumn={parentColumn}
                                         isSubComponentGrid={isSubComponentGrid}
-                                        subComponentColumnns={
-                                            subComponentColumnns
+                                        subComponentColumns={
+                                            subComponentColumns
                                         }
                                         subComponentAdditionalColumn={
                                             subComponentAdditionalColumn
@@ -1687,8 +1687,8 @@ const Customgrid = (props: {
                                                             isRowExpandEnabled={
                                                                 isRowExpandEnabled
                                                             }
-                                                            subComponentColumnns={
-                                                                subComponentColumnns
+                                                            subComponentColumns={
+                                                                subComponentColumns
                                                             }
                                                             subComponentAdditionalColumn={
                                                                 subComponentAdditionalColumn
@@ -1793,8 +1793,8 @@ const Customgrid = (props: {
                                                     isParentRowCollapsed={
                                                         isParentRowCollapsed
                                                     }
-                                                    subComponentColumnns={
-                                                        subComponentColumnns
+                                                    subComponentColumns={
+                                                        subComponentColumns
                                                     }
                                                     subComponentAdditionalColumn={
                                                         subComponentAdditionalColumn

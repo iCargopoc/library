@@ -24,7 +24,7 @@ const ExportData = (props: Object): any => {
         isParentGrid,
         parentColumn,
         isSubComponentGrid,
-        subComponentColumnns,
+        subComponentColumns,
         subComponentAdditionalColumn,
         fileName,
         pdfPaperSize,
@@ -501,7 +501,7 @@ const ExportData = (props: Object): any => {
             isAdditionalColumnPresent ? { ...additionalColumn } : null
         );
         if (isSubComponentGrid) {
-            setManagedSubComponentColumns([...subComponentColumnns]);
+            setManagedSubComponentColumns([...subComponentColumns]);
             setManagedSubComponentAdditionalColumn(
                 isSubComponentAdditionalColumnPresent
                     ? { ...subComponentAdditionalColumn }
@@ -527,7 +527,7 @@ const ExportData = (props: Object): any => {
                         managedColumns={managedColumns}
                         managedAdditionalColumn={managedAdditionalColumn}
                         isSubComponentGrid={isSubComponentGrid}
-                        subComponentColumnns={[...subComponentColumnns]}
+                        subComponentColumns={[...subComponentColumns]}
                         subComponentAdditionalColumn={
                             subComponentAdditionalColumn
                         }

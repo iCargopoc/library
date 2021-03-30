@@ -24,7 +24,7 @@ const RowItem = ({
     isParentGrid,
     fixedRowHeight,
     isLoadMoreRequiredForNormalRow,
-    subComponentColumnns,
+    subComponentColumns,
     subComponentHeader,
     subComponentAdditionalColumn,
     isSubComponentGrid,
@@ -52,7 +52,7 @@ const RowItem = ({
     isParentGrid: boolean,
     fixedRowHeight: boolean,
     isLoadMoreRequiredForNormalRow: Function,
-    subComponentColumnns: Array<Object>,
+    subComponentColumns: Array<Object>,
     subComponentAdditionalColumn: Object,
     isSubComponentGrid: boolean,
     subComponentHeader: boolean,
@@ -169,6 +169,18 @@ const RowItem = ({
                                             gridRef,
                                             false,
                                             false
+                                        ),
+                                        minWidth: getTotalWidthOfPinnedColumns(
+                                            "left",
+                                            gridRef,
+                                            false,
+                                            false
+                                        ),
+                                        maxWidth: getTotalWidthOfPinnedColumns(
+                                            "left",
+                                            gridRef,
+                                            false,
+                                            false
                                         )
                                     }}
                                 />
@@ -183,6 +195,18 @@ const RowItem = ({
                                             gridRef,
                                             false,
                                             false
+                                        ),
+                                        minWidth: getTotalWidthOfPinnedColumns(
+                                            "right",
+                                            gridRef,
+                                            false,
+                                            false
+                                        ),
+                                        maxWidth: getTotalWidthOfPinnedColumns(
+                                            "right",
+                                            gridRef,
+                                            false,
+                                            false
                                         )
                                     }}
                                 />
@@ -193,7 +217,7 @@ const RowItem = ({
                         <SubComponent
                             gridRef={gridRef}
                             subComponentData={subComponentData}
-                            subComponentColumnns={subComponentColumnns}
+                            subComponentColumns={subComponentColumns}
                             subComponentAdditionalColumn={
                                 subComponentAdditionalColumn
                             }

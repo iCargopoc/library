@@ -85,7 +85,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         parentIdAttribute,
         parentRowExpandable,
         parentRowsToExpand,
-        subComponentColumnns,
+        subComponentColumns,
         subComponentColumnToExpand,
         subComponentHeader,
         rowActions,
@@ -512,7 +512,7 @@ const Grid = (props: Object): ?React$Element<*> => {
     useEffect(() => {
         // Sub Component Columns Config
         const columnsConfigData = extractColumns(
-            subComponentColumnns,
+            subComponentColumns,
             isDesktop,
             updateRowInGrid,
             expandableColumn,
@@ -540,7 +540,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         setGridSubComponentAdditionalColumnAccessorList(
             columnToExpandAccessorList
         );
-    }, [subComponentColumnns, subComponentColumnToExpand]);
+    }, [subComponentColumns, subComponentColumnToExpand]);
 
     useEffect(() => {
         setIsLoaded(true);
