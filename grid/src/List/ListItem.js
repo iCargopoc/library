@@ -27,6 +27,8 @@ const ListItem = ({
     additionalColumn,
     subComponentColumns,
     subComponentAdditionalColumn,
+    subComponentColumnsAccessorList,
+    subComponentAdditionalColumnAccessorList,
     isSubComponentGrid,
     subComponentHeader,
     rowsWithExpandedSubComponents,
@@ -37,7 +39,8 @@ const ListItem = ({
     rowActions,
     expandableColumn,
     isRowActionsColumnNeeded,
-    enablePinColumn
+    enablePinColumn,
+    gridGlobalFilterValue
 }: {
     gridRef: any,
     row: Object,
@@ -63,6 +66,8 @@ const ListItem = ({
     getRowInfo: Function,
     subComponentColumns: Array<Object>,
     subComponentAdditionalColumn: Object,
+    subComponentColumnsAccessorList: any,
+    subComponentAdditionalColumnAccessorList: any,
     isSubComponentGrid: boolean,
     subComponentHeader: boolean,
     rowsWithExpandedSubComponents: Array<Object>,
@@ -72,7 +77,8 @@ const ListItem = ({
     rowActions: Function,
     expandableColumn: boolean,
     isRowActionsColumnNeeded: boolean,
-    enablePinColumn: boolean
+    enablePinColumn: boolean,
+    gridGlobalFilterValue: any
 }): any => {
     if (isParentRowCollapsed(row)) {
         return null;
@@ -132,6 +138,12 @@ const ListItem = ({
                 }
                 subComponentColumns={subComponentColumns}
                 subComponentAdditionalColumn={subComponentAdditionalColumn}
+                subComponentColumnsAccessorList={
+                    subComponentColumnsAccessorList
+                }
+                subComponentAdditionalColumnAccessorList={
+                    subComponentAdditionalColumnAccessorList
+                }
                 isSubComponentGrid={isSubComponentGrid}
                 subComponentHeader={subComponentHeader}
                 rowsWithExpandedSubComponents={rowsWithExpandedSubComponents}
@@ -147,6 +159,7 @@ const ListItem = ({
                 multiRowSelection={multiRowSelection}
                 isRowActionsColumnNeeded={isRowActionsColumnNeeded}
                 enablePinColumn={enablePinColumn}
+                gridGlobalFilterValue={gridGlobalFilterValue}
             />
         </div>
     );

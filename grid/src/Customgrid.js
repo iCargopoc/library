@@ -1353,6 +1353,12 @@ const Customgrid = (props: {
                                                             subComponentAdditionalColumn={
                                                                 subComponentAdditionalColumn
                                                             }
+                                                            subComponentColumnsAccessorList={
+                                                                subComponentColumnsAccessorList
+                                                            }
+                                                            subComponentAdditionalColumnAccessorList={
+                                                                subComponentAdditionalColumnAccessorList
+                                                            }
                                                             isSubComponentGrid={
                                                                 isSubComponentGrid
                                                             }
@@ -1419,6 +1425,9 @@ const Customgrid = (props: {
                                                             enablePinColumn={
                                                                 enablePinColumn
                                                             }
+                                                            gridGlobalFilterValue={
+                                                                globalFilter
+                                                            }
                                                         />
                                                     )}
                                                 </InfiniteLoader>
@@ -1458,6 +1467,12 @@ const Customgrid = (props: {
                                                     }
                                                     subComponentAdditionalColumn={
                                                         subComponentAdditionalColumn
+                                                    }
+                                                    subComponentColumnsAccessorList={
+                                                        subComponentColumnsAccessorList
+                                                    }
+                                                    subComponentAdditionalColumnAccessorList={
+                                                        subComponentAdditionalColumnAccessorList
                                                     }
                                                     isSubComponentGrid={
                                                         isSubComponentGrid
@@ -1510,6 +1525,9 @@ const Customgrid = (props: {
                                                     }
                                                     enablePinColumn={
                                                         enablePinColumn
+                                                    }
+                                                    gridGlobalFilterValue={
+                                                        globalFilter
                                                     }
                                                 />
                                             )}

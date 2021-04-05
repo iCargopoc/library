@@ -359,3 +359,13 @@ export const isLastPinnedColumn = (
     });
     return isLast;
 };
+
+export const updateAccessorList = (currentList: any): any => {
+    return [...currentList].map((item: Object): Object => {
+        const updatedItem = { ...item };
+        const { key } = item;
+        const updatedKey = key.split("original.subComponentData.*.").pop();
+        updatedItem.key = `original.${updatedKey}`;
+        return updatedItem;
+    });
+};

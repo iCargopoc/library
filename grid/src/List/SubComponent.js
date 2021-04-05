@@ -1,7 +1,9 @@
 // @flow
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useCallback, useEffect } from "react";
+import { matchSorter } from "match-sorter";
 import {
     useTable,
+    useGlobalFilter,
     useFlexLayout,
     useRowSelect,
     useExpanded
@@ -14,7 +16,8 @@ import {
     hideColumns,
     getLeftOfColumn,
     isLastPinnedColumn,
-    getTotalWidthOfPinnedColumns
+    getTotalWidthOfPinnedColumns,
+    updateAccessorList
 } from "../Utilities/GridUtilities";
 
 const SubComponent = (props: {
@@ -22,13 +25,16 @@ const SubComponent = (props: {
     subComponentData: Array<Object>,
     subComponentColumns: Array<Object>,
     subComponentAdditionalColumn: Object,
+    subComponentColumnsAccessorList: any,
+    subComponentAdditionalColumnAccessorList: any,
     subComponentHeader: boolean,
     getRowInfo: Function,
     rowActions: Function,
     expandableColumn: boolean,
     rowSelector: boolean,
     multiRowSelection: boolean,
-    enablePinColumn: boolean
+    enablePinColumn: boolean,
+    gridGlobalFilterValue: any
 }): React$Element<*> => {
     const {
         gridRef,
@@ -39,9 +45,12 @@ const SubComponent = (props: {
         getRowInfo,
         rowActions,
         expandableColumn,
+        subComponentColumnsAccessorList,
+        subComponentAdditionalColumnAccessorList,
         rowSelector,
         multiRowSelection,
-        enablePinColumn
+        enablePinColumn,
+        gridGlobalFilterValue
     } = props;
 
     const isRowExpandEnabled = !!(
@@ -69,23 +78,50 @@ const SubComponent = (props: {
         }
     });
 
+    // Create a list of updated accessors to be searched from columns array
+    const accessorList = [
+        ...updateAccessorList(subComponentColumnsAccessorList),
+        ...updateAccessorList(subComponentAdditionalColumnAccessorList)
+    ];
+
+    // Global Search Filter Logic - React table wants all parameters passed into useTable function to be memoized
+    const globalFilterLogic = useCallback(
+        (
+            rowsToFilter: Array<Object>,
+            columnsToFilter: Object,
+            filterValue: string
+        ): Object => {
+            // Do match-sorter and return results
+            return matchSorter(rowsToFilter, filterValue, {
+                keys: accessorList,
+                sorter: (rankedItems: Object): Object => rankedItems // To avoid automatic sorting based on match
+            });
+        },
+        [subComponentColumns, subComponentAdditionalColumn]
+    );
+
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,
-        allColumns
+        allColumns,
+        setGlobalFilter
     } = useTable(
         {
             columns,
             data,
+            initialState: { globalFilter: gridGlobalFilterValue },
             isAtleastOneColumnPinned,
             isRowActionsColumnNeeded,
             enablePinColumn,
+            globalFilter: globalFilterLogic,
+            autoResetGlobalFilter: false,
             autoResetExpanded: false,
             autoResetSelectedRows: false
         },
+        useGlobalFilter,
         useExpanded,
         useRowSelect,
         useFlexLayout,
@@ -221,6 +257,10 @@ const SubComponent = (props: {
     useEffect(() => {
         hideColumns(allColumns, subComponentColumns);
     }, [subComponentColumns]);
+
+    useEffect(() => {
+        setGlobalFilter(gridGlobalFilterValue || undefined);
+    }, [gridGlobalFilterValue]);
 
     return (
         <div

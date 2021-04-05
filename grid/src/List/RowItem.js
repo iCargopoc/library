@@ -27,6 +27,8 @@ const RowItem = ({
     subComponentColumns,
     subComponentHeader,
     subComponentAdditionalColumn,
+    subComponentColumnsAccessorList,
+    subComponentAdditionalColumnAccessorList,
     isSubComponentGrid,
     rowsWithExpandedSubComponents,
     getRowInfo,
@@ -35,7 +37,8 @@ const RowItem = ({
     rowSelector,
     multiRowSelection,
     isRowActionsColumnNeeded,
-    enablePinColumn
+    enablePinColumn,
+    gridGlobalFilterValue
 }: {
     gridRef: any,
     row: Object,
@@ -54,6 +57,8 @@ const RowItem = ({
     isLoadMoreRequiredForNormalRow: Function,
     subComponentColumns: Array<Object>,
     subComponentAdditionalColumn: Object,
+    subComponentColumnsAccessorList: any,
+    subComponentAdditionalColumnAccessorList: any,
     isSubComponentGrid: boolean,
     subComponentHeader: boolean,
     rowsWithExpandedSubComponents: Array<Object>,
@@ -63,7 +68,8 @@ const RowItem = ({
     rowSelector: boolean,
     multiRowSelection: boolean,
     isRowActionsColumnNeeded: boolean,
-    enablePinColumn: boolean
+    enablePinColumn: boolean,
+    gridGlobalFilterValue: any
 }): React$Element<*> => {
     const { isExpanded, cells, original } = row;
     const { subComponentData } = original;
@@ -221,6 +227,12 @@ const RowItem = ({
                             subComponentAdditionalColumn={
                                 subComponentAdditionalColumn
                             }
+                            subComponentColumnsAccessorList={
+                                subComponentColumnsAccessorList
+                            }
+                            subComponentAdditionalColumnAccessorList={
+                                subComponentAdditionalColumnAccessorList
+                            }
                             subComponentHeader={subComponentHeader}
                             getRowInfo={getRowInfo}
                             rowActions={rowActions}
@@ -228,6 +240,7 @@ const RowItem = ({
                             rowSelector={rowSelector}
                             multiRowSelection={multiRowSelection}
                             enablePinColumn={enablePinColumn}
+                            gridGlobalFilterValue={gridGlobalFilterValue}
                         />
                     ) : null}
                     {isLoadMoreRequiredForNormalRow(index) ? (

@@ -28,6 +28,8 @@ const RowsList = ({
     isParentRowOpen,
     subComponentColumns,
     subComponentAdditionalColumn,
+    subComponentColumnsAccessorList,
+    subComponentAdditionalColumnAccessorList,
     isSubComponentGrid,
     subComponentHeader,
     rowsWithExpandedSubComponents,
@@ -44,7 +46,8 @@ const RowsList = ({
     rowActions,
     expandableColumn,
     isRowActionsColumnNeeded,
-    enablePinColumn
+    enablePinColumn,
+    gridGlobalFilterValue
 }: {
     gridRef: any,
     onItemsRendered?: Function,
@@ -77,6 +80,8 @@ const RowsList = ({
     isLoadMoreRequiredForNormalRow: Function,
     subComponentColumns: Array<Object>,
     subComponentAdditionalColumn: Object,
+    subComponentColumnsAccessorList: any,
+    subComponentAdditionalColumnAccessorList: any,
     isSubComponentGrid: boolean,
     subComponentHeader: boolean,
     rowsWithExpandedSubComponents: Array<Object>,
@@ -84,7 +89,8 @@ const RowsList = ({
     rowActions: Function,
     expandableColumn: boolean,
     isRowActionsColumnNeeded: boolean,
-    enablePinColumn: boolean
+    enablePinColumn: boolean,
+    gridGlobalFilterValue: any
 }): any => {
     const sizeMap = useRef({});
 
@@ -195,6 +201,12 @@ const RowsList = ({
                             subComponentAdditionalColumn={
                                 subComponentAdditionalColumn
                             }
+                            subComponentColumnsAccessorList={
+                                subComponentColumnsAccessorList
+                            }
+                            subComponentAdditionalColumnAccessorList={
+                                subComponentAdditionalColumnAccessorList
+                            }
                             isSubComponentGrid={isSubComponentGrid}
                             subComponentHeader={subComponentHeader}
                             rowsWithExpandedSubComponents={
@@ -210,6 +222,7 @@ const RowsList = ({
                             expandableColumn={expandableColumn}
                             isRowActionsColumnNeeded={isRowActionsColumnNeeded}
                             enablePinColumn={enablePinColumn}
+                            gridGlobalFilterValue={gridGlobalFilterValue}
                         />
                     );
                 },
