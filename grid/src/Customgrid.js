@@ -34,7 +34,6 @@ import {
     findSelectedRowIdAttributes,
     findSelectedRowIdFromIdAttribute,
     findDeSelectedRows,
-    checkIfGroupsortIsApplicable,
     hideColumns
 } from "./Utilities/GridUtilities";
 

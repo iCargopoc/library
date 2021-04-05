@@ -1,3 +1,4 @@
+// @flow
 import React from "react";
 import GlobalFilter from "../Functions/GlobalFilter";
 import ColumnReordering from "../Overlays/managecolumns";
@@ -61,7 +62,7 @@ const GridHeader = ({
     pdfPaperSize,
     isDesktop,
     onGridRefresh
-}: Object): ?React$Element<*> => {
+}: Object): any => {
     // Check if atleast 1 column has group sort option enabled, and display group sort icon only if there is atleast 1.
     const isGroupSortNeeded = checkIfGroupsortIsApplicable(managableColumns);
     return (

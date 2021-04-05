@@ -17,7 +17,7 @@ const ColumnHeaders = ({
     gridRef: any,
     columnFilter: boolean,
     isFilterOpen: boolean
-}): ?React$Element<*> => {
+}): any => {
     return (
         <div className="neo-grid__thead">
             {headerGroups.map((headerGroup: Object, index: number): Object => {
