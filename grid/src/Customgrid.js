@@ -23,36 +23,19 @@ import InfiniteLoader from "react-window-infinite-loader";
 import { matchSorter } from "match-sorter";
 import RowSelector from "./Functions/RowSelector";
 import DefaultColumnFilter from "./Functions/DefaultColumnFilter";
-import GlobalFilter from "./Functions/GlobalFilter";
 import RowOptions from "./Functions/RowOptions";
+import ColumnHeaders from "./Headers/ColumnHeaders";
+import GridHeader from "./Headers/GridHeader";
 import RowsList from "./List/RowsList";
-import ColumnReordering from "./Overlays/managecolumns";
-import GroupSort from "./Overlays/groupsort";
-import ExportData from "./Overlays/exportdata";
-import {
-    IconColumns,
-    IconAngle,
-    IconFilter,
-    IconShare,
-    IconGroupSort,
-    IconSort,
-    IconRefresh,
-    IconExpand,
-    IconCollapse,
-    IconPinColumn
-} from "./Utilities/SvgUtilities";
+import { IconAngle, IconExpand, IconCollapse } from "./Utilities/SvgUtilities";
 import {
     setColumnWidths,
     findSelectedRows,
     findSelectedRowIdAttributes,
     findSelectedRowIdFromIdAttribute,
     findDeSelectedRows,
-    checkdisplayOfGroupedColumns,
     checkIfGroupsortIsApplicable,
-    findAllChildRows,
-    hideColumns,
-    getLeftOfColumn,
-    isLastPinnedColumn
+    hideColumns
 } from "./Utilities/GridUtilities";
 
 const Customgrid = (props: {
@@ -1213,11 +1196,6 @@ const Customgrid = (props: {
     };
 
     if (!isFirstRendering && gridColumns && gridColumns.length > 0) {
-        // Check if atleast 1 column has group sort option enabled, and display group sort icon only if there is atleast 1.
-        const isGroupSortNeeded = checkIfGroupsortIsApplicable(
-            managableColumns
-        );
-
         // Render table and other components as required
         // Use properties and methods provided by react-table
         // Autosizer used for calculating grid height (don't consider window width and column resizing value changes)
@@ -1225,193 +1203,57 @@ const Customgrid = (props: {
         // React window list is used for implementing virtualization, specifying the item count in a frame and height of each rows in it.
         return (
             <div className="neo-grid__wrapper">
-                <div
-                    className={`neo-grid__header ${
-                        gridHeader === false
-                            ? "neo-grid__header--borderless"
-                            : ""
-                    }`}
-                >
-                    {gridHeader === false &&
-                    multiRowSelection !== false &&
-                    rowSelector !== false ? (
-                        <div className="neo-form-check ng-header-results__check">
-                            <input
-                                type="checkbox"
-                                data-testid="rowSelector-allRows-fromHeaderTitle"
-                                className="neo-checkbox form-check-input"
-                                checked={isAllRowsSelected()}
-                                onChange={toggleAllRowsSelection}
-                            />
-                        </div>
-                    ) : null}
-                    {showTitle !== false ? (
-                        <div
-                            className="ng-header-results"
-                            data-testid="grid-title-container"
-                        >
-                            <span className="ng-header-results__count">
-                                {totalRecordsCount > 0 &&
-                                rows.length === gridDataLength
-                                    ? totalRecordsCount
-                                    : findAllChildRows(rows).length}
-                            </span>
-                            <span className="ng-header-results__title">
-                                {title || "Rows"}
-                            </span>
-                        </div>
-                    ) : null}
-                    {CustomPanel ? (
-                        <div className="neo-grid__customPanel">
-                            <CustomPanel />
-                        </div>
-                    ) : null}
-                    <div className="ng-header-utils">
-                        {globalSearch !== false ? (
-                            <GlobalFilter
-                                globalFilter={globalFilter}
-                                setGlobalFilter={setGlobalFilter}
-                            />
-                        ) : null}
-                        {gridHeader !== false && columnFilter !== false ? (
-                            <div className="ng-header-utils__items keyword-search-container">
-                                <div
-                                    className="ng-header-utils__icons keyword-search"
-                                    role="presentation"
-                                    data-testid="toggleColumnFilter"
-                                    onClick={toggleColumnFilter}
-                                >
-                                    <i className="ng-icon-block">
-                                        <IconFilter className="ng-icon ng-icon--filter" />
-                                    </i>
-                                </div>
-                            </div>
-                        ) : null}
-                        {isGroupSortNeeded !== false && groupSort !== false ? (
-                            <div className="ng-header-utils__items group-sort-container">
-                                <div
-                                    className="ng-header-utils__icons group-sort"
-                                    role="presentation"
-                                    data-testid="toggleGroupSortOverLay"
-                                    onClick={toggleGroupSortOverLay}
-                                >
-                                    <i className="ng-icon-block">
-                                        <IconGroupSort className="ng-icon" />
-                                    </i>
-                                </div>
-                                {isGroupSortOverLayOpen ? (
-                                    <GroupSort
-                                        toggleGroupSortOverLay={
-                                            toggleGroupSortOverLay
-                                        }
-                                        groupSortOptions={groupSortOptions}
-                                        gridColumns={managableColumns}
-                                        gridSubComponentColumns={
-                                            managableSubComponentColumnns
-                                        }
-                                        applyGroupSort={applyGroupSort}
-                                    />
-                                ) : null}
-                            </div>
-                        ) : null}
-                        {columnChooser !== false ? (
-                            <div className="ng-header-utils__items">
-                                <div
-                                    className="ng-header-utils__icons"
-                                    role="presentation"
-                                    data-testid="toggleManageColumnsOverlay"
-                                    onClick={toggleManageColumnsOverlay}
-                                >
-                                    <i className="ng-icon-block">
-                                        <IconColumns className="ng-icon" />
-                                    </i>
-                                </div>
-                                {isManageColumnOverlayOpen ? (
-                                    <ColumnReordering
-                                        toggleManageColumnsOverlay={
-                                            toggleManageColumnsOverlay
-                                        }
-                                        columns={gridColumns}
-                                        originalColumns={managableColumns}
-                                        additionalColumn={additionalColumn}
-                                        originalAdditionalColumn={
-                                            expandedRowData
-                                        }
-                                        isSubComponentGrid={isSubComponentGrid}
-                                        subComponentColumns={
-                                            subComponentColumns
-                                        }
-                                        originalSubComponentColumns={
-                                            managableSubComponentColumnns
-                                        }
-                                        subComponentAdditionalColumn={
-                                            subComponentAdditionalColumn
-                                        }
-                                        originalSubComponentAdditionalColumn={
-                                            managableSubComponentAdditionalColumn
-                                        }
-                                        updateColumnStructure={
-                                            updateColumnStructure
-                                        }
-                                        enablePinColumn={enablePinColumn}
-                                    />
-                                ) : null}
-                            </div>
-                        ) : null}
-                        {exportData !== false ? (
-                            <div className="ng-header-utils__items">
-                                <div
-                                    className="ng-header-utils__icons export-data"
-                                    role="presentation"
-                                    data-testid="toggleExportDataOverlay"
-                                    onClick={toggleExportDataOverlay}
-                                >
-                                    <i className="ng-icon-block">
-                                        <IconShare className="ng-icon" />
-                                    </i>
-                                </div>
-                                {isExportOverlayOpen ? (
-                                    <ExportData
-                                        gridRef={gridRef}
-                                        toggleExportDataOverlay={
-                                            toggleExportDataOverlay
-                                        }
-                                        rows={rows}
-                                        columns={gridColumns}
-                                        additionalColumn={additionalColumn}
-                                        isParentGrid={isParentGrid}
-                                        parentColumn={parentColumn}
-                                        isSubComponentGrid={isSubComponentGrid}
-                                        subComponentColumns={
-                                            subComponentColumns
-                                        }
-                                        subComponentAdditionalColumn={
-                                            subComponentAdditionalColumn
-                                        }
-                                        fileName={fileName}
-                                        pdfPaperSize={pdfPaperSize}
-                                        isDesktop={isDesktop}
-                                    />
-                                ) : null}
-                            </div>
-                        ) : null}
-                        {typeof onGridRefresh === "function" ? (
-                            <div className="ng-header-utils__items">
-                                <div
-                                    className="ng-header-utils__icons"
-                                    role="presentation"
-                                    data-testid="refreshGrid"
-                                    onClick={onGridRefresh}
-                                >
-                                    <i className="ng-icon-block">
-                                        <IconRefresh className="ng-icon" />
-                                    </i>
-                                </div>
-                            </div>
-                        ) : null}
-                    </div>
-                </div>
-
+                <GridHeader
+                    gridHeader={gridHeader}
+                    multiRowSelection={multiRowSelection}
+                    rowSelector={rowSelector}
+                    isAllRowsSelected={isAllRowsSelected}
+                    toggleAllRowsSelection={toggleAllRowsSelection}
+                    showTitle={showTitle}
+                    totalRecordsCount={totalRecordsCount}
+                    rows={rows}
+                    gridDataLength={gridDataLength}
+                    title={title}
+                    CustomPanel={CustomPanel}
+                    globalSearch={globalSearch}
+                    globalFilter={globalFilter}
+                    setGlobalFilter={setGlobalFilter}
+                    columnFilter={columnFilter}
+                    toggleColumnFilter={toggleColumnFilter}
+                    groupSort={groupSort}
+                    toggleGroupSortOverLay={toggleGroupSortOverLay}
+                    isGroupSortOverLayOpen={isGroupSortOverLayOpen}
+                    groupSortOptions={groupSortOptions}
+                    managableColumns={managableColumns}
+                    managableSubComponentColumnns={
+                        managableSubComponentColumnns
+                    }
+                    applyGroupSort={applyGroupSort}
+                    columnChooser={columnChooser}
+                    toggleManageColumnsOverlay={toggleManageColumnsOverlay}
+                    isManageColumnOverlayOpen={isManageColumnOverlayOpen}
+                    gridColumns={gridColumns}
+                    additionalColumn={additionalColumn}
+                    expandedRowData={expandedRowData}
+                    isSubComponentGrid={isSubComponentGrid}
+                    subComponentColumns={subComponentColumns}
+                    subComponentAdditionalColumn={subComponentAdditionalColumn}
+                    managableSubComponentAdditionalColumn={
+                        managableSubComponentAdditionalColumn
+                    }
+                    updateColumnStructure={updateColumnStructure}
+                    enablePinColumn={enablePinColumn}
+                    exportData={exportData}
+                    toggleExportDataOverlay={toggleExportDataOverlay}
+                    isExportOverlayOpen={isExportOverlayOpen}
+                    gridRef={gridRef}
+                    isParentGrid={isParentGrid}
+                    parentColumn={parentColumn}
+                    fileName={fileName}
+                    pdfPaperSize={pdfPaperSize}
+                    isDesktop={isDesktop}
+                    onGridRefresh={onGridRefresh}
+                />
                 <div
                     className={`neo-grid__table ${
                         isParentGrid === true ? "neo-grid__table--parent" : ""
@@ -1441,203 +1283,12 @@ const Customgrid = (props: {
                                     className="neo-grid__content"
                                 >
                                     {gridHeader === false ? null : (
-                                        <div className="neo-grid__thead">
-                                            {headerGroups.map(
-                                                (
-                                                    headerGroup: Object,
-                                                    index: number
-                                                ): Object => {
-                                                    // If there are morthan 1 headerGroups, we consider 1st one as group header row
-                                                    const isGroupHeader =
-                                                        headerGroups.length > 1
-                                                            ? index === 0
-                                                            : false;
-                                                    return (
-                                                        <div
-                                                            {...headerGroup.getHeaderGroupProps()}
-                                                            className="neo-grid__tr"
-                                                            data-testid={
-                                                                isGroupHeader
-                                                                    ? "grid-groupHeadersList"
-                                                                    : "grid-headersList"
-                                                            }
-                                                        >
-                                                            {headerGroup.headers.map(
-                                                                (
-                                                                    column: Object,
-                                                                    headerIndex: number
-                                                                ): Object => {
-                                                                    const {
-                                                                        display,
-                                                                        isSorted,
-                                                                        isSortedDesc,
-                                                                        filter,
-                                                                        canResize,
-                                                                        pinLeft,
-                                                                        pinRight,
-                                                                        isAutoPinned,
-                                                                        headers
-                                                                    } = column;
-                                                                    let isColumnPinnedLeft =
-                                                                        pinLeft ===
-                                                                        true;
-                                                                    let isColumnPinnedRight =
-                                                                        !isColumnPinnedLeft &&
-                                                                        pinRight ===
-                                                                            true;
-                                                                    if (
-                                                                        isGroupHeader &&
-                                                                        headers &&
-                                                                        headers.length >
-                                                                            0
-                                                                    ) {
-                                                                        isColumnPinnedLeft =
-                                                                            headers[0]
-                                                                                .pinLeft ===
-                                                                            true;
-                                                                        isColumnPinnedRight =
-                                                                            !isColumnPinnedLeft &&
-                                                                            headers[0]
-                                                                                .pinRight ===
-                                                                                true;
-                                                                    }
-                                                                    if (
-                                                                        display ===
-                                                                            true ||
-                                                                        checkdisplayOfGroupedColumns(
-                                                                            column
-                                                                        )
-                                                                    ) {
-                                                                        // If header is group header only render header value and not sort/filter/resize
-                                                                        return (
-                                                                            <div
-                                                                                {...column.getHeaderProps(
-                                                                                    isColumnPinnedLeft
-                                                                                        ? {
-                                                                                              style: {
-                                                                                                  left: getLeftOfColumn(
-                                                                                                      gridRef,
-                                                                                                      headerIndex,
-                                                                                                      false,
-                                                                                                      isGroupHeader
-                                                                                                  )
-                                                                                              }
-                                                                                          }
-                                                                                        : {}
-                                                                                )}
-                                                                                className={`neo-grid__th ${
-                                                                                    isGroupHeader ===
-                                                                                    true
-                                                                                        ? "neo-grid__th-group"
-                                                                                        : ""
-                                                                                } ${
-                                                                                    isColumnPinnedLeft
-                                                                                        ? "ng-sticky ng-sticky--left"
-                                                                                        : ""
-                                                                                }  ${
-                                                                                    isColumnPinnedLeft &&
-                                                                                    isLastPinnedColumn(
-                                                                                        gridRef,
-                                                                                        headerIndex,
-                                                                                        false,
-                                                                                        isGroupHeader
-                                                                                    )
-                                                                                        ? "ng-sticky--left__last"
-                                                                                        : ""
-                                                                                } ${
-                                                                                    isColumnPinnedRight
-                                                                                        ? "ng-sticky ng-sticky--right"
-                                                                                        : ""
-                                                                                }`}
-                                                                                data-testid={
-                                                                                    isGroupHeader ===
-                                                                                    true
-                                                                                        ? "grid-group-header"
-                                                                                        : "grid-header"
-                                                                                }
-                                                                            >
-                                                                                <div
-                                                                                    className="neo-grid__th-title"
-                                                                                    data-testid="column-header-sort"
-                                                                                    {...column.getSortByToggleProps()}
-                                                                                >
-                                                                                    {column.render(
-                                                                                        "Header"
-                                                                                    )}
-                                                                                    {isGroupHeader ===
-                                                                                    false ? (
-                                                                                        <div className="neo-grid__th-iconblock">
-                                                                                            {isSorted ? (
-                                                                                                <i className="neo-grid__th-icon">
-                                                                                                    <IconSort
-                                                                                                        className={`ng-icon neo-grid__sort-desc ${
-                                                                                                            isSortedDesc
-                                                                                                                ? "is-active"
-                                                                                                                : ""
-                                                                                                        }`}
-                                                                                                    />
-                                                                                                    <IconSort
-                                                                                                        className={`ng-icon neo-grid__sort-asc ${
-                                                                                                            isSortedDesc
-                                                                                                                ? ""
-                                                                                                                : "is-active"
-                                                                                                        }`}
-                                                                                                    />
-                                                                                                </i>
-                                                                                            ) : null}
-                                                                                            {!isAutoPinned &&
-                                                                                            (isColumnPinnedLeft ||
-                                                                                                isColumnPinnedRight) ? (
-                                                                                                <i className="neo-grid__th-icon">
-                                                                                                    <IconPinColumn className="ng-icon neo-grid__pin" />
-                                                                                                </i>
-                                                                                            ) : null}
-                                                                                        </div>
-                                                                                    ) : null}
-                                                                                </div>
-                                                                                {/* Don't render filter if header is group header or if column filter is disabled */}
-                                                                                {/* If atleast 1 column filter is present, below div wrap has to be present, to maintain the alignment of header text in header cell */}
-                                                                                {isGroupHeader ===
-                                                                                    false &&
-                                                                                columnFilter !==
-                                                                                    false ? (
-                                                                                    <div
-                                                                                        className={`ng-txt-wrap ${
-                                                                                            isFilterOpen
-                                                                                                ? "ng-txt-wrap__open"
-                                                                                                : ""
-                                                                                        }`}
-                                                                                    >
-                                                                                        {/* column.canFilter - should be used to identify if column is filterable */}
-                                                                                        {/* But bug of react-table will set canFilter to true (even if it is false) after doing a global search */}
-                                                                                        {/* Hence checking if filter logic is present as a function for a column */}
-                                                                                        {typeof filter ===
-                                                                                        "function"
-                                                                                            ? column.render(
-                                                                                                  "Filter"
-                                                                                              )
-                                                                                            : null}
-                                                                                    </div>
-                                                                                ) : null}
-                                                                                {isGroupHeader ===
-                                                                                    false &&
-                                                                                    canResize && (
-                                                                                        <div
-                                                                                            className="neo-grid__th-resizer"
-                                                                                            {...column.getResizerProps()}
-                                                                                        />
-                                                                                    )}
-                                                                            </div>
-                                                                        );
-                                                                    }
-                                                                    return null;
-                                                                }
-                                                            )}
-                                                        </div>
-                                                    );
-                                                }
-                                            )}
-                                        </div>
+                                        <ColumnHeaders
+                                            headerGroups={headerGroups}
+                                            gridRef={gridRef}
+                                            columnFilter={columnFilter}
+                                            isFilterOpen={isFilterOpen}
+                                        />
                                     )}
                                     {rows && rows.length > 0 ? (
                                         <div
