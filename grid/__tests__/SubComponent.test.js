@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React from "react";
-import { render, cleanup, fireEvent } from "@testing-library/react";
+import { render, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
 /* eslint-disable no-unused-vars */
@@ -1081,7 +1081,7 @@ describe("render Index file ", () => {
     });
     afterEach(cleanup);
 
-    it("test grid with sub component data without group header and row selector", () => {
+    it("test grid with sub component data with global filter and without group header and row selector", async () => {
         mockOffsetSize(600, 600);
         const { container, getAllByTestId, getByTestId } = render(
             <Grid
@@ -1120,6 +1120,28 @@ describe("render Index file ", () => {
         // Check if subComponent section is opened
         let subComponentContent = getAllByTestId("subcomponent-content");
         expect(subComponentContent.length).toBe(1);
+
+        // Apply global filter
+        let input = getByTestId("globalFilter-textbox");
+        expect(input.value).toBe("");
+        fireEvent.change(input, { target: { value: "6001" } });
+        expect(input.value).toBe("6001");
+
+        // Check number of sub component rows
+        await waitFor(() =>
+            expect(getAllByTestId("subcontentrow").length).toBe(1)
+        );
+
+        // Clear global filter
+        input = getByTestId("globalFilter-textbox");
+        expect(input.value).toBe("6001");
+        fireEvent.change(input, { target: { value: "" } });
+        expect(input.value).toBe("");
+
+        // Check sub component rows count now
+        await waitFor(() =>
+            expect(getAllByTestId("subcontentrow").length).toBeGreaterThan(1)
+        );
 
         // Close that sub component
         subComponentExpandCollpase = getAllByTestId(

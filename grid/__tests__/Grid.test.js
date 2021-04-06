@@ -658,8 +658,14 @@ describe("render Index file ", () => {
         );
         expect(overlayContainer.length).toBe(0);
 
-        // Flight column Sort
+        // Flight column ascending Sort
         const flightSort = getAllByTestId("column-header-sort")[2];
+        act(() => {
+            flightSort.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Flight column descending Sort
         act(() => {
             flightSort.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
