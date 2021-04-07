@@ -92,7 +92,7 @@ const SubComponent = (props: {
         }
     });
 
-    const onRowSelect = (
+    const onGridRowSelect = (
         rowsIdAttrsList: any,
         rowsIdsList: any,
         selectionType: string
@@ -265,7 +265,7 @@ const SubComponent = (props: {
                                                         ]
                                                     );
                                                 });
-                                                onRowSelect(
+                                                onGridRowSelect(
                                                     rowsIdAttr,
                                                     rowsIds,
                                                     selectedType
@@ -313,7 +313,7 @@ const SubComponent = (props: {
                                                         original[
                                                             subComponentIdAttribute
                                                         ];
-                                                    onRowSelect(
+                                                    onGridRowSelect(
                                                         [rowIdAttr],
                                                         [id],
                                                         selectedType
