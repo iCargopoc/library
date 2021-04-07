@@ -29,6 +29,10 @@ const ListItem = ({
     subComponentAdditionalColumn,
     subComponentColumnsAccessorList,
     subComponentAdditionalColumnAccessorList,
+    subComponentIdAttribute,
+    onSubComponentRowSelect,
+    userSelectedSubCompRowIdentifiers,
+    updateSubCompRowIdentifiers,
     isSubComponentGrid,
     subComponentHeader,
     rowsWithExpandedSubComponents,
@@ -68,6 +72,10 @@ const ListItem = ({
     subComponentAdditionalColumn: Object,
     subComponentColumnsAccessorList: any,
     subComponentAdditionalColumnAccessorList: any,
+    subComponentIdAttribute: string,
+    onSubComponentRowSelect: Function,
+    userSelectedSubCompRowIdentifiers: any,
+    updateSubCompRowIdentifiers: Function,
     isSubComponentGrid: boolean,
     subComponentHeader: boolean,
     rowsWithExpandedSubComponents: Array<Object>,
@@ -144,6 +152,12 @@ const ListItem = ({
                 subComponentAdditionalColumnAccessorList={
                     subComponentAdditionalColumnAccessorList
                 }
+                subComponentIdAttribute={subComponentIdAttribute}
+                onSubComponentRowSelect={onSubComponentRowSelect}
+                userSelectedSubCompRowIdentifiers={
+                    userSelectedSubCompRowIdentifiers
+                }
+                updateSubCompRowIdentifiers={updateSubCompRowIdentifiers}
                 isSubComponentGrid={isSubComponentGrid}
                 subComponentHeader={subComponentHeader}
                 rowsWithExpandedSubComponents={rowsWithExpandedSubComponents}

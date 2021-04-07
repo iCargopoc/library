@@ -29,6 +29,10 @@ const RowItem = ({
     subComponentAdditionalColumn,
     subComponentColumnsAccessorList,
     subComponentAdditionalColumnAccessorList,
+    subComponentIdAttribute,
+    onSubComponentRowSelect,
+    userSelectedSubCompRowIdentifiers,
+    updateSubCompRowIdentifiers,
     isSubComponentGrid,
     rowsWithExpandedSubComponents,
     getRowInfo,
@@ -59,6 +63,10 @@ const RowItem = ({
     subComponentAdditionalColumn: Object,
     subComponentColumnsAccessorList: any,
     subComponentAdditionalColumnAccessorList: any,
+    subComponentIdAttribute: string,
+    onSubComponentRowSelect: Function,
+    userSelectedSubCompRowIdentifiers: any,
+    updateSubCompRowIdentifiers: Function,
     isSubComponentGrid: boolean,
     subComponentHeader: boolean,
     rowsWithExpandedSubComponents: Array<Object>,
@@ -73,12 +81,25 @@ const RowItem = ({
 }): React$Element<*> => {
     const { isExpanded, cells, original } = row;
     const { subComponentData } = original;
+    const rowIdAttrValue = original[idAttribute];
     const isSubComponentRowsPresent =
         isSubComponentGrid &&
         subComponentData !== null &&
         subComponentData !== undefined &&
         subComponentData.length > 0 &&
-        rowsWithExpandedSubComponents.includes(original[idAttribute]);
+        rowsWithExpandedSubComponents.includes(rowIdAttrValue);
+
+    const existingRowIdentifierValue = userSelectedSubCompRowIdentifiers.find(
+        (identifier: Object): boolean => {
+            const { rowId } = identifier;
+            return rowId === rowIdAttrValue;
+        }
+    );
+    const userSelectedCurrentRowSubCompRows =
+        existingRowIdentifierValue !== null &&
+        existingRowIdentifierValue !== undefined
+            ? existingRowIdentifierValue.rowIdentifiers
+            : [];
 
     return (
         <Measure
@@ -233,6 +254,15 @@ const RowItem = ({
                             subComponentAdditionalColumnAccessorList={
                                 subComponentAdditionalColumnAccessorList
                             }
+                            subComponentIdAttribute={subComponentIdAttribute}
+                            rowIdAttrValue={rowIdAttrValue}
+                            userSelectedCurrentRowSubCompRows={
+                                userSelectedCurrentRowSubCompRows
+                            }
+                            updateSubCompRowIdentifiers={
+                                updateSubCompRowIdentifiers
+                            }
+                            onSubComponentRowSelect={onSubComponentRowSelect}
                             subComponentHeader={subComponentHeader}
                             getRowInfo={getRowInfo}
                             rowActions={rowActions}

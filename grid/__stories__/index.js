@@ -1817,6 +1817,13 @@ const GridComponent = (props) => {
         }
     };
 
+    const onSubComponentRowSelect = (selectedRows, deSelectedRows) => {
+        console.log("Sub component Rows selected: ");
+        console.log(selectedRows);
+        console.log("Sub component Rows deselected: ");
+        console.log(deSelectedRows);
+    };
+
     const onRowSelect = (selectedRows, deSelectedRows) => {
         console.log("Rows selected: ");
         console.log(selectedRows);
@@ -2677,6 +2684,12 @@ const GridComponent = (props) => {
                     }
                     subComponentColumns={subComponentColumns}
                     subComponentColumnToExpand={subComponentColumnToExpand}
+                    subComponentIdAttribute={
+                        allProps || passIdAttribute
+                            ? subComponentIdAttribute
+                            : ""
+                    }
+                    onSubComponentRowSelect={onSubComponentRowSelect}
                     subComponentHeader={subComponentHeader}
                     rowActions={allProps || passRowActions ? rowActions : null}
                     expandableColumn={

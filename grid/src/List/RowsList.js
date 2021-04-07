@@ -30,6 +30,10 @@ const RowsList = ({
     subComponentAdditionalColumn,
     subComponentColumnsAccessorList,
     subComponentAdditionalColumnAccessorList,
+    subComponentIdAttribute,
+    onSubComponentRowSelect,
+    userSelectedSubCompRowIdentifiers,
+    updateSubCompRowIdentifiers,
     isSubComponentGrid,
     subComponentHeader,
     rowsWithExpandedSubComponents,
@@ -83,6 +87,10 @@ const RowsList = ({
     subComponentColumnsAccessorList: any,
     subComponentAdditionalColumnAccessorList: any,
     isSubComponentGrid: boolean,
+    subComponentIdAttribute: string,
+    onSubComponentRowSelect: Function,
+    userSelectedSubCompRowIdentifiers: any,
+    updateSubCompRowIdentifiers: Function,
     subComponentHeader: boolean,
     rowsWithExpandedSubComponents: Array<Object>,
     rowSelector: boolean,
@@ -206,6 +214,14 @@ const RowsList = ({
                             }
                             subComponentAdditionalColumnAccessorList={
                                 subComponentAdditionalColumnAccessorList
+                            }
+                            subComponentIdAttribute={subComponentIdAttribute}
+                            onSubComponentRowSelect={onSubComponentRowSelect}
+                            userSelectedSubCompRowIdentifiers={
+                                userSelectedSubCompRowIdentifiers
+                            }
+                            updateSubCompRowIdentifiers={
+                                updateSubCompRowIdentifiers
                             }
                             isSubComponentGrid={isSubComponentGrid}
                             subComponentHeader={subComponentHeader}

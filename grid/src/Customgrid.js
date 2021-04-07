@@ -54,6 +54,8 @@ const Customgrid = (props: {
     subComponentColumnsAccessorList: any,
     managableSubComponentAdditionalColumn: Object,
     subComponentAdditionalColumnAccessorList: any,
+    subComponentIdAttribute: string,
+    onSubComponentRowSelect: Function,
     subComponentHeader: boolean,
     loadChildData: Function,
     isParentGrid: boolean,
@@ -109,6 +111,8 @@ const Customgrid = (props: {
         subComponentColumnsAccessorList,
         managableSubComponentAdditionalColumn,
         subComponentAdditionalColumnAccessorList,
+        subComponentIdAttribute,
+        onSubComponentRowSelect,
         subComponentHeader,
         loadChildData,
         isParentGrid,
@@ -326,6 +330,46 @@ const Customgrid = (props: {
     // Toggle export overlay show/hide state value based on UI clicks
     const toggleExportDataOverlay = () => {
         setIsExportOverlayOpen(!isExportOverlayOpen);
+    };
+
+    // Local state value for storing user selected sub component rows corresponding to each main row- identifier values (idAttribute)
+    const [
+        userSelectedSubCompRowIdentifiers,
+        setUserSelectedSubCompRowIdentifiers
+    ] = useState([]);
+    const updateSubCompRowIdentifiers = (
+        mainRowId: any,
+        subCompRowIdentifiers: any
+    ) => {
+        let updatedUserSelectedSubCompRowIdentifiers = [
+            ...userSelectedSubCompRowIdentifiers
+        ];
+        const existingValue = userSelectedSubCompRowIdentifiers.find(
+            (identifier: Object): boolean => {
+                const { rowId } = identifier;
+                return rowId === mainRowId;
+            }
+        );
+        if (existingValue !== null && existingValue !== undefined) {
+            updatedUserSelectedSubCompRowIdentifiers = updatedUserSelectedSubCompRowIdentifiers.map(
+                (identifier: Object): Object => {
+                    const updatedIdentifier = { ...identifier };
+                    const { rowId } = identifier;
+                    if (rowId === mainRowId) {
+                        updatedIdentifier.rowIdentifiers = subCompRowIdentifiers;
+                    }
+                    return updatedIdentifier;
+                }
+            );
+        } else {
+            updatedUserSelectedSubCompRowIdentifiers.push({
+                rowId: mainRowId,
+                rowIdentifiers: subCompRowIdentifiers
+            });
+        }
+        setUserSelectedSubCompRowIdentifiers(
+            updatedUserSelectedSubCompRowIdentifiers
+        );
     };
 
     // Local state value for storing user selected rows - identifier values (idAttribute)
@@ -1359,6 +1403,18 @@ const Customgrid = (props: {
                                                             subComponentAdditionalColumnAccessorList={
                                                                 subComponentAdditionalColumnAccessorList
                                                             }
+                                                            subComponentIdAttribute={
+                                                                subComponentIdAttribute
+                                                            }
+                                                            onSubComponentRowSelect={
+                                                                onSubComponentRowSelect
+                                                            }
+                                                            userSelectedSubCompRowIdentifiers={
+                                                                userSelectedSubCompRowIdentifiers
+                                                            }
+                                                            updateSubCompRowIdentifiers={
+                                                                updateSubCompRowIdentifiers
+                                                            }
                                                             isSubComponentGrid={
                                                                 isSubComponentGrid
                                                             }
@@ -1476,6 +1532,18 @@ const Customgrid = (props: {
                                                     }
                                                     isSubComponentGrid={
                                                         isSubComponentGrid
+                                                    }
+                                                    subComponentIdAttribute={
+                                                        subComponentIdAttribute
+                                                    }
+                                                    onSubComponentRowSelect={
+                                                        onSubComponentRowSelect
+                                                    }
+                                                    userSelectedSubCompRowIdentifiers={
+                                                        userSelectedSubCompRowIdentifiers
+                                                    }
+                                                    updateSubCompRowIdentifiers={
+                                                        updateSubCompRowIdentifiers
                                                     }
                                                     subComponentHeader={
                                                         subComponentHeader

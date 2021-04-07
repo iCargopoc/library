@@ -1,5 +1,5 @@
 // @flow
-import React, { useMemo, useCallback, useEffect } from "react";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
 import { matchSorter } from "match-sorter";
 import {
     useTable,
@@ -27,6 +27,11 @@ const SubComponent = (props: {
     subComponentAdditionalColumn: Object,
     subComponentColumnsAccessorList: any,
     subComponentAdditionalColumnAccessorList: any,
+    subComponentIdAttribute: string,
+    rowIdAttrValue: any,
+    userSelectedCurrentRowSubCompRows: any,
+    updateSubCompRowIdentifiers: Function,
+    onSubComponentRowSelect: Function,
     subComponentHeader: boolean,
     getRowInfo: Function,
     rowActions: Function,
@@ -41,6 +46,11 @@ const SubComponent = (props: {
         subComponentData,
         subComponentColumns,
         subComponentAdditionalColumn,
+        subComponentIdAttribute,
+        rowIdAttrValue,
+        userSelectedCurrentRowSubCompRows,
+        updateSubCompRowIdentifiers,
+        onSubComponentRowSelect,
         subComponentHeader,
         getRowInfo,
         rowActions,
@@ -52,6 +62,12 @@ const SubComponent = (props: {
         enablePinColumn,
         gridGlobalFilterValue
     } = props;
+
+    // Local state to identify if row selection call back has to be given or not
+    const [
+        isRowSelectionCallbackNeeded,
+        setIsRowSelectionCallbackNeeded
+    ] = useState(null);
 
     const isRowExpandEnabled = !!(
         subComponentAdditionalColumn &&
@@ -77,6 +93,34 @@ const SubComponent = (props: {
             isAtleastOneColumnPinned = true;
         }
     });
+
+    const onRowSelect = (rowsIdList: any, selectionType: string) => {
+        const copyUserSelectedCurrentRowSubCompRows = [
+            ...userSelectedCurrentRowSubCompRows
+        ];
+        rowsIdList.forEach((value: any) => {
+            const existingValueIndex = copyUserSelectedCurrentRowSubCompRows.findIndex(
+                (item: any): boolean => {
+                    return item === value;
+                }
+            );
+            if (existingValueIndex >= 0 && selectionType === "deselect") {
+                copyUserSelectedCurrentRowSubCompRows.splice(
+                    existingValueIndex,
+                    1
+                );
+            } else if (
+                existingValueIndex === -1 &&
+                selectionType === "select"
+            ) {
+                copyUserSelectedCurrentRowSubCompRows.push(value);
+            }
+        });
+        updateSubCompRowIdentifiers(
+            rowIdAttrValue,
+            copyUserSelectedCurrentRowSubCompRows
+        );
+    };
 
     // Create a list of updated accessors to be searched from columns array
     const accessorList = [
@@ -107,7 +151,9 @@ const SubComponent = (props: {
         rows,
         prepareRow,
         allColumns,
-        setGlobalFilter
+        setGlobalFilter,
+        toggleRowSelected,
+        toggleAllRowsSelected
     } = useTable(
         {
             columns,
@@ -152,19 +198,48 @@ const SubComponent = (props: {
                             return (
                                 <RowSelector
                                     data-testid="subcomponent-rowSelector-allRows"
-                                    {...getToggleAllRowsSelectedProps()}
+                                    {...getToggleAllRowsSelectedProps({
+                                        onClick: (event: Object): Object => {
+                                            if (subComponentIdAttribute) {
+                                                // Set state value to identify if checkbox has been selected or deselected
+                                                const selectedType =
+                                                    event.currentTarget
+                                                        .checked === false
+                                                        ? "deselect"
+                                                        : "select";
+                                                setIsRowSelectionCallbackNeeded(
+                                                    selectedType
+                                                );
+                                                toggleAllRowsSelected();
+                                                const rowsIdAttr = [];
+                                                rows.forEach((row: Object) => {
+                                                    const { original } = row;
+                                                    rowsIdAttr.push(
+                                                        original[
+                                                            subComponentIdAttribute
+                                                        ]
+                                                    );
+                                                });
+                                                onRowSelect(
+                                                    rowsIdAttr,
+                                                    selectedType
+                                                );
+                                            }
+                                        }
+                                    })}
                                 />
                             );
                         },
                         Cell: (cellSelectProps: Object): Object => {
                             const { row } = cellSelectProps;
+                            const { original } = row;
                             // Check if row selector is required for this row using the getRowInfo prop passed
                             let isRowSelectable = true;
                             if (
                                 getRowInfo &&
                                 typeof getRowInfo === "function"
                             ) {
-                                const rowInfo = getRowInfo(row.original, true);
+                                const rowInfo = getRowInfo(original, true);
                                 if (
                                     rowInfo &&
                                     rowInfo.isRowSelectable === false
@@ -176,7 +251,32 @@ const SubComponent = (props: {
                                 return (
                                     <RowSelector
                                         data-testid="subcomponent-rowSelector-singleRow"
-                                        {...row.getToggleRowSelectedProps()}
+                                        {...row.getToggleRowSelectedProps({
+                                            onClick: (
+                                                event: Object
+                                            ): Object => {
+                                                if (subComponentIdAttribute) {
+                                                    // Set state value to identify if checkbox has been selected or deselected
+                                                    const selectedType =
+                                                        event.currentTarget
+                                                            .checked === false
+                                                            ? "deselect"
+                                                            : "select";
+                                                    setIsRowSelectionCallbackNeeded(
+                                                        selectedType
+                                                    );
+                                                    row.toggleRowSelected();
+                                                    const rowIdAttr =
+                                                        original[
+                                                            subComponentIdAttribute
+                                                        ];
+                                                    onRowSelect(
+                                                        [rowIdAttr],
+                                                        selectedType
+                                                    );
+                                                }
+                                            }
+                                        })}
                                     />
                                 );
                             }
@@ -205,13 +305,14 @@ const SubComponent = (props: {
                         maxWidth: 35,
                         Cell: (cellCustomProps: Object): Object => {
                             const { row } = cellCustomProps;
+                            const { original } = row;
                             // Check if expand icon is required for this row using the getRowInfo prop passed
                             let isRowExpandable = true;
                             if (
                                 getRowInfo &&
                                 typeof getRowInfo === "function"
                             ) {
-                                const rowInfo = getRowInfo(row.original, true);
+                                const rowInfo = getRowInfo(original, true);
                                 if (
                                     rowInfo &&
                                     rowInfo.isRowExpandable === false
@@ -261,6 +362,37 @@ const SubComponent = (props: {
     useEffect(() => {
         setGlobalFilter(gridGlobalFilterValue || undefined);
     }, [gridGlobalFilterValue]);
+
+    // Update the select state of row in Grid using the hook provided by useTable method
+    // Find the row Id using the key - value passed from props and use toggleRowSelected method to select the checkboxes
+    // Consider rowsToSelect, rowsToDeselect and already made selections and then select wanted rows and deselect unwanted rows.
+    // This should hapen whenever data changes or group sort is applied
+    useEffect(() => {
+        if (subComponentIdAttribute) {
+            let rowsToBeSelected =
+                userSelectedCurrentRowSubCompRows &&
+                userSelectedCurrentRowSubCompRows.length > 0
+                    ? [...userSelectedCurrentRowSubCompRows]
+                    : [];
+            // If Grid selection is single selection consider only the first item in array
+            if (multiRowSelection === false) {
+                rowsToBeSelected =
+                    rowsToBeSelected.length > 0 ? [rowsToBeSelected[0]] : [];
+            }
+            if (rowsToBeSelected && rowsToBeSelected.length > 0) {
+                rowsToBeSelected.forEach((rowId: string): Object => {
+                    const rowToSelect = rows.find((row: Object): Object => {
+                        const { original } = row;
+                        return original[subComponentIdAttribute] === rowId;
+                    });
+                    if (rowToSelect) {
+                        const { id } = rowToSelect;
+                        toggleRowSelected(id, true);
+                    }
+                });
+            }
+        }
+    }, [userSelectedCurrentRowSubCompRows]);
 
     return (
         <div
