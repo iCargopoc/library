@@ -339,7 +339,8 @@ const Customgrid = (props: {
     ] = useState([]);
     const updateSubCompRowIdentifiers = (
         mainRowId: any,
-        subCompRowIdentifiers: any
+        subCompRowIdentifiers: any,
+        subCompRowIds: any
     ) => {
         let updatedUserSelectedSubCompRowIdentifiers = [
             ...userSelectedSubCompRowIdentifiers
@@ -357,6 +358,7 @@ const Customgrid = (props: {
                     const { rowId } = identifier;
                     if (rowId === mainRowId) {
                         updatedIdentifier.rowIdentifiers = subCompRowIdentifiers;
+                        updatedIdentifier.rowIds = subCompRowIds;
                     }
                     return updatedIdentifier;
                 }
@@ -364,7 +366,8 @@ const Customgrid = (props: {
         } else {
             updatedUserSelectedSubCompRowIdentifiers.push({
                 rowId: mainRowId,
-                rowIdentifiers: subCompRowIdentifiers
+                rowIdentifiers: subCompRowIdentifiers,
+                rowIds: subCompRowIds
             });
         }
         setUserSelectedSubCompRowIdentifiers(

@@ -100,6 +100,11 @@ const RowItem = ({
         existingRowIdentifierValue !== undefined
             ? existingRowIdentifierValue.rowIdentifiers
             : [];
+    const userSelectedCurrentRowSubCompRowIds =
+        existingRowIdentifierValue !== null &&
+        existingRowIdentifierValue !== undefined
+            ? existingRowIdentifierValue.rowIds
+            : {};
 
     return (
         <Measure
@@ -258,6 +263,9 @@ const RowItem = ({
                             rowIdAttrValue={rowIdAttrValue}
                             userSelectedCurrentRowSubCompRows={
                                 userSelectedCurrentRowSubCompRows
+                            }
+                            userSelectedCurrentRowSubCompRowIds={
+                                userSelectedCurrentRowSubCompRowIds
                             }
                             updateSubCompRowIdentifiers={
                                 updateSubCompRowIdentifiers

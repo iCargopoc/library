@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 // @flow
 import React, { useMemo, useState, useCallback, useEffect } from "react";
 import { matchSorter } from "match-sorter";
@@ -12,6 +13,8 @@ import RowSelector from "../Functions/RowSelector";
 import RowOptions from "../Functions/RowOptions";
 import { IconAngle, IconPinColumn } from "../Utilities/SvgUtilities";
 import {
+    findSelectedRows,
+    findDeSelectedRows,
     checkdisplayOfGroupedColumns,
     hideColumns,
     getLeftOfColumn,
@@ -30,6 +33,7 @@ const SubComponent = (props: {
     subComponentIdAttribute: string,
     rowIdAttrValue: any,
     userSelectedCurrentRowSubCompRows: any,
+    userSelectedCurrentRowSubCompRowIds: any,
     updateSubCompRowIdentifiers: Function,
     onSubComponentRowSelect: Function,
     subComponentHeader: boolean,
@@ -49,6 +53,7 @@ const SubComponent = (props: {
         subComponentIdAttribute,
         rowIdAttrValue,
         userSelectedCurrentRowSubCompRows,
+        userSelectedCurrentRowSubCompRowIds,
         updateSubCompRowIdentifiers,
         onSubComponentRowSelect,
         subComponentHeader,
@@ -94,11 +99,19 @@ const SubComponent = (props: {
         }
     });
 
-    const onRowSelect = (rowsIdList: any, selectionType: string) => {
+    const onRowSelect = (
+        rowsIdAttrsList: any,
+        rowsIdsList: any,
+        selectionType: string
+    ) => {
         const copyUserSelectedCurrentRowSubCompRows = [
             ...userSelectedCurrentRowSubCompRows
         ];
-        rowsIdList.forEach((value: any) => {
+        const copyUserSelectedCurrentRowSubCompRowIds = {
+            ...userSelectedCurrentRowSubCompRowIds
+        };
+
+        rowsIdAttrsList.forEach((value: any) => {
             const existingValueIndex = copyUserSelectedCurrentRowSubCompRows.findIndex(
                 (item: any): boolean => {
                     return item === value;
@@ -116,10 +129,42 @@ const SubComponent = (props: {
                 copyUserSelectedCurrentRowSubCompRows.push(value);
             }
         });
+
+        rowsIdsList.forEach((idValue: any) => {
+            if (selectionType === "deselect") {
+                delete copyUserSelectedCurrentRowSubCompRowIds[idValue];
+            } else {
+                copyUserSelectedCurrentRowSubCompRowIds[idValue] = true;
+            }
+        });
+
         updateSubCompRowIdentifiers(
             rowIdAttrValue,
-            copyUserSelectedCurrentRowSubCompRows
+            copyUserSelectedCurrentRowSubCompRows,
+            copyUserSelectedCurrentRowSubCompRowIds
         );
+
+        if (onSubComponentRowSelect) {
+            // Add code here
+            const rowsSelectedByUser = findSelectedRows(
+                preGlobalFilteredRows,
+                copyUserSelectedCurrentRowSubCompRowIds,
+                getRowInfo,
+                false
+            );
+            setIsRowSelectionCallbackNeeded(null);
+            onSubComponentRowSelect(
+                rowsSelectedByUser,
+                selectionType === "deselect"
+                    ? findDeSelectedRows(
+                          preGlobalFilteredRows,
+                          userSelectedCurrentRowSubCompRows,
+                          copyUserSelectedCurrentRowSubCompRows,
+                          subComponentIdAttribute
+                      )
+                    : null
+            );
+        }
     };
 
     // Create a list of updated accessors to be searched from columns array
@@ -149,6 +194,7 @@ const SubComponent = (props: {
         getTableBodyProps,
         headerGroups,
         rows,
+        preGlobalFilteredRows,
         prepareRow,
         allColumns,
         setGlobalFilter,
@@ -158,7 +204,10 @@ const SubComponent = (props: {
         {
             columns,
             data,
-            initialState: { globalFilter: gridGlobalFilterValue },
+            initialState: {
+                globalFilter: gridGlobalFilterValue,
+                selectedRowIds: userSelectedCurrentRowSubCompRowIds
+            },
             isAtleastOneColumnPinned,
             isRowActionsColumnNeeded,
             enablePinColumn,
@@ -211,9 +260,14 @@ const SubComponent = (props: {
                                                     selectedType
                                                 );
                                                 toggleAllRowsSelected();
+                                                const rowsIds = [];
                                                 const rowsIdAttr = [];
                                                 rows.forEach((row: Object) => {
-                                                    const { original } = row;
+                                                    const {
+                                                        original,
+                                                        id
+                                                    } = row;
+                                                    rowsIds.push(id);
                                                     rowsIdAttr.push(
                                                         original[
                                                             subComponentIdAttribute
@@ -222,6 +276,7 @@ const SubComponent = (props: {
                                                 });
                                                 onRowSelect(
                                                     rowsIdAttr,
+                                                    rowsIds,
                                                     selectedType
                                                 );
                                             }
@@ -232,7 +287,7 @@ const SubComponent = (props: {
                         },
                         Cell: (cellSelectProps: Object): Object => {
                             const { row } = cellSelectProps;
-                            const { original } = row;
+                            const { original, id } = row;
                             // Check if row selector is required for this row using the getRowInfo prop passed
                             let isRowSelectable = true;
                             if (
@@ -272,6 +327,7 @@ const SubComponent = (props: {
                                                         ];
                                                     onRowSelect(
                                                         [rowIdAttr],
+                                                        [id],
                                                         selectedType
                                                     );
                                                 }
