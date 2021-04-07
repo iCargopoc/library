@@ -13,8 +13,7 @@ import RowSelector from "../Functions/RowSelector";
 import RowOptions from "../Functions/RowOptions";
 import { IconAngle, IconPinColumn } from "../Utilities/SvgUtilities";
 import {
-    findSelectedRows,
-    findDeSelectedRows,
+    getSelectedAndDeselectedRows,
     checkdisplayOfGroupedColumns,
     hideColumns,
     getLeftOfColumn,
@@ -146,23 +145,18 @@ const SubComponent = (props: {
         );
 
         if (onSubComponentRowSelect) {
-            // Add code here
-            const rowsSelectedByUser = findSelectedRows(
+            const rowsToReturn = getSelectedAndDeselectedRows(
                 preGlobalFilteredRows,
-                copyUserSelectedCurrentRowSubCompRowIds,
                 getRowInfo,
-                false
+                copyUserSelectedCurrentRowSubCompRows,
+                userSelectedCurrentRowSubCompRows,
+                subComponentIdAttribute,
+                true
             );
+            const { selectedRows, deselectedRows } = rowsToReturn;
             onSubComponentRowSelect(
-                rowsSelectedByUser,
-                selectionType === "deselect"
-                    ? findDeSelectedRows(
-                          preGlobalFilteredRows,
-                          userSelectedCurrentRowSubCompRows,
-                          copyUserSelectedCurrentRowSubCompRows,
-                          subComponentIdAttribute
-                      )
-                    : null
+                selectedRows,
+                selectionType === "deselect" ? deselectedRows : null
             );
         }
     };

@@ -177,6 +177,40 @@ export const findDeSelectedRows = (
     return deSelectedRows;
 };
 
+export const getSelectedAndDeselectedRows = (
+    gridRows: Array<Object>,
+    getRowInfo: any,
+    currentRowIdAttrs: any,
+    oldRowIdAttrs: any,
+    idAttribute: string,
+    isSubComponentRow: boolean
+): Object => {
+    const selectedRows = [];
+    const deselectedRows = [];
+    if (idAttribute && gridRows && gridRows.length > 0) {
+        gridRows.forEach((rowItem: Object) => {
+            const { original } = rowItem;
+            let isSelectable = true;
+            if (getRowInfo && typeof getRowInfo === "function") {
+                const rowInfo = getRowInfo(original, isSubComponentRow);
+                isSelectable = rowInfo.isRowSelectable;
+            }
+            if (isSelectable !== false) {
+                const idAttrValue = original[idAttribute];
+                if (currentRowIdAttrs.includes(idAttrValue)) {
+                    selectedRows.push(original);
+                } else if (oldRowIdAttrs.includes(idAttrValue)) {
+                    deselectedRows.push(original);
+                }
+            }
+        });
+    }
+    return {
+        selectedRows,
+        deselectedRows
+    };
+};
+
 export const convertToIndividualColumns = (managableColumns: any): any => {
     let modifiedColumns = [];
     if (managableColumns && managableColumns.length > 0) {
