@@ -98,10 +98,10 @@ const SubComponent = (props: {
         rowsIdsList: any,
         selectionType: string
     ) => {
-        const copyUserSelectedCurrentRowSubCompRows = [
+        let copyUserSelectedCurrentRowSubCompRows = [
             ...userSelectedCurrentRowSubCompRows
         ];
-        const copyUserSelectedCurrentRowSubCompRowIds = {
+        let copyUserSelectedCurrentRowSubCompRowIds = {
             ...userSelectedCurrentRowSubCompRowIds
         };
 
@@ -120,7 +120,11 @@ const SubComponent = (props: {
                 existingValueIndex === -1 &&
                 selectionType === "select"
             ) {
-                copyUserSelectedCurrentRowSubCompRows.push(value);
+                if (multiRowSelection === false) {
+                    copyUserSelectedCurrentRowSubCompRows = [value];
+                } else {
+                    copyUserSelectedCurrentRowSubCompRows.push(value);
+                }
             }
         });
 
@@ -128,6 +132,9 @@ const SubComponent = (props: {
             if (selectionType === "deselect") {
                 delete copyUserSelectedCurrentRowSubCompRowIds[idValue];
             } else {
+                if (multiRowSelection === false) {
+                    copyUserSelectedCurrentRowSubCompRowIds = {};
+                }
                 copyUserSelectedCurrentRowSubCompRowIds[idValue] = true;
             }
         });
