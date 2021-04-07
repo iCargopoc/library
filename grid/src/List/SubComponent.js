@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 // @flow
-import React, { useMemo, useState, useCallback, useEffect } from "react";
+import React, { useMemo, useCallback, useEffect } from "react";
 import { matchSorter } from "match-sorter";
 import {
     useTable,
@@ -67,12 +67,6 @@ const SubComponent = (props: {
         enablePinColumn,
         gridGlobalFilterValue
     } = props;
-
-    // Local state to identify if row selection call back has to be given or not
-    const [
-        isRowSelectionCallbackNeeded,
-        setIsRowSelectionCallbackNeeded
-    ] = useState(null);
 
     const isRowExpandEnabled = !!(
         subComponentAdditionalColumn &&
@@ -152,7 +146,6 @@ const SubComponent = (props: {
                 getRowInfo,
                 false
             );
-            setIsRowSelectionCallbackNeeded(null);
             onSubComponentRowSelect(
                 rowsSelectedByUser,
                 selectionType === "deselect"
@@ -256,9 +249,6 @@ const SubComponent = (props: {
                                                         .checked === false
                                                         ? "deselect"
                                                         : "select";
-                                                setIsRowSelectionCallbackNeeded(
-                                                    selectedType
-                                                );
                                                 toggleAllRowsSelected();
                                                 const rowsIds = [];
                                                 const rowsIdAttr = [];
@@ -317,9 +307,6 @@ const SubComponent = (props: {
                                                             .checked === false
                                                             ? "deselect"
                                                             : "select";
-                                                    setIsRowSelectionCallbackNeeded(
-                                                        selectedType
-                                                    );
                                                     row.toggleRowSelected();
                                                     const rowIdAttr =
                                                         original[
