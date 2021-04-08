@@ -602,13 +602,14 @@ describe("render Index file ", () => {
         expect(mockUpdateRowData).toHaveBeenCalled();
     });
 
-    it("test row options functionalities and column sort, custom panel and refresh button not passed", () => {
+    it("test grid with estimated row height, row options functionalities and column sort, custom panel and refresh button not passed", () => {
         mockOffsetSize(1440, 900);
         const { getAllByTestId, container, getByTestId } = render(
             <Grid
                 title={mockTitle}
                 gridWidth={mockGridWidth}
                 gridData={data}
+                estimatedRowHeight={90}
                 idAttribute="travelId"
                 paginationType="index"
                 pageInfo={pageInfo}
