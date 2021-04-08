@@ -258,6 +258,23 @@
                     .neo-grid__tr {
                         background: var(--white);
                     }
+                    .neo-grid__td {
+                        &.ng-sticky {
+                            border-bottom: none;
+                        }
+                    }
+                    .neo-grid__row-expand {
+                        .ng-sticky {
+                            &--left {
+                                border-bottom: none;
+                                margin-top: 0;
+                            }
+                            &--right {
+                                border-bottom: none;
+                                margin-top: 0;
+                            }
+                        }
+                    }
                 }
                 .ng-action {
                     padding-top: rem(4);
