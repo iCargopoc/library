@@ -734,10 +734,11 @@ const Customgrid = (props: {
         subCompRowIds: any,
         selectionType: string
     ) => {
-        let updatedUserSelectedSubCompRowIdentifiers = [
-            ...userSelectedSubCompRowIdentifiers
-        ];
-        const existingValue = userSelectedSubCompRowIdentifiers.find(
+        let updatedUserSelectedSubCompRowIdentifiers =
+            multiRowSelection === false
+                ? []
+                : [...userSelectedSubCompRowIdentifiers];
+        const existingValue = updatedUserSelectedSubCompRowIdentifiers.find(
             (identifier: Object): boolean => {
                 const { rowId } = identifier;
                 return rowId === mainRowId;
