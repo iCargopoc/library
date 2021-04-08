@@ -1294,6 +1294,19 @@ describe("render Index file ", () => {
         subComponentContent = getAllByTestId("subcomponent-content");
         expect(subComponentContent.length).toBeGreaterThan(1);
 
+        // Make row selection for another sub component section
+        const lastRowSelector = getAllByTestId(
+            "subcomponent-rowSelector-singleRow"
+        )[20];
+        act(() => {
+            lastRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if call back is triggered
+        expect(mockOnSubComponentRowSelect).toBeCalled();
+
         // Make subcomponent row selections from header
         let headerSubCompSelector = getAllByTestId(
             "subcomponent-rowSelector-allRows"
@@ -1444,7 +1457,7 @@ describe("render Index file ", () => {
         expect(subComponentContent.length).toBe(0);
     });
 
-    it("test grid with sub component data without expandable column and column to expand", () => {
+    it("test grid with sub component data without expandable column and column to expand - row selector without callback fun", () => {
         mockOffsetSize(600, 600);
         const { container, getAllByTestId, getByTestId } = render(
             <Grid
@@ -1535,6 +1548,16 @@ describe("render Index file ", () => {
         // Check if subComponent section is opened
         let subComponentContent = getAllByTestId("subcomponent-content");
         expect(subComponentContent.length).toBe(1);
+
+        // Select first row
+        let firstRowSelector = getAllByTestId(
+            "subcomponent-rowSelector-singleRow"
+        )[0];
+        act(() => {
+            firstRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
 
         // Close that sub component
         subComponentExpandCollpase = getAllByTestId(

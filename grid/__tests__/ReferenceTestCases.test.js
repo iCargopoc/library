@@ -342,7 +342,16 @@ describe("Reference test cases", () => {
         expect(gridContainer).toBeInTheDocument();
 
         // Test select all checkbox
-        const selectAllRowsCheckbox = getByTestId("rowSelector-allRows");
+        let selectAllRowsCheckbox = getByTestId("rowSelector-allRows");
+        act(() => {
+            selectAllRowsCheckbox.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        expect(mockOnRowSelect).toBeCalled();
+
+        // Test deselect all checkbox
+        selectAllRowsCheckbox = getByTestId("rowSelector-allRows");
         act(() => {
             selectAllRowsCheckbox.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })

@@ -844,10 +844,8 @@ const Customgrid = (props: {
     };
 
     const loadMoreChildData = (row: Object): Object => {
-        if (row) {
-            const { original } = row;
-            loadChildData(original);
-        }
+        const { original } = row;
+        loadChildData(original);
     };
 
     const isParentRowOpen = (row: Object): Object => {
