@@ -1359,6 +1359,10 @@ const Customgrid = (props: {
                                         <div
                                             {...getTableBodyProps()}
                                             className={`neo-grid__tbody ${
+                                                isParentGrid === true
+                                                    ? "neo-grid__tbody--parent"
+                                                    : ""
+                                            } ${
                                                 gridHeader === false
                                                     ? "neo-grid__tbody--nohead"
                                                     : ""

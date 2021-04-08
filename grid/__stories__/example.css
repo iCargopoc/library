@@ -6,21 +6,22 @@
     --primary: #00b4b4; /* rgba(0, 180, 180) */
     --primary-light: #e5f7f7; /* rgba(0, 180, 180, 0.1) */
     --tertiary: #4ccaca; /* rgba(0, 180, 180, 0.7) */
-    --border-green: #99e1e1; /*rgba(0, 180, 180, 0.4) */
-    --titlecolor: #004164; /*rgba(0, 65, 100); */
-    --light-grey: #e5ecef; /*rgba(0, 65, 100, 0.1); */
-    --border-light: #d9e3e8; /*rgba(0, 65, 100, 0.15); */
-    --box-shadow: #d9e3e8; /*rgba(0, 65, 100, 0.15); */
-    --border: #bfcfd8; /*rgba(0, 65, 100, 0.25); */
-    --border-grey: #b2c6d0; /*rgba(0, 65, 100, 0.3); */
-    --border-default: #99b3c1; /*rgba(0, 65, 100, 0.4); */
-    --reserved: #7fa0b1; /*rgba(0, 65, 100, 0.5); */
-    --dark-grey: #4c7a92; /*rgba(0, 65, 100, 0.7); */
-    --text-light: #40718b; /*rgba(0, 65, 100, 0.75); */
-    --placeholder: #195473; /*rgba(0, 65, 100, 0.9); */
-    --textcolor: #195473; /*rgba(0, 65, 100, 0.9); */
-    --icon-primary: #8f9eab; /*rgb(143, 158, 171); */
-    --icon-secondary: #9bb1bf; /*rgb(155, 177, 191); */
+    --border-green: #99e1e1; /* rgba(0, 180, 180, 0.4) */
+    --titlecolor: #004164; /* rgba(0, 65, 100); */
+    --light-grey: #e5ecef; /* rgba(0, 65, 100, 0.1); */
+    --border-light: #d9e3e8; /* rgba(0, 65, 100, 0.15); */
+    --box-shadow: rgba(80, 80, 80, 0.2);
+    --body-bg: #f2f5f7;
+    --border: #bfcfd8; /* rgba(0, 65, 100, 0.25); */
+    --border-grey: #b2c6d0; /* rgba(0, 65, 100, 0.3); */
+    --border-default: #99b3c1; /* rgba(0, 65, 100, 0.4); */
+    --reserved: #7fa0b1; /* rgba(0, 65, 100, 0.5); */
+    --dark-grey: #4c7a92; /* rgba(0, 65, 100, 0.7); */
+    --text-light: #40718b; /* rgba(0, 65, 100, 0.75); */
+    --placeholder: #195473; /* rgba(0, 65, 100, 0.9); */
+    --textcolor: #195473; /* rgba(0, 65, 100, 0.9); */
+    --icon-primary: #8f9eab; /* rgb(143, 158, 171); */
+    --icon-secondary: #9bb1bf; /* rgb(155, 177, 191); */
     --primary_hover: #06808d;
     --light_hover: #f1f4f7;
     --secondary: #f7fafc;
@@ -42,9 +43,11 @@
     --danger_light: #f9eaea;
     --success_light: #eafaf3;
     --warning_light: #fef9ea;
-    --bodyBg: #fff;
     --focus: #199ed8;
     --form-label: #59839a;
+    --alert-bg: #f6e7b7;
+    --alert-text: #4b280e;
+    --alert-label: #b7672b;
     --font: "Roboto", sans-serif;
     --em-base: 16;
 }
@@ -53,12 +56,6 @@
 *::before,
 *::after {
     box-sizing: border-box;
-}
-
-/*  portal theme Styles
-*  ------------------------------------------------------ */
-.sample-bg {
-    background: rgb(235, 239, 243);
 }
 
 /*  Checkbox Styles
@@ -452,7 +449,6 @@ body {
     padding: 0 !important;
     font-family: "sans-serif", Arial, Segoe UI, serif;
     font-size: 12px !important;
-    background-color: var(--bodyBg);
 }
 ul,
 li {

@@ -23,6 +23,7 @@
     .ng-accordion {
         display: flex;
         border-bottom: rem(1) solid var(--border-default);
+        background: var(--white);
         &__container {
             width: 100%;
             display: table;
@@ -202,6 +203,7 @@
         .neo-grid__tr {
             border-bottom: rem(1) solid var(--light-grey);
             flex-wrap: wrap;
+            background: var(--white);
         }
         .ng-loadmore {
             width: 100%;
@@ -216,7 +218,7 @@
     &__td {
         position: relative;
         &.ng-sticky {
-            background-color: var(--bodyBg);
+            background-color: var(--white);
         }
     }
     &__wrapper {
@@ -244,6 +246,9 @@
                     z-index: auto;
                     top: auto;
                     left: auto;
+                    .neo-grid__tr {
+                        background: transparent !important;
+                    }
                     .neo-grid__row-selector {
                         padding: 0;
                     }
@@ -273,7 +278,7 @@
             display: flex;
             justify-content: space-between;
             .ng-sticky {
-                background-color: var(--bodyBg);
+                background-color: var(--white);
                 &--left {
                     left: 0;
                 }
@@ -379,7 +384,7 @@
 
     &--portal {
         .neo-grid__header {
-            background: transparent;
+            background: var(--body-bg);
             &--borderless {
                 border: 0 !important;
             }
@@ -391,12 +396,23 @@
                 border-radius: rem(12) rem(12) 0 0;
             }
         }
+        .neo-grid__row-expand {
+            background: var(--white);
+            border-bottom-left-radius: rem(12);
+            border-bottom-right-radius: rem(12);
+        }
         .neo-grid__tr {
-            padding-bottom: rem(10);
+            padding-bottom: rem(4);
+            padding-top: rem(4);
             border: none;
+            background: transparent !important;
         }
         .neo-grid__tbody {
-            margin-top: rem(10);
+            padding-top: rem(4);
+            background: var(--body-bg);
+            &--parent {
+                padding-top: 0 !important;
+            }
             &--nohead {
                 margin-top: 0;
             }
