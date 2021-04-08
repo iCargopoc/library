@@ -173,10 +173,10 @@
         }
         .disabled {
             .neo-grid__row-wrap {
-                background-color: var(--box-shadow);
+                background-color: var(--border-light);
                 .neo-grid__td {
                     &.ng-sticky {
-                        background-color: var(--box-shadow);
+                        background-color: var(--border-light);
                     }
                     .neo-grid__cell-edit {
                         display: none;
@@ -184,13 +184,13 @@
                 }
                 .form-check-input {
                     pointer-events: none;
-                    background-color: var(--box-shadow);
+                    background-color: var(--border-light);
                 }
             }
             .neo-grid__row-expand {
-                background-color: var(--box-shadow);
+                background-color: var(--border-light);
                 .ng-sticky {
-                    background-color: var(--box-shadow);
+                    background-color: var(--border-light);
                     &--left {
                         left: 0;
                     }
@@ -201,7 +201,7 @@
             }
         }
         .neo-grid__tr {
-            border-bottom: rem(1) solid var(--light-grey);
+            border-bottom: 1px solid var(--light-grey);
             flex-wrap: wrap;
             background: var(--white);
         }
@@ -219,6 +219,7 @@
         position: relative;
         &.ng-sticky {
             background-color: var(--white);
+            border-bottom: var(--light-grey) solid rem(1);
         }
     }
     &__wrapper {
@@ -271,7 +272,6 @@
         .neo-grid__row-wrap {
             width: 100%;
             display: flex;
-            padding-bottom: 1px;
         }
         .neo-grid__row-expand {
             width: 100%;
@@ -281,9 +281,13 @@
                 background-color: var(--white);
                 &--left {
                     left: 0;
+                    border-bottom: solid 1px var(--light-grey);
+                    margin-top: -1px;
                 }
                 &--right {
                     right: 0;
+                    border-bottom: solid 1px var(--light-grey);
+                    margin-top: -1px;
                 }
             }
         }
