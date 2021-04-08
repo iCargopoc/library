@@ -420,12 +420,16 @@ const subComponentColumnToExpand // Same as columnToExpand
     // User can 'Pin Left' columns from manage column overlay, and row actions column will be pinned right by default.
     const enablePinColumn = true;
 
+    // Pass this property if you are aware of an estimated row height value or if you are using grid with fixed row height.
+    const estimatedRowHeight = 50;
+
     <Grid
         className="icargoCustomClass"
         theme={theme}
         title="AWBs"
         gridWidth="100%"
         gridData={gridData}
+        estimatedRowHeight={estimatedRowHeight}
         rowsToOverscan={rowsToOverscan}
         idAttribute={idAttribute}
         paginationType={paginationType}
@@ -540,10 +544,29 @@ const subComponentColumnToExpand // Same as columnToExpand
 />
 ```
 
+#### With estimated row height value
+
+<Story name="With estimated row height value">
+    <GridComponent passEstimatedRowHeight />;
+</Story>
+
+```jsx
+// All rows will have same height (height of first row).
+
+<Grid
+    title="AWBs"
+    gridData={gridData}
+    columns={columns}
+    estimatedRowHeight={estimatedRowHeight}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+/>
+```
+
 #### With fixed row size
 
 <Story name="With fixed row size">
-    <GridComponent fixedRowHeight />;
+    <GridComponent fixedRowHeight passEstimatedRowHeight />;
 </Story>
 
 ```jsx
@@ -554,6 +577,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     gridData={gridData}
     columns={columns}
     fixedRowHeight={fixedRowHeight}
+    estimatedRowHeight={estimatedRowHeight}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
 />

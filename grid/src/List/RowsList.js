@@ -121,6 +121,7 @@ const RowsList = ({
         const { current } = sizeMap;
         const firstRowSize = current[0];
         const secondRowSize = current[1];
+        const defaultParentRowSize = 50;
         const defaultRowSize =
             estimatedRowHeight && typeof estimatedRowHeight === "number"
                 ? estimatedRowHeight
@@ -141,7 +142,7 @@ const RowsList = ({
         if (currentRowSize !== undefined && currentRowSize !== null) {
             rowSizeToReturn = currentRowSize;
         } else if (isParentRow) {
-            rowSizeToReturn = firstRowSize;
+            rowSizeToReturn = firstRowSize || defaultParentRowSize;
         } else {
             rowSizeToReturn = secondRowSize;
         }

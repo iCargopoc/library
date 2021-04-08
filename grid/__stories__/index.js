@@ -22,6 +22,7 @@ const GridComponent = (props) => {
         className,
         title,
         fixedRowHeight,
+        passEstimatedRowHeight,
         gridWidth,
         rowsToOverscan,
         passColumnToExpand,
@@ -57,6 +58,7 @@ const GridComponent = (props) => {
         passPinColumn
     } = props;
 
+    const estimatedRowHeight = fixedRowHeight ? 75 : 150;
     const idAttribute = "travelId";
     const parentIdAttribute = "titleId";
     const subComponentIdAttribute = "hawbId";
@@ -2653,7 +2655,11 @@ const GridComponent = (props) => {
                     title={title}
                     gridWidth={gridWidth}
                     gridData={gridData}
-                    estimatedRowHeight={150}
+                    estimatedRowHeight={
+                        passEstimatedRowHeight || allProps
+                            ? estimatedRowHeight
+                            : null
+                    }
                     rowsToOverscan={isSubComponentGrid ? 5 : rowsToOverscan}
                     idAttribute={allProps || passIdAttribute ? idAttribute : ""}
                     paginationType={
