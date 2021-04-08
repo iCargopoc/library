@@ -22,7 +22,8 @@ const processedData = (gridData: [Object], parentIdAttribute: string): ?[] => {
             const { childData } = gridDataItem;
             if (childData && parentIdAttribute) {
                 const parentId = gridDataItem[parentIdAttribute];
-                const { data } = childData;
+                const updatedChildData = { ...childData };
+                const { data } = updatedChildData;
                 if (
                     data &&
                     data.length > 0 &&
@@ -36,8 +37,10 @@ const processedData = (gridData: [Object], parentIdAttribute: string): ?[] => {
                         lastPage
                     } = childData;
                     data.forEach((dataItem: Object) => {
-                        const updatedDataItem = dataItem;
-                        updatedDataItem[parentIdAttribute] = parentId;
+                        const updatedDataItem = { ...dataItem };
+                        if (!(parentIdAttribute in updatedDataItem)) {
+                            updatedDataItem[parentIdAttribute] = parentId;
+                        }
                         updatedDataItem.pageNum = pageNum;
                         updatedDataItem.endCursor = endCursor;
                         updatedDataItem.pageSize = pageSize;
