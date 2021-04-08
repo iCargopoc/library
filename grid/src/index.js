@@ -76,6 +76,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         title,
         gridWidth,
         gridData,
+        estimatedRowHeight,
         rowsToOverscan,
         idAttribute,
         paginationType,
@@ -598,6 +599,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     loadChildData={loadChildData}
                     isParentGrid={isParentGrid}
                     gridData={processedGridData}
+                    estimatedRowHeight={estimatedRowHeight}
                     rowsToOverscan={rowsToOverscan}
                     idAttribute={idAttribute}
                     pageInfo={pageInfo}

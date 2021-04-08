@@ -13,6 +13,7 @@ const RowsList = ({
     height,
     theme,
     rows,
+    estimatedRowHeight,
     isAtleastOneColumnPinned,
     idAttribute,
     overScanCount,
@@ -59,6 +60,7 @@ const RowsList = ({
     height: number,
     theme: string,
     rows: Array<Object>,
+    estimatedRowHeight: number,
     isAtleastOneColumnPinned: boolean,
     idAttribute: string,
     overScanCount: number,
@@ -119,7 +121,10 @@ const RowsList = ({
         const { current } = sizeMap;
         const firstRowSize = current[0];
         const secondRowSize = current[1];
-        const defaultRowSize = 50;
+        const defaultRowSize =
+            estimatedRowHeight && typeof estimatedRowHeight === "number"
+                ? estimatedRowHeight
+                : 50;
 
         if (fixedRowHeight === true && !isParentRow) {
             if (isParentGrid) {

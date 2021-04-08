@@ -2653,6 +2653,7 @@ const GridComponent = (props) => {
                     title={title}
                     gridWidth={gridWidth}
                     gridData={gridData}
+                    estimatedRowHeight={150}
                     rowsToOverscan={isSubComponentGrid ? 5 : rowsToOverscan}
                     idAttribute={allProps || passIdAttribute ? idAttribute : ""}
                     paginationType={

@@ -61,6 +61,7 @@ const Customgrid = (props: {
     loadChildData: Function,
     isParentGrid: boolean,
     gridData: Array<Object>,
+    estimatedRowHeight: number,
     rowsToOverscan: number,
     idAttribute: string,
     pageInfo: Object,
@@ -118,6 +119,7 @@ const Customgrid = (props: {
         loadChildData,
         isParentGrid,
         gridData,
+        estimatedRowHeight,
         rowsToOverscan,
         idAttribute,
         pageInfo,
@@ -268,7 +270,7 @@ const Customgrid = (props: {
                 });
             }
         }
-        return isReloadRequired === false && index < gridDataLength;
+        return isReloadRequired === false && !!gridData[index];
     };
 
     // Local state value for checking if column filter is open/closed
@@ -1372,6 +1374,7 @@ const Customgrid = (props: {
                                                 <InfiniteLoader
                                                     isItemLoaded={isItemLoaded}
                                                     itemCount={itemCount}
+                                                    threshold={overScanCount}
                                                     loadMoreItems={
                                                         loadMoreItems
                                                     }
@@ -1392,6 +1395,9 @@ const Customgrid = (props: {
                                                             height={height}
                                                             theme={theme}
                                                             rows={rows}
+                                                            estimatedRowHeight={
+                                                                estimatedRowHeight
+                                                            }
                                                             isAtleastOneColumnPinned={
                                                                 isAtleastOneColumnPinned
                                                             }
@@ -1516,6 +1522,9 @@ const Customgrid = (props: {
                                                     height={height}
                                                     theme={theme}
                                                     rows={rows}
+                                                    estimatedRowHeight={
+                                                        estimatedRowHeight
+                                                    }
                                                     isAtleastOneColumnPinned={
                                                         isAtleastOneColumnPinned
                                                     }
