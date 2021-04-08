@@ -5,7 +5,8 @@ import {
     findSelectedRows,
     findSelectedRowIdFromIdAttribute,
     findDeSelectedRows,
-    getColumnElementsForPinColumn
+    getColumnElementsForPinColumn,
+    getSelectedAndDeselectedSubCompRows
 } from "../../src/Utilities/GridUtilities";
 
 describe("Grid utility file test", () => {
@@ -25,6 +26,47 @@ describe("Grid utility file test", () => {
             }
         }
     ];
+    const mockGridRowsWithSubComp = [
+        {
+            id: "0",
+            original: {
+                travelId: 0,
+                subComponentData: [
+                    {
+                        hawbId: 0
+                    },
+                    {
+                        hawbId: 1
+                    },
+                    {
+                        hawbId: 2
+                    }
+                ]
+            }
+        },
+        {
+            id: "1",
+            original: {
+                travelId: 1,
+                subComponentData: [
+                    {
+                        hawbId: 3
+                    },
+                    {
+                        hawbId: 4
+                    },
+                    {
+                        hawbId: 5
+                    }
+                ]
+            }
+        }
+    ];
+    const mockInvalidCurrentRowIdAttributes = [
+        { rowId: 5, rowIdentifiers: [3] }
+    ];
+    const mockCurrentRowIdAttributes = [{ rowId: 1, rowIdentifiers: [6] }];
+    const mockOldRowIdentifiers = [{ rowId: 1, rowIdentifiers: [3] }];
     let container;
     beforeEach(() => {
         container = document.createElement("div");
@@ -88,5 +130,61 @@ describe("Grid utility file test", () => {
     it("should test getColumnElementsForPinColumn with invalid parameters", () => {
         const value = getColumnElementsForPinColumn();
         expect(value.length).toBe(0); // Empty array should be returned
+    });
+
+    it("should test getSelectedAndDeselectedSubCompRows with old selection row values not present in current list", () => {
+        const rowsList = getSelectedAndDeselectedSubCompRows(
+            mockGridRowsWithSubComp,
+            null,
+            [],
+            mockOldRowIdentifiers,
+            "travelId",
+            "hawbId"
+        );
+        const { selectedRows, deselectedRows } = rowsList;
+        expect(selectedRows.length).toBe(0);
+        expect(deselectedRows.length).toBe(1);
+    });
+
+    it("should test getSelectedAndDeselectedSubCompRows with empty gridRows", () => {
+        const rowsList = getSelectedAndDeselectedSubCompRows(
+            [],
+            null,
+            [],
+            mockOldRowIdentifiers,
+            "travelId",
+            "hawbId"
+        );
+        const { selectedRows, deselectedRows } = rowsList;
+        expect(selectedRows.length).toBe(0);
+        expect(deselectedRows.length).toBe(0);
+    });
+
+    it("should test getSelectedAndDeselectedSubCompRows with current row select list with invalid rowId", () => {
+        const rowsList = getSelectedAndDeselectedSubCompRows(
+            mockGridRowsWithSubComp,
+            null,
+            mockInvalidCurrentRowIdAttributes,
+            [],
+            "travelId",
+            "hawbId"
+        );
+        const { selectedRows, deselectedRows } = rowsList;
+        expect(selectedRows.length).toBe(0);
+        expect(deselectedRows.length).toBe(0);
+    });
+
+    it("should test getSelectedAndDeselectedSubCompRows with current row select list with invalid sub comp rowId", () => {
+        const rowsList = getSelectedAndDeselectedSubCompRows(
+            mockGridRowsWithSubComp,
+            null,
+            mockCurrentRowIdAttributes,
+            [],
+            "travelId",
+            "hawbId"
+        );
+        const { selectedRows, deselectedRows } = rowsList;
+        expect(selectedRows.length).toBe(0);
+        expect(deselectedRows.length).toBe(0);
     });
 });

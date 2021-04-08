@@ -1073,6 +1073,7 @@ describe("render Index file ", () => {
     const mockUpdateRowData = jest.fn();
     const mockSelectBulkData = jest.fn();
     const mockLoadMoreData = jest.fn();
+    const mockOnSubComponentRowSelect = jest.fn();
 
     let mockContainer;
     beforeEach(() => {
@@ -1185,7 +1186,7 @@ describe("render Index file ", () => {
         expect(subComponentContent.length).toBe(0);
     });
 
-    it("test grid with sub component data without multi row selection", () => {
+    it("test grid with sub component data - rows selection", () => {
         mockOffsetSize(600, 600);
         const { container, getAllByTestId, getByTestId } = render(
             <Grid
@@ -1200,8 +1201,9 @@ describe("render Index file ", () => {
                 subComponentColumns={subComponentColumns}
                 getRowInfo={mockGetRowInfo}
                 rowActions={mockRowActions}
-                multiRowSelection={false}
                 onRowUpdate={mockUpdateRowData}
+                onSubComponentRowSelect={mockOnSubComponentRowSelect}
+                subComponentIdAttribute="hawbId"
             />
         );
         const gridContainer = container;
@@ -1224,6 +1226,181 @@ describe("render Index file ", () => {
         // Check if subComponent section is opened
         let subComponentContent = getAllByTestId("subcomponent-content");
         expect(subComponentContent.length).toBe(1);
+
+        // Select first row
+        let firstRowSelector = getAllByTestId(
+            "subcomponent-rowSelector-singleRow"
+        )[0];
+        act(() => {
+            firstRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if call back is triggered
+        expect(mockOnSubComponentRowSelect).toBeCalled();
+
+        // Select second row
+        const secondRowSelector = getAllByTestId(
+            "subcomponent-rowSelector-singleRow"
+        )[1];
+        act(() => {
+            secondRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if call back is triggered
+        expect(mockOnSubComponentRowSelect).toBeCalled();
+
+        // Deselect first row
+        firstRowSelector = getAllByTestId(
+            "subcomponent-rowSelector-singleRow"
+        )[0];
+        act(() => {
+            firstRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if call back is triggered
+        expect(mockOnSubComponentRowSelect).toBeCalled();
+
+        // Close that sub component
+        subComponentExpandCollpase = getAllByTestId(
+            "subComponent-header-expand-collapse"
+        );
+        act(() => {
+            subComponentExpandCollpase[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if that subComponent section is closed
+        subComponentContent = gridContainer.querySelectorAll(
+            "[data-testid='subcomponent-content']"
+        );
+        expect(subComponentContent.length).toBe(0);
+
+        // Open expand/collapse from header
+        let headerExpand = getByTestId(
+            "subComponent-header-expand-collapse-all"
+        );
+        act(() => {
+            headerExpand.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if subComponent sections are opened
+        subComponentContent = getAllByTestId("subcomponent-content");
+        expect(subComponentContent.length).toBeGreaterThan(1);
+
+        // Make subcomponent row selections from header
+        let headerSubCompSelector = getAllByTestId(
+            "subcomponent-rowSelector-allRows"
+        )[0];
+        act(() => {
+            headerSubCompSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if call back is triggered
+        expect(mockOnSubComponentRowSelect).toBeCalled();
+
+        // Deselect subcomponent row selections from header
+        headerSubCompSelector = getAllByTestId(
+            "subcomponent-rowSelector-allRows"
+        )[0];
+        act(() => {
+            headerSubCompSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if call back is triggered
+        expect(mockOnSubComponentRowSelect).toBeCalled();
+
+        // Close sub components from header
+        headerExpand = getByTestId("subComponent-header-expand-collapse-all");
+        act(() => {
+            headerExpand.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if all subComponent sections are closed
+        subComponentContent = gridContainer.querySelectorAll(
+            "[data-testid='subcomponent-content']"
+        );
+        expect(subComponentContent.length).toBe(0);
+    });
+
+    it("test grid with sub component data without multi row selection", () => {
+        mockOffsetSize(600, 600);
+        const { container, getAllByTestId, getByTestId } = render(
+            <Grid
+                title={mockTitle}
+                gridWidth={mockGridWidth}
+                gridData={mockGridData}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                subComponentColumns={subComponentColumns}
+                getRowInfo={mockGetRowInfo}
+                rowActions={mockRowActions}
+                multiRowSelection={false}
+                onRowUpdate={mockUpdateRowData}
+                onSubComponentRowSelect={mockOnSubComponentRowSelect}
+                subComponentIdAttribute="hawbId"
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Check if expand/collapse icons are present
+        let subComponentExpandCollpase = getAllByTestId(
+            "subComponent-header-expand-collapse"
+        );
+        expect(subComponentExpandCollpase.length).toBeGreaterThan(0);
+
+        // Open 1 subComponent
+        act(() => {
+            subComponentExpandCollpase[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if subComponent section is opened
+        let subComponentContent = getAllByTestId("subcomponent-content");
+        expect(subComponentContent.length).toBe(1);
+
+        // Select first row
+        const firstRowSelector = getAllByTestId(
+            "subcomponent-rowSelector-singleRow"
+        )[0];
+        act(() => {
+            firstRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if call back is triggered
+        expect(mockOnSubComponentRowSelect).toBeCalled();
+
+        // Select second row
+        const secondRowSelector = getAllByTestId(
+            "subcomponent-rowSelector-singleRow"
+        )[1];
+        act(() => {
+            secondRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if call back is triggered
+        expect(mockOnSubComponentRowSelect).toBeCalled();
 
         // Close that sub component
         subComponentExpandCollpase = getAllByTestId(

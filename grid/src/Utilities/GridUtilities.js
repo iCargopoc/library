@@ -227,7 +227,12 @@ export const getSelectedAndDeselectedSubCompRows = (
 ): Object => {
     const selectedRows = [];
     const deselectedRows = [];
-    if (idAttribute && gridRows && gridRows.length > 0) {
+    if (
+        idAttribute &&
+        subComponentIdAttribute &&
+        gridRows &&
+        gridRows.length > 0
+    ) {
         if (currentRowIdAttrs && currentRowIdAttrs.length > 0) {
             // Add selected rows
             currentRowIdAttrs.forEach((rowIdAttr: Object) => {
@@ -244,6 +249,8 @@ export const getSelectedAndDeselectedSubCompRows = (
                     );
                 }
             });
+        }
+        if (oldRowIdAttrs && oldRowIdAttrs.length > 0) {
             // Add deselected rows
             oldRowIdAttrs.forEach((rowIdAttr: Object) => {
                 const { rowIdentifiers } = rowIdAttr;
@@ -254,7 +261,10 @@ export const getSelectedAndDeselectedSubCompRows = (
                         return rowIdAttr.rowId === rowId;
                     }
                 );
-                if (valueInCurrentAttrs && valueInCurrentAttrs !== null) {
+                if (
+                    valueInCurrentAttrs !== null &&
+                    valueInCurrentAttrs !== undefined
+                ) {
                     const filteredRowIdentifiers = rowIdentifiers.filter(
                         (value: any): boolean => {
                             return !valueInCurrentAttrs.rowIdentifiers.includes(
