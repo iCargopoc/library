@@ -34,6 +34,7 @@ import {
     findSelectedRowIdAttributes,
     findSelectedRowIdFromIdAttribute,
     findDeSelectedRows,
+    getSelectedAndDeselectedSubCompRows,
     hideColumns
 } from "./Utilities/GridUtilities";
 
@@ -337,43 +338,6 @@ const Customgrid = (props: {
         userSelectedSubCompRowIdentifiers,
         setUserSelectedSubCompRowIdentifiers
     ] = useState([]);
-    const updateSubCompRowIdentifiers = (
-        mainRowId: any,
-        subCompRowIdentifiers: any,
-        subCompRowIds: any
-    ) => {
-        let updatedUserSelectedSubCompRowIdentifiers = [
-            ...userSelectedSubCompRowIdentifiers
-        ];
-        const existingValue = userSelectedSubCompRowIdentifiers.find(
-            (identifier: Object): boolean => {
-                const { rowId } = identifier;
-                return rowId === mainRowId;
-            }
-        );
-        if (existingValue !== null && existingValue !== undefined) {
-            updatedUserSelectedSubCompRowIdentifiers = updatedUserSelectedSubCompRowIdentifiers.map(
-                (identifier: Object): Object => {
-                    const updatedIdentifier = { ...identifier };
-                    const { rowId } = identifier;
-                    if (rowId === mainRowId) {
-                        updatedIdentifier.rowIdentifiers = subCompRowIdentifiers;
-                        updatedIdentifier.rowIds = subCompRowIds;
-                    }
-                    return updatedIdentifier;
-                }
-            );
-        } else {
-            updatedUserSelectedSubCompRowIdentifiers.push({
-                rowId: mainRowId,
-                rowIdentifiers: subCompRowIdentifiers,
-                rowIds: subCompRowIds
-            });
-        }
-        setUserSelectedSubCompRowIdentifiers(
-            updatedUserSelectedSubCompRowIdentifiers
-        );
-    };
 
     // Local state value for storing user selected rows - identifier values (idAttribute)
     const [
@@ -763,6 +727,61 @@ const Customgrid = (props: {
             }
         }
     );
+
+    const updateSubCompRowIdentifiers = (
+        mainRowId: any,
+        subCompRowIdentifiers: any,
+        subCompRowIds: any,
+        selectionType: string
+    ) => {
+        let updatedUserSelectedSubCompRowIdentifiers = [
+            ...userSelectedSubCompRowIdentifiers
+        ];
+        const existingValue = userSelectedSubCompRowIdentifiers.find(
+            (identifier: Object): boolean => {
+                const { rowId } = identifier;
+                return rowId === mainRowId;
+            }
+        );
+        if (existingValue !== null && existingValue !== undefined) {
+            updatedUserSelectedSubCompRowIdentifiers = updatedUserSelectedSubCompRowIdentifiers.map(
+                (identifier: Object): Object => {
+                    const updatedIdentifier = { ...identifier };
+                    const { rowId } = identifier;
+                    if (rowId === mainRowId) {
+                        updatedIdentifier.rowIdentifiers = subCompRowIdentifiers;
+                        updatedIdentifier.rowIds = subCompRowIds;
+                    }
+                    return updatedIdentifier;
+                }
+            );
+        } else {
+            updatedUserSelectedSubCompRowIdentifiers.push({
+                rowId: mainRowId,
+                rowIdentifiers: subCompRowIdentifiers,
+                rowIds: subCompRowIds
+            });
+        }
+        setUserSelectedSubCompRowIdentifiers(
+            updatedUserSelectedSubCompRowIdentifiers
+        );
+
+        if (onSubComponentRowSelect) {
+            const rowsToReturn = getSelectedAndDeselectedSubCompRows(
+                preFilteredRows,
+                getRowInfo,
+                updatedUserSelectedSubCompRowIdentifiers,
+                userSelectedSubCompRowIdentifiers,
+                idAttribute,
+                subComponentIdAttribute
+            );
+            const { selectedRows, deselectedRows } = rowsToReturn;
+            onSubComponentRowSelect(
+                selectedRows,
+                selectionType === "deselect" ? deselectedRows : null
+            );
+        }
+    };
 
     // Finds the rows (avoids if not isSelectable from getRowInfo) selected by users from selectedRowIds and updates the state value and triggers the callback function.
     // Also identify if checkbox is checked or unchecked and if unchecked, return runchecked row details too to the callback function.
@@ -1409,9 +1428,6 @@ const Customgrid = (props: {
                                                             subComponentIdAttribute={
                                                                 subComponentIdAttribute
                                                             }
-                                                            onSubComponentRowSelect={
-                                                                onSubComponentRowSelect
-                                                            }
                                                             userSelectedSubCompRowIdentifiers={
                                                                 userSelectedSubCompRowIdentifiers
                                                             }
@@ -1538,9 +1554,6 @@ const Customgrid = (props: {
                                                     }
                                                     subComponentIdAttribute={
                                                         subComponentIdAttribute
-                                                    }
-                                                    onSubComponentRowSelect={
-                                                        onSubComponentRowSelect
                                                     }
                                                     userSelectedSubCompRowIdentifiers={
                                                         userSelectedSubCompRowIdentifiers

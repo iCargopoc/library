@@ -31,7 +31,6 @@ const RowsList = ({
     subComponentColumnsAccessorList,
     subComponentAdditionalColumnAccessorList,
     subComponentIdAttribute,
-    onSubComponentRowSelect,
     userSelectedSubCompRowIdentifiers,
     updateSubCompRowIdentifiers,
     isSubComponentGrid,
@@ -88,7 +87,6 @@ const RowsList = ({
     subComponentAdditionalColumnAccessorList: any,
     isSubComponentGrid: boolean,
     subComponentIdAttribute: string,
-    onSubComponentRowSelect: Function,
     userSelectedSubCompRowIdentifiers: any,
     updateSubCompRowIdentifiers: Function,
     subComponentHeader: boolean,
@@ -216,7 +214,6 @@ const RowsList = ({
                                 subComponentAdditionalColumnAccessorList
                             }
                             subComponentIdAttribute={subComponentIdAttribute}
-                            onSubComponentRowSelect={onSubComponentRowSelect}
                             userSelectedSubCompRowIdentifiers={
                                 userSelectedSubCompRowIdentifiers
                             }

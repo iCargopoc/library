@@ -177,33 +177,118 @@ export const findDeSelectedRows = (
     return deSelectedRows;
 };
 
-export const getSelectedAndDeselectedRows = (
+const checkAndPushRows = (
+    gridRows: any,
+    rowId: any,
+    identifiersList: any,
+    idAttribute: string,
+    subComponentIdAttribute: string,
+    getRowInfo: any,
+    arrayToPush: any
+) => {
+    const selectedMainRow = gridRows.find((mainRow: Object): boolean => {
+        const { original } = mainRow;
+        return original[idAttribute] === rowId;
+    });
+    if (selectedMainRow !== null && selectedMainRow !== undefined) {
+        const { subComponentData } = selectedMainRow.original;
+        identifiersList.forEach((identifierValue: any) => {
+            const selectedSubCompRow = subComponentData.find(
+                (subCompRow: Object): boolean => {
+                    return (
+                        subCompRow[subComponentIdAttribute] === identifierValue
+                    );
+                }
+            );
+            if (
+                selectedSubCompRow !== null &&
+                selectedSubCompRow !== undefined
+            ) {
+                let isSelectable = true;
+                if (getRowInfo && typeof getRowInfo === "function") {
+                    const rowInfo = getRowInfo(selectedSubCompRow, true);
+                    isSelectable = rowInfo.isRowSelectable;
+                }
+                if (isSelectable !== false) {
+                    arrayToPush.push(selectedSubCompRow);
+                }
+            }
+        });
+    }
+};
+
+export const getSelectedAndDeselectedSubCompRows = (
     gridRows: Array<Object>,
     getRowInfo: any,
     currentRowIdAttrs: any,
     oldRowIdAttrs: any,
     idAttribute: string,
-    isSubComponentRow: boolean
+    subComponentIdAttribute: string
 ): Object => {
     const selectedRows = [];
     const deselectedRows = [];
     if (idAttribute && gridRows && gridRows.length > 0) {
-        gridRows.forEach((rowItem: Object) => {
-            const { original } = rowItem;
-            let isSelectable = true;
-            if (getRowInfo && typeof getRowInfo === "function") {
-                const rowInfo = getRowInfo(original, isSubComponentRow);
-                isSelectable = rowInfo.isRowSelectable;
-            }
-            if (isSelectable !== false) {
-                const idAttrValue = original[idAttribute];
-                if (currentRowIdAttrs.includes(idAttrValue)) {
-                    selectedRows.push(original);
-                } else if (oldRowIdAttrs.includes(idAttrValue)) {
-                    deselectedRows.push(original);
+        if (currentRowIdAttrs && currentRowIdAttrs.length > 0) {
+            // Add selected rows
+            currentRowIdAttrs.forEach((rowIdAttr: Object) => {
+                const { rowId, rowIdentifiers } = rowIdAttr;
+                if (rowIdentifiers && rowIdentifiers.length > 0) {
+                    checkAndPushRows(
+                        gridRows,
+                        rowId,
+                        rowIdentifiers,
+                        idAttribute,
+                        subComponentIdAttribute,
+                        getRowInfo,
+                        selectedRows
+                    );
                 }
-            }
-        });
+            });
+            // Add deselected rows
+            oldRowIdAttrs.forEach((rowIdAttr: Object) => {
+                const { rowIdentifiers } = rowIdAttr;
+                // Check if this Row Id is present in the current collection
+                const valueInCurrentAttrs = currentRowIdAttrs.find(
+                    (currentRowIdAttr: Object): boolean => {
+                        const { rowId } = currentRowIdAttr;
+                        return rowIdAttr.rowId === rowId;
+                    }
+                );
+                if (valueInCurrentAttrs && valueInCurrentAttrs !== null) {
+                    const filteredRowIdentifiers = rowIdentifiers.filter(
+                        (value: any): boolean => {
+                            return !valueInCurrentAttrs.rowIdentifiers.includes(
+                                value
+                            );
+                        }
+                    );
+                    if (
+                        filteredRowIdentifiers &&
+                        filteredRowIdentifiers.length > 0
+                    ) {
+                        checkAndPushRows(
+                            gridRows,
+                            rowIdAttr.rowId,
+                            filteredRowIdentifiers,
+                            idAttribute,
+                            subComponentIdAttribute,
+                            getRowInfo,
+                            deselectedRows
+                        );
+                    }
+                } else {
+                    checkAndPushRows(
+                        gridRows,
+                        rowIdAttr.rowId,
+                        rowIdentifiers,
+                        idAttribute,
+                        subComponentIdAttribute,
+                        getRowInfo,
+                        deselectedRows
+                    );
+                }
+            });
+        }
     }
     return {
         selectedRows,

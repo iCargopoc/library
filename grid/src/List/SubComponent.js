@@ -13,7 +13,6 @@ import RowSelector from "../Functions/RowSelector";
 import RowOptions from "../Functions/RowOptions";
 import { IconAngle, IconPinColumn } from "../Utilities/SvgUtilities";
 import {
-    getSelectedAndDeselectedRows,
     checkdisplayOfGroupedColumns,
     hideColumns,
     getLeftOfColumn,
@@ -34,7 +33,6 @@ const SubComponent = (props: {
     userSelectedCurrentRowSubCompRows: any,
     userSelectedCurrentRowSubCompRowIds: any,
     updateSubCompRowIdentifiers: Function,
-    onSubComponentRowSelect: Function,
     subComponentHeader: boolean,
     getRowInfo: Function,
     rowActions: Function,
@@ -54,7 +52,6 @@ const SubComponent = (props: {
         userSelectedCurrentRowSubCompRows,
         userSelectedCurrentRowSubCompRowIds,
         updateSubCompRowIdentifiers,
-        onSubComponentRowSelect,
         subComponentHeader,
         getRowInfo,
         rowActions,
@@ -141,24 +138,9 @@ const SubComponent = (props: {
         updateSubCompRowIdentifiers(
             rowIdAttrValue,
             copyUserSelectedCurrentRowSubCompRows,
-            copyUserSelectedCurrentRowSubCompRowIds
+            copyUserSelectedCurrentRowSubCompRowIds,
+            selectionType
         );
-
-        if (onSubComponentRowSelect) {
-            const rowsToReturn = getSelectedAndDeselectedRows(
-                preGlobalFilteredRows,
-                getRowInfo,
-                copyUserSelectedCurrentRowSubCompRows,
-                userSelectedCurrentRowSubCompRows,
-                subComponentIdAttribute,
-                true
-            );
-            const { selectedRows, deselectedRows } = rowsToReturn;
-            onSubComponentRowSelect(
-                selectedRows,
-                selectionType === "deselect" ? deselectedRows : null
-            );
-        }
     };
 
     // Create a list of updated accessors to be searched from columns array
@@ -188,7 +170,6 @@ const SubComponent = (props: {
         getTableBodyProps,
         headerGroups,
         rows,
-        preGlobalFilteredRows,
         prepareRow,
         allColumns,
         setGlobalFilter,

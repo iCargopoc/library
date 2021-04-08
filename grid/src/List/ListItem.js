@@ -30,7 +30,6 @@ const ListItem = ({
     subComponentColumnsAccessorList,
     subComponentAdditionalColumnAccessorList,
     subComponentIdAttribute,
-    onSubComponentRowSelect,
     userSelectedSubCompRowIdentifiers,
     updateSubCompRowIdentifiers,
     isSubComponentGrid,
@@ -73,7 +72,6 @@ const ListItem = ({
     subComponentColumnsAccessorList: any,
     subComponentAdditionalColumnAccessorList: any,
     subComponentIdAttribute: string,
-    onSubComponentRowSelect: Function,
     userSelectedSubCompRowIdentifiers: any,
     updateSubCompRowIdentifiers: Function,
     isSubComponentGrid: boolean,
@@ -153,7 +151,6 @@ const ListItem = ({
                     subComponentAdditionalColumnAccessorList
                 }
                 subComponentIdAttribute={subComponentIdAttribute}
-                onSubComponentRowSelect={onSubComponentRowSelect}
                 userSelectedSubCompRowIdentifiers={
                     userSelectedSubCompRowIdentifiers
                 }
