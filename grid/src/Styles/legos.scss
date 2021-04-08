@@ -12,11 +12,11 @@
     }
     .ng-txt {
         height: rem(32);
-        border-radius: rem(3);
-        padding: rem(1) 0 0 rem(4);
+        border-radius: 3px;
+        padding: 1px 0 0 rem(4);
         font-size: rem(12);
         color: var(--textcolor);
-        border: var(--border-grey) solid rem(1);
+        border: var(--border-grey) solid 1px;
         box-sizing: border-box;
         &::placeholder {
             color: var(--placeholder);

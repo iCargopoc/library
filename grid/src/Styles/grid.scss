@@ -22,7 +22,7 @@
     }
     .ng-accordion {
         display: flex;
-        border-bottom: rem(1) solid var(--border-default);
+        border-bottom: 1px solid var(--border-default);
         background: var(--white);
         &__container {
             width: 100%;
@@ -41,7 +41,7 @@
             width: rem(20);
             height: rem(20);
             margin: rem(8) 0;
-            border: var(--border-light) solid rem(1);
+            border: var(--border-light) solid 1px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -58,7 +58,7 @@
     &__thead {
         font-size: rem(12);
         background: var(--light-grey);
-        border-bottom: rem(1) solid var(--border);
+        border-bottom: 1px solid var(--border);
         flex-wrap: wrap;
         position: sticky;
         z-index: 5;
@@ -77,12 +77,12 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        border-left: rem(1) solid transparent;
-        border-right: rem(1) solid transparent;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
         position: relative;
         &:hover {
-            border-left: rem(1) solid var(--border-grey);
-            border-right: rem(1) solid var(--border-grey);
+            border-left: 1px solid var(--border-grey);
+            border-right: 1px solid var(--border-grey);
         }
         .neo-grid__th-title {
             height: 100%;
@@ -125,7 +125,7 @@
                     }
                 }
                 &.neo-grid__pin {
-                    margin-top: rem(3);
+                    margin-top: 3px;
                     height: rem(12);
                     width: rem(12);
                     fill: var(--danger);
@@ -208,7 +208,7 @@
         .ng-loadmore {
             width: 100%;
             text-align: center;
-            border-top: var(--light-grey) solid rem(1);
+            border-top: var(--light-grey) solid 1px;
             padding: rem(8) 0;
             display: flex;
             justify-content: center;
@@ -219,7 +219,7 @@
         position: relative;
         &.ng-sticky {
             background-color: var(--white);
-            border-bottom: var(--light-grey) solid rem(1);
+            border-bottom: var(--light-grey) solid 1px;
         }
     }
     &__wrapper {
@@ -261,7 +261,7 @@
                 }
                 .ng-action {
                     padding-top: rem(4);
-                    padding-bottom: rem(2);
+                    padding-bottom: 2px;
                 }
             }
         }
@@ -322,8 +322,8 @@
                 display: block;
                 position: absolute;
                 background: var(--white);
-                border-radius: rem(4);
-                border: var(--border) solid rem(1);
+                border-radius: 4px;
+                border: var(--border) solid 1px;
                 width: auto;
                 right: 0;
                 top: 0;
@@ -356,26 +356,26 @@
             position: absolute;
             z-index: 5;
             background: var(--white);
-            border: var(--light-grey) solid rem(1);
+            border: var(--light-grey) solid 1px;
             top: rem(5);
             padding: rem(4);
-            border-radius: rem(4);
+            border-radius: 4px;
             width: auto;
             white-space: nowrap;
-            box-shadow: 0 0 rem(8) 0 var(--box-shadow);
+            box-shadow: 0 0 8px 0 var(--box-shadow);
             .ng-icon--tick {
                 fill: var(--white);
             }
         }
         .ng-scrolltrack {
-            right: rem(2) !important;
-            bottom: rem(2) !important;
-            border-radius: rem(3) !important;
+            right: 2px !important;
+            bottom: 2px !important;
+            border-radius: 3px !important;
             &--horizontal {
-                left: rem(2) !important;
+                left: 2px !important;
             }
             &--vertical {
-                top: rem(2) !important;
+                top: 2px !important;
             }
         }
         .ng-scrollthumb {
@@ -395,15 +395,15 @@
         }
         .neo-grid__row-wrap {
             background: var(--white);
-            border-radius: rem(12);
+            border-radius: 12px;
             &--expand {
-                border-radius: rem(12) rem(12) 0 0;
+                border-radius: 12px 12px 0 0;
             }
         }
         .neo-grid__row-expand {
             background: var(--white);
-            border-bottom-left-radius: rem(12);
-            border-bottom-right-radius: rem(12);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
         }
         .neo-grid__tr {
             padding-bottom: rem(4);

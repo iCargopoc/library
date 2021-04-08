@@ -5,7 +5,7 @@
 .neo-grid {
     .ng-popover {
         z-index: 10;
-        box-shadow: 0 rem(15) rem(30) var(--box-shadow);
+        box-shadow: 0 15px 30px var(--box-shadow);
         position: absolute;
         font-size: rem(13);
         color: var(--textcolor);
@@ -14,18 +14,18 @@
         right: 0;
         transition: 0.5s;
         background: var(--white);
-        border: rem(1) solid var(--border);
-        border-radius: rem(3);
+        border: 1px solid var(--border);
+        border-radius: 3px;
         &:before {
             width: 0;
             height: 0;
-            border-left: rem(11) solid transparent;
-            border-right: rem(11) solid transparent;
-            border-bottom: rem(11) solid var(--white);
+            border-left: 11px solid transparent;
+            border-right: 11px solid transparent;
+            border-bottom: 11px solid var(--white);
             content: "";
             top: rem(-10);
             position: absolute;
-            right: rem(2);
+            right: 2px;
         }
         ::-webkit-scrollbar {
             width: rem(6);
@@ -52,11 +52,11 @@
         }
         &__header {
             display: flex;
-            border-bottom: rem(1) solid var(--light-grey);
-            padding: rem(10) rem(10) rem(2) rem(10);
+            border-bottom: 1px solid var(--light-grey);
+            padding: rem(10) rem(10) 2px rem(10);
         }
         &__chooser {
-            border-right: rem(1) solid var(--light-grey);
+            border-right: 1px solid var(--light-grey);
             .ng-chooser-body {
                 padding: rem(10);
                 margin-bottom: rem(10);
@@ -71,8 +71,8 @@
                     padding: 0 rem(10);
                 }
                 &__txt {
-                    border: rem(1) solid var(--border);
-                    border-radius: rem(3);
+                    border: 1px solid var(--border);
+                    border-radius: 3px;
                     padding: 0 rem(6);
                     width: 100%;
                     height: rem(30);
@@ -81,12 +81,12 @@
                 }
                 &__wrap {
                     display: flex;
-                    border: rem(1) solid var(--border);
-                    border-radius: rem(3);
+                    border: 1px solid var(--border);
+                    border-radius: 3px;
                     padding: 0 rem(10);
                     height: rem(32);
                     &:last-child {
-                        border-bottom: rem(1) solid var(--border);
+                        border-bottom: 1px solid var(--border);
                     }
                 }
                 &__checkwrap {
@@ -104,7 +104,7 @@
         }
         &__footer {
             padding: rem(16) rem(10);
-            border-top: rem(1) solid var(--light-grey);
+            border-top: 1px solid var(--light-grey);
             display: flex;
             margin-top: auto;
             justify-content: flex-end;
@@ -172,13 +172,13 @@
                 font-size: rem(12);
             }
             &__icon {
-                margin: rem(2) 0 0;
+                margin: 2px 0 0;
                 cursor: pointer;
             }
             &__select {
                 width: rem(120);
                 height: rem(28);
-                border-radius: rem(3);
+                border-radius: 3px;
                 border-color: var(--border);
                 color: var(--textcolor);
             }
@@ -226,8 +226,8 @@
                 flex-wrap: wrap;
             }
             &__reorder {
-                border: rem(1) solid var(--border);
-                border-radius: rem(3);
+                border: 1px solid var(--border);
+                border-radius: 3px;
                 text-align: center;
                 min-height: rem(150);
                 margin: rem(6) rem(6);
@@ -301,11 +301,11 @@
                 padding: rem(10);
             }
             &__reorder {
-                border: rem(1) solid var(--border);
-                border-radius: rem(5);
+                border: 1px solid var(--border);
+                border-radius: 5px;
                 height: rem(86);
                 margin: 0 rem(4);
-                padding: rem(2) rem(8);
+                padding: 2px rem(8);
                 width: rem(86);
                 line-height: normal;
             }
