@@ -2599,7 +2599,7 @@ const GridComponent = (props) => {
 
     if (gridData && gridData.length > 0 && columns && columns.length > 0) {
         return (
-            <div className={`screen-container ${passTheme ? "sample-bg" : ""}`}>
+            <div className="screen-container">
                 <div className="selectedRows">
                     {userSelectedRows.map((row) => {
                         return (
