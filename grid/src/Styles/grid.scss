@@ -404,8 +404,8 @@
     }
 
     &--portal {
+        background: var(--body-bg);
         .neo-grid__header {
-            background: var(--body-bg);
             &--borderless {
                 border: 0 !important;
             }
@@ -430,7 +430,6 @@
         }
         .neo-grid__tbody {
             padding-top: rem(4);
-            background: var(--body-bg);
             &--parent {
                 padding-top: 0 !important;
             }
