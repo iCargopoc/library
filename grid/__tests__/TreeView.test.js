@@ -415,6 +415,7 @@ describe("render Index file ", () => {
     const thirdChildData = [];
     for (let i = 6000; i < 6005; i++) {
         thirdChildData.push({
+            titleId: 2,
             travelId: i,
             flight: null,
             segment: {
@@ -516,6 +517,39 @@ describe("render Index file ", () => {
         }
     ];
 
+    const parentDataWithInvalidValue = [
+        {
+            titleId: undefined,
+            parentTitle: "EXCVGRATES",
+            count: 3,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39",
+            childData: {
+                pageNum: 1,
+                pageSize: 5,
+                lastPage: false,
+                data: firstChildData
+            }
+        },
+        {
+            titleId: 1,
+            parentTitle: "EXCVGRATES",
+            count: 3,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39"
+        },
+        {
+            titleId: 2,
+            parentTitle: "EXCVGRATES",
+            count: 1,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39"
+        }
+    ];
+
     const parentDataWithOnlyLastChildData = [
         {
             titleId: 0,
@@ -531,7 +565,13 @@ describe("render Index file ", () => {
             count: 3,
             lastModified: "User name",
             date: "21 Jul 2020",
-            time: "18:39"
+            time: "18:39",
+            childData: {
+                pageNum: 21,
+                pageSize: 5,
+                lastPage: false,
+                data: []
+            }
         },
         {
             titleId: 2,
@@ -689,6 +729,59 @@ describe("render Index file ", () => {
 
         // Call for child data fetching has to be fired
         expect(mockLoadMoreData).toHaveBeenCalled();
+    });
+
+    it("test grid with invalid parent id - group sort", () => {
+        mockOffsetSize(600, 900);
+        const { container, getAllByTestId, getByTestId } = render(
+            <Grid
+                title={mockTitle}
+                gridWidth={mockGridWidth}
+                gridData={parentDataWithInvalidValue}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                parentColumn={parentColumn}
+                parentIdAttribute={parentIdAttribute}
+                parentRowExpandable={false}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                rowsToDeselect={mockRowsToDeselect}
+                fixedRowHeight
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open Group sort overlay
+        const groupSortIcon = getAllByTestId("toggleGroupSortOverLay");
+        expect(groupSortIcon.length).toBe(1);
+        act(() => {
+            groupSortIcon[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Add sort option
+        const addSortLink = getByTestId("addSort");
+        act(() => {
+            addSortLink.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Apply sort options
+        const applySortButton = getByTestId("saveSort");
+        act(() => {
+            applySortButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
     });
 
     it("test grid with parent data and child data and parentRowExpandable as false - load more - index pagination for fixedRowHeight Grid", () => {

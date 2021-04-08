@@ -225,40 +225,30 @@ const Grid = (props: Object): ?React$Element<*> => {
                 let sortedTreeData = [];
                 const parentDataFromOriginalData = [...originalData].filter(
                     (dataToFilter: Object): boolean => {
-                        let returnValue = false;
-                        if (dataToFilter) {
-                            const { isParent } = dataToFilter;
-                            returnValue = isParent === true;
-                        }
-                        return returnValue;
+                        const { isParent } = dataToFilter;
+                        return isParent === true;
                     }
                 );
                 parentDataFromOriginalData.forEach((dataFromGrid: Object) => {
-                    if (dataFromGrid) {
-                        sortedTreeData.push(dataFromGrid);
-                        const parentIdentifier =
-                            dataFromGrid[parentIdAttribute];
-                        if (
-                            parentIdentifier !== null &&
-                            parentIdentifier !== undefined
-                        ) {
-                            const childRowsOfParent = [...originalData].filter(
-                                (origData: Object): boolean => {
-                                    return (
-                                        origData &&
-                                        origData.isParent !== true &&
-                                        origData[parentIdAttribute] ===
-                                            parentIdentifier
-                                    );
-                                }
-                            );
-                            if (
-                                childRowsOfParent &&
-                                childRowsOfParent.length > 0
-                            ) {
-                                const sortedChildData = [
-                                    ...childRowsOfParent
-                                ].sort((x: Object, y: Object): number => {
+                    sortedTreeData.push(dataFromGrid);
+                    const parentIdentifier = dataFromGrid[parentIdAttribute];
+                    if (
+                        parentIdentifier !== null &&
+                        parentIdentifier !== undefined
+                    ) {
+                        const childRowsOfParent = [...originalData].filter(
+                            (origData: Object): boolean => {
+                                return (
+                                    origData &&
+                                    origData.isParent !== true &&
+                                    origData[parentIdAttribute] ===
+                                        parentIdentifier
+                                );
+                            }
+                        );
+                        if (childRowsOfParent && childRowsOfParent.length > 0) {
+                            const sortedChildData = [...childRowsOfParent].sort(
+                                (x: Object, y: Object): number => {
                                     let compareResult = 0;
                                     gridSortOptions.forEach(
                                         (option: Object) => {
@@ -300,12 +290,12 @@ const Grid = (props: Object): ?React$Element<*> => {
                                         }
                                     );
                                     return compareResult;
-                                });
-                                sortedTreeData = [
-                                    ...sortedTreeData,
-                                    ...sortedChildData
-                                ];
-                            }
+                                }
+                            );
+                            sortedTreeData = [
+                                ...sortedTreeData,
+                                ...sortedChildData
+                            ];
                         }
                     }
                 });
