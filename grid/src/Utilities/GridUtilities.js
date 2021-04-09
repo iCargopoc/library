@@ -457,9 +457,10 @@ export const getTotalWidthOfPinnedColumns = (
     );
     columnElements.forEach((elem: Object) => {
         const { classList, offsetWidth } = elem;
-        if (type === "left" && classList.contains("ng-sticky--left")) {
-            totalWidth += offsetWidth;
-        } else if (type === "right" && classList.contains("ng-sticky--right")) {
+        if (
+            (type === "left" && classList.contains("ng-sticky--left")) ||
+            (type === "right" && classList.contains("ng-sticky--right"))
+        ) {
             totalWidth += offsetWidth;
         }
     });
