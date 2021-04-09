@@ -6,6 +6,8 @@ import "@testing-library/jest-dom/extend-expect";
 /* eslint-disable no-unused-vars */
 import regeneratorRuntime from "regenerator-runtime";
 import Grid from "../src/index";
+import SubComponent from "../src/List/SubComponent";
+import { extractColumns } from "../src/Utilities/ColumnsUtilities";
 
 describe("render Index file ", () => {
     jest.setTimeout(30000);
@@ -36,6 +38,134 @@ describe("render Index file ", () => {
         }
         return "";
     };
+
+    const mockSubComponentData = [
+        {
+            hawbId: 6001,
+            subCompUldPositions: [
+                {
+                    subCompPosition: "L1",
+                    subCompValue: "7/9"
+                },
+                {
+                    subCompPosition: "Q1",
+                    subCompValue: "9/3"
+                },
+                {
+                    subCompPosition: "L6",
+                    subCompValue: "8/4"
+                },
+                {
+                    subCompPosition: "Q7",
+                    subCompValue: "4/9"
+                }
+            ],
+            hawb: {
+                hawbNo: "H1886",
+                from: "CBB",
+                to: "YYX",
+                status: "In transit",
+                ports: "GEN,SPX",
+                type: "NCE Corper",
+                std: {
+                    item1: "20 Pcs",
+                    item2: "300 kg",
+                    item3: "0.3 CBM",
+                    item4: "100 Slac Pcs"
+                },
+                goodsType: "Dangerous Goods"
+            },
+            scr: {
+                status: null,
+                ack: "Call",
+                num: 639
+            },
+            remarks:
+                "Laboris enim non do esse aliquip adipisicing eiusmod officia quis commodo sit. Voluptate ullamco occaecat incididunt amet ad dolor nisi ad consectetur. Laboris nulla esse do occaecat tempor cupidatat labore."
+        },
+        {
+            hawbId: 6002,
+            subCompUldPositions: [
+                {
+                    subCompPosition: "L1",
+                    subCompValue: "7/9"
+                },
+                {
+                    subCompPosition: "Q1",
+                    subCompValue: "9/3"
+                },
+                {
+                    subCompPosition: "L6",
+                    subCompValue: "8/4"
+                },
+                {
+                    subCompPosition: "Q7",
+                    subCompValue: "4/9"
+                }
+            ],
+            hawb: {
+                hawbNo: "H1886",
+                from: "CBB",
+                to: "YYX",
+                status: "In transit",
+                ports: "GEN,SPX",
+                type: "NCE Corper",
+                std: {
+                    item1: "20 Pcs",
+                    item2: "300 kg",
+                    item3: "0.3 CBM",
+                    item4: "100 Slac Pcs"
+                },
+                goodsType: "Dangerous Goods"
+            },
+            scr: null,
+            remarks:
+                "Laboris enim non do esse aliquip adipisicing eiusmod officia quis commodo sit. Voluptate ullamco occaecat incididunt amet ad dolor nisi ad consectetur. Laboris nulla esse do occaecat tempor cupidatat labore."
+        },
+        {
+            hawbId: null,
+            subCompUldPositions: [
+                {
+                    subCompPosition: "L1",
+                    subCompValue: "7/9"
+                },
+                {
+                    subCompPosition: "Q1",
+                    subCompValue: "9/3"
+                },
+                {
+                    subCompPosition: "L6",
+                    subCompValue: "8/4"
+                },
+                {
+                    subCompPosition: null,
+                    subCompValue: undefined
+                }
+            ],
+            hawb: {
+                hawbNo: "H1886",
+                from: "CBB",
+                to: "YYX",
+                status: "In transit",
+                ports: "GEN,SPX",
+                type: "NCE Corper",
+                std: {
+                    item1: "20 Pcs",
+                    item2: "300 kg",
+                    item3: "0.3 CBM",
+                    item4: "100 Slac Pcs"
+                },
+                goodsType: "Dangerous Goods"
+            },
+            scr: {
+                status: "Not ready to send",
+                ack: "Call",
+                num: 639
+            },
+            remarks:
+                "Laboris enim non do esse aliquip adipisicing eiusmod officia quis commodo sit. Voluptate ullamco occaecat incididunt amet ad dolor nisi ad consectetur. Laboris nulla esse do occaecat tempor cupidatat labore."
+        }
+    ];
 
     let mockGridData = [
         {
@@ -95,133 +225,7 @@ describe("render Index file ", () => {
                 volume: "7437 kg / 31 cbm"
             },
             remarks: "Enim aute magna.",
-            subComponentData: [
-                {
-                    hawbId: 6001,
-                    subCompUldPositions: [
-                        {
-                            subCompPosition: "L1",
-                            subCompValue: "7/9"
-                        },
-                        {
-                            subCompPosition: "Q1",
-                            subCompValue: "9/3"
-                        },
-                        {
-                            subCompPosition: "L6",
-                            subCompValue: "8/4"
-                        },
-                        {
-                            subCompPosition: "Q7",
-                            subCompValue: "4/9"
-                        }
-                    ],
-                    hawb: {
-                        hawbNo: "H1886",
-                        from: "CBB",
-                        to: "YYX",
-                        status: "In transit",
-                        ports: "GEN,SPX",
-                        type: "NCE Corper",
-                        std: {
-                            item1: "20 Pcs",
-                            item2: "300 kg",
-                            item3: "0.3 CBM",
-                            item4: "100 Slac Pcs"
-                        },
-                        goodsType: "Dangerous Goods"
-                    },
-                    scr: {
-                        status: null,
-                        ack: "Call",
-                        num: 639
-                    },
-                    remarks:
-                        "Laboris enim non do esse aliquip adipisicing eiusmod officia quis commodo sit. Voluptate ullamco occaecat incididunt amet ad dolor nisi ad consectetur. Laboris nulla esse do occaecat tempor cupidatat labore."
-                },
-                {
-                    hawbId: 6002,
-                    subCompUldPositions: [
-                        {
-                            subCompPosition: "L1",
-                            subCompValue: "7/9"
-                        },
-                        {
-                            subCompPosition: "Q1",
-                            subCompValue: "9/3"
-                        },
-                        {
-                            subCompPosition: "L6",
-                            subCompValue: "8/4"
-                        },
-                        {
-                            subCompPosition: "Q7",
-                            subCompValue: "4/9"
-                        }
-                    ],
-                    hawb: {
-                        hawbNo: "H1886",
-                        from: "CBB",
-                        to: "YYX",
-                        status: "In transit",
-                        ports: "GEN,SPX",
-                        type: "NCE Corper",
-                        std: {
-                            item1: "20 Pcs",
-                            item2: "300 kg",
-                            item3: "0.3 CBM",
-                            item4: "100 Slac Pcs"
-                        },
-                        goodsType: "Dangerous Goods"
-                    },
-                    scr: null,
-                    remarks:
-                        "Laboris enim non do esse aliquip adipisicing eiusmod officia quis commodo sit. Voluptate ullamco occaecat incididunt amet ad dolor nisi ad consectetur. Laboris nulla esse do occaecat tempor cupidatat labore."
-                },
-                {
-                    hawbId: null,
-                    subCompUldPositions: [
-                        {
-                            subCompPosition: "L1",
-                            subCompValue: "7/9"
-                        },
-                        {
-                            subCompPosition: "Q1",
-                            subCompValue: "9/3"
-                        },
-                        {
-                            subCompPosition: "L6",
-                            subCompValue: "8/4"
-                        },
-                        {
-                            subCompPosition: null,
-                            subCompValue: undefined
-                        }
-                    ],
-                    hawb: {
-                        hawbNo: "H1886",
-                        from: "CBB",
-                        to: "YYX",
-                        status: "In transit",
-                        ports: "GEN,SPX",
-                        type: "NCE Corper",
-                        std: {
-                            item1: "20 Pcs",
-                            item2: "300 kg",
-                            item3: "0.3 CBM",
-                            item4: "100 Slac Pcs"
-                        },
-                        goodsType: "Dangerous Goods"
-                    },
-                    scr: {
-                        status: "Not ready to send",
-                        ack: "Call",
-                        num: 639
-                    },
-                    remarks:
-                        "Laboris enim non do esse aliquip adipisicing eiusmod officia quis commodo sit. Voluptate ullamco occaecat incididunt amet ad dolor nisi ad consectetur. Laboris nulla esse do occaecat tempor cupidatat labore."
-                }
-            ]
+            subComponentData: mockSubComponentData
         }
     ];
     for (let i = 0; i < 50; i++) {
@@ -1075,6 +1079,16 @@ describe("render Index file ", () => {
     const mockLoadMoreData = jest.fn();
     const mockOnSubComponentRowSelect = jest.fn();
 
+    const columnsConfigData = extractColumns(
+        subComponentColumns,
+        false,
+        mockUpdateRowData,
+        false,
+        false,
+        true
+    );
+    const { updatedColumnStructure } = columnsConfigData;
+
     let mockContainer;
     beforeEach(() => {
         mockContainer = document.createElement("div");
@@ -1550,11 +1564,21 @@ describe("render Index file ", () => {
         expect(subComponentContent.length).toBe(1);
 
         // Select first row
-        let firstRowSelector = getAllByTestId(
+        const firstRowSelector = getAllByTestId(
             "subcomponent-rowSelector-singleRow"
         )[0];
         act(() => {
             firstRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Make subcomponent row selections from header
+        const headerSubCompSelector = getAllByTestId(
+            "subcomponent-rowSelector-allRows"
+        )[0];
+        act(() => {
+            headerSubCompSelector.dispatchEvent(
                 new MouseEvent("click", { bubbles: true })
             );
         });
@@ -2661,5 +2685,32 @@ describe("render Index file ", () => {
                 new MouseEvent("click", { bubbles: true })
             );
         });
+    });
+
+    it("test subComponent with row invalid selection", () => {
+        mockOffsetSize(600, 600);
+        const { container } = render(
+            <SubComponent
+                subComponentData={mockSubComponentData}
+                subComponentIdAttribute="hawbId"
+                subComponentColumns={updatedColumnStructure}
+                subComponentColumnsAccessorList={[]}
+                subComponentAdditionalColumnAccessorList={[]}
+                rowIdAttrValue={1}
+                gridGlobalFilterValue=""
+                userSelectedCurrentRowSubCompRows={[700]}
+                userSelectedCurrentRowSubCompRowIds={[]}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // No rows should have been selected
+        const selectedRowCheckboxes = container.querySelectorAll(
+            "input[type='checkbox'][checked]"
+        );
+        expect(selectedRowCheckboxes.length).toBe(0);
     });
 });
