@@ -2692,7 +2692,7 @@ const GridComponent = (props) => {
                     subComponentColumns={subComponentColumns}
                     subComponentColumnToExpand={subComponentColumnToExpand}
                     subComponentIdAttribute={
-                        allProps || passIdAttribute
+                        isSubComponentGrid && allProps
                             ? subComponentIdAttribute
                             : ""
                     }
