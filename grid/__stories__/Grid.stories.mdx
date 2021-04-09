@@ -287,6 +287,12 @@ const subComponentColumnToExpand // Same as columnToExpand
         ************/
     };
 
+    const onSubComponentRowSelect = (selectedRows, deSelectedRows) => {
+        // Grid will call this function when user selects or deselects a row from sub component section.
+        // An array of all selected row(s) data will be passed in as the first parameter.
+        // An array of deSelectedRow will be passed in as the second parameter.
+    };
+
     // This should be an array of idAttribute values, of rows that has to be deselected from the Grid
     const rowsToDeselect = [];
 
@@ -446,6 +452,7 @@ const subComponentColumnToExpand // Same as columnToExpand
         subComponentColumns={subComponentColumns} // Only for Sub component grid
         subComponentColumnToExpand={subComponentColumnToExpand} // Only for Sub component grid
         subComponentHeader={subComponentHeader} // Only for Sub component grid
+        onSubComponentRowSelect={onSubComponentRowSelect}
         rowActions={rowActions}
         expandableColumn={expandableColumn}
         onRowUpdate={onRowUpdate}
@@ -1426,6 +1433,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     subComponentColumns={subComponentColumns}
     subComponentColumnToExpand={subComponentColumnToExpand}
     subComponentHeader={subComponentHeader}
+    onSubComponentRowSelect={onSubComponentRowSelect}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     getRowInfo={getRowInfo}
@@ -1484,6 +1492,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     subComponentColumns={subComponentColumns}
     subComponentColumnToExpand={subComponentColumnToExpand}
     subComponentHeader={subComponentHeader}
+    onSubComponentRowSelect={onSubComponentRowSelect}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     getRowInfo={getRowInfo}
@@ -1541,6 +1550,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     subComponentColumns={subComponentColumns}
     subComponentColumnToExpand={subComponentColumnToExpand}
     subComponentHeader={subComponentHeader}
+    onSubComponentRowSelect={onSubComponentRowSelect}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     getRowInfo={getRowInfo}
