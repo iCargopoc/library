@@ -1,6 +1,7 @@
 // @flow
 import React from "react";
 import Measure from "react-measure";
+import Loader from "../Common/Loader";
 import SubComponent from "./SubComponent";
 import {
     getLeftOfColumn,
@@ -280,16 +281,7 @@ const RowItem = ({
                             gridGlobalFilterValue={gridGlobalFilterValue}
                         />
                     ) : null}
-                    {isLoadMoreRequiredForNormalRow(index) ? (
-                        <div className="ng-loader">
-                            <div className="ng-loader__block">
-                                <div className="ng-loader__item" />
-                                <div className="ng-loader__item" />
-                                <div className="ng-loader__item" />
-                                <div className="ng-loader__item" />
-                            </div>
-                        </div>
-                    ) : null}
+                    {isLoadMoreRequiredForNormalRow(index) ? <Loader /> : null}
                     {isLoadMoreChildRowsRequiredForRow(index, lastPage) ? (
                         <div className="ng-loadmore" style={{ width }}>
                             <button

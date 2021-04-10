@@ -24,8 +24,8 @@ import { matchSorter } from "match-sorter";
 import RowSelector from "./Functions/RowSelector";
 import DefaultColumnFilter from "./Functions/DefaultColumnFilter";
 import RowOptions from "./Functions/RowOptions";
-import ColumnHeaders from "./Headers/ColumnHeaders";
-import GridHeader from "./Headers/GridHeader";
+import ColumnHeaders from "./Common/ColumnHeaders";
+import GridHeader from "./Common/GridHeader";
 import RowsList from "./List/RowsList";
 import { IconAngle, IconExpand, IconCollapse } from "./Utilities/SvgUtilities";
 import {

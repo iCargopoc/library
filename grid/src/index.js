@@ -6,6 +6,7 @@ import {
     extractAdditionalColumn
 } from "./Utilities/ColumnsUtilities";
 import Customgrid from "./Customgrid";
+import Loader from "./Common/Loader";
 // Old method - eslint-disable-next-line import/no-unresolved
 // import "!style-loader!css-loader!sass-loader!./Styles/main.scss";
 // lazy styles inclusion via styleloader
@@ -634,14 +635,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                 />
                 {pageReloadCount > 0 ? (
                     <>
-                        <div className="ng-loader ng-loader--overlay">
-                            <div className="ng-loader__block">
-                                <div className="ng-loader__item" />
-                                <div className="ng-loader__item" />
-                                <div className="ng-loader__item" />
-                                <div className="ng-loader__item" />
-                            </div>
-                        </div>
+                        <Loader classNameValue="ng-loader--overlay" />
                         <div className="ng-overlay" />
                     </>
                 ) : null}
