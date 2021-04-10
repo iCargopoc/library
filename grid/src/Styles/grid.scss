@@ -31,6 +31,8 @@
         &__session {
             width: 100%;
             display: flex;
+            position: sticky;
+            left: 0;
         }
         &__block {
             display: flex;
@@ -213,6 +215,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: sticky;
+            left: 0;
         }
     }
     &__td {

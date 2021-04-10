@@ -6,6 +6,7 @@ import { IconExpand, IconCollapse } from "../Utilities/SvgUtilities";
 const ParentItem = ({
     row,
     index,
+    width,
     setSize,
     multiRowSelection,
     parentRowExpandable,
@@ -18,6 +19,7 @@ const ParentItem = ({
 }: {
     row: Object,
     index: number,
+    width: number,
     setSize: Function,
     multiRowSelection: boolean,
     parentRowExpandable: boolean,
@@ -40,7 +42,7 @@ const ParentItem = ({
         >
             {({ measureRef }: Object): Object => (
                 <div ref={measureRef} className="ng-accordion__container">
-                    <div className="ng-accordion__session">
+                    <div className="ng-accordion__session" style={{ width }}>
                         <div className="ng-accordion__block">
                             {multiRowSelection !== false &&
                             rowSelector !== false ? (

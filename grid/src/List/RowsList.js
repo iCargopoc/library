@@ -11,6 +11,7 @@ const RowsList = ({
     infiniteLoaderRef,
     listRef,
     height,
+    width,
     theme,
     rows,
     estimatedRowHeight,
@@ -58,6 +59,7 @@ const RowsList = ({
     infiniteLoaderRef?: any,
     listRef: any,
     height: number,
+    width: number,
     theme: string,
     rows: Array<Object>,
     estimatedRowHeight: number,
@@ -191,6 +193,7 @@ const RowsList = ({
                             isAtleastOneColumnPinned={isAtleastOneColumnPinned}
                             idAttribute={idAttribute}
                             style={style}
+                            width={width}
                             theme={theme}
                             index={index}
                             setSize={setSize}

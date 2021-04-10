@@ -15,6 +15,7 @@ const RowItem = ({
     idAttribute,
     theme,
     index,
+    width,
     setSize,
     isRowExpandEnabled,
     additionalColumn,
@@ -49,6 +50,7 @@ const RowItem = ({
     idAttribute: string,
     theme: string,
     index: number,
+    width: number,
     setSize: Function,
     isRowExpandEnabled: boolean,
     additionalColumn: Object,
@@ -289,7 +291,7 @@ const RowItem = ({
                         </div>
                     ) : null}
                     {isLoadMoreChildRowsRequiredForRow(index, lastPage) ? (
-                        <div className="ng-loadmore">
+                        <div className="ng-loadmore" style={{ width }}>
                             <button
                                 type="button"
                                 className="neo-btn neo-btn-default btn btn-secondary"

@@ -9,6 +9,7 @@ const ListItem = ({
     isAtleastOneColumnPinned,
     idAttribute,
     style,
+    width,
     theme,
     index,
     setSize,
@@ -50,6 +51,7 @@ const ListItem = ({
     isAtleastOneColumnPinned: boolean,
     idAttribute: string,
     style: Object,
+    width: number,
     theme: string,
     index: number,
     setSize: Function,
@@ -98,6 +100,7 @@ const ListItem = ({
                 <ParentItem
                     row={row}
                     index={index}
+                    width={width}
                     setSize={setSize}
                     multiRowSelection={multiRowSelection}
                     parentRowExpandable={parentRowExpandable}
@@ -136,6 +139,7 @@ const ListItem = ({
                 idAttribute={idAttribute}
                 theme={theme}
                 index={index}
+                width={width}
                 setSize={setSize}
                 isRowExpandEnabled={isRowExpandEnabled}
                 additionalColumn={additionalColumn}

@@ -426,6 +426,7 @@ const Customgrid = (props: {
 
     // Initialize react-table instance with the values received through properties
     const {
+        totalColumnsWidth,
         getTableProps,
         getTableBodyProps,
         headerGroups,
@@ -1325,12 +1326,15 @@ const Customgrid = (props: {
                         isParentGrid === true ? "neo-grid__table--parent" : ""
                     }`}
                 >
-                    <AutoSizer disableWidth className="neo-grid__autosizer">
-                        {({ height }: Object): Object => (
+                    <AutoSizer className="neo-grid__autosizer">
+                        {({ height, width }: Object): Object => (
                             <Scrollbars
                                 autoHeight
                                 autoHeightMin={height}
                                 autoHeightMax={height}
+                                style={{
+                                    width
+                                }}
                                 classes={{
                                     view: "neo-grid__scrollView",
                                     trackHorizontal:
@@ -1359,6 +1363,12 @@ const Customgrid = (props: {
                                     {rows && rows.length > 0 ? (
                                         <div
                                             {...getTableBodyProps()}
+                                            style={{
+                                                width:
+                                                    totalColumnsWidth > width
+                                                        ? totalColumnsWidth
+                                                        : width
+                                            }}
                                             className={`neo-grid__tbody ${
                                                 isParentGrid === true
                                                     ? "neo-grid__tbody--parent"
@@ -1393,6 +1403,7 @@ const Customgrid = (props: {
                                                             }
                                                             listRef={listRef}
                                                             height={height}
+                                                            width={width}
                                                             theme={theme}
                                                             rows={rows}
                                                             estimatedRowHeight={
@@ -1520,6 +1531,7 @@ const Customgrid = (props: {
                                                     gridRef={gridRef}
                                                     listRef={listRef}
                                                     height={height}
+                                                    width={width}
                                                     theme={theme}
                                                     rows={rows}
                                                     estimatedRowHeight={
