@@ -312,6 +312,10 @@
                 }
             }
         }
+        .neo-grid__row-loader {
+            position: sticky;
+            left: 0;
+        }
         .ng-action {
             display: flex;
             flex-direction: column;

@@ -281,7 +281,11 @@ const RowItem = ({
                             gridGlobalFilterValue={gridGlobalFilterValue}
                         />
                     ) : null}
-                    {isLoadMoreRequiredForNormalRow(index) ? <Loader /> : null}
+                    {isLoadMoreRequiredForNormalRow(index) ? (
+                        <div className="neo-grid__row-loader" style={{ width }}>
+                            <Loader />
+                        </div>
+                    ) : null}
                     {isLoadMoreChildRowsRequiredForRow(index, lastPage) ? (
                         <div className="ng-loadmore" style={{ width }}>
                             <button
