@@ -69,7 +69,7 @@ const Customgrid = (props: {
     paginationType: string,
     totalRecordsCount: number,
     onRowSelect: Function,
-    onFilterApplied: Function,
+    onSearch: Function,
     getRowInfo: Function,
     expandableColumn: boolean,
     isExpandContentAvailable?: boolean,
@@ -128,7 +128,7 @@ const Customgrid = (props: {
         paginationType,
         totalRecordsCount,
         onRowSelect,
-        onFilterApplied,
+        onSearch,
         getRowInfo,
         expandableColumn,
         rowActions,
@@ -1116,7 +1116,7 @@ const Customgrid = (props: {
 
     useEffect(() => {
         if (!isFirstRendering) {
-            onFilterApplied(extractGridDataFromRows(rows));
+            onSearch(extractGridDataFromRows(rows));
         }
     }, [globalFilter, filters]);
 

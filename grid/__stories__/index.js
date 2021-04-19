@@ -1886,7 +1886,7 @@ const GridComponent = (props) => {
         }
     };
 
-    const onFilterApplied = (filteredRows) => {
+    const onSearch = (filteredRows) => {
         console.log("Filtered Rows", filteredRows);
     };
 
@@ -2709,7 +2709,7 @@ const GridComponent = (props) => {
                     }
                     onRowUpdate={onRowUpdate}
                     onRowSelect={onRowSelect}
-                    onFilterApplied={onFilterApplied}
+                    onSearch={onSearch}
                     getRowInfo={allProps || passGetRowInfo ? getRowInfo : null}
                     onGridRefresh={
                         allProps || passOnGridRefresh ? onGridRefresh : null
