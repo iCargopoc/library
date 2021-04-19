@@ -98,6 +98,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         rowActions,
         onRowUpdate,
         onRowSelect,
+        onFilterApplied,
         getRowInfo,
         expandableColumn,
         CustomPanel,
@@ -608,6 +609,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     totalRecordsCount={totalRecordsCount}
                     updateRowInGrid={updateRowInGrid}
                     onRowSelect={onRowSelect}
+                    onFilterApplied={onFilterApplied}
                     getRowInfo={getRowInfo}
                     expandableColumn={expandableColumn}
                     rowActions={rowActions}

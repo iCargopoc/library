@@ -35,7 +35,8 @@ import {
     findSelectedRowIdFromIdAttribute,
     findDeSelectedRows,
     getSelectedAndDeselectedSubCompRows,
-    hideColumns
+    hideColumns,
+    extractGridDataFromRows
 } from "./Utilities/GridUtilities";
 
 const Customgrid = (props: {
@@ -68,6 +69,7 @@ const Customgrid = (props: {
     paginationType: string,
     totalRecordsCount: number,
     onRowSelect: Function,
+    onFilterApplied: Function,
     getRowInfo: Function,
     expandableColumn: boolean,
     isExpandContentAvailable?: boolean,
@@ -126,6 +128,7 @@ const Customgrid = (props: {
         paginationType,
         totalRecordsCount,
         onRowSelect,
+        onFilterApplied,
         getRowInfo,
         expandableColumn,
         rowActions,
@@ -434,7 +437,7 @@ const Customgrid = (props: {
         prepareRow,
         allColumns,
         preFilteredRows,
-        state: { globalFilter, selectedRowIds },
+        state: { globalFilter, filters, selectedRowIds },
         setGlobalFilter,
         toggleRowSelected,
         toggleAllRowsSelected
@@ -1110,6 +1113,12 @@ const Customgrid = (props: {
             }
         }
     }, [selectedRowIds]);
+
+    useEffect(() => {
+        if (!isFirstRendering) {
+            onFilterApplied(extractGridDataFromRows(rows));
+        }
+    }, [globalFilter, filters]);
 
     // Check if parent id attribute is present in the list of opened parent attributes.
     const isParentRowCollapsed = (childRow: Object): boolean => {

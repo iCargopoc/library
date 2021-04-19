@@ -499,3 +499,15 @@ export const updateAccessorList = (currentList: any): any => {
         return updatedItem;
     });
 };
+
+export const extractGridDataFromRows = (rows: any): any => {
+    const rowsToReturn = [];
+    rows.forEach((row: Object): Object => {
+        const { original } = row;
+        const { isParent } = original;
+        if (!isParent) {
+            rowsToReturn.push(original);
+        }
+    });
+    return rowsToReturn;
+};
