@@ -1017,11 +1017,15 @@ describe("render Index file ", () => {
         fireEvent.change(input, { target: { value: "6000" } });
         expect(input.value).toBe("6000");
 
-        // Check rows count now. It should not be same
+        // Check child rows count now. It should not be same
         await waitFor(() =>
             expect(getAllByTestId("gridrowWrap").length).toBeLessThan(
                 childRowsCount
             )
+        );
+        // Check parent rows count now. It should be greater than 1
+        await waitFor(() =>
+            expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1)
         );
 
         // Clear global filter
@@ -1030,9 +1034,13 @@ describe("render Index file ", () => {
         fireEvent.change(input, { target: { value: "" } });
         expect(input.value).toBe("");
 
-        // Check rows count now. It should be same now
+        // Check child rows count now. It should be same now
         await waitFor(() =>
             expect(getAllByTestId("gridrowWrap").length).toBe(childRowsCount)
+        );
+        // Check parent rows count now. It should be greater than 1
+        await waitFor(() =>
+            expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1)
         );
 
         // Open Column Filter
@@ -1048,18 +1056,22 @@ describe("render Index file ", () => {
         fireEvent.change(columnInput, { target: { value: "6000" } });
         expect(columnInput.value).toBe("6000");
 
-        // Check rows count now. It should not be same
+        // Check child rows count now. It should not be same
         expect(getAllByTestId("gridrowWrap").length).toBeLessThan(
             childRowsCount
         );
+        // Check parent rows count now. It should be greater than 1
+        expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1);
 
         // Clear Id Column filter
         columnInput = getByTestId("columnFilter-textbox");
         fireEvent.change(columnInput, { target: { value: "" } });
         expect(columnInput.value).toBe("");
 
-        // Check rows count now. It should not be same
+        // Check child rows count now. It should not be same
         expect(getAllByTestId("gridrowWrap").length).toBe(childRowsCount);
+        // Check parent rows count now. It should be greater than 1
+        expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1);
 
         // Open Group sort Icon
         const groupSortIcon = getByTestId("toggleGroupSortOverLay");
