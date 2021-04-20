@@ -196,6 +196,27 @@ const Customgrid = (props: {
         setRowsWithExpandedSubComponents
     ] = useState([]);
 
+    // Local state value for storing user selected sub component rows corresponding to each main row- identifier values (idAttribute)
+    const [
+        userSelectedSubCompRowIdentifiers,
+        setUserSelectedSubCompRowIdentifiers
+    ] = useState([]);
+
+    // Local state value for storing user selected rows - identifier values (idAttribute)
+    const [
+        userSelectedRowIdentifiers,
+        setUserSelectedRowIdentifiers
+    ] = useState([]);
+
+    // Local state to identify if row selection call back has to be given or not
+    const [
+        isRowSelectionCallbackNeeded,
+        setIsRowSelectionCallbackNeeded
+    ] = useState(null);
+
+    // Local state to store expanded parent rows
+    const [expandedParentRows, setExpandedParentRows] = useState([]);
+
     const gridDataLength = gridData.length;
 
     // Variables and functions used for handling infinite loading
@@ -348,23 +369,6 @@ const Customgrid = (props: {
         setIsExportOverlayOpen(!isExportOverlayOpen);
     };
 
-    // Local state value for storing user selected sub component rows corresponding to each main row- identifier values (idAttribute)
-    const [
-        userSelectedSubCompRowIdentifiers,
-        setUserSelectedSubCompRowIdentifiers
-    ] = useState([]);
-
-    // Local state value for storing user selected rows - identifier values (idAttribute)
-    const [
-        userSelectedRowIdentifiers,
-        setUserSelectedRowIdentifiers
-    ] = useState([]);
-    // Local state to identify if row selection call back has to be given or not
-    const [
-        isRowSelectionCallbackNeeded,
-        setIsRowSelectionCallbackNeeded
-    ] = useState(null);
-
     // Column filter added for all columns by default
     const defaultColumn = useMemo(
         (): Object => ({
@@ -372,8 +376,6 @@ const Customgrid = (props: {
         }),
         []
     );
-
-    const [expandedParentRows, setExpandedParentRows] = useState([]);
 
     // Create a list of accessors to be searched from columns array
     let accessorList = [...columnsAccessorList, ...expandedRowDataAccessorList];
