@@ -1095,7 +1095,7 @@ const Customgrid = (props: {
 
     useEffect(() => {
         resetRef.current = false;
-    }, [groupSortOptions]);
+    }, [gridData, groupSortOptions]);
 
     useEffect(() => {
         if (!isFirstRendering) {
