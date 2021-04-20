@@ -1179,7 +1179,6 @@ describe("Export data functionality test", () => {
 
     const mockAdditionalColumn = getColumnToExpand();
     const mockData = getGridData();
-    const mockOnSearch = jest.fn();
 
     afterEach(cleanup);
     let mockContainer;
@@ -1239,7 +1238,6 @@ describe("Export data functionality test", () => {
                 idAttribute="travelId"
                 columns={mockGridColumns}
                 columnToExpand={mockAdditionalColumn}
-                onSearch={mockOnSearch}
             />
         );
         const gridContainer = container;
@@ -1256,8 +1254,6 @@ describe("Export data functionality test", () => {
         await waitFor(() =>
             expect(getAllByText("No Records Found").length).toBe(1)
         );
-        // Expect call back to be called
-        await waitFor(() => expect(mockOnSearch).toHaveBeenCalled());
 
         // Open Export overlay
         const exportDataIcon = getByTestId("toggleExportDataOverlay");
@@ -1313,8 +1309,6 @@ describe("Export data functionality test", () => {
         await waitFor(() =>
             expect(getAllByTestId("gridrow").length).toBeGreaterThan(0)
         );
-        // Expect call back to be called
-        await waitFor(() => expect(mockOnSearch).toHaveBeenCalled());
     });
 
     it("test export data warnings", () => {
