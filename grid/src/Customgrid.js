@@ -217,6 +217,76 @@ const Customgrid = (props: {
     // Local state to store expanded parent rows
     const [expandedParentRows, setExpandedParentRows] = useState([]);
 
+    // Local state value for checking if column filter is open/closed
+    const [isFilterOpen, setFilterOpen] = useState(false);
+    // Toggle column filter state value based on UI clicks
+    const toggleColumnFilter = () => {
+        setFilterOpen(!isFilterOpen);
+    };
+
+    // Local state value for checking if group Sort Overlay is open/closed.
+    const [isGroupSortOverLayOpen, setGroupSortOverLay] = useState(false);
+    // Local state for group sort options
+    const [groupSortOptions, setGroupSortOptions] = useState([]);
+    // Local state value for hiding/unhiding column management overlay
+    const [isManageColumnOverlayOpen, setManageColumnOpen] = useState(false);
+
+    // Toggle group Sort state value based on UI clicks
+    const toggleGroupSortOverLay = () => {
+        // Make sure manage column overlay is closed whenever user opens/hides group sort overlay.
+        // This is to avoid conflicts of 2 components being rendered that uses DnD library.
+        setManageColumnOpen(false);
+        setGroupSortOverLay(!isGroupSortOverLayOpen);
+    };
+    // Call apply group sort function from parent
+    const applyGroupSort = (sortOptions: Object) => {
+        setGroupSortOptions(sortOptions);
+        if (serverSideSorting && typeof serverSideSorting === "function") {
+            resetRef.current = true;
+            if (scrollRef && scrollRef.current) {
+                scrollRef.current.scrollTop(0);
+            }
+            setRowsWithExpandedSubComponents([]);
+            setUserSelectedSubCompRowIdentifiers([]);
+            setUserSelectedRowIdentifiers([]);
+            setExpandedParentRows([]);
+            serverSideSorting(sortOptions);
+        }
+    };
+
+    // Toggle column manage overlay show/hide state value based on UI clicks
+    const toggleManageColumnsOverlay = () => {
+        // Make sure group sort overlay is closed whenever user opens/hides manage column overlay.
+        // This is to avoid conflicts of 2 components being rendered that uses DnD library.
+        setGroupSortOverLay(false);
+        setManageColumnOpen(!isManageColumnOverlayOpen);
+    };
+    // Callback method from column manage overlay to update the column structure of the grid
+    const updateColumnStructure = (
+        updatedColumns: Object,
+        updatedAdditionalColumn: Object,
+        updatedSubComponentColumns: Object,
+        updatedSubComponentAdditionalColumn: Object
+    ) => {
+        setGridColumns([...setColumnWidths([...updatedColumns])]);
+        setAdditionalColumn(updatedAdditionalColumn);
+        if (isSubComponentGrid) {
+            setSubComponentColumns([
+                ...setColumnWidths([...updatedSubComponentColumns])
+            ]);
+            setSubComponentAdditionalColumn(
+                updatedSubComponentAdditionalColumn
+            );
+        }
+    };
+
+    // Local state value for hiding/unhiding export data overlay
+    const [isExportOverlayOpen, setIsExportOverlayOpen] = useState(false);
+    // Toggle export overlay show/hide state value based on UI clicks
+    const toggleExportDataOverlay = () => {
+        setIsExportOverlayOpen(!isExportOverlayOpen);
+    };
+
     const gridDataLength = gridData.length;
 
     // Variables and functions used for handling infinite loading
@@ -299,74 +369,6 @@ const Customgrid = (props: {
             }
         }
         return isReloadRequired === false && !!gridData[index];
-    };
-
-    // Local state value for checking if column filter is open/closed
-    const [isFilterOpen, setFilterOpen] = useState(false);
-    // Toggle column filter state value based on UI clicks
-    const toggleColumnFilter = () => {
-        setFilterOpen(!isFilterOpen);
-    };
-
-    // Local state value for checking if group Sort Overlay is open/closed.
-    const [isGroupSortOverLayOpen, setGroupSortOverLay] = useState(false);
-    // Local state for group sort options
-    const [groupSortOptions, setGroupSortOptions] = useState([]);
-    // Local state value for hiding/unhiding column management overlay
-    const [isManageColumnOverlayOpen, setManageColumnOpen] = useState(false);
-
-    // Toggle group Sort state value based on UI clicks
-    const toggleGroupSortOverLay = () => {
-        // Make sure manage column overlay is closed whenever user opens/hides group sort overlay.
-        // This is to avoid conflicts of 2 components being rendered that uses DnD library.
-        setManageColumnOpen(false);
-        setGroupSortOverLay(!isGroupSortOverLayOpen);
-    };
-    // Call apply group sort function from parent
-    const applyGroupSort = (sortOptions: Object) => {
-        setGroupSortOptions(sortOptions);
-        if (serverSideSorting && typeof serverSideSorting === "function") {
-            resetRef.current = true;
-            scrollRef.current.scrollTop(0);
-            setRowsWithExpandedSubComponents([]);
-            setUserSelectedSubCompRowIdentifiers([]);
-            setUserSelectedRowIdentifiers([]);
-            setExpandedParentRows([]);
-            serverSideSorting(sortOptions);
-        }
-    };
-
-    // Toggle column manage overlay show/hide state value based on UI clicks
-    const toggleManageColumnsOverlay = () => {
-        // Make sure group sort overlay is closed whenever user opens/hides manage column overlay.
-        // This is to avoid conflicts of 2 components being rendered that uses DnD library.
-        setGroupSortOverLay(false);
-        setManageColumnOpen(!isManageColumnOverlayOpen);
-    };
-    // Callback method from column manage overlay to update the column structure of the grid
-    const updateColumnStructure = (
-        updatedColumns: Object,
-        updatedAdditionalColumn: Object,
-        updatedSubComponentColumns: Object,
-        updatedSubComponentAdditionalColumn: Object
-    ) => {
-        setGridColumns([...setColumnWidths([...updatedColumns])]);
-        setAdditionalColumn(updatedAdditionalColumn);
-        if (isSubComponentGrid) {
-            setSubComponentColumns([
-                ...setColumnWidths([...updatedSubComponentColumns])
-            ]);
-            setSubComponentAdditionalColumn(
-                updatedSubComponentAdditionalColumn
-            );
-        }
-    };
-
-    // Local state value for hiding/unhiding export data overlay
-    const [isExportOverlayOpen, setIsExportOverlayOpen] = useState(false);
-    // Toggle export overlay show/hide state value based on UI clicks
-    const toggleExportDataOverlay = () => {
-        setIsExportOverlayOpen(!isExportOverlayOpen);
     };
 
     // Column filter added for all columns by default
@@ -1089,7 +1091,7 @@ const Customgrid = (props: {
 
     useEffect(() => {
         resetRef.current = false;
-    }, [gridData]);
+    }, [groupSortOptions]);
 
     useEffect(() => {
         if (!isFirstRendering) {
