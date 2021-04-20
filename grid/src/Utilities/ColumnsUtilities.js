@@ -1,6 +1,10 @@
 // @flow
 import React from "react";
 import { matchSorter } from "match-sorter";
+import {
+    getParentRowsFromList,
+    getChildRowsFromParentId
+} from "./GridUtilities";
 import CellDisplayAndEdit from "../Functions/CellDisplayAndEdit";
 import { AdditionalColumnContext } from "./TagsContext";
 import AdditionalColumnTag from "../Functions/AdditionalColumnTag";
@@ -192,11 +196,48 @@ export const extractColumns = (
                     rows: any,
                     id: string,
                     filterValue: string
-                ): any =>
-                    matchSorter(rows, filterValue, {
+                ): any => {
+                    // Filter and group rows by parents
+                    const parentRows = getParentRowsFromList(rows);
+                    if (parentRows && parentRows.length > 0) {
+                        let filteredRows = [];
+                        parentRows.forEach((row: Object) => {
+                            const { original } = row;
+                            filteredRows.push(row);
+                            const { parentIdAttrForGrid } = original;
+                            const parentIdValue = original[parentIdAttrForGrid];
+                            const childRowsOfParent = getChildRowsFromParentId(
+                                rows,
+                                parentIdValue,
+                                parentIdAttrForGrid
+                            );
+                            if (
+                                childRowsOfParent &&
+                                childRowsOfParent.length > 0
+                            ) {
+                                const filteredChildRows = matchSorter(
+                                    childRowsOfParent,
+                                    filterValue,
+                                    {
+                                        keys: columnSearchKeys,
+                                        sorter: (rankedItems: Object): Object =>
+                                            rankedItems // To avoid automatic sorting based on match
+                                    }
+                                );
+                                filteredRows = [
+                                    ...filteredRows,
+                                    ...filteredChildRows
+                                ];
+                            }
+                        });
+                        return filteredRows;
+                    }
+
+                    return matchSorter(rows, filterValue, {
                         keys: columnSearchKeys,
                         sorter: (rankedItems: Object): Object => rankedItems // To avoid automatic sorting based on match
                     });
+                };
             } else {
                 elem.disableFilters = true;
             }

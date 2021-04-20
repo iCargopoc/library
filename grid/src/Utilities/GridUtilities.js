@@ -500,6 +500,30 @@ export const updateAccessorList = (currentList: any): any => {
     });
 };
 
+export const getParentRowsFromList = (rows: any): any => {
+    const parentRows = rows.filter((row: Object): boolean => {
+        const { original } = row;
+        const { isParent } = original;
+        return isParent === true;
+    });
+    return parentRows;
+};
+
+export const getChildRowsFromParentId = (
+    rows: any,
+    parentIdValue: any,
+    parentIdAttribute: string
+): any => {
+    const childRowsOfParent = rows.filter((row: Object): boolean => {
+        const { original } = row;
+        const { isParent } = original;
+        return (
+            isParent !== true && original[parentIdAttribute] === parentIdValue
+        );
+    });
+    return childRowsOfParent;
+};
+
 export const extractGridDataFromRows = (rows: any): any => {
     const rowsToReturn = [];
     rows.forEach((row: Object): Object => {

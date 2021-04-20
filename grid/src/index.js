@@ -18,6 +18,7 @@ const processedData = (gridData: [Object], parentIdAttribute: string): ?[] => {
         gridData.forEach((gridDataItem: Object) => {
             const updatedData = { ...gridDataItem };
             updatedData.isParent = true;
+            updatedData.parentIdAttrForGrid = parentIdAttribute;
             delete updatedData.childData;
             processedGridData.push(updatedData);
             const { childData } = gridDataItem;

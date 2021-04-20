@@ -29,6 +29,8 @@ import GridHeader from "./Common/GridHeader";
 import RowsList from "./List/RowsList";
 import { IconAngle, IconExpand, IconCollapse } from "./Utilities/SvgUtilities";
 import {
+    getParentRowsFromList,
+    getChildRowsFromParentId,
     setColumnWidths,
     findSelectedRows,
     findSelectedRowIdAttributes,
@@ -388,6 +390,34 @@ const Customgrid = (props: {
             columnsToFilter: Object,
             filterValue: string
         ): Object => {
+            if (isParentGrid) {
+                let filteredRows = [];
+                // Filter and group rows by parents
+                const parentRows = getParentRowsFromList(rowsToFilter);
+                parentRows.forEach((row: Object) => {
+                    const { original } = row;
+                    filteredRows.push(row);
+                    const parentIdValue = original[parentIdAttribute];
+                    const childRowsOfParent = getChildRowsFromParentId(
+                        rowsToFilter,
+                        parentIdValue,
+                        parentIdAttribute
+                    );
+                    if (childRowsOfParent && childRowsOfParent.length > 0) {
+                        const filteredChildRows = matchSorter(
+                            childRowsOfParent,
+                            filterValue,
+                            {
+                                keys: accessorList,
+                                sorter: (rankedItems: Object): Object =>
+                                    rankedItems // To avoid automatic sorting based on match
+                            }
+                        );
+                        filteredRows = [...filteredRows, ...filteredChildRows];
+                    }
+                });
+                return filteredRows;
+            }
             // Do match-sorter and return results
             return matchSorter(rowsToFilter, filterValue, {
                 keys: accessorList,
