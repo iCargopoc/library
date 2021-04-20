@@ -1,18 +1,27 @@
 // @flow
-import React from "react";
+import React, { useState } from "react";
+import { useAsyncDebounce } from "react-table";
 
 const DefaultColumnFilter = ({
     column: { filterValue, setFilter }
 }: {
     column: Object
 }): React$Element<*> => {
+    const [value, setValue] = useState(filterValue);
+
+    const onChange = useAsyncDebounce((changedValue: string) => {
+        setFilter(changedValue);
+    }, 500);
+
     return (
         <input
             className="ng-txt"
             data-testid="columnFilter-textbox"
-            value={filterValue || ""}
+            value={value || ""}
             onChange={(e: Object) => {
-                setFilter(e.target.value || undefined);
+                const newValue = e.target.value || undefined;
+                setValue(newValue);
+                onChange(newValue);
             }}
             placeholder="Search"
         />

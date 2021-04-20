@@ -10,8 +10,8 @@ const GlobalFilter = ({
     const [value, setValue] = useState(globalFilter);
 
     const onChange = useAsyncDebounce((changedValue: string) => {
-        setGlobalFilter(changedValue || undefined);
-    }, 200);
+        setGlobalFilter(changedValue);
+    }, 500);
 
     return (
         <div className="ng-txt-wrap ng-header__globalFilter">
@@ -20,8 +20,9 @@ const GlobalFilter = ({
                 data-testid="globalFilter-textbox"
                 value={value || ""}
                 onChange={(e: Object) => {
-                    setValue(e.target.value);
-                    onChange(e.target.value);
+                    const newValue = e.target.value || undefined;
+                    setValue(newValue);
+                    onChange(newValue);
                 }}
                 className="ng-txt"
                 placeholder="Search"
