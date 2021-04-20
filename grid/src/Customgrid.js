@@ -181,8 +181,8 @@ const Customgrid = (props: {
     // Local state value for holding sub component columns
     const [subComponentColumns, setSubComponentColumns] = useState([]);
 
-    // Local state value for holding whether grid has sub component structure
-    const [isSubComponentGrid, setIsSubComponentGrid] = useState(false);
+    // Local ref value for holding whether grid has sub component structure
+    const isSubComponentGrid = useRef(false);
 
     // Local state value for holding the sub component additional column configuration
     const [
@@ -270,7 +270,7 @@ const Customgrid = (props: {
     ) => {
         setGridColumns([...setColumnWidths([...updatedColumns])]);
         setAdditionalColumn(updatedAdditionalColumn);
-        if (isSubComponentGrid) {
+        if (isSubComponentGrid.current) {
             setSubComponentColumns([
                 ...setColumnWidths([...updatedSubComponentColumns])
             ]);
@@ -383,11 +383,7 @@ const Customgrid = (props: {
     let accessorList = [...columnsAccessorList, ...expandedRowDataAccessorList];
 
     // Append accessors if sub component is present
-    if (
-        isSubComponentGrid &&
-        managableSubComponentColumnns &&
-        managableSubComponentColumnns.length > 0
-    ) {
+    if (subComponentColumnsAccessorList.length > 0) {
         accessorList = [
             ...accessorList,
             ...subComponentColumnsAccessorList,
@@ -436,7 +432,14 @@ const Customgrid = (props: {
                 sorter: (rankedItems: Object): Object => rankedItems // To avoid automatic sorting based on match
             });
         },
-        [managableColumns, managableSubComponentColumnns, isSubComponentGrid]
+        [
+            gridData,
+            groupSortOptions,
+            managableColumns,
+            expandedRowData,
+            managableSubComponentColumnns,
+            managableSubComponentAdditionalColumn
+        ]
     );
 
     const isRowExpandEnabled = !!(
@@ -508,7 +511,7 @@ const Customgrid = (props: {
         useFlexLayout,
         useResizeColumns,
         (hooks: Object): Object => {
-            if (isSubComponentGrid) {
+            if (isSubComponentGrid.current) {
                 hooks.allColumns.push(
                     (hookColumns: Object, instanceObj: Object): Object => [
                         {
@@ -999,7 +1002,7 @@ const Customgrid = (props: {
             managableSubComponentColumnns &&
             managableSubComponentColumnns.length > 0
         ) {
-            setIsSubComponentGrid(true);
+            isSubComponentGrid.current = true;
             setSubComponentColumns(managableSubComponentColumnns);
         }
     }, [managableSubComponentColumnns]);
@@ -1357,7 +1360,7 @@ const Customgrid = (props: {
                     gridColumns={gridColumns}
                     additionalColumn={additionalColumn}
                     expandedRowData={expandedRowData}
-                    isSubComponentGrid={isSubComponentGrid}
+                    isSubComponentGrid={isSubComponentGrid.current}
                     subComponentColumns={subComponentColumns}
                     subComponentAdditionalColumn={subComponentAdditionalColumn}
                     managableSubComponentAdditionalColumn={
@@ -1511,7 +1514,7 @@ const Customgrid = (props: {
                                                                 updateSubCompRowIdentifiers
                                                             }
                                                             isSubComponentGrid={
-                                                                isSubComponentGrid
+                                                                isSubComponentGrid.current
                                                             }
                                                             subComponentHeader={
                                                                 subComponentHeader
@@ -1630,7 +1633,7 @@ const Customgrid = (props: {
                                                         subComponentAdditionalColumnAccessorList
                                                     }
                                                     isSubComponentGrid={
-                                                        isSubComponentGrid
+                                                        isSubComponentGrid.current
                                                     }
                                                     subComponentIdAttribute={
                                                         subComponentIdAttribute
