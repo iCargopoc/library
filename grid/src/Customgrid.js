@@ -158,6 +158,8 @@ const Customgrid = (props: {
     } = props;
 
     const listRef = createRef();
+    const scrollRef = useRef();
+    const resetRef = useRef();
 
     // Over scan count for react-window list
     const overScanCount =
@@ -303,6 +305,12 @@ const Customgrid = (props: {
     const applyGroupSort = (sortOptions: Object) => {
         setGroupSortOptions(sortOptions);
         if (serverSideSorting && typeof serverSideSorting === "function") {
+            resetRef.current = true;
+            scrollRef.current.scrollTop(0);
+            setRowsWithExpandedSubComponents([]);
+            setUserSelectedSubCompRowIdentifiers([]);
+            setUserSelectedRowIdentifiers([]);
+            setExpandedParentRows([]);
             serverSideSorting(sortOptions);
         }
     };
@@ -482,11 +490,11 @@ const Customgrid = (props: {
             isRowActionsColumnNeeded,
             rowsWithExpandedSubComponents,
             globalFilter: globalFilterLogic,
-            autoResetFilters: false,
-            autoResetGlobalFilter: false,
-            autoResetSortBy: false,
-            autoResetExpanded: false,
-            autoResetSelectedRows: false
+            autoResetFilters: resetRef.current,
+            autoResetGlobalFilter: resetRef.current,
+            autoResetSortBy: resetRef.current,
+            autoResetExpanded: resetRef.current,
+            autoResetSelectedRows: resetRef.current
         },
         useFilters,
         useGlobalFilter,
@@ -1078,6 +1086,10 @@ const Customgrid = (props: {
     }, [rowsToSelect, rowsToDeselect, gridData, groupSortOptions]);
 
     useEffect(() => {
+        resetRef.current = false;
+    }, [gridData]);
+
+    useEffect(() => {
         if (!isFirstRendering) {
             reRenderListData();
         }
@@ -1368,6 +1380,7 @@ const Customgrid = (props: {
                     <AutoSizer className="neo-grid__autosizer">
                         {({ height, width }: Object): Object => (
                             <Scrollbars
+                                ref={scrollRef}
                                 autoHeight
                                 autoHeightMin={height}
                                 autoHeightMax={height}
