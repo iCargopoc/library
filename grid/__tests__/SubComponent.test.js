@@ -1078,6 +1078,7 @@ describe("render Index file ", () => {
     const mockSelectBulkData = jest.fn();
     const mockLoadMoreData = jest.fn();
     const mockOnSubComponentRowSelect = jest.fn();
+    const mockOnSearch = jest.fn();
 
     const columnsConfigData = extractColumns(
         subComponentColumns,
@@ -1113,6 +1114,7 @@ describe("render Index file ", () => {
                 getRowInfo={mockGetRowInfo}
                 rowSelector={false}
                 onRowUpdate={mockUpdateRowData}
+                onSearch={mockOnSearch}
             />
         );
         const gridContainer = container;
@@ -1146,6 +1148,8 @@ describe("render Index file ", () => {
         await waitFor(() =>
             expect(getAllByTestId("subcontentrow").length).toBe(1)
         );
+        // Expect call back to be called
+        await waitFor(() => expect(mockOnSearch).toHaveBeenCalled());
 
         // Clear global filter
         input = getByTestId("globalFilter-textbox");
@@ -1157,6 +1161,8 @@ describe("render Index file ", () => {
         await waitFor(() =>
             expect(getAllByTestId("subcontentrow").length).toBeGreaterThan(1)
         );
+        // Expect call back to be called
+        await waitFor(() => expect(mockOnSearch).toHaveBeenCalled());
 
         // Close that sub component
         subComponentExpandCollpase = getAllByTestId(

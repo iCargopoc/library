@@ -607,6 +607,7 @@ describe("render Index file ", () => {
     const mockUpdateRowData = jest.fn();
     const mockSelectBulkData = jest.fn();
     const mockLoadMoreData = jest.fn();
+    const mockOnSearch = jest.fn();
 
     let mockContainer;
     beforeEach(() => {
@@ -1001,6 +1002,7 @@ describe("render Index file ", () => {
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 rowsToDeselect={mockRowsToDeselect}
+                onSearch={mockOnSearch}
             />
         );
         const gridContainer = container;
@@ -1027,6 +1029,8 @@ describe("render Index file ", () => {
         await waitFor(() =>
             expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1)
         );
+        // Expect call back to be called
+        await waitFor(() => expect(mockOnSearch).toHaveBeenCalled());
 
         // Clear global filter
         input = getByTestId("globalFilter-textbox");
@@ -1042,6 +1046,8 @@ describe("render Index file ", () => {
         await waitFor(() =>
             expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1)
         );
+        // Expect call back to be called
+        await waitFor(() => expect(mockOnSearch).toHaveBeenCalled());
 
         // Open Column Filter
         const toggleColumnFilter = getByTestId("toggleColumnFilter");
@@ -1062,6 +1068,8 @@ describe("render Index file ", () => {
         );
         // Check parent rows count now. It should be greater than 1
         expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1);
+        // Expect call back to be called
+        expect(mockOnSearch).toHaveBeenCalled();
 
         // Clear Id Column filter
         columnInput = getByTestId("columnFilter-textbox");
@@ -1072,6 +1080,8 @@ describe("render Index file ", () => {
         expect(getAllByTestId("gridrowWrap").length).toBe(childRowsCount);
         // Check parent rows count now. It should be greater than 1
         expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1);
+        // Expect call back to be called
+        expect(mockOnSearch).toHaveBeenCalled();
 
         // Open Group sort Icon
         const groupSortIcon = getByTestId("toggleGroupSortOverLay");

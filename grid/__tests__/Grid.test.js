@@ -438,6 +438,7 @@ describe("render Index file ", () => {
     const mockSelectBulkData = jest.fn();
     const mockGridRefresh = jest.fn();
     const mockLoadMoreData = jest.fn();
+    const mockOnSearch = jest.fn();
     const mockCustomPanel = () => {
         return (
             <div className="row-options-overlay customPanel">
@@ -471,6 +472,7 @@ describe("render Index file ", () => {
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 rowsToDeselect={mockRowsToDeselect}
+                onSearch={mockOnSearch}
             />
         );
         const gridContainer = container;
@@ -516,6 +518,8 @@ describe("render Index file ", () => {
         // Check new rows count, it should not match with old rows count
         let newRowsCount = getAllByTestId("gridrow").length;
         expect(newRowsCount).not.toBe(oldRowsCount);
+        // Expect call back to be called
+        expect(mockOnSearch).toHaveBeenCalled();
 
         // Clear search
         fireEvent.change(columnInput, { target: { value: "" } });
@@ -524,6 +528,8 @@ describe("render Index file ", () => {
         // Check new rows count, it should now match with old rows count
         newRowsCount = getAllByTestId("gridrow").length;
         expect(newRowsCount).toBe(oldRowsCount);
+        // Expect call back to be called
+        expect(mockOnSearch).toHaveBeenCalled();
 
         // Apply Ascending Sort
         const toggleGroupSortOverLay = getByTestId("toggleGroupSortOverLay");
