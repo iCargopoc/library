@@ -1145,7 +1145,7 @@ const Customgrid = (props: {
     }, [selectedRowIds]);
 
     useEffect(() => {
-        if (!isFirstRendering) {
+        if (!isFirstRendering && onSearch && typeof onSearch === "function") {
             onSearch(extractGridDataFromRows(rows));
         }
     }, [globalFilter, filters]);
