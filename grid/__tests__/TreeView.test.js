@@ -1,8 +1,10 @@
 /* eslint-disable no-undef */
 import React from "react";
-import { render, cleanup, fireEvent } from "@testing-library/react";
+import { render, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
+/* eslint-disable no-unused-vars */
+import regeneratorRuntime from "regenerator-runtime";
 import Grid from "../src/index";
 
 describe("render Index file ", () => {
@@ -74,6 +76,7 @@ describe("render Index file ", () => {
             accessor: "travelId",
             width: 50,
             isSortable: true,
+            searchKeys: ["travelId"],
             exportData: (rowData, isDesktop) => {
                 const { travelId } = rowData;
                 return [
@@ -979,9 +982,9 @@ describe("render Index file ", () => {
         expect(loadMoreButttons.length).toBe(1);
     });
 
-    it("test grid with parent data and child data and parentRowExpandable as false - group sort and export", () => {
+    it("test grid with parent data and child data and parentRowExpandable as false - filtering, group sort and export", async () => {
         mockOffsetSize(600, 600);
-        const { container, getByTestId } = render(
+        const { container, getByTestId, getAllByTestId } = render(
             <Grid
                 title={mockTitle}
                 gridWidth={mockGridWidth}
@@ -1004,6 +1007,59 @@ describe("render Index file ", () => {
 
         // Check if Grid id rendered.
         expect(gridContainer).toBeInTheDocument();
+
+        // Get Child Rows count
+        const childRowsCount = getAllByTestId("gridrowWrap").length;
+
+        // Apply global filter
+        let input = getByTestId("globalFilter-textbox");
+        expect(input.value).toBe("");
+        fireEvent.change(input, { target: { value: "6000" } });
+        expect(input.value).toBe("6000");
+
+        // Check rows count now. It should not be same
+        await waitFor(() =>
+            expect(getAllByTestId("gridrowWrap").length).toBeLessThan(
+                childRowsCount
+            )
+        );
+
+        // Clear global filter
+        input = getByTestId("globalFilter-textbox");
+        expect(input.value).toBe("6000");
+        fireEvent.change(input, { target: { value: "" } });
+        expect(input.value).toBe("");
+
+        // Check rows count now. It should be same now
+        await waitFor(() =>
+            expect(getAllByTestId("gridrowWrap").length).toBe(childRowsCount)
+        );
+
+        // Open Column Filter
+        const toggleColumnFilter = getByTestId("toggleColumnFilter");
+        act(() => {
+            toggleColumnFilter.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Apply Id Column filter
+        let columnInput = getByTestId("columnFilter-textbox");
+        fireEvent.change(columnInput, { target: { value: "6000" } });
+        expect(columnInput.value).toBe("6000");
+
+        // Check rows count now. It should not be same
+        expect(getAllByTestId("gridrowWrap").length).toBeLessThan(
+            childRowsCount
+        );
+
+        // Clear Id Column filter
+        columnInput = getByTestId("columnFilter-textbox");
+        fireEvent.change(columnInput, { target: { value: "" } });
+        expect(columnInput.value).toBe("");
+
+        // Check rows count now. It should not be same
+        expect(getAllByTestId("gridrowWrap").length).toBe(childRowsCount);
 
         // Open Group sort Icon
         const groupSortIcon = getByTestId("toggleGroupSortOverLay");
