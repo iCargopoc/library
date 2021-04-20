@@ -453,7 +453,7 @@ describe("render Index file ", () => {
     });
     afterEach(cleanup);
 
-    it("test custom className, theme, row expand, column filter, Ascending group sort and Cell edit", () => {
+    it("test custom className, theme, row expand, column filter, Ascending group sort and Cell edit", async () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId, getAllByTestId } = render(
             <Grid
@@ -516,20 +516,22 @@ describe("render Index file ", () => {
         expect(columnInput.value).toBe("222");
 
         // Check new rows count, it should not match with old rows count
-        let newRowsCount = getAllByTestId("gridrow").length;
-        expect(newRowsCount).not.toBe(oldRowsCount);
+        await waitFor(() =>
+            expect(getAllByTestId("gridrow").length).not.toBe(oldRowsCount)
+        );
         // Expect call back to be called
-        expect(mockOnSearch).toHaveBeenCalled();
+        await waitFor(() => expect(mockOnSearch).toHaveBeenCalled());
 
         // Clear search
         fireEvent.change(columnInput, { target: { value: "" } });
         expect(columnInput.value).toBe("");
 
         // Check new rows count, it should now match with old rows count
-        newRowsCount = getAllByTestId("gridrow").length;
-        expect(newRowsCount).toBe(oldRowsCount);
+        await waitFor(() =>
+            expect(getAllByTestId("gridrow").length).toBe(oldRowsCount)
+        );
         // Expect call back to be called
-        expect(mockOnSearch).toHaveBeenCalled();
+        await waitFor(() => expect(mockOnSearch).toHaveBeenCalled());
 
         // Apply Ascending Sort
         const toggleGroupSortOverLay = getByTestId("toggleGroupSortOverLay");

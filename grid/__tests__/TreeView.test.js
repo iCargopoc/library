@@ -1063,13 +1063,17 @@ describe("render Index file ", () => {
         expect(columnInput.value).toBe("6000");
 
         // Check child rows count now. It should not be same
-        expect(getAllByTestId("gridrowWrap").length).toBeLessThan(
-            childRowsCount
+        await waitFor(() =>
+            expect(getAllByTestId("gridrowWrap").length).toBeLessThan(
+                childRowsCount
+            )
         );
         // Check parent rows count now. It should be greater than 1
-        expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1);
+        await waitFor(() =>
+            expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1)
+        );
         // Expect call back to be called
-        expect(mockOnSearch).toHaveBeenCalled();
+        await waitFor(() => expect(mockOnSearch).toHaveBeenCalled());
 
         // Clear Id Column filter
         columnInput = getByTestId("columnFilter-textbox");
@@ -1077,11 +1081,15 @@ describe("render Index file ", () => {
         expect(columnInput.value).toBe("");
 
         // Check child rows count now. It should not be same
-        expect(getAllByTestId("gridrowWrap").length).toBe(childRowsCount);
+        await waitFor(() =>
+            expect(getAllByTestId("gridrowWrap").length).toBe(childRowsCount)
+        );
         // Check parent rows count now. It should be greater than 1
-        expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1);
+        await waitFor(() =>
+            expect(getAllByTestId("parentrowWrap").length).toBeGreaterThan(1)
+        );
         // Expect call back to be called
-        expect(mockOnSearch).toHaveBeenCalled();
+        await waitFor(() => expect(mockOnSearch).toHaveBeenCalled());
 
         // Open Group sort Icon
         const groupSortIcon = getByTestId("toggleGroupSortOverLay");
