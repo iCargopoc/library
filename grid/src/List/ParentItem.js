@@ -42,7 +42,11 @@ const ParentItem = ({
         >
             {({ measureRef }: Object): Object => (
                 <div ref={measureRef} className="ng-accordion__container">
-                    <div className="ng-accordion__session" style={{ width }}>
+                    <div
+                        className="ng-accordion__session"
+                        data-testid="parentrowWrap"
+                        style={{ width }}
+                    >
                         <div className="ng-accordion__block">
                             {multiRowSelection !== false &&
                             rowSelector !== false ? (
