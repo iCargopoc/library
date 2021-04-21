@@ -1,5 +1,5 @@
 // @flow
-import React from "react";
+import React, { useState } from "react";
 import GlobalFilter from "../Functions/GlobalFilter";
 import ColumnReordering from "../Overlays/managecolumns";
 import GroupSort from "../Overlays/groupsort";
@@ -35,15 +35,11 @@ const GridHeader = ({
     columnFilter,
     toggleColumnFilter,
     groupSort,
-    toggleGroupSortOverLay,
-    isGroupSortOverLayOpen,
     groupSortOptions,
     managableColumns,
     managableSubComponentColumnns,
     applyGroupSort,
     columnChooser,
-    toggleManageColumnsOverlay,
-    isManageColumnOverlayOpen,
     gridColumns,
     additionalColumn,
     expandedRowData,
@@ -54,8 +50,6 @@ const GridHeader = ({
     updateColumnStructure,
     enablePinColumn,
     exportData,
-    toggleExportDataOverlay,
-    isExportOverlayOpen,
     gridRef,
     isParentGrid,
     parentColumn,
@@ -64,6 +58,35 @@ const GridHeader = ({
     isDesktop,
     onGridRefresh
 }: Object): any => {
+    // Local state value for checking if group Sort Overlay is open/closed.
+    const [isGroupSortOverLayOpen, setGroupSortOverLay] = useState(false);
+
+    // Local state value for hiding/unhiding column management overlay
+    const [isManageColumnOverlayOpen, setManageColumnOpen] = useState(false);
+
+    // Toggle group Sort state value based on UI clicks
+    const toggleGroupSortOverLay = () => {
+        // Make sure manage column overlay is closed whenever user opens/hides group sort overlay.
+        // This is to avoid conflicts of 2 components being rendered that uses DnD library.
+        setManageColumnOpen(false);
+        setGroupSortOverLay(!isGroupSortOverLayOpen);
+    };
+
+    // Toggle column manage overlay show/hide state value based on UI clicks
+    const toggleManageColumnsOverlay = () => {
+        // Make sure group sort overlay is closed whenever user opens/hides manage column overlay.
+        // This is to avoid conflicts of 2 components being rendered that uses DnD library.
+        setGroupSortOverLay(false);
+        setManageColumnOpen(!isManageColumnOverlayOpen);
+    };
+
+    // Local state value for hiding/unhiding export data overlay
+    const [isExportOverlayOpen, setIsExportOverlayOpen] = useState(false);
+    // Toggle export overlay show/hide state value based on UI clicks
+    const toggleExportDataOverlay = () => {
+        setIsExportOverlayOpen(!isExportOverlayOpen);
+    };
+
     // Check if atleast 1 column has group sort option enabled, and display group sort icon only if there is atleast 1.
     const isGroupSortNeeded = checkIfGroupsortIsApplicable(managableColumns);
     return (

@@ -221,20 +221,8 @@ const Customgrid = (props: {
         setFilterOpen(!isFilterOpen);
     };
 
-    // Local state value for checking if group Sort Overlay is open/closed.
-    const [isGroupSortOverLayOpen, setGroupSortOverLay] = useState(false);
     // Local state for group sort options
     const [groupSortOptions, setGroupSortOptions] = useState([]);
-    // Local state value for hiding/unhiding column management overlay
-    const [isManageColumnOverlayOpen, setManageColumnOpen] = useState(false);
-
-    // Toggle group Sort state value based on UI clicks
-    const toggleGroupSortOverLay = () => {
-        // Make sure manage column overlay is closed whenever user opens/hides group sort overlay.
-        // This is to avoid conflicts of 2 components being rendered that uses DnD library.
-        setManageColumnOpen(false);
-        setGroupSortOverLay(!isGroupSortOverLayOpen);
-    };
     // Call apply group sort function from parent
     const applyGroupSort = (sortOptions: Object) => {
         setGroupSortOptions(sortOptions);
@@ -249,14 +237,6 @@ const Customgrid = (props: {
             setExpandedParentRows([]);
             serverSideSorting(sortOptions);
         }
-    };
-
-    // Toggle column manage overlay show/hide state value based on UI clicks
-    const toggleManageColumnsOverlay = () => {
-        // Make sure group sort overlay is closed whenever user opens/hides manage column overlay.
-        // This is to avoid conflicts of 2 components being rendered that uses DnD library.
-        setGroupSortOverLay(false);
-        setManageColumnOpen(!isManageColumnOverlayOpen);
     };
     // Callback method from column manage overlay to update the column structure of the grid
     const updateColumnStructure = (
@@ -275,13 +255,6 @@ const Customgrid = (props: {
                 updatedSubComponentAdditionalColumn
             );
         }
-    };
-
-    // Local state value for hiding/unhiding export data overlay
-    const [isExportOverlayOpen, setIsExportOverlayOpen] = useState(false);
-    // Toggle export overlay show/hide state value based on UI clicks
-    const toggleExportDataOverlay = () => {
-        setIsExportOverlayOpen(!isExportOverlayOpen);
     };
 
     // Local Ref value to identify if column/global filter has been applied, and give a call back
@@ -1357,8 +1330,6 @@ const Customgrid = (props: {
                     columnFilter={columnFilter}
                     toggleColumnFilter={toggleColumnFilter}
                     groupSort={groupSort}
-                    toggleGroupSortOverLay={toggleGroupSortOverLay}
-                    isGroupSortOverLayOpen={isGroupSortOverLayOpen}
                     groupSortOptions={groupSortOptions}
                     managableColumns={managableColumns}
                     managableSubComponentColumnns={
@@ -1366,8 +1337,6 @@ const Customgrid = (props: {
                     }
                     applyGroupSort={applyGroupSort}
                     columnChooser={columnChooser}
-                    toggleManageColumnsOverlay={toggleManageColumnsOverlay}
-                    isManageColumnOverlayOpen={isManageColumnOverlayOpen}
                     gridColumns={gridColumns}
                     additionalColumn={additionalColumn}
                     expandedRowData={expandedRowData}
@@ -1380,8 +1349,6 @@ const Customgrid = (props: {
                     updateColumnStructure={updateColumnStructure}
                     enablePinColumn={enablePinColumn}
                     exportData={exportData}
-                    toggleExportDataOverlay={toggleExportDataOverlay}
-                    isExportOverlayOpen={isExportOverlayOpen}
                     gridRef={gridRef}
                     isParentGrid={isParentGrid}
                     parentColumn={parentColumn}
