@@ -98,7 +98,9 @@ const Customgrid = (props: {
     rowsToDeselect: Array<Object>,
     fixedRowHeight: boolean,
     pdfPaperSize: string,
-    enablePinColumn: boolean
+    enablePinColumn: boolean,
+    shouldDisplayLoader: boolean,
+    setShouldDisplayLoader: Function
 }): any => {
     const {
         gridRef,
@@ -154,7 +156,9 @@ const Customgrid = (props: {
         rowsToSelect,
         rowsToDeselect,
         fixedRowHeight,
-        enablePinColumn
+        enablePinColumn,
+        shouldDisplayLoader,
+        setShouldDisplayLoader
     } = props;
 
     const listRef = createRef();
@@ -1356,6 +1360,8 @@ const Customgrid = (props: {
                     pdfPaperSize={pdfPaperSize}
                     isDesktop={isDesktop}
                     onGridRefresh={onGridRefresh}
+                    shouldDisplayLoader={shouldDisplayLoader}
+                    setShouldDisplayLoader={setShouldDisplayLoader}
                 />
                 <div
                     className={`neo-grid__table ${

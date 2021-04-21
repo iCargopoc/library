@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ClickAwayListener from "react-click-away-listener";
 import update from "immutability-helper";
 import JsPdf from "jspdf";
@@ -28,8 +28,12 @@ const ExportData = (props: Object): any => {
         subComponentAdditionalColumn,
         fileName,
         pdfPaperSize,
-        isDesktop
+        isDesktop,
+        shouldDisplayLoader,
+        setShouldDisplayLoader
     } = props;
+
+    const hasExportStarted = useRef(false);
 
     const exportedFileName = fileName || "iCargo Neo Report";
     const exportedPdfPaperSize = pdfPaperSize || "A4"; // Use A1, A2, A3, A4 or A5 - Default value is A4
@@ -286,6 +290,11 @@ const ExportData = (props: Object): any => {
         });
     };
 
+    const doExportData = () => {
+        hasExportStarted.current = true;
+        setShouldDisplayLoader(true);
+    };
+
     const prepareExportData = () => {
         // Clear existing warning
         setWarning("");
@@ -480,6 +489,10 @@ const ExportData = (props: Object): any => {
             // If no file types to export are selected
             setWarning("Select at least one file type");
         }
+
+        // Update ref and state variables to false
+        hasExportStarted.current = false;
+        setShouldDisplayLoader(false);
     };
 
     const changeDownloadType = (event: Object) => {
@@ -509,6 +522,12 @@ const ExportData = (props: Object): any => {
             );
         }
     }, []);
+
+    useEffect(() => {
+        if (shouldDisplayLoader === true && hasExportStarted.current === true) {
+            prepareExportData();
+        }
+    }, [shouldDisplayLoader]);
 
     if (columns && columns.length > 0) {
         return (
@@ -650,7 +669,7 @@ const ExportData = (props: Object): any => {
                             type="button"
                             data-testid="export_button"
                             className="neo-btn neo-btn-default btn btn-secondary"
-                            onClick={prepareExportData}
+                            onClick={doExportData}
                         >
                             Export
                         </button>

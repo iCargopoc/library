@@ -56,7 +56,9 @@ const GridHeader = ({
     fileName,
     pdfPaperSize,
     isDesktop,
-    onGridRefresh
+    onGridRefresh,
+    shouldDisplayLoader,
+    setShouldDisplayLoader
 }: Object): any => {
     // Local state value for checking if group Sort Overlay is open/closed.
     const [isGroupSortOverLayOpen, setGroupSortOverLay] = useState(false);
@@ -244,6 +246,8 @@ const GridHeader = ({
                                 fileName={fileName}
                                 pdfPaperSize={pdfPaperSize}
                                 isDesktop={isDesktop}
+                                shouldDisplayLoader={shouldDisplayLoader}
+                                setShouldDisplayLoader={setShouldDisplayLoader}
                             />
                         ) : null}
                     </div>

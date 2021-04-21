@@ -129,6 +129,9 @@ const Grid = (props: Object): ?React$Element<*> => {
     // Set state value for variable to check if the loading process is going on
     const [isNextPageLoading, setIsNextPageLoading] = useState(false);
 
+    // Set state value to check if loader has to be displayed or not
+    const [shouldDisplayLoader, setShouldDisplayLoader] = useState(false);
+
     // Set state value for holding the count of page reloads
     const [pageReloadCount, setPageReloadCount] = useState(0);
 
@@ -637,8 +640,10 @@ const Grid = (props: Object): ?React$Element<*> => {
                     fixedRowHeight={fixedRowHeight}
                     pdfPaperSize={pdfPaperSize}
                     enablePinColumn={enablePinColumn}
+                    shouldDisplayLoader={shouldDisplayLoader}
+                    setShouldDisplayLoader={setShouldDisplayLoader}
                 />
-                {pageReloadCount > 0 ? (
+                {shouldDisplayLoader || pageReloadCount > 0 ? (
                     <>
                         <Loader classNameValue="ng-loader--overlay" />
                         <div className="ng-overlay" />
