@@ -523,6 +523,7 @@ describe("render Index file ", () => {
     const parentDataWithInvalidValue = [
         {
             titleId: undefined,
+            parentIdAttrForGrid: { parentIdAttribute },
             parentTitle: "EXCVGRATES",
             count: 3,
             lastModified: "User name",
