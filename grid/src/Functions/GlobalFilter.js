@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAsyncDebounce } from "react-table";
 import { IconSearch } from "../Utilities/SvgUtilities";
 
@@ -8,13 +8,17 @@ const GlobalFilter = ({
     setGlobalFilter,
     filterEventRef
 }: Object): React$Element<*> => {
-    const [value, setValue] = useState(globalFilter);
+    const [value, setValue] = useState("");
 
     const onChange = useAsyncDebounce((changedValue: string) => {
         const currentFilterEvent = filterEventRef;
         currentFilterEvent.current = true;
         setGlobalFilter(changedValue);
     }, 500);
+
+    useEffect(() => {
+        setValue(globalFilter);
+    }, [globalFilter]);
 
     return (
         <div className="ng-txt-wrap ng-header__globalFilter">

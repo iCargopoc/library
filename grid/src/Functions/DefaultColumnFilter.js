@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAsyncDebounce } from "react-table";
 
 const DefaultColumnFilter = ({
@@ -9,13 +9,17 @@ const DefaultColumnFilter = ({
     column: Object,
     filterEventRef: Object
 }): React$Element<*> => {
-    const [value, setValue] = useState(filterValue);
+    const [value, setValue] = useState("");
 
     const onChange = useAsyncDebounce((changedValue: string) => {
         const currentFilterEvent = filterEventRef;
         currentFilterEvent.current = true;
         setFilter(changedValue);
     }, 500);
+
+    useEffect(() => {
+        setValue(filterValue);
+    }, [filterValue]);
 
     return (
         <input
