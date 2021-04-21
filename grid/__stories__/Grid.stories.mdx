@@ -427,6 +427,10 @@ const subComponentColumnToExpand // Same as columnToExpand
         ]
     }
 
+    // Pass this property if a loading graphics has to be displayed in the Grid.
+    // This can be used while doing functionalities like server side sorting.
+    const displayLoader = true;
+
     // Pass this property if pin column feature has to be enabled for grid columns.
     // User can 'Pin Left' columns from manage column overlay, and row actions column will be pinned right by default.
     const enablePinColumn = true;
@@ -447,6 +451,7 @@ const subComponentColumnToExpand // Same as columnToExpand
         pageInfo={pageInfo}
         loadMoreData={loadMoreData}
         serverSideSorting={serverSideSorting}
+        displayLoader={displayLoader}
         columns={columns} // *Required
         columnToExpand={columnToExpand}
         parentColumn={parentColumn} // Only for tree view
@@ -820,6 +825,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
 <Grid
     gridData={gridData}
     serverSideSorting={serverSideSorting}
+    displayLoader={displayLoader}
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
