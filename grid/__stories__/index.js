@@ -78,6 +78,8 @@ const GridComponent = (props) => {
         total: 20000,
         lastPage: false
     });
+    // State to keep loader displayed in Grid
+    const [displayLoader, setDisplayLoader] = useState(false);
     // Ref to keep store of pages that are reloaded based on total records count.
     const reloadedPages = useRef([]);
     // Ref to keep store of pages that are loaded till now.
@@ -2363,14 +2365,18 @@ const GridComponent = (props) => {
     };
 
     const serverSideSorting = (groupSortOptions) => {
-        console.log("Server side sort", groupSortOptions);
-        if (groupSortOptions && groupSortOptions.length > 0) {
-            setSortOptions(groupSortOptions);
-            setGridData(getSortedData([...gridData], groupSortOptions));
-        } else {
-            setSortOptions([]);
-            setGridData(originalGridData);
-        }
+        setDisplayLoader(true);
+        setTimeout(() => {
+            console.log("Server side sort", groupSortOptions);
+            if (groupSortOptions && groupSortOptions.length > 0) {
+                setSortOptions(groupSortOptions);
+                setGridData(getSortedData([...gridData], groupSortOptions));
+            } else {
+                setSortOptions([]);
+                setGridData(originalGridData);
+            }
+            setDisplayLoader(false);
+        }, 5000);
     };
 
     useEffect(() => {
@@ -2730,6 +2736,7 @@ const GridComponent = (props) => {
                     fileName={fileName || null}
                     pdfPaperSize={pdfPaperSize || null}
                     enablePinColumn={passPinColumn || false}
+                    displayLoader={displayLoader}
                 />
             </div>
         );

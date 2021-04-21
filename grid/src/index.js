@@ -120,7 +120,8 @@ const Grid = (props: Object): ?React$Element<*> => {
         fixedRowHeight,
         fileName,
         pdfPaperSize,
-        enablePinColumn
+        enablePinColumn,
+        displayLoader
     } = props;
 
     // Check if device is desktop
@@ -643,7 +644,9 @@ const Grid = (props: Object): ?React$Element<*> => {
                     shouldDisplayLoader={shouldDisplayLoader}
                     setShouldDisplayLoader={setShouldDisplayLoader}
                 />
-                {shouldDisplayLoader || pageReloadCount > 0 ? (
+                {displayLoader === true ||
+                shouldDisplayLoader ||
+                pageReloadCount > 0 ? (
                     <>
                         <Loader classNameValue="ng-loader--overlay" />
                         <div className="ng-overlay" />
