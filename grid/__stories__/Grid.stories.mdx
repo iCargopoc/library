@@ -278,13 +278,18 @@ const subComponentColumnToExpand // Same as columnToExpand
 
     const onRowSelect = (selectedRows, deSelectedRows) => {
         // Grid will call this function when user selects or deselects a row.
-        // An array of all selected row data will be passed in as the first parameter.
-        // An array of deSelectedRow(s) will be passed in as the second parameter.
+        // An array of all selected row(s) data will be passed in as the first parameter.
+        // An array of deselected row will be passed in as the second parameter.
         /************
             Make sure:
             * If a row is selected, remove that row details from 'rowsToDeselect' prop value (if present).
             * If a row is deselected, remove that row details from 'rowsToSelect' prop value (if present).
         ************/
+    };
+
+    const onSearch = (filteredRows) => {
+        // Grid will call this function when user applies column/global filters.
+        // An array of filtered row(s) data will be passed.
     };
 
     const onSubComponentRowSelect = (selectedRows, deSelectedRows) => {
@@ -457,6 +462,7 @@ const subComponentColumnToExpand // Same as columnToExpand
         expandableColumn={expandableColumn}
         onRowUpdate={onRowUpdate}
         onRowSelect={onRowSelect}
+        onSearch={onSearch}
         getRowInfo={getRowInfo}
         onGridRefresh={onGridRefresh}
         CustomPanel={CustomPanel}
@@ -495,6 +501,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -513,6 +520,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -531,6 +539,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -549,6 +558,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -568,6 +578,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     estimatedRowHeight={estimatedRowHeight}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -588,6 +599,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     estimatedRowHeight={estimatedRowHeight}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -607,6 +619,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     columnToExpand={columnToExpand}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -625,6 +638,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     expandableColumn
 />
 ```
@@ -645,6 +659,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     rowActions={rowActions}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -661,6 +676,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     rowActions={rowActions}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     enablePinColumn={true}
 />
 ```
@@ -679,6 +695,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     onGridRefresh={onGridRefresh}
 />
 ```
@@ -698,6 +715,7 @@ const CustomPanel = <CustomPanel />
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     CustomPanel={CustomPanel}
 />
 ```
@@ -718,6 +736,7 @@ const multiRowSelection = false;
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     multiRowSelection={multiRowSelection}
 />;
 ```
@@ -739,6 +758,7 @@ const rowsToSelect = [1, 7, 17];
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     rowsToSelect={rowsToSelect}
 />;
 ```
@@ -760,6 +780,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     rowsToDeselect={rowsToDeselect}
 />;
 ```
@@ -782,6 +803,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -801,6 +823,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -819,6 +842,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -837,6 +861,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -856,6 +881,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
 />
 ```
 
@@ -874,6 +900,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
     expandableColumn
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     getRowInfo={getRowInfo}
 />
 ```
@@ -894,6 +921,7 @@ const gridHeader = false;
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     gridHeader={gridHeader}
 />;
 ```
@@ -914,6 +942,7 @@ const showTitle = false;
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     showTitle={showTitle}
 />;
 ```
@@ -951,6 +980,7 @@ const globalSearch = false;
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     globalSearch={globalSearch}
 />;
 ```
@@ -970,6 +1000,7 @@ const columnFilter = false;
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     columnFilter={columnFilter}
 />;
 ```
@@ -989,6 +1020,7 @@ const groupSort = false;
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     groupSort={groupSort}
 />;
 ```
@@ -1008,6 +1040,7 @@ const columnChooser = false;
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     columnChooser={columnChooser}
 />;
 ```
@@ -1027,6 +1060,7 @@ const exportData = false;
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     exportData={exportData}
 />;
 ```
@@ -1046,6 +1080,7 @@ const fileName="Custom filename"
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     fileName={fileName}
 />;
 ```
@@ -1066,6 +1101,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     pdfPaperSize={pdfPaperSize}
 />;
 ```
@@ -1104,6 +1140,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     expandableColumn={expandableColumn}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     getRowInfo={getRowInfo}
     onGridRefresh={onGridRefresh}
     CustomPanel={CustomPanel}
@@ -1156,6 +1193,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     expandableColumn={expandableColumn}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     getRowInfo={getRowInfo}
     onGridRefresh={onGridRefresh}
     CustomPanel={CustomPanel}
@@ -1211,6 +1249,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     expandableColumn={expandableColumn}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     getRowInfo={getRowInfo}
     onGridRefresh={onGridRefresh}
     CustomPanel={CustomPanel}
@@ -1267,6 +1306,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     expandableColumn={expandableColumn}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     getRowInfo={getRowInfo}
     onGridRefresh={onGridRefresh}
     CustomPanel={CustomPanel}
@@ -1323,6 +1363,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     expandableColumn={expandableColumn}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     getRowInfo={getRowInfo}
     onGridRefresh={onGridRefresh}
     CustomPanel={CustomPanel}
@@ -1379,6 +1420,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     expandableColumn={expandableColumn}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     getRowInfo={getRowInfo}
     onGridRefresh={onGridRefresh}
     CustomPanel={CustomPanel}
@@ -1436,6 +1478,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     onSubComponentRowSelect={onSubComponentRowSelect}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     getRowInfo={getRowInfo}
     onGridRefresh={onGridRefresh}
     CustomPanel={CustomPanel}
@@ -1495,6 +1538,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     onSubComponentRowSelect={onSubComponentRowSelect}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     getRowInfo={getRowInfo}
     onGridRefresh={onGridRefresh}
     CustomPanel={CustomPanel}
@@ -1553,6 +1597,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     onSubComponentRowSelect={onSubComponentRowSelect}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
+    onSearch={onSearch}
     getRowInfo={getRowInfo}
     onGridRefresh={onGridRefresh}
     CustomPanel={CustomPanel}
