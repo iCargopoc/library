@@ -284,6 +284,9 @@ const Customgrid = (props: {
         setIsExportOverlayOpen(!isExportOverlayOpen);
     };
 
+    // Local Ref value to identify if column/global filter has been applied, and give a call back
+    const filterEventRef = useRef(false);
+
     const gridDataLength = gridData.length;
 
     // Variables and functions used for handling infinite loading
@@ -488,6 +491,7 @@ const Customgrid = (props: {
             columns,
             data,
             defaultColumn,
+            filterEventRef,
             isSubComponentGrid,
             enablePinColumn,
             isAtleastOneColumnPinned,
@@ -1165,7 +1169,12 @@ const Customgrid = (props: {
     }, [selectedRowIds]);
 
     useEffect(() => {
-        if (!isFirstRendering && onSearch && typeof onSearch === "function") {
+        if (
+            filterEventRef.current === true &&
+            onSearch &&
+            typeof onSearch === "function"
+        ) {
+            filterEventRef.current = false;
             onSearch(extractGridDataFromRows(rows));
         }
     }, [globalFilter, filters]);
@@ -1344,6 +1353,7 @@ const Customgrid = (props: {
                     globalSearch={globalSearch}
                     globalFilter={globalFilter}
                     setGlobalFilter={setGlobalFilter}
+                    filterEventRef={filterEventRef}
                     columnFilter={columnFilter}
                     toggleColumnFilter={toggleColumnFilter}
                     groupSort={groupSort}

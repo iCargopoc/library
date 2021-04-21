@@ -3,13 +3,17 @@ import React, { useState } from "react";
 import { useAsyncDebounce } from "react-table";
 
 const DefaultColumnFilter = ({
-    column: { filterValue, setFilter }
+    column: { filterValue, setFilter },
+    filterEventRef
 }: {
-    column: Object
+    column: Object,
+    filterEventRef: Object
 }): React$Element<*> => {
     const [value, setValue] = useState(filterValue);
 
     const onChange = useAsyncDebounce((changedValue: string) => {
+        const currentFilterEvent = filterEventRef;
+        currentFilterEvent.current = true;
         setFilter(changedValue);
     }, 500);
 

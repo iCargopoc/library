@@ -5,11 +5,14 @@ import { IconSearch } from "../Utilities/SvgUtilities";
 
 const GlobalFilter = ({
     globalFilter,
-    setGlobalFilter
+    setGlobalFilter,
+    filterEventRef
 }: Object): React$Element<*> => {
     const [value, setValue] = useState(globalFilter);
 
     const onChange = useAsyncDebounce((changedValue: string) => {
+        const currentFilterEvent = filterEventRef;
+        currentFilterEvent.current = true;
         setGlobalFilter(changedValue);
     }, 500);
 

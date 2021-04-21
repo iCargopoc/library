@@ -31,6 +31,7 @@ const GridHeader = ({
     globalSearch,
     globalFilter,
     setGlobalFilter,
+    filterEventRef,
     columnFilter,
     toggleColumnFilter,
     groupSort,
@@ -109,6 +110,7 @@ const GridHeader = ({
                     <GlobalFilter
                         globalFilter={globalFilter}
                         setGlobalFilter={setGlobalFilter}
+                        filterEventRef={filterEventRef}
                     />
                 ) : null}
                 {gridHeader !== false && columnFilter !== false ? (
