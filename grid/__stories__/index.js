@@ -2365,7 +2365,9 @@ const GridComponent = (props) => {
     };
 
     const serverSideSorting = (groupSortOptions) => {
+        // Setting display loader value true in Grid
         setDisplayLoader(true);
+        // Wait for 5 seconds and then do sorting (To make loader visible in the screen)
         setTimeout(() => {
             console.log("Server side sort", groupSortOptions);
             if (groupSortOptions && groupSortOptions.length > 0) {
