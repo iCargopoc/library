@@ -522,8 +522,9 @@ const ExportData = (props: Object): any => {
                 exportPageInfo.current = { ...pageInfo };
                 if (data && data.length > 0) {
                     dataFromServer = [...dataFromServer, ...data];
-                    const { pageNum, pageSize, endCursor, lastPage } = pageInfo;
-                    if (lastPage !== true) {
+                    const { pageNum, pageSize, endCursor, lastPage } =
+                        pageInfo || {};
+                    if (isParentGrid !== true && lastPage !== true) {
                         let newPageInfo = { endCursor, pageSize };
                         if (paginationType !== "cursor") {
                             newPageInfo = {
@@ -537,9 +538,10 @@ const ExportData = (props: Object): any => {
             })
             .then(() => {
                 if (
-                    exportPageInfo &&
-                    exportPageInfo.current &&
-                    exportPageInfo.current.lastPage === true
+                    isParentGrid === true ||
+                    (exportPageInfo &&
+                        exportPageInfo.current &&
+                        exportPageInfo.current.lastPage === true)
                 ) {
                     const serverData = isParentGrid
                         ? getProcessedData(dataFromServer, parentIdAttribute)

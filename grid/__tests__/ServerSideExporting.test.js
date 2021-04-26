@@ -8,6 +8,13 @@ import { act } from "react-dom/test-utils";
 import Grid from "../src/index";
 
 const GridScreen = (props) => {
+    const validateData = (value: any): string => {
+        if (value !== null && value !== undefined) {
+            return value.toString();
+        }
+        return "";
+    };
+
     const { paginationType, isLastPageEmpty, isTreeView } = props;
     const [gridData, setGridData] = useState([]);
     const isIndexBasedPagination = paginationType === "index";
@@ -34,6 +41,15 @@ const GridScreen = (props) => {
             displayCell: (rowData) => {
                 const { travelId } = rowData;
                 return <span>Travel Id {travelId}</span>;
+            },
+            exportData: (rowData) => {
+                const { travelId } = rowData;
+                return [
+                    {
+                        header: "Id",
+                        content: validateData(travelId)
+                    }
+                ];
             }
         },
         {
@@ -52,6 +68,20 @@ const GridScreen = (props) => {
             ],
             displayCell: () => {
                 return <span>Flight</span>;
+            },
+            exportData: (rowData) => {
+                const { flight } = rowData;
+                const { flightno, date } = flight || {};
+                return [
+                    {
+                        header: "Flight",
+                        content: validateData(flightno)
+                    },
+                    {
+                        header: "Date",
+                        content: validateData(date)
+                    }
+                ];
             }
         },
         {
@@ -60,6 +90,15 @@ const GridScreen = (props) => {
             width: 90,
             displayCell: () => {
                 return <span>SR</span>;
+            },
+            exportData: (rowData) => {
+                const { sr } = rowData;
+                return [
+                    {
+                        header: "SR",
+                        content: validateData(sr)
+                    }
+                ];
             }
         }
     ];
@@ -120,6 +159,23 @@ const GridScreen = (props) => {
         ],
         displayCell: () => {
             return <span>Parent Data</span>;
+        },
+        exportData: (rowData) => {
+            const { titleId, parentTitle, count } = rowData;
+            return [
+                {
+                    header: "Title ID",
+                    content: validateData(titleId)
+                },
+                {
+                    header: "Title",
+                    content: validateData(parentTitle)
+                },
+                {
+                    header: "Total Count",
+                    content: validateData(count)
+                }
+            ];
         }
     };
 
@@ -149,7 +205,7 @@ const GridScreen = (props) => {
                 pageNum: 1,
                 pageSize: 2,
                 lastPage: true,
-                data: firstPageData
+                data: secondPageData
             }
         }
     ];
@@ -178,8 +234,7 @@ const GridScreen = (props) => {
     const serverSideExporting = async (updatedPageInfo): any => {
         if (isTreeView) {
             return {
-                data: parentDataWithAllChildData,
-                pageInfo: { lastPage: true }
+                data: parentDataWithAllChildData
             };
         }
         const currentPageInfo = { ...firstPageInfo };
@@ -246,6 +301,13 @@ const GridScreen = (props) => {
 };
 
 describe("test server side exporting functionality", () => {
+    jest.setTimeout(30000);
+    HTMLCanvasElement.prototype.getContext = () => {
+        // return whatever getContext has to return
+        return [];
+    };
+    global.URL.createObjectURL = jest.fn();
+
     function mockOffsetSize(width, height) {
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,
