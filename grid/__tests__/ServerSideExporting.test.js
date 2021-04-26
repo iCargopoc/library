@@ -8,7 +8,7 @@ import { act } from "react-dom/test-utils";
 import Grid from "../src/index";
 
 const GridScreen = (props) => {
-    const { paginationType, isLastPageEmpty } = props;
+    const { paginationType, isLastPageEmpty, isTreeView } = props;
     const [gridData, setGridData] = useState([]);
     const isIndexBasedPagination = paginationType === "index";
     const firstPageInfo = isIndexBasedPagination
@@ -102,6 +102,58 @@ const GridScreen = (props) => {
         }
     ];
 
+    const parentColumn = {
+        Header: "ParentColumn",
+        innerCells: [
+            {
+                Header: "Title Id",
+                accessor: "titleId"
+            },
+            {
+                Header: "Title",
+                accessor: "parentTitle"
+            },
+            {
+                Header: "Count",
+                accessor: null
+            }
+        ],
+        displayCell: () => {
+            return <span>Parent Data</span>;
+        }
+    };
+
+    const parentDataWithAllChildData = [
+        {
+            titleId: 0,
+            parentTitle: "EXCVGRATES",
+            count: 2,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39",
+            childData: {
+                pageNum: 1,
+                pageSize: 2,
+                lastPage: true,
+                data: firstPageData
+            }
+        },
+        {
+            titleId: 1,
+            parentTitle: "EXCVGRATES",
+            count: 2,
+            lastModified: "User name",
+            date: "21 Jul 2020",
+            time: "18:39",
+            childData: {
+                pageNum: 1,
+                pageSize: 2,
+                lastPage: true,
+                data: firstPageData
+            }
+        }
+    ];
+
     const fetchData = (pageInfoObj) => {
         const { pageNum, endCursor } = pageInfoObj;
         if (pageNum === 1 || endCursor === 1) {
@@ -124,6 +176,12 @@ const GridScreen = (props) => {
     };
 
     const serverSideExporting = async (updatedPageInfo): any => {
+        if (isTreeView) {
+            return {
+                data: parentDataWithAllChildData,
+                pageInfo: { lastPage: true }
+            };
+        }
         const currentPageInfo = { ...firstPageInfo };
         if (updatedPageInfo !== null && updatedPageInfo !== undefined) {
             const { pageSize, endCursor, pageNum } = updatedPageInfo;
@@ -151,11 +209,27 @@ const GridScreen = (props) => {
     };
 
     useEffect(() => {
-        setGridData(firstPageData);
-        setPageInfo(firstPageInfo);
+        if (isTreeView) {
+            setGridData(parentDataWithAllChildData);
+        } else {
+            setGridData(firstPageData);
+            setPageInfo(firstPageInfo);
+        }
     }, []);
 
     if (gridData.length > 0) {
+        if (isTreeView) {
+            return (
+                <Grid
+                    gridData={gridData}
+                    columns={gridColumns}
+                    idAttribute="travelId"
+                    parentColumn={parentColumn}
+                    parentIdAttribute="titleId"
+                    serverSideExporting={serverSideExporting}
+                />
+            );
+        }
         return (
             <Grid
                 gridData={gridData}
@@ -276,6 +350,43 @@ describe("test server side exporting functionality", () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId, getAllByTestId } = render(
             <GridScreen paginationType="index" isLastPageEmpty={false} />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open Export overlay
+        const exportDataIcon = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            exportDataIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        const exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        expect(exportDataOverlayCount).toBe(1);
+
+        // Select csv
+        const selectCsv = getByTestId("chk_csv_test");
+        expect(selectCsv.checked).toEqual(false);
+        fireEvent.click(selectCsv);
+        expect(selectCsv.checked).toEqual(true);
+
+        // Click export data button
+        const exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+    });
+
+    it("index based pagination for tree view", async () => {
+        mockOffsetSize(600, 600);
+        const { container, getByTestId, getAllByTestId } = render(
+            <GridScreen paginationType="index" isTreeView />
         );
         const gridContainer = container;
 
