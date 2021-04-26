@@ -41,15 +41,6 @@ const GridScreen = (props) => {
             displayCell: (rowData) => {
                 const { travelId } = rowData;
                 return <span>Travel Id {travelId}</span>;
-            },
-            exportData: (rowData) => {
-                const { travelId } = rowData;
-                return [
-                    {
-                        header: "Id",
-                        content: validateData(travelId)
-                    }
-                ];
             }
         },
         {
@@ -68,20 +59,6 @@ const GridScreen = (props) => {
             ],
             displayCell: () => {
                 return <span>Flight</span>;
-            },
-            exportData: (rowData) => {
-                const { flight } = rowData;
-                const { flightno, date } = flight || {};
-                return [
-                    {
-                        header: "Flight",
-                        content: validateData(flightno)
-                    },
-                    {
-                        header: "Date",
-                        content: validateData(date)
-                    }
-                ];
             }
         },
         {
@@ -90,15 +67,6 @@ const GridScreen = (props) => {
             width: 90,
             displayCell: () => {
                 return <span>SR</span>;
-            },
-            exportData: (rowData) => {
-                const { sr } = rowData;
-                return [
-                    {
-                        header: "SR",
-                        content: validateData(sr)
-                    }
-                ];
             }
         }
     ];
@@ -159,23 +127,6 @@ const GridScreen = (props) => {
         ],
         displayCell: () => {
             return <span>Parent Data</span>;
-        },
-        exportData: (rowData) => {
-            const { titleId, parentTitle, count } = rowData;
-            return [
-                {
-                    header: "Title ID",
-                    content: validateData(titleId)
-                },
-                {
-                    header: "Title",
-                    content: validateData(parentTitle)
-                },
-                {
-                    header: "Total Count",
-                    content: validateData(count)
-                }
-            ];
         }
     };
 
