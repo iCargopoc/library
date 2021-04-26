@@ -1,3 +1,4 @@
+// @flow
 export const processedData = (
     gridData: [Object],
     parentIdAttribute: string
