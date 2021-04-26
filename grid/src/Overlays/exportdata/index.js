@@ -356,7 +356,8 @@ const ExportData = (props: Object): any => {
             // Loop through all rows
             rowsToExport.forEach((row: Object) => {
                 const { original } = row;
-                const { isParent } = isServerSideExporting ? row : original;
+                const rowDataObj = isServerSideExporting ? row : original;
+                const { isParent } = rowDataObj;
 
                 // If tree grid and row is parent row
                 if (isParentGrid === true && isParent === true) {
@@ -367,7 +368,7 @@ const ExportData = (props: Object): any => {
                     // Get export data from parent column
                     getExportDataFromColumns(
                         [parentColumn],
-                        isServerSideExporting ? row : original,
+                        rowDataObj,
                         isParentHeaderCreated,
                         headerValues,
                         parentRowValues,
@@ -407,7 +408,7 @@ const ExportData = (props: Object): any => {
                     // Get export data from parent column
                     getExportDataFromColumns(
                         gridColumnsList,
-                        isServerSideExporting ? row : original,
+                        rowDataObj,
                         isGridHeaderCreated,
                         headerValues,
                         gridRowValues,
@@ -424,9 +425,7 @@ const ExportData = (props: Object): any => {
 
                     if (isSubComponentGrid) {
                         // Check if grid has sub component column provided and corresponding row has sub component data
-                        const { subComponentData } = isServerSideExporting
-                            ? row
-                            : original;
+                        const { subComponentData } = rowDataObj;
                         if (
                             subComponentData &&
                             subComponentData.length > 0 &&
