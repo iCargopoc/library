@@ -269,7 +269,8 @@ const SubComponent = (props: {
                                 const rowInfo = getRowInfo(original, true);
                                 if (
                                     rowInfo &&
-                                    rowInfo.isRowSelectable === false
+                                    (rowInfo.isRowSelectable === false ||
+                                        rowInfo.className === "disabled")
                                 ) {
                                     isRowSelectable = false;
                                 }

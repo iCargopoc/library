@@ -657,7 +657,8 @@ const Customgrid = (props: {
                                 const rowInfo = getRowInfo(row.original, false);
                                 if (
                                     rowInfo &&
-                                    rowInfo.isRowSelectable === false
+                                    (rowInfo.isRowSelectable === false ||
+                                        rowInfo.className === "disabled")
                                 ) {
                                     isRowSelectable = false;
                                 }
@@ -1217,7 +1218,8 @@ const Customgrid = (props: {
                                 );
                                 if (
                                     rowInfo &&
-                                    rowInfo.isRowSelectable === false
+                                    (rowInfo.isRowSelectable === false ||
+                                        rowInfo.className === "disabled")
                                 ) {
                                     isRowSelectable = false;
                                 }

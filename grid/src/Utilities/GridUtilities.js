@@ -89,8 +89,11 @@ export const findSelectedRows = (
                         const { original } = flatRow;
                         const rowInfo = getRowInfo(original, isSubComponentRow);
                         return (
-                            !(rowInfo && rowInfo.isRowSelectable === false) &&
-                            id === rowId
+                            !(
+                                rowInfo &&
+                                (rowInfo.isRowSelectable === false ||
+                                    rowInfo.className === "disabled")
+                            ) && id === rowId
                         );
                     }
                     return id === rowId;
@@ -207,7 +210,9 @@ const checkAndPushRows = (
                 let isSelectable = true;
                 if (getRowInfo && typeof getRowInfo === "function") {
                     const rowInfo = getRowInfo(selectedSubCompRow, true);
-                    isSelectable = rowInfo.isRowSelectable;
+                    isSelectable =
+                        rowInfo.isRowSelectable &&
+                        rowInfo.className !== "disabled";
                 }
                 if (isSelectable !== false) {
                     arrayToPush.push(selectedSubCompRow);
