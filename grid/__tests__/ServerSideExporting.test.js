@@ -8,7 +8,7 @@ import { act } from "react-dom/test-utils";
 import Grid from "../src/index";
 
 const GridScreen = (props) => {
-    const { paginationType } = props;
+    const { paginationType, isLastPageEmpty } = props;
     const [gridData, setGridData] = useState([]);
     const isIndexBasedPagination = paginationType === "index";
     const firstPageInfo = isIndexBasedPagination
@@ -133,6 +133,12 @@ const GridScreen = (props) => {
                 currentPageInfo.pageNum = pageNum;
             }
         }
+        if (
+            isLastPageEmpty === false &&
+            (currentPageInfo.pageNum === 2 || currentPageInfo.endCursor === 3)
+        ) {
+            currentPageInfo.lastPage = true;
+        }
         const searchedData = await fetchData(currentPageInfo);
         if (searchedData && searchedData.length > 0) {
             return { data: searchedData, pageInfo: currentPageInfo };
@@ -155,7 +161,7 @@ const GridScreen = (props) => {
                 gridData={gridData}
                 columns={gridColumns}
                 idAttribute="travelId"
-                paginationType
+                paginationType={paginationType}
                 pageInfo={pageInfo}
                 loadMoreData={loadMoreData}
                 serverSideExporting={serverSideExporting}
@@ -233,6 +239,43 @@ describe("test server side exporting functionality", () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId, getAllByTestId } = render(
             <GridScreen paginationType="cursor" />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Open Export overlay
+        const exportDataIcon = getByTestId("toggleExportDataOverlay");
+        act(() => {
+            exportDataIcon.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if overlay is opened
+        const exportDataOverlayCount = getAllByTestId("exportoverlay").length;
+        expect(exportDataOverlayCount).toBe(1);
+
+        // Select csv
+        const selectCsv = getByTestId("chk_csv_test");
+        expect(selectCsv.checked).toEqual(false);
+        fireEvent.click(selectCsv);
+        expect(selectCsv.checked).toEqual(true);
+
+        // Click export data button
+        const exportButton = getByTestId("export_button");
+        act(() => {
+            exportButton.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+    });
+
+    it("index based pagination without empty data for last page", async () => {
+        mockOffsetSize(600, 600);
+        const { container, getByTestId, getAllByTestId } = render(
+            <GridScreen paginationType="index" isLastPageEmpty={false} />
         );
         const gridContainer = container;
 
