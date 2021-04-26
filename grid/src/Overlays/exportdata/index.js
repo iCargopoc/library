@@ -1,5 +1,6 @@
 // @flow
 import React, { useState, useRef, useEffect } from "react";
+import memoize from "lodash.memoize";
 import ClickAwayListener from "react-click-away-listener";
 import update from "immutability-helper";
 import JsPdf from "jspdf";
@@ -13,6 +14,9 @@ import {
     IconPdf
 } from "../../Utilities/SvgUtilities";
 import { convertToIndividualColumns } from "../../Utilities/GridUtilities";
+import { processedData } from "../../Utilities/DataUtilities";
+
+const getProcessedData = memoize(processedData);
 
 const ExportData = (props: Object): any => {
     const {
@@ -22,6 +26,7 @@ const ExportData = (props: Object): any => {
         columns,
         additionalColumn,
         isParentGrid,
+        parentIdAttribute,
         parentColumn,
         isSubComponentGrid,
         subComponentColumns,
@@ -30,7 +35,9 @@ const ExportData = (props: Object): any => {
         pdfPaperSize,
         isDesktop,
         shouldDisplayLoader,
-        setShouldDisplayLoader
+        setShouldDisplayLoader,
+        serverSideExporting,
+        paginationType
     } = props;
 
     const hasExportStarted = useRef(false);
@@ -69,6 +76,9 @@ const ExportData = (props: Object): any => {
     ] = useState(null);
     const [downloadTypes, setDownloadTypes] = useState([]);
     const [warning, setWarning] = useState("");
+
+    let dataFromServer = [];
+    const exportPageInfo = useRef({});
 
     // Update display value of column based on columnId
     const updatedDisplayOfColumn = (
@@ -295,7 +305,7 @@ const ExportData = (props: Object): any => {
         setShouldDisplayLoader(true);
     };
 
-    const prepareExportData = () => {
+    const prepareExportData = (serverData: any) => {
         // Clear existing warning
         setWarning("");
 
@@ -313,10 +323,19 @@ const ExportData = (props: Object): any => {
             return column.display === true;
         });
 
+        // Check if this is serverSide Exporting
+        const isServerSideExporting =
+            serverSideExporting && typeof serverSideExporting === "function";
+
+        let rowsToExport = [...rows];
+        if (isServerSideExporting) {
+            rowsToExport = [...serverData];
+        }
+
         // If rows, columns and download options are available
         if (
-            rows &&
-            rows.length > 0 &&
+            rowsToExport &&
+            rowsToExport.length > 0 &&
             filteredManagedColumns.length > 0 &&
             downloadTypes.length > 0
         ) {
@@ -335,9 +354,9 @@ const ExportData = (props: Object): any => {
             const rowValues = [];
 
             // Loop through all rows
-            rows.forEach((row: Object) => {
+            rowsToExport.forEach((row: Object) => {
                 const { original } = row;
-                const { isParent } = original;
+                const { isParent } = isServerSideExporting ? row : original;
 
                 // If tree grid and row is parent row
                 if (isParentGrid === true && isParent === true) {
@@ -348,7 +367,7 @@ const ExportData = (props: Object): any => {
                     // Get export data from parent column
                     getExportDataFromColumns(
                         [parentColumn],
-                        original,
+                        isServerSideExporting ? row : original,
                         isParentHeaderCreated,
                         headerValues,
                         parentRowValues,
@@ -388,7 +407,7 @@ const ExportData = (props: Object): any => {
                     // Get export data from parent column
                     getExportDataFromColumns(
                         gridColumnsList,
-                        original,
+                        isServerSideExporting ? row : original,
                         isGridHeaderCreated,
                         headerValues,
                         gridRowValues,
@@ -405,7 +424,9 @@ const ExportData = (props: Object): any => {
 
                     if (isSubComponentGrid) {
                         // Check if grid has sub component column provided and corresponding row has sub component data
-                        const { subComponentData } = original;
+                        const { subComponentData } = isServerSideExporting
+                            ? row
+                            : original;
                         if (
                             subComponentData &&
                             subComponentData.length > 0 &&
@@ -473,7 +494,7 @@ const ExportData = (props: Object): any => {
             } else {
                 setWarning("No data has been configured to export");
             }
-        } else if (!(rows && rows.length > 0)) {
+        } else if (!(rowsToExport && rowsToExport.length > 0)) {
             // If no rows available to export
             setWarning("No rows available to export");
         } else if (filteredManagedColumns.length === 0) {
@@ -493,6 +514,40 @@ const ExportData = (props: Object): any => {
         // Update ref and state variables to false
         hasExportStarted.current = false;
         setShouldDisplayLoader(false);
+    };
+
+    const fetchServerData = async (pageInfoData: any) => {
+        await serverSideExporting(pageInfoData)
+            .then((result: any) => {
+                const { data, pageInfo } = result;
+                exportPageInfo.current = { ...pageInfo };
+                if (data && data.length > 0) {
+                    dataFromServer = [...dataFromServer, ...data];
+                    const { pageNum, pageSize, endCursor, lastPage } = pageInfo;
+                    if (lastPage !== true) {
+                        let newPageInfo = { endCursor, pageSize };
+                        if (paginationType !== "cursor") {
+                            newPageInfo = {
+                                pageNum: pageNum + 1,
+                                pageSize
+                            };
+                        }
+                        fetchServerData(newPageInfo);
+                    }
+                }
+            })
+            .then(() => {
+                if (
+                    exportPageInfo &&
+                    exportPageInfo.current &&
+                    exportPageInfo.current.lastPage === true
+                ) {
+                    const serverData = isParentGrid
+                        ? getProcessedData(dataFromServer, parentIdAttribute)
+                        : dataFromServer;
+                    prepareExportData(serverData);
+                }
+            });
     };
 
     const changeDownloadType = (event: Object) => {
@@ -525,7 +580,14 @@ const ExportData = (props: Object): any => {
 
     useEffect(() => {
         if (shouldDisplayLoader === true && hasExportStarted.current === true) {
-            prepareExportData();
+            if (
+                serverSideExporting &&
+                typeof serverSideExporting === "function"
+            ) {
+                fetchServerData();
+            } else {
+                prepareExportData();
+            }
         }
     }, [shouldDisplayLoader]);
 

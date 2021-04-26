@@ -65,18 +65,24 @@ const GridComponent = (props) => {
     const gridPageSize = 50;
     const paginationType = "index"; // or - "cursor" - if Gris is tree view and parentRowExpandable is false, then paginationType should be "index"
     // State for holding index page info
-    const [indexPageInfo, setIndexPageInfo] = useState({
+    const firstIndexPageInfo = {
         pageNum: 1,
         pageSize: gridPageSize,
         total: 20000,
         lastPage: false
+    };
+    const [indexPageInfo, setIndexPageInfo] = useState({
+        ...firstIndexPageInfo
     });
     // State for holding cursor page info
-    const [cursorPageInfo, setCursorPageInfo] = useState({
+    const firstCursorPageInfo = {
         endCursor: gridPageSize - 1,
         pageSize: gridPageSize,
         total: 20000,
         lastPage: false
+    };
+    const [cursorPageInfo, setCursorPageInfo] = useState({
+        ...firstCursorPageInfo
     });
     // State to keep loader displayed in Grid
     const [displayLoader, setDisplayLoader] = useState(false);
@@ -2381,6 +2387,32 @@ const GridComponent = (props) => {
         }, 5000);
     };
 
+    const serverSideExporting = async (updatedPageInfo): any => {
+        const currentPageInfo =
+            paginationType === "index"
+                ? firstIndexPageInfo
+                : firstCursorPageInfo;
+        if (updatedPageInfo !== null && updatedPageInfo !== undefined) {
+            const { pageSize, endCursor, pageNum } = updatedPageInfo;
+            if (paginationType === "cursor") {
+                currentPageInfo.endCursor = endCursor + pageSize;
+            } else {
+                currentPageInfo.pageNum = pageNum;
+            }
+        }
+        const searchedData = await fetchData(currentPageInfo).then((data) => {
+            return data;
+        });
+        if (searchedData && searchedData.length > 0) {
+            return { data: searchedData, pageInfo: currentPageInfo };
+        }
+        currentPageInfo.lastPage = true;
+        return {
+            data: [],
+            pageInfo: currentPageInfo
+        };
+    };
+
     useEffect(() => {
         const mappedOriginalColumns = originalColumns.map((column) => {
             const updatedColumn = column;
@@ -2682,6 +2714,7 @@ const GridComponent = (props) => {
                     serverSideSorting={
                         enableServersideSorting ? serverSideSorting : null
                     }
+                    serverSideExporting={serverSideExporting}
                     columns={columns}
                     columnToExpand={
                         (allProps && fixedRowHeight !== true) ||

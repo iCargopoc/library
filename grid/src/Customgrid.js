@@ -78,6 +78,7 @@ const Customgrid = (props: {
     isNextPageLoading: boolean,
     loadNextPage: Function,
     serverSideSorting: Function,
+    serverSideExporting: Function,
     getSortedData: Function,
     getToggleAllRowsSelectedProps?: Function,
     row?: Array<Object>,
@@ -139,6 +140,7 @@ const Customgrid = (props: {
         isNextPageLoading,
         loadNextPage,
         serverSideSorting,
+        serverSideExporting,
         getSortedData,
         CustomPanel,
         multiRowSelection,
@@ -1355,6 +1357,7 @@ const Customgrid = (props: {
                     exportData={exportData}
                     gridRef={gridRef}
                     isParentGrid={isParentGrid}
+                    parentIdAttribute={parentIdAttribute}
                     parentColumn={parentColumn}
                     fileName={fileName}
                     pdfPaperSize={pdfPaperSize}
@@ -1362,6 +1365,8 @@ const Customgrid = (props: {
                     onGridRefresh={onGridRefresh}
                     shouldDisplayLoader={shouldDisplayLoader}
                     setShouldDisplayLoader={setShouldDisplayLoader}
+                    serverSideExporting={serverSideExporting}
+                    paginationType={paginationType}
                 />
                 <div
                     className={`neo-grid__table ${

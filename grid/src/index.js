@@ -42,6 +42,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         pageInfo,
         loadMoreData,
         serverSideSorting,
+        serverSideExporting,
         columns,
         columnToExpand,
         parentColumn,
@@ -578,6 +579,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     isNextPageLoading={isNextPageLoading}
                     loadNextPage={loadNextPage}
                     serverSideSorting={serverSideSorting}
+                    serverSideExporting={serverSideExporting}
                     getSortedData={getSortedData}
                     CustomPanel={CustomPanel}
                     multiRowSelection={multiRowSelection}

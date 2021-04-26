@@ -52,13 +52,16 @@ const GridHeader = ({
     exportData,
     gridRef,
     isParentGrid,
+    parentIdAttribute,
     parentColumn,
     fileName,
     pdfPaperSize,
     isDesktop,
     onGridRefresh,
     shouldDisplayLoader,
-    setShouldDisplayLoader
+    setShouldDisplayLoader,
+    serverSideExporting,
+    paginationType
 }: Object): any => {
     // Local state value for checking if group Sort Overlay is open/closed.
     const [isGroupSortOverLayOpen, setGroupSortOverLay] = useState(false);
@@ -237,6 +240,7 @@ const GridHeader = ({
                                 columns={gridColumns}
                                 additionalColumn={additionalColumn}
                                 isParentGrid={isParentGrid}
+                                parentIdAttribute={parentIdAttribute}
                                 parentColumn={parentColumn}
                                 isSubComponentGrid={isSubComponentGrid}
                                 subComponentColumns={subComponentColumns}
@@ -248,6 +252,8 @@ const GridHeader = ({
                                 isDesktop={isDesktop}
                                 shouldDisplayLoader={shouldDisplayLoader}
                                 setShouldDisplayLoader={setShouldDisplayLoader}
+                                serverSideExporting={serverSideExporting}
+                                paginationType={paginationType}
                             />
                         ) : null}
                     </div>
