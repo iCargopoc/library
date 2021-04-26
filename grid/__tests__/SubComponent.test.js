@@ -1070,6 +1070,21 @@ describe("render Index file ", () => {
         };
     };
 
+    const mockGetRowInfoWithoutClassName = (rowData, isSubComponentRow) => {
+        if (isSubComponentRow) {
+            const { hawbId } = rowData;
+            return {
+                isRowExpandable: hawbId % 2 === 0,
+                isRowSelectable: hawbId % 3 !== 0
+            };
+        }
+        const { travelId } = rowData;
+        return {
+            isRowExpandable: travelId % 2 === 0,
+            isRowSelectable: travelId % 3 !== 0
+        };
+    };
+
     const mockGridWidth = "100%";
     const mockTitle = "AWBs";
 
@@ -1219,7 +1234,7 @@ describe("render Index file ", () => {
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
                 subComponentColumns={subComponentColumns}
-                getRowInfo={mockGetRowInfo}
+                getRowInfo={mockGetRowInfoWithoutClassName}
                 rowActions={mockRowActions}
                 onRowUpdate={mockUpdateRowData}
                 onSubComponentRowSelect={mockOnSubComponentRowSelect}
@@ -1380,7 +1395,7 @@ describe("render Index file ", () => {
                 columns={gridColumns}
                 columnToExpand={mockAdditionalColumn}
                 subComponentColumns={subComponentColumns}
-                getRowInfo={mockGetRowInfo}
+                getRowInfo={mockGetRowInfoWithoutClassName}
                 rowActions={mockRowActions}
                 multiRowSelection={false}
                 onRowUpdate={mockUpdateRowData}
