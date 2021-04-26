@@ -40,6 +40,10 @@ const ExportData = (props: Object): any => {
         paginationType
     } = props;
 
+    // Check if this is serverSide Exporting
+    const isServerSideExporting =
+        serverSideExporting && typeof serverSideExporting === "function";
+
     const hasExportStarted = useRef(false);
 
     const exportedFileName = fileName || "iCargo Neo Report";
@@ -323,10 +327,6 @@ const ExportData = (props: Object): any => {
             return column.display === true;
         });
 
-        // Check if this is serverSide Exporting
-        const isServerSideExporting =
-            serverSideExporting && typeof serverSideExporting === "function";
-
         let rowsToExport = [...rows];
         if (isServerSideExporting) {
             rowsToExport = [...serverData];
@@ -580,10 +580,7 @@ const ExportData = (props: Object): any => {
 
     useEffect(() => {
         if (shouldDisplayLoader === true && hasExportStarted.current === true) {
-            if (
-                serverSideExporting &&
-                typeof serverSideExporting === "function"
-            ) {
+            if (isServerSideExporting) {
                 fetchServerData();
             } else {
                 prepareExportData();

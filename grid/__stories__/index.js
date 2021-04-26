@@ -49,6 +49,7 @@ const GridComponent = (props) => {
         multiRowSelection,
         passTheme,
         enableServersideSorting,
+        enableServersideExporting,
         treeStructure,
         parentRowExpandable,
         parentRowsToExpand,
@@ -62,7 +63,7 @@ const GridComponent = (props) => {
     const idAttribute = "travelId";
     const parentIdAttribute = "titleId";
     const subComponentIdAttribute = "hawbId";
-    const gridPageSize = 50;
+    const gridPageSize = enableServersideExporting ? 2000 : 50;
     const paginationType = "index"; // or - "cursor" - if Gris is tree view and parentRowExpandable is false, then paginationType should be "index"
     // State for holding index page info
     const firstIndexPageInfo = {
@@ -2714,7 +2715,9 @@ const GridComponent = (props) => {
                     serverSideSorting={
                         enableServersideSorting ? serverSideSorting : null
                     }
-                    serverSideExporting={serverSideExporting}
+                    serverSideExporting={
+                        enableServersideExporting ? serverSideExporting : null
+                    }
                     columns={columns}
                     columnToExpand={
                         (allProps && fixedRowHeight !== true) ||

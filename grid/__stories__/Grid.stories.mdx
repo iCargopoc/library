@@ -427,6 +427,20 @@ const subComponentColumnToExpand // Same as columnToExpand
         ]
     }
 
+    // Pass this function as a prop to Grid, then Grid will callback this function when user tries to export data.
+    // This function will be called to fetch grid data of each page.
+    // Return an object containing data and pageInfo.
+    const serverSideExporting = (updatedPageInfo) => {
+        // updatedPageInfo - pageInfo based on which developer has to fetch ad return gridData.
+        // Initially updatedPageInfo will be undefined. Return first page data and the pageInfo in that case.
+        // And pass an object like:
+        return {
+            { data: <searchedData>, pageInfo: <modifiedPageInfo> }
+        }
+        // This function will be called recursively, until developer pass pageInfo that has 'lastPage: true' in it.
+        // Data passed each time will be concatenated and this data will be exported from Grid.
+    }
+
     // Pass this property if a loading graphics has to be displayed in the Grid.
     // This can be used while doing functionalities like server side sorting.
     const displayLoader = true;
@@ -483,6 +497,7 @@ const subComponentColumnToExpand // Same as columnToExpand
         groupSort={groupSort}
         columnChooser={columnChooser}
         exportData={exportData}
+        serverSideExporting={serverSideExporting}
         fileName={fileName}
         pdfPaperSize={pdfPaperSize}
         enablePinColumn={enablePinColumn}
@@ -826,6 +841,28 @@ const rowsToDeselect = []; // [1] or [1, 7]
     gridData={gridData}
     serverSideSorting={serverSideSorting}
     displayLoader={displayLoader}
+    columns={columns}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    onSearch={onSearch}
+/>
+```
+
+#### With server side exporting
+
+<Story name="With server side exporting">
+    <GridComponent hasPagination enableServersideExporting />;
+</Story>
+
+```jsx
+// Pass 'serverSideExporting' function as a prop and Grid will call this function whenever user tries to export data.
+
+<Grid
+    gridData={gridData}
+    paginationType={paginationType}
+    pageInfo={gridPageInfo}
+    loadMoreData={loadMoreData}
+    serverSideExporting={serverSideExporting}
     columns={columns}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
