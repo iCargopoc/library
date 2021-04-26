@@ -433,12 +433,19 @@ const subComponentColumnToExpand // Same as columnToExpand
     const serverSideExporting = (updatedPageInfo) => {
         // updatedPageInfo - pageInfo based on which developer has to fetch ad return gridData.
         // Initially updatedPageInfo will be undefined. Return first page data and the pageInfo in that case.
-        // And pass an object like:
+        // Pass an object like:
         return {
             { data: <searchedData>, pageInfo: <modifiedPageInfo> }
         }
-        // This function will be called recursively, until developer pass pageInfo that has 'lastPage: true' in it.
+        // This function will be called recursively, until developer passes pageInfo that has 'lastPage: true' in it.
         // Data passed each time will be concatenated and this data will be exported from Grid.
+
+        /*********************
+        NOTE: In case of tree view grid, this function will be called only once. Grid expects complete data to be returned in that single call.
+        return {
+            { data: <completeData> }
+        }
+        *********************/
     }
 
     // Pass this property if a loading graphics has to be displayed in the Grid.

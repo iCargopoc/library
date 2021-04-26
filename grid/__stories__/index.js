@@ -2389,6 +2389,9 @@ const GridComponent = (props) => {
     };
 
     const serverSideExporting = async (updatedPageInfo): any => {
+        // Currently implemented only for normal Grid.
+        // In case of sub component Grid, pass drid data which includes subComponentData based on page
+        // In case of tree view, this function is expected to call only once. Pass complete data in that call.
         const currentPageInfo =
             paginationType === "index"
                 ? firstIndexPageInfo
