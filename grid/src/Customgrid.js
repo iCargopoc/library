@@ -1121,12 +1121,7 @@ const Customgrid = (props: {
                     selectedRowKey.length > 1
                 ) {
                     // Disable that existing row
-                    const currentSelection = selectedRowKey.find(
-                        (key: string): boolean => key !== rowIdToDeSelect
-                    );
-                    if (currentSelection) {
-                        toggleRowSelected(rowIdToDeSelect, false);
-                    }
+                    toggleRowSelected(rowIdToDeSelect, false);
                 } else {
                     // This method will be called twice. 1 for deselection and other for user selection
                     // So need to trigger the save changes only once
@@ -1228,34 +1223,21 @@ const Customgrid = (props: {
             selectionType = false;
         }
         if (row && parentIdAttribute && idAttribute) {
-            const { original } = row;
-            const { isParent } = original;
-            if (isParent === true) {
-                const rowParentIdAttribute = original[parentIdAttribute];
+            const rowParentIdAttribute = row.original[parentIdAttribute];
+            preFilteredRows.forEach((gridRow: Object): Object => {
+                const { original } = gridRow;
+                const { isParent } = original;
                 if (
-                    rowParentIdAttribute !== null &&
-                    rowParentIdAttribute !== undefined
+                    isParent !== true &&
+                    original[parentIdAttribute] === rowParentIdAttribute
                 ) {
-                    preFilteredRows.forEach((gridRow: Object): Object => {
-                        const gridRowOriginal = gridRow.original;
-                        if (
-                            gridRowOriginal &&
-                            gridRowOriginal.isParent !== true
-                        ) {
-                            if (
-                                gridRowOriginal[parentIdAttribute] ===
-                                rowParentIdAttribute
-                            ) {
-                                const { id } = gridRow;
-                                setIsRowSelectionCallbackNeeded(
-                                    selectionType ? "select" : "deselect"
-                                );
-                                toggleRowSelected(id, selectionType);
-                            }
-                        }
-                    });
+                    const { id } = gridRow;
+                    setIsRowSelectionCallbackNeeded(
+                        selectionType ? "select" : "deselect"
+                    );
+                    toggleRowSelected(id, selectionType);
                 }
-            }
+            });
         }
     };
 
@@ -1269,10 +1251,9 @@ const Customgrid = (props: {
                 isLoadMoreChildNeeded = true;
             } else {
                 const nextRow = rows[index + 1];
-                if (nextRow) {
-                    isLoadMoreChildNeeded =
-                        nextRow.original && nextRow.original.isParent === true;
-                }
+                const { original } = nextRow;
+                const { isParent } = original;
+                isLoadMoreChildNeeded = isParent === true;
             }
         }
         return isLoadMoreChildNeeded;

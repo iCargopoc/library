@@ -4,11 +4,12 @@ import { render, cleanup, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import Grid from "../src/index";
 
-const GridScreen = () => {
+const GridScreen = ({ passPageSize }) => {
+    const gridPageSize = passPageSize === true ? 1 : 2;
     const [gridData, setGridData] = useState([]);
     const [pageInfo, setPageInfo] = useState({
         pageNum: 1,
-        pageSize: 2,
+        pageSize: gridPageSize,
         total: 10,
         lastPage: false
     });
@@ -159,6 +160,14 @@ describe("test auto page refresh functionality", () => {
     it("load grid screen component", async () => {
         mockOffsetSize(600, 600);
         const { container } = render(<GridScreen />);
+
+        // Check if Grid id rendered.
+        await waitFor(() => expect(container).toBeInTheDocument());
+    });
+
+    it("load grid screen component with page size 1", async () => {
+        mockOffsetSize(600, 600);
+        const { container } = render(<GridScreen passPageSize />);
 
         // Check if Grid id rendered.
         await waitFor(() => expect(container).toBeInTheDocument());
