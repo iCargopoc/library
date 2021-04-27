@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState, useEffect } from "react";
-import { render, cleanup } from "@testing-library/react";
+import { render, cleanup, waitFor } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 import "@testing-library/jest-dom/extend-expect";
 import Grid from "../src/index";
 
@@ -89,13 +90,25 @@ const GridScreen = () => {
         }
     ];
 
+    const fetchData = () => {
+        return secondPageData;
+    };
+
+    const fetchNextPageData = async () => {
+        const searchedData = await setTimeout(() => {
+            fetchData();
+            return searchedData;
+        }, 3000);
+    };
+
     const loadMoreData = () => {
-        setGridData(gridData.concat(secondPageData));
-        setPageInfo({
-            ...pageInfo,
-            pageNum: 2,
-            total: 20,
-            lastPage: true
+        fetchNextPageData().then(() => {
+            setPageInfo({
+                ...pageInfo,
+                pageNum: 2,
+                total: 20
+            });
+            setGridData(gridData.concat(secondPageData));
         });
     };
 
@@ -145,12 +158,11 @@ describe("test auto page refresh functionality", () => {
     });
     afterEach(cleanup);
 
-    it("load grid screen component", () => {
+    it("load grid screen component", async () => {
         mockOffsetSize(600, 600);
         const { container } = render(<GridScreen />);
-        const gridContainer = container;
 
         // Check if Grid id rendered.
-        expect(gridContainer).toBeInTheDocument();
+        await waitFor(() => expect(container).toBeInTheDocument());
     });
 });
