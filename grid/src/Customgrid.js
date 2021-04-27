@@ -1057,11 +1057,9 @@ const Customgrid = (props: {
             // Loop through already selected rows and find row id that are not selected yet and update it to false
             Object.entries(selectedRowIds).forEach(
                 (objEntry: Object): Object => {
-                    if (objEntry && objEntry.length > 0) {
-                        const rowId = objEntry[0];
-                        if (!updatedSelectedRowIds.includes(rowId)) {
-                            toggleRowSelected(rowId, false);
-                        }
+                    const rowId = objEntry[0];
+                    if (!updatedSelectedRowIds.includes(rowId)) {
+                        toggleRowSelected(rowId, false);
                     }
                 }
             );

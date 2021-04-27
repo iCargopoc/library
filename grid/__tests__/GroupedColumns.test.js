@@ -434,6 +434,8 @@ describe("render Index file ", () => {
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 rowsToDeselect={mockRowsToDeselect}
+                rowsToSelect={[800]}
+                multiRowSelection={false}
             />
         );
         const gridContainer = container;

@@ -384,7 +384,7 @@ describe("render Index file ", () => {
                 getRowInfo={getRowInfoWithoutClassName}
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
-                rowsToSelect={[0, 1, 2]}
+                rowsToSelect={[0, 1, 2, 560]}
             />
         );
         const gridContainer = container;
