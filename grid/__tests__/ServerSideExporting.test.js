@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React, { useState, useEffect } from "react";
-import { render, cleanup, fireEvent } from "@testing-library/react";
+import { render, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 /* eslint-disable no-unused-vars */
 import regeneratorRuntime from "regenerator-runtime";
@@ -8,13 +8,6 @@ import { act } from "react-dom/test-utils";
 import Grid from "../src/index";
 
 const GridScreen = (props) => {
-    const validateData = (value: any): string => {
-        if (value !== null && value !== undefined) {
-            return value.toString();
-        }
-        return "";
-    };
-
     const { paginationType, isLastPageEmpty, isTreeView } = props;
     const [gridData, setGridData] = useState([]);
     const isIndexBasedPagination = paginationType === "index";
@@ -41,6 +34,15 @@ const GridScreen = (props) => {
             displayCell: (rowData) => {
                 const { travelId } = rowData;
                 return <span>Travel Id {travelId}</span>;
+            },
+            exportData: (rowData) => {
+                const { travelId } = rowData;
+                return [
+                    {
+                        header: "Travel Id",
+                        content: travelId
+                    }
+                ];
             }
         },
         {
@@ -59,6 +61,21 @@ const GridScreen = (props) => {
             ],
             displayCell: () => {
                 return <span>Flight</span>;
+            },
+            exportData: (rowData) => {
+                const { flight } = rowData;
+                const { flightno, date } = flight || {};
+
+                return [
+                    {
+                        header: "Flight No",
+                        content: flightno
+                    },
+                    {
+                        header: "Flight Date",
+                        content: date
+                    }
+                ];
             }
         },
         {
@@ -67,6 +84,15 @@ const GridScreen = (props) => {
             width: 90,
             displayCell: () => {
                 return <span>SR</span>;
+            },
+            exportData: (rowData) => {
+                const { sr } = rowData;
+                return [
+                    {
+                        header: "SR",
+                        content: sr
+                    }
+                ];
             }
         }
     ];
@@ -127,6 +153,23 @@ const GridScreen = (props) => {
         ],
         displayCell: () => {
             return <span>Parent Data</span>;
+        },
+        exportData: (rowData) => {
+            const { titleId, parentTitle, count } = rowData;
+            return [
+                {
+                    header: "Title ID",
+                    content: titleId
+                },
+                {
+                    header: "Title",
+                    content: parentTitle
+                },
+                {
+                    header: "Total Count",
+                    content: count
+                }
+            ];
         }
     };
 
@@ -320,8 +363,16 @@ describe("test server side exporting functionality", () => {
                 new MouseEvent("click", { bubbles: true })
             );
         });
-    });
 
+        // There should not be any error messages
+        await waitFor(() =>
+            expect(
+                gridContainer.querySelectorAll(
+                    "[data-testid='export-overlay-error']"
+                ).length
+            ).toBe(0)
+        );
+    });
     it("cursor based pagination", async () => {
         mockOffsetSize(600, 600);
         const { container, getByTestId, getAllByTestId } = render(
@@ -357,6 +408,15 @@ describe("test server side exporting functionality", () => {
                 new MouseEvent("click", { bubbles: true })
             );
         });
+
+        // There should not be any error messages
+        await waitFor(() =>
+            expect(
+                gridContainer.querySelectorAll(
+                    "[data-testid='export-overlay-error']"
+                ).length
+            ).toBe(0)
+        );
     });
 
     it("index based pagination without empty data for last page", async () => {
@@ -394,6 +454,15 @@ describe("test server side exporting functionality", () => {
                 new MouseEvent("click", { bubbles: true })
             );
         });
+
+        // There should not be any error messages
+        await waitFor(() =>
+            expect(
+                gridContainer.querySelectorAll(
+                    "[data-testid='export-overlay-error']"
+                ).length
+            ).toBe(0)
+        );
     });
 
     it("index based pagination for tree view", async () => {
@@ -431,5 +500,14 @@ describe("test server side exporting functionality", () => {
                 new MouseEvent("click", { bubbles: true })
             );
         });
+
+        // There should not be any error messages
+        await waitFor(() =>
+            expect(
+                gridContainer.querySelectorAll(
+                    "[data-testid='export-overlay-error']"
+                ).length
+            ).toBe(0)
+        );
     });
 });

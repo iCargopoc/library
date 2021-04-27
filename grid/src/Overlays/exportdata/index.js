@@ -709,7 +709,10 @@ const ExportData = (props: Object): any => {
                             </label>
                         </div>
                         {warning !== "" ? (
-                            <div className="ng-popover--exports__warning">
+                            <div
+                                className="ng-popover--exports__warning"
+                                data-testid="export-overlay-error"
+                            >
                                 <span>
                                     <strong>{warning}</strong>
                                 </span>
