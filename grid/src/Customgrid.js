@@ -277,57 +277,54 @@ const Customgrid = (props: {
     const isPaginationNeeded = pageInfo !== undefined && pageInfo !== null;
     const itemCount = gridDataLength + 1;
     const loadMoreItems = (): Object => {
-        if (loadNextPage && typeof loadNextPage === "function") {
-            const { pageSize, lastPage } = pageInfo;
-            let pageInfoToReturn = { pageSize, lastPage };
-            const pageNumsToReturn = pagesToReload.current;
-            if (
-                pageNumsToReturn &&
-                pageNumsToReturn.length > 0 &&
-                paginationType !== "cursor"
-            ) {
-                const firstPageToReload = pageNumsToReturn[0];
-                pageInfoToReturn = {
-                    pageNum: firstPageToReload,
-                    ...pageInfoToReturn
-                };
-                pagesToReload.current = pageNumsToReturn.filter(
-                    (num: number): boolean => num !== firstPageToReload
-                );
-                return loadNextPage(pageInfoToReturn, true);
-            }
-            if (isNextPageLoading) {
-                return Promise.resolve();
-            }
-            const { pageNum, endCursor } = pageInfo;
-            if (paginationType === "cursor") {
-                let calculatedEndCursor = endCursor;
-                if (currentEndCursor.current === -1) {
-                    currentEndCursor.current = endCursor;
-                } else {
-                    calculatedEndCursor = currentEndCursor.current + pageSize;
-                    currentEndCursor.current = calculatedEndCursor;
-                }
-                pageInfoToReturn = {
-                    endCursor: calculatedEndCursor,
-                    ...pageInfoToReturn
-                };
-            } else {
-                let calculatedPageNumber = pageNum;
-                if (currentPageNumber.current === -1) {
-                    currentPageNumber.current = pageNum;
-                } else {
-                    calculatedPageNumber = currentPageNumber.current + 1;
-                    currentPageNumber.current = calculatedPageNumber;
-                }
-                pageInfoToReturn = {
-                    pageNum: calculatedPageNumber + 1,
-                    ...pageInfoToReturn
-                };
-            }
-            return loadNextPage(pageInfoToReturn, false);
+        const { pageSize, lastPage } = pageInfo;
+        let pageInfoToReturn = { pageSize, lastPage };
+        const pageNumsToReturn = pagesToReload.current;
+        if (
+            pageNumsToReturn &&
+            pageNumsToReturn.length > 0 &&
+            paginationType !== "cursor"
+        ) {
+            const firstPageToReload = pageNumsToReturn[0];
+            pageInfoToReturn = {
+                pageNum: firstPageToReload,
+                ...pageInfoToReturn
+            };
+            pagesToReload.current = pageNumsToReturn.filter(
+                (num: number): boolean => num !== firstPageToReload
+            );
+            return loadNextPage(pageInfoToReturn, true);
         }
-        return Promise.resolve();
+        if (isNextPageLoading) {
+            return Promise.resolve();
+        }
+        const { pageNum, endCursor } = pageInfo;
+        if (paginationType === "cursor") {
+            let calculatedEndCursor = endCursor;
+            if (currentEndCursor.current === -1) {
+                currentEndCursor.current = endCursor;
+            } else {
+                calculatedEndCursor = currentEndCursor.current + pageSize;
+                currentEndCursor.current = calculatedEndCursor;
+            }
+            pageInfoToReturn = {
+                endCursor: calculatedEndCursor,
+                ...pageInfoToReturn
+            };
+        } else {
+            let calculatedPageNumber = pageNum;
+            if (currentPageNumber.current === -1) {
+                currentPageNumber.current = pageNum;
+            } else {
+                calculatedPageNumber = currentPageNumber.current + 1;
+                currentPageNumber.current = calculatedPageNumber;
+            }
+            pageInfoToReturn = {
+                pageNum: calculatedPageNumber + 1,
+                ...pageInfoToReturn
+            };
+        }
+        return loadNextPage(pageInfoToReturn, false);
     };
     const isItemLoaded = (index: number): Object => {
         let isReloadRequired = false;

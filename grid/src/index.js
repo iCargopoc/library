@@ -361,7 +361,12 @@ const Grid = (props: Object): ?React$Element<*> => {
     // #endregion
 
     const loadChildData = (row: Object): Function => {
-        if (row && parentIdAttribute) {
+        if (
+            row &&
+            parentIdAttribute &&
+            loadMoreData &&
+            typeof loadMoreData === "function"
+        ) {
             const { lastPage, pageNum, pageSize, endCursor } = row;
             const isIntialLoad =
                 lastPage === undefined &&
@@ -407,7 +412,11 @@ const Grid = (props: Object): ?React$Element<*> => {
         isReload: boolean
     ): Function => {
         const { pageNum, pageSize, endCursor, lastPage } = returnedPageInfo;
-        if (lastPage !== true) {
+        if (
+            lastPage !== true &&
+            loadMoreData &&
+            typeof loadMoreData === "function"
+        ) {
             if (isReload) {
                 setPageReloadCount(pageReloadCount + 1);
             } else {
