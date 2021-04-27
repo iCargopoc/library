@@ -94,10 +94,8 @@ const GridScreen = () => {
     };
 
     const fetchNextPageData = async () => {
-        const searchedData = await setTimeout(() => {
-            fetchData();
-            return searchedData;
-        }, 3000);
+        const searchedData = await fetchData();
+        return searchedData;
     };
 
     const loadMoreData = (updatedPageInfo) => {
@@ -132,6 +130,7 @@ const GridScreen = () => {
 
 describe("test auto page refresh functionality", () => {
     function mockOffsetSize(width, height) {
+        jest.setTimeout(30000);
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,
             value: height
