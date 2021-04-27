@@ -32,6 +32,7 @@ import {
     getParentRowsFromList,
     getChildRowsFromParentId,
     setColumnWidths,
+    isRowSelectionDisabled,
     findSelectedRows,
     findSelectedRowIdAttributes,
     findSelectedRowIdFromIdAttribute,
@@ -648,22 +649,15 @@ const Customgrid = (props: {
                         },
                         Cell: (cellSelectProps: Object): Object => {
                             const { row } = cellSelectProps;
+                            const { original } = row;
                             // Check if row selector is required for this row using the getRowInfo prop passed
-                            let isRowSelectable = true;
                             if (
-                                getRowInfo &&
-                                typeof getRowInfo === "function"
+                                !isRowSelectionDisabled(
+                                    getRowInfo,
+                                    original,
+                                    false
+                                )
                             ) {
-                                const rowInfo = getRowInfo(row.original, false);
-                                if (
-                                    rowInfo &&
-                                    (rowInfo.isRowSelectable === false ||
-                                        rowInfo.className === "disabled")
-                                ) {
-                                    isRowSelectable = false;
-                                }
-                            }
-                            if (isRowSelectable) {
                                 return (
                                     <RowSelector
                                         data-testid="rowSelector-singleRow"
@@ -1207,26 +1201,13 @@ const Customgrid = (props: {
                         ) {
                             isChildRowsAvailable = true;
                             const rowIdAttribute = gridRowOriginal[idAttribute];
-                            let isRowSelectable = true;
-                            if (
-                                getRowInfo &&
-                                typeof getRowInfo === "function"
-                            ) {
-                                const rowInfo = getRowInfo(
-                                    gridRowOriginal,
-                                    false
-                                );
-                                if (
-                                    rowInfo &&
-                                    (rowInfo.isRowSelectable === false ||
-                                        rowInfo.className === "disabled")
-                                ) {
-                                    isRowSelectable = false;
-                                }
-                            }
 
                             if (
-                                isRowSelectable &&
+                                !isRowSelectionDisabled(
+                                    getRowInfo,
+                                    gridRowOriginal,
+                                    false
+                                ) &&
                                 !userSelectedRowIdentifiers.current.includes(
                                     rowIdAttribute
                                 )

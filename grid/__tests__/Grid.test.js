@@ -422,6 +422,9 @@ describe("render Index file ", () => {
 
     const getRowInfo = (rowData) => {
         const { travelId } = rowData;
+        if (travelId % 11 === 0) {
+            return null;
+        }
         return {
             isRowExpandable: travelId % 2 === 0,
             isRowSelectable: travelId % 3 !== 0,

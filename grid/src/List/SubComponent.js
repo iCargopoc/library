@@ -18,6 +18,7 @@ import {
     getLeftOfColumn,
     isLastPinnedColumn,
     getTotalWidthOfPinnedColumns,
+    isRowSelectionDisabled,
     updateAccessorList
 } from "../Utilities/GridUtilities";
 
@@ -261,21 +262,13 @@ const SubComponent = (props: {
                             const { row } = cellSelectProps;
                             const { original, id } = row;
                             // Check if row selector is required for this row using the getRowInfo prop passed
-                            let isRowSelectable = true;
                             if (
-                                getRowInfo &&
-                                typeof getRowInfo === "function"
+                                !isRowSelectionDisabled(
+                                    getRowInfo,
+                                    original,
+                                    true
+                                )
                             ) {
-                                const rowInfo = getRowInfo(original, true);
-                                if (
-                                    rowInfo &&
-                                    (rowInfo.isRowSelectable === false ||
-                                        rowInfo.className === "disabled")
-                                ) {
-                                    isRowSelectable = false;
-                                }
-                            }
-                            if (isRowSelectable) {
                                 return (
                                     <RowSelector
                                         data-testid="subcomponent-rowSelector-singleRow"

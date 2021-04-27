@@ -71,6 +71,19 @@ export const setColumnWidths = (gridColumns: any[]): any[] => {
     return updatedColumns;
 };
 
+export const isRowSelectionDisabled = (
+    getRowInfo: any,
+    rowData: any,
+    isSubComponentRow: boolean
+): boolean => {
+    if (getRowInfo && typeof getRowInfo === "function") {
+        const rowInfo = getRowInfo(rowData, isSubComponentRow);
+        const { isRowSelectable, className } = rowInfo || {};
+        return isRowSelectable === false || className === "disabled";
+    }
+    return false;
+};
+
 export const findSelectedRows = (
     rows: any,
     selectedRowIds: any[],
@@ -84,19 +97,14 @@ export const findSelectedRows = (
             const isSelected = objEntry[1];
             if (isSelected) {
                 const selectedRow = rows.find((flatRow: Object): Object => {
-                    const { id } = flatRow;
-                    if (getRowInfo && typeof getRowInfo === "function") {
-                        const { original } = flatRow;
-                        const rowInfo = getRowInfo(original, isSubComponentRow);
-                        return (
-                            !(
-                                rowInfo &&
-                                (rowInfo.isRowSelectable === false ||
-                                    rowInfo.className === "disabled")
-                            ) && id === rowId
-                        );
-                    }
-                    return id === rowId;
+                    const { id, original } = flatRow;
+                    return (
+                        !isRowSelectionDisabled(
+                            getRowInfo,
+                            original,
+                            isSubComponentRow
+                        ) && id === rowId
+                    );
                 });
                 if (selectedRow) {
                     const { original } = selectedRow;
@@ -205,18 +213,10 @@ const checkAndPushRows = (
             );
             if (
                 selectedSubCompRow !== null &&
-                selectedSubCompRow !== undefined
+                selectedSubCompRow !== undefined &&
+                !isRowSelectionDisabled(getRowInfo, selectedSubCompRow, true)
             ) {
-                let isSelectable = true;
-                if (getRowInfo && typeof getRowInfo === "function") {
-                    const rowInfo = getRowInfo(selectedSubCompRow, true);
-                    isSelectable =
-                        rowInfo.isRowSelectable &&
-                        rowInfo.className !== "disabled";
-                }
-                if (isSelectable !== false) {
-                    arrayToPush.push(selectedSubCompRow);
-                }
+                arrayToPush.push(selectedSubCompRow);
             }
         });
     }
