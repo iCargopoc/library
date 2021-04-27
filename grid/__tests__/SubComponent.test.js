@@ -1492,6 +1492,70 @@ describe("render Index file ", () => {
         expect(subComponentContent.length).toBe(0);
     });
 
+    it("test grid with sub component data without onSubComponentRowSelect", () => {
+        mockOffsetSize(600, 600);
+        const { container, getAllByTestId, getByTestId } = render(
+            <Grid
+                gridData={mockGridData}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                subComponentColumns={subComponentColumns}
+                getRowInfo={mockGetRowInfoWithoutClassName}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+                subComponentIdAttribute="hawbId"
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Check if expand/collapse icons are present
+        let subComponentExpandCollpase = getAllByTestId(
+            "subComponent-header-expand-collapse"
+        );
+        expect(subComponentExpandCollpase.length).toBeGreaterThan(0);
+
+        // Open 1 subComponent
+        act(() => {
+            subComponentExpandCollpase[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if subComponent section is opened
+        let subComponentContent = getAllByTestId("subcomponent-content");
+        expect(subComponentContent.length).toBe(1);
+
+        // Select first row
+        const firstRowSelector = getAllByTestId(
+            "subcomponent-rowSelector-singleRow"
+        )[0];
+        act(() => {
+            firstRowSelector.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Close that sub component
+        subComponentExpandCollpase = getAllByTestId(
+            "subComponent-header-expand-collapse"
+        );
+        act(() => {
+            subComponentExpandCollpase[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if that subComponent section is closed
+        subComponentContent = gridContainer.querySelectorAll(
+            "[data-testid='subcomponent-content']"
+        );
+        expect(subComponentContent.length).toBe(0);
+    });
+
     it("test grid with sub component data without expandable column and column to expand - row selector without callback fun", () => {
         mockOffsetSize(600, 600);
         const { container, getAllByTestId, getByTestId } = render(

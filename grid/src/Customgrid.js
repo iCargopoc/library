@@ -856,13 +856,10 @@ const Customgrid = (props: {
                     indexToReset = index;
                 } else {
                     const { _instanceProps } = current;
-                    if (_instanceProps) {
-                        const expectedItemsCount = overScanCount + 30;
-                        const { lastMeasuredIndex } = _instanceProps;
-                        const difference =
-                            lastMeasuredIndex - expectedItemsCount;
-                        indexToReset = difference >= 0 ? difference : 0;
-                    }
+                    const expectedItemsCount = overScanCount + 30;
+                    const { lastMeasuredIndex } = _instanceProps;
+                    const difference = lastMeasuredIndex - expectedItemsCount;
+                    indexToReset = difference >= 0 ? difference : 0;
                 }
                 current.resetAfterIndex(indexToReset, true);
             }
@@ -894,41 +891,35 @@ const Customgrid = (props: {
         if (parentIdAttribute && row) {
             const { original, index } = row;
             const rowParentIdAttribute = original[parentIdAttribute];
-            if (
-                rowParentIdAttribute !== null &&
-                rowParentIdAttribute !== undefined
-            ) {
-                // Check if parent row is present in state.
-                // If present, remove it and if not present add it.
-                if (expandedParentRows.includes(rowParentIdAttribute)) {
-                    setExpandedParentRows(
-                        expandedParentRows.filter(
-                            (item: Object): Object =>
-                                item !== rowParentIdAttribute
-                        )
-                    );
-                } else {
-                    setExpandedParentRows([
-                        ...expandedParentRows,
-                        rowParentIdAttribute
-                    ]);
-                }
+            // Check if parent row is present in state.
+            // If present, remove it and if not present add it.
+            if (expandedParentRows.includes(rowParentIdAttribute)) {
+                setExpandedParentRows(
+                    expandedParentRows.filter(
+                        (item: Object): Object => item !== rowParentIdAttribute
+                    )
+                );
+            } else {
+                setExpandedParentRows([
+                    ...expandedParentRows,
+                    rowParentIdAttribute
+                ]);
+            }
 
-                // Check if child rows are present for parent row
-                const childRow = rows.find((currentRow: Object): boolean => {
-                    return (
-                        currentRow &&
-                        currentRow.original &&
-                        currentRow.original.isParent !== true &&
-                        currentRow.original[parentIdAttribute] ===
-                            rowParentIdAttribute
-                    );
-                });
-                if (!childRow) {
-                    loadMoreChildData(row);
-                } else {
-                    reRenderListData(index);
-                }
+            // Check if child rows are present for parent row
+            const childRow = rows.find((currentRow: Object): boolean => {
+                return (
+                    currentRow &&
+                    currentRow.original &&
+                    currentRow.original.isParent !== true &&
+                    currentRow.original[parentIdAttribute] ===
+                        rowParentIdAttribute
+                );
+            });
+            if (!childRow) {
+                loadMoreChildData(row);
+            } else {
+                reRenderListData(index);
             }
         }
     };
@@ -954,9 +945,7 @@ const Customgrid = (props: {
 
     // Update state, when user is updating columns configuration from outside Grid
     useEffect(() => {
-        if (managableColumns && managableColumns.length > 0) {
-            setGridColumns(managableColumns);
-        }
+        setGridColumns(managableColumns);
     }, [managableColumns]);
 
     useEffect(() => {

@@ -647,6 +647,47 @@ describe("render Index file ", () => {
         expect(errorMessage.length).toBe(1);
     });
 
+    it("test grid with simple parent data - index pagination and expand without parentIdAttribute", () => {
+        mockOffsetSize(600, 600);
+        const { container, getAllByTestId } = render(
+            <Grid
+                gridData={parentData}
+                idAttribute="travelId"
+                paginationType="index"
+                loadMoreData={mockLoadMoreData}
+                columns={gridColumns}
+                columnToExpand={mockAdditionalColumn}
+                parentColumn={parentColumn}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                rowsToDeselect={mockRowsToDeselect}
+            />
+        );
+        const gridContainer = container;
+
+        // Check if Grid id rendered.
+        expect(gridContainer).toBeInTheDocument();
+
+        // Find accordion expand/collapse icons
+        const accordionExpandCollapse = getAllByTestId(
+            "acccordion-expand-collapse"
+        );
+        // There should be 3 for each parent
+        expect(accordionExpandCollapse.length).toBe(3);
+
+        // Expand first parent
+        const firstParentAccordion = accordionExpandCollapse[0];
+        act(() => {
+            firstParentAccordion.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Call for child data fetching has to be fired
+        expect(mockLoadMoreData).not.toHaveBeenCalled();
+    });
+
     it("test grid with simple parent data - index pagination and single row selection", () => {
         mockOffsetSize(600, 600);
         const { container, getAllByTestId } = render(
