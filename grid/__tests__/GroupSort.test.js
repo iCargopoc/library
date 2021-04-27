@@ -720,6 +720,57 @@ describe("Group sort functionality test", () => {
                 remarks: null
             },
             {
+                travelId: null,
+                flight: null,
+                segment: null,
+                details: {
+                    flightModel: null,
+                    bodyType: null,
+                    type: null,
+                    startTime: null,
+                    endTime: null,
+                    status: null,
+                    additionalStatus: null,
+                    timeStatus: null
+                },
+                weight: {
+                    percentage: null,
+                    value: null
+                },
+                volume: {
+                    percentage: null,
+                    value: null
+                },
+                uldPositions: [
+                    {
+                        position: null,
+                        value: null
+                    },
+                    {
+                        position: null,
+                        value: null
+                    },
+                    {
+                        position: null,
+                        value: null
+                    },
+                    {
+                        position: null,
+                        value: null
+                    }
+                ],
+                revenue: {
+                    revenue: null,
+                    yeild: null
+                },
+                sr: null,
+                queuedBooking: {
+                    sr: null,
+                    volume: null
+                },
+                remarks: null
+            },
+            {
                 travelId: undefined,
                 flight: undefined,
                 segment: {
