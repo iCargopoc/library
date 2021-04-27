@@ -101,11 +101,11 @@ const GridScreen = () => {
         }, 3000);
     };
 
-    const loadMoreData = () => {
+    const loadMoreData = (updatedPageInfo) => {
         fetchNextPageData().then(() => {
             setPageInfo({
                 ...pageInfo,
-                pageNum: 2,
+                pageNum: updatedPageInfo.pageNum,
                 total: 20
             });
             setGridData(gridData.concat(secondPageData));
