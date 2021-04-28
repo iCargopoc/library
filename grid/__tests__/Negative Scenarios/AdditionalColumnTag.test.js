@@ -20,14 +20,15 @@ describe("AdditionalColumnTag unit test", () => {
         columnId: "rowExpand",
         isDisplayInExpandedRegion: true
     };
+    const mockDivContainer = document.createElement("div");
     let container;
     beforeEach(() => {
-        container = document.createElement("div");
+        container = mockDivContainer;
         document.body.appendChild(container);
     });
     afterEach(cleanup);
     it("should return null when additionalColumn is not passed", () => {
-        const component = render(
+        render(
             <AdditionalColumnContext.Provider
                 value={{
                     additionalColumn: null
@@ -37,11 +38,12 @@ describe("AdditionalColumnTag unit test", () => {
             </AdditionalColumnContext.Provider>,
             container
         );
-        expect(component).toBeDefined();
+        // Nothing should have been rendered
+        expect(container).toBe(mockDivContainer);
     });
 
     it("should return null when cell key is not passed", () => {
-        const component = render(
+        render(
             <AdditionalColumnContext.Provider
                 value={{
                     additionalColumn: additionalColumnMockData
@@ -51,11 +53,12 @@ describe("AdditionalColumnTag unit test", () => {
             </AdditionalColumnContext.Provider>,
             container
         );
-        expect(component).toBeDefined();
+        // Nothing should have been rendered
+        expect(container).toBe(mockDivContainer);
     });
 
     it("should return null when invalid cell key is passed", () => {
-        const component = render(
+        render(
             <AdditionalColumnContext.Provider
                 value={{
                     additionalColumn: additionalColumnMockData
@@ -65,6 +68,7 @@ describe("AdditionalColumnTag unit test", () => {
             </AdditionalColumnContext.Provider>,
             container
         );
-        expect(component).toBeDefined();
+        // Nothing should have been rendered
+        expect(container).toBe(mockDivContainer);
     });
 });
