@@ -20,13 +20,16 @@ describe("AdditionalColumnTag unit test", () => {
         columnId: "rowExpand",
         isDisplayInExpandedRegion: true
     };
+
     const mockDivContainer = document.createElement("div");
     let container;
+
     beforeEach(() => {
         container = mockDivContainer;
         document.body.appendChild(container);
     });
     afterEach(cleanup);
+
     it("should return null when additionalColumn is not passed", () => {
         render(
             <AdditionalColumnContext.Provider
