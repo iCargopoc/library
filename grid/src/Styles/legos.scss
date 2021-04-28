@@ -4,6 +4,11 @@
 }
 
 .neo-grid {
+    .neo-grid__row-selector {
+        .form-check-input {
+            margin-left: 0;
+        }
+    }
     .ng-error {
         margin-top: rem(20);
         color: var(--danger);
