@@ -2389,9 +2389,49 @@ const GridComponent = (props) => {
     };
 
     const serverSideExporting = async (updatedPageInfo): any => {
-        // Currently implemented only for normal Grid.
-        // In case of sub component Grid, pass drid data which includes subComponentData based on page
-        // In case of tree view, this function is expected to call only once. Pass complete data in that call.
+        // Not implemented for sub component Grid.
+        // In case of sub component Grid, pass drid data which includes subComponentData based on page.
+
+        // Tree View
+        if (treeStructure) {
+            const newPageSize = 15;
+            const searchedData = await fetchData({
+                pageNum: 1,
+                pageSize: newPageSize
+            }).then((data) => {
+                return data;
+            });
+            if (searchedData && searchedData.length > 0) {
+                const newGridData = [...parentData];
+                newGridData[0].childData = {
+                    pageNum: 1,
+                    pageSize: newPageSize,
+                    lastPage: true,
+                    data: searchedData.filter((data, index) => index < 5)
+                };
+                newGridData[1].childData = {
+                    pageNum: 11,
+                    pageSize: newPageSize,
+                    lastPage: true,
+                    data: searchedData.filter(
+                        (data, index) => index >= 5 && index < 10
+                    )
+                };
+                newGridData[2].childData = {
+                    pageNum: 21,
+                    pageSize: newPageSize,
+                    lastPage: true,
+                    data: searchedData.filter(
+                        (data, index) => index >= 10 && index < 15
+                    )
+                };
+                return { data: newGridData };
+            }
+            return {
+                data: []
+            };
+        }
+        // Normal Grid
         const currentPageInfo =
             paginationType === "index"
                 ? firstIndexPageInfo
