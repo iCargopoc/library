@@ -6,7 +6,6 @@ import "@testing-library/jest-dom/extend-expect";
 import Grid from "../src/index";
 
 describe("render Index file ", () => {
-    jest.setTimeout(30000);
     function mockOffsetSize(width, height) {
         Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
             configurable: true,
@@ -612,7 +611,7 @@ describe("render Index file ", () => {
 
         // Call back should be made as data has been changed
         expect(mockUpdateRowData).toHaveBeenCalled();
-    });
+    }, 10000);
 
     it("test grid with estimated row height, row options functionalities and column sort, custom panel and refresh button not passed", () => {
         mockOffsetSize(1440, 900);
