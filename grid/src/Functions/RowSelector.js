@@ -15,7 +15,7 @@ const RowSelector: any = forwardRef(
                 <div className="neo-form-check">
                     <input
                         type="checkbox"
-                        className="neo-checkbox form-check-input"
+                        className="neo-checkbox"
                         ref={resolvedRef}
                         {...rest}
                     />

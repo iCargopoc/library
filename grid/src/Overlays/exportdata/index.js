@@ -634,7 +634,7 @@ const ExportData = (props: Object): any => {
                             <div className="neo-form-check">
                                 <input
                                     type="checkbox"
-                                    className="neo-checkbox form-check-input"
+                                    className="neo-checkbox"
                                     id="chk_pdf"
                                     data-testid="chk_pdf_test"
                                     value="pdf"
@@ -660,7 +660,7 @@ const ExportData = (props: Object): any => {
                             <div className="neo-form-check">
                                 <input
                                     type="checkbox"
-                                    className="neo-checkbox form-check-input"
+                                    className="neo-checkbox"
                                     id="chk_excel"
                                     data-testid="chk_excel_test"
                                     value="excel"
@@ -686,7 +686,7 @@ const ExportData = (props: Object): any => {
                             <div className="neo-form-check">
                                 <input
                                     type="checkbox"
-                                    className="neo-checkbox form-check-input"
+                                    className="neo-checkbox"
                                     id="chk_csv"
                                     data-testid="chk_csv_test"
                                     value="csv"

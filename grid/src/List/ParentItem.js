@@ -54,7 +54,7 @@ const ParentItem = ({
                                     <input
                                         type="checkbox"
                                         data-testid="rowSelector-parentRow"
-                                        className="neo-checkbox form-check-input"
+                                        className="neo-checkbox"
                                         checked={isParentRowSelected(row)}
                                         onChange={(event: Object): Object =>
                                             toggleParentRowSelection(event, row)

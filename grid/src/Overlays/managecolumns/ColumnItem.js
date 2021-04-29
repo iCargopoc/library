@@ -93,7 +93,7 @@ const ColumnItem = ({
                             <input
                                 type="checkbox"
                                 id={`chk_pinColumn_${id}`}
-                                className="neo-checkbox form-check-input"
+                                className="neo-checkbox"
                                 data-testid={`pinColumn_${id}`}
                                 data-columnid={id}
                                 checked={pinLeft}
@@ -151,7 +151,7 @@ const ColumnItem = ({
                                                   <input
                                                       type="checkbox"
                                                       id={`chk_selectInnerCell_${cellId}`}
-                                                      className="neo-checkbox form-check-input"
+                                                      className="neo-checkbox"
                                                       data-testid={`selectInnerCell_${id}_${cellId}`}
                                                       data-columnid={id}
                                                       data-cellid={cellId}

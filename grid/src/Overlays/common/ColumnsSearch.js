@@ -198,7 +198,7 @@ const ColumnsSearch = ({
                         <input
                             type="checkbox"
                             id="chk_selectAllSearchableColumns"
-                            className="neo-checkbox form-check-input"
+                            className="neo-checkbox"
                             data-testid="selectAllSearchableColumns"
                             data-columnid="all"
                             checked={isSearchableColumnSelected("all")}
@@ -228,7 +228,7 @@ const ColumnsSearch = ({
                                       <input
                                           type="checkbox"
                                           id={`chk_selectSearchableColumn_${columnId}`}
-                                          className="neo-checkbox form-check-input"
+                                          className="neo-checkbox"
                                           data-testid="selectSingleSearchableColumn"
                                           data-columnid={columnId}
                                           data-isadditionalcolumn={
@@ -259,7 +259,7 @@ const ColumnsSearch = ({
                         <input
                             type="checkbox"
                             id="chk_selectAllSearchableSubComponentColumns"
-                            className="neo-checkbox form-check-input"
+                            className="neo-checkbox"
                             data-testid="selectAllSearchableSubComponentColumns"
                             data-columnid="all"
                             checked={isSearchableSubComponentColumnSelected(
@@ -295,7 +295,7 @@ const ColumnsSearch = ({
                                           <input
                                               type="checkbox"
                                               id={`chk_selectSearchableSubComponentColumn_${columnId}`}
-                                              className="neo-checkbox form-check-input"
+                                              className="neo-checkbox"
                                               data-testid="selectSingleSearchableSubComponentColumn"
                                               data-columnid={columnId}
                                               data-isadditionalcolumn={

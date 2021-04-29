@@ -674,7 +674,7 @@ const ColumnReordering = (props: any): any => {
                                                                 <input
                                                                     type="checkbox"
                                                                     id={`chk_selectInnerCell_${cellId}`}
-                                                                    className="neo-checkbox form-check-input"
+                                                                    className="neo-checkbox"
                                                                     data-testid={`selectInnerCell_${managedAdditionalColumnColumnId}_${cellId}`}
                                                                     data-columnid={
                                                                         managedAdditionalColumnColumnId
@@ -765,7 +765,7 @@ const ColumnReordering = (props: any): any => {
                                                                         <input
                                                                             type="checkbox"
                                                                             id={`chk_selectSubComponentInnerCell_${cellId}`}
-                                                                            className="neo-checkbox form-check-input"
+                                                                            className="neo-checkbox"
                                                                             data-testid={`selectSubComponentInnerCell_${managedSubComponentAdditionalColumnColumnId}_${cellId}`}
                                                                             data-columnid={
                                                                                 managedSubComponentAdditionalColumnColumnId

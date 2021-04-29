@@ -107,7 +107,7 @@ const GridHeader = ({
                     <input
                         type="checkbox"
                         data-testid="rowSelector-allRows-fromHeaderTitle"
-                        className="neo-checkbox form-check-input"
+                        className="neo-checkbox"
                         checked={isAllRowsSelected()}
                         onChange={toggleAllRowsSelection}
                     />
