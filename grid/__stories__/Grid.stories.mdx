@@ -858,7 +858,14 @@ const rowsToDeselect = []; // [1] or [1, 7]
 #### With server side exporting
 
 <Story name="With server side exporting">
-    <GridComponent hasPagination enableServersideExporting />;
+    <GridComponent
+        hasPagination
+        passRowActions
+        enableServersideExporting
+        fileName="Custom filename"
+        pdfPaperSize="A1"
+    />
+    ;
 </Story>
 
 ```jsx
@@ -871,9 +878,44 @@ const rowsToDeselect = []; // [1] or [1, 7]
     loadMoreData={loadMoreData}
     serverSideExporting={serverSideExporting}
     columns={columns}
+    idAttribute={idAttribute}
+    rowActions={rowActions}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     onSearch={onSearch}
+/>
+```
+
+#### Tree view grid with server side exporting
+
+<Story name="Tree view grid with server side exporting">
+    <GridComponent
+        treeStructure
+        passRowActions
+        enableServersideExporting
+        fileName="Custom filename"
+        pdfPaperSize="A1"
+    />
+    ;
+</Story>
+
+```jsx
+// Pass 'serverSideExporting' function as a prop and Grid will call this function whenever user tries to export data.
+
+<Grid
+    paginationType={paginationType}
+    gridData={gridData}
+    columns={columns}
+    idAttribute={idAttribute}
+    parentColumn={parentColumn}
+    parentIdAttribute={parentIdAttribute}
+    rowActions={rowActions}
+    serverSideExporting={serverSideExporting}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    onSearch={onSearch}
+    fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
 />
 ```
 
