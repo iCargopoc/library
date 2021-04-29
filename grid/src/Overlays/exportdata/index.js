@@ -511,6 +511,7 @@ const ExportData = (props: Object): any => {
         }
 
         // Update ref and state variables to false
+        exportPageInfo.current = null;
         hasExportStarted.current = false;
         setShouldDisplayLoader(false);
     };

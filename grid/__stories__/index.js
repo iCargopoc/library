@@ -2435,8 +2435,8 @@ const GridComponent = (props) => {
         // Normal Grid
         const currentPageInfo =
             paginationType === "index"
-                ? firstIndexPageInfo
-                : firstCursorPageInfo;
+                ? { ...firstIndexPageInfo }
+                : { ...firstCursorPageInfo };
         if (updatedPageInfo !== null && updatedPageInfo !== undefined) {
             const { pageSize, endCursor, pageNum } = updatedPageInfo;
             if (paginationType === "cursor") {
