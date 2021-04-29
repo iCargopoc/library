@@ -883,6 +883,8 @@ const rowsToDeselect = []; // [1] or [1, 7]
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     onSearch={onSearch}
+    fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
 />
 ```
 
@@ -901,6 +903,10 @@ const rowsToDeselect = []; // [1] or [1, 7]
 
 ```jsx
 // Pass 'serverSideExporting' function as a prop and Grid will call this function whenever user tries to export data.
+// In this case of tree view grid, this function will be called only once. Grid expects complete data to be returned in that single call.
+// return {
+//     { data: <completeData> }
+// }
 
 <Grid
     paginationType={paginationType}
