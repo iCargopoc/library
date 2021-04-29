@@ -63,7 +63,8 @@ const GridComponent = (props) => {
     const idAttribute = "travelId";
     const parentIdAttribute = "titleId";
     const subComponentIdAttribute = "hawbId";
-    const gridPageSize = enableServersideExporting && !treeStructure ? 2000 : 50;
+    const gridPageSize =
+        enableServersideExporting && !treeStructure ? 2000 : 50;
     const paginationType = "index"; // or - "cursor" - if Gris is tree view and parentRowExpandable is false, then paginationType should be "index"
     // State for holding index page info
     const firstIndexPageInfo = {
