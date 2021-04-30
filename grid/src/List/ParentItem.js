@@ -66,9 +66,7 @@ const ParentItem = ({
                                 <i
                                     role="presentation"
                                     className="ng-accordion__icon"
-                                    onClick={(): void =>
-                                        toggleParentRow(row, index)
-                                    }
+                                    onClick={(): void => toggleParentRow(row)}
                                     data-testid="acccordion-expand-collapse"
                                 >
                                     {isParentRowOpened ? (
