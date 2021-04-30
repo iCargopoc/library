@@ -842,7 +842,9 @@ const rowsToDeselect = []; // [1] or [1, 7]
 
 ```jsx
 // Pass 'serverSideSorting' function as a prop and Grid will call this function whenever user selects group sort option.
-// This function to re-render the Grid with sorted 'gridData'.
+// Grid expect this function to re-render the Grid with sorted 'gridData'.
+// In case if developer is making an API call to get sorted data/sorting will take much time, use displayLoader property to display a loading graphichs in Grid till you are ready with sorted data.
+// Pass displayLoader={true}, then fetch sorted data and once you are ready with sorted data, update gridData and set displayLoader={false}
 
 <Grid
     gridData={gridData}
