@@ -13,6 +13,7 @@ import Loader from "./Common/Loader";
 // lazy styles inclusion via styleloader
 import __cmpStyles from "./Styles/main.scss";
 
+// Memoize the function that is used to convert the structure of developer passed gridData to the structure required by Grid.
 const getProcessedData = memoize(processedData);
 
 const Grid = (props: Object): ?React$Element<*> => {
@@ -27,6 +28,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         };
     }, []);
 
+    // This is used to find Grid component from the screen, and use it to find other elements from the grid.
     const gridRef = createRef();
 
     const {
@@ -98,18 +100,7 @@ const Grid = (props: Object): ?React$Element<*> => {
     // To check if total records count has been changed
     const [totalRecordsCount, setTotalRecordsCount] = useState(0);
 
-    // Gets triggered when one row item is updated
-    const updateRowInGrid = (
-        original: Object,
-        updatedRow: Object,
-        isSubComponentRow: boolean
-    ): Function => {
-        if (onRowUpdate) {
-            onRowUpdate(original, updatedRow, isSubComponentRow);
-        }
-    };
-
-    // Local state value for holding columns configuration
+    // Local state value for holding grid columns configuration
     const [gridColumns, setGridColumns] = useState([]);
 
     // Local state value for holding columns filter accessor configurations
@@ -124,8 +115,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         setAdditionalColumnAccessorList
     ] = useState([]);
 
-    const isParentGrid = parentColumn !== null && parentColumn !== undefined;
-
+    // Local state value for holding sub components columns configuration
     const [gridSubComponentColumns, setGridSubComponentColumns] = useState([]);
 
     // Local state value for holding sub component columns filter accessor configurations
@@ -134,6 +124,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         setGridSubComponentColumnsAccessorList
     ] = useState([]);
 
+    // Local state value for holding sub components additional column configuration
     const [
         gridSubComponentAdditionalColumn,
         setGridSubComponentAdditionalColumn
@@ -145,8 +136,22 @@ const Grid = (props: Object): ?React$Element<*> => {
         setGridSubComponentAdditionalColumnAccessorList
     ] = useState([]);
 
+    // Check if rendered Grid is tree view grid or not.
+    const isParentGrid = parentColumn !== null && parentColumn !== undefined;
+
+    // Gets triggered when one row item is updated
+    const updateRowInGrid = (
+        original: Object,
+        updatedRow: Object,
+        isSubComponentRow: boolean
+    ): Function => {
+        if (onRowUpdate && typeof onRowUpdate === "function") {
+            onRowUpdate(original, updatedRow, isSubComponentRow);
+        }
+    };
+
     // #region - Group sorting logic
-    // Function to return sorting logic based on the user selected order of sort
+    // Sorting logic
     const compareValues = (
         compareOrder: string,
         v1: Object,
@@ -168,40 +173,50 @@ const Grid = (props: Object): ?React$Element<*> => {
         }
         return returnValue;
     };
-    // Function to return sorted data
+    // Return sorted data based on original grid data and user selected sort options
     const getSortedData = (
         originalData: any[],
         groupSortOptions: any[]
     ): any[] => {
+        // If original grid data and user selected sort options are present
         if (
             originalData &&
             originalData.length > 0 &&
             groupSortOptions &&
             groupSortOptions.length > 0
         ) {
+            // Filter sort options to be applied on Grid data (not on sub component grid data)
             const gridSortOptions = groupSortOptions.filter(
                 (option: Object): boolean =>
                     option.isSubComponentColumn !== true
             );
+            // If Grid is tree view grid
             if (
                 isParentGrid &&
                 parentIdAttribute !== null &&
                 parentIdAttribute !== undefined
             ) {
+                // New result array to hold sorted data
                 let sortedTreeData = [];
+                // Filter out all parent rows. This is to maintain the order of parent rows even if sorting is applied.
+                // Only need to sort child data under each parent.
                 const parentDataFromOriginalData = [...originalData].filter(
                     (dataToFilter: Object): boolean => {
                         const { isParent } = dataToFilter;
                         return isParent === true;
                     }
                 );
+                // Loop through parent rows
                 parentDataFromOriginalData.forEach((dataFromGrid: Object) => {
+                    // Push parent row to result array
                     sortedTreeData.push(dataFromGrid);
+                    // If id attribute is present and it has a valid value
                     const parentIdentifier = dataFromGrid[parentIdAttribute];
                     if (
                         parentIdentifier !== null &&
                         parentIdentifier !== undefined
                     ) {
+                        // Find all child rows of that parent
                         const childRowsOfParent = [...originalData].filter(
                             (origData: Object): boolean => {
                                 return (
@@ -212,10 +227,13 @@ const Grid = (props: Object): ?React$Element<*> => {
                                 );
                             }
                         );
+                        // If chilkd rows are present
                         if (childRowsOfParent && childRowsOfParent.length > 0) {
+                            // Sort child data based on user selected sorting options
                             const sortedChildData = [...childRowsOfParent].sort(
                                 (x: Object, y: Object): number => {
                                     let compareResult = 0;
+                                    // Do sorting logic for each selected sorting option
                                     gridSortOptions.forEach(
                                         (option: Object) => {
                                             const {
@@ -258,6 +276,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                                     return compareResult;
                                 }
                             );
+                            // Push sorted child data into result array.
                             sortedTreeData = [
                                 ...sortedTreeData,
                                 ...sortedChildData
@@ -265,15 +284,19 @@ const Grid = (props: Object): ?React$Element<*> => {
                         }
                     }
                 });
+                // After sorting child data of all parents return the sorted data.
                 return sortedTreeData;
             }
+            // Filter sort options to be applied on sub component Grid data (not on main grid data)
             const subComponentSortOptions = groupSortOptions.filter(
                 (option: Object): boolean =>
                     option.isSubComponentColumn === true
             );
+            // Sort main rows based on user selected sort options for main grid
             let sortedOriginalData = [...originalData].sort(
                 (x: Object, y: Object): number => {
                     let compareResult = 0;
+                    // Do sorting based on each user slected sort options
                     gridSortOptions.forEach((option: Object) => {
                         const { sortBy, sortOn, order } = option;
                         const xSortBy = x[sortBy];
@@ -295,14 +318,19 @@ const Grid = (props: Object): ?React$Element<*> => {
                     return compareResult;
                 }
             );
+            // After sorting main rows, check if this Grid is sub component grid.
+            // If yes and user has selected sort options for subcomponent grid, apply sort for each sub component data under each main row.
             if (subComponentSortOptions && subComponentSortOptions.length > 0) {
+                // Loop through each row
                 sortedOriginalData = [...sortedOriginalData].map(
                     (data: Object): any[] => {
                         const sortedData = { ...data };
+                        // Check if sub component data is present in the main row.
                         if (
                             sortedData.subComponentData &&
                             sortedData.subComponentData.length > 0
                         ) {
+                            // Sort sub component data based on user slected sub component sort options
                             const sortedSubComponentData = [
                                 ...sortedData.subComponentData
                             ].sort((x: Object, y: Object): number => {
@@ -360,7 +388,9 @@ const Grid = (props: Object): ?React$Element<*> => {
     };
     // #endregion
 
+    // Load child data under a parent row, in case of tree view grid
     const loadChildData = (row: Object): Function => {
+        // If parent row & id attribute are present for parent data, and load more function is defined by developer
         if (
             row &&
             parentIdAttribute &&
@@ -368,12 +398,15 @@ const Grid = (props: Object): ?React$Element<*> => {
             typeof loadMoreData === "function"
         ) {
             const { lastPage, pageNum, pageSize, endCursor } = row;
+            // If page Info data are not present, we consider it as the first page load under this parent.
             const isIntialLoad =
                 lastPage === undefined &&
                 pageNum === undefined &&
                 pageSize === undefined &&
                 endCursor === undefined;
+            // Get parent id attribute value
             const parentId = row[parentIdAttribute];
+            // Check if last page is true for that parent and if it is not, then trigger callback function with parentId value and updated pageInfo.
             if (
                 (lastPage === false || isIntialLoad) &&
                 parentId !== null &&
@@ -383,7 +416,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                 if (paginationType === "cursor") {
                     if (endCursor !== null && endCursor !== undefined) {
                         pageInfoObj = {
-                            endCursor,
+                            endCursor, // send back same endCursor
                             pageSize
                         };
                     }
@@ -395,7 +428,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                         typeof pageNum === "number"
                     ) {
                         pageInfoObj = {
-                            pageNum: pageNum + 1,
+                            pageNum: pageNum + 1, // Update page number to next page
                             pageSize
                         };
                     }
@@ -405,21 +438,24 @@ const Grid = (props: Object): ?React$Element<*> => {
         }
     };
 
-    // Gets called when page scroll reaches the bottom of the grid.
-    // Trigger call back and get the grid data updated.
+    // Gets called when page scroll reaches the bottom of the grid, in case if pagination is enabled.
     const loadNextPage = (
         returnedPageInfo: Object,
         isReload: boolean
     ): Function => {
         const { pageNum, pageSize, endCursor, lastPage } = returnedPageInfo;
+        // If lastPage is not true, trigger call back with updated pageInfo.
         if (
             lastPage !== true &&
             loadMoreData &&
             typeof loadMoreData === "function"
         ) {
+            // If this is a reload functionality (when toalRecords property gets changed)
             if (isReload) {
+                // Keep the incremental number of pages that are being reloaded. This will be decremented when ever gridData is updated.
                 setPageReloadCount(pageReloadCount + 1);
             } else {
+                // Set loader display value as true. This will be set to false when gridData is updated.
                 setIsNextPageLoading(true);
             }
             if (paginationType === "cursor") {
@@ -437,9 +473,12 @@ const Grid = (props: Object): ?React$Element<*> => {
     };
 
     useEffect(() => {
+        // Set next page loader display value to false
         setIsNextPageLoading(false);
+        // Decrement page reload tracked numbers
         const newPageReloadCount = pageReloadCount - 1;
         setPageReloadCount(newPageReloadCount < 0 ? 0 : newPageReloadCount);
+        // Check if totalRecordsCount is changed in pageInfo, and if yes store the updated value
         if (pageInfo) {
             const { total } = pageInfo;
             if (typeof total === "number" && total !== totalRecordsCount) {
@@ -449,7 +488,7 @@ const Grid = (props: Object): ?React$Element<*> => {
     }, [gridData, pageInfo]);
 
     useEffect(() => {
-        // Columns Config
+        // Convert grid columns configuration to required structure & get the accessor list to be used for filtering, and store it.
         const columnsConfigData = extractColumns(
             columns,
             isDesktop,
@@ -465,7 +504,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         setGridColumns(updatedColumnStructure);
         setGridColumnsAccessorList(columnsAccessorList);
 
-        // Column To Expand config
+        // Convert grid additional column configuration to required structure & get the accessor list to be used for filtering, and store it.
         const columnToExpandConfigData = extractAdditionalColumn(
             columnToExpand,
             isDesktop,
@@ -480,7 +519,7 @@ const Grid = (props: Object): ?React$Element<*> => {
     }, [columns, columnToExpand]);
 
     useEffect(() => {
-        // Sub Component Columns Config
+        // Convert sub component columns configuration to required structure & get the accessor list to be used for filtering, and store it.
         const columnsConfigData = extractColumns(
             subComponentColumns,
             isDesktop,
@@ -496,7 +535,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         setGridSubComponentColumns(updatedColumnStructure);
         setGridSubComponentColumnsAccessorList(columnsAccessorList);
 
-        // Sub Component Column To Expand config
+        // Convert sub component additional column configuration to required structure & get the accessor list to be used for filtering, and store it.
         const columnToExpandConfigData = extractAdditionalColumn(
             subComponentColumnToExpand,
             isDesktop,
@@ -512,10 +551,12 @@ const Grid = (props: Object): ?React$Element<*> => {
         );
     }, [subComponentColumns, subComponentColumnToExpand]);
 
+    // To see if initial loading is completed or not
     useEffect(() => {
         setIsLoaded(true);
     }, []);
 
+    // If grid is tree view grid, update grid data structure
     let processedGridData = gridData && gridData.length > 0 ? gridData : [];
     if (isParentGrid) {
         processedGridData = getProcessedData(gridData, parentIdAttribute);
