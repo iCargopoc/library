@@ -1,6 +1,6 @@
 // @flow
 import React, { useRef } from "react";
-import PinnedRow from "./PinnedRow";
+import RowItem from "./RowItem";
 
 const PinnedRowsList = ({
     gridRef,
@@ -11,7 +11,30 @@ const PinnedRowsList = ({
     isAtleastOneColumnPinned,
     additionalColumn,
     enablePinColumn,
-    isRowActionsColumnNeeded
+    isRowActionsColumnNeeded,
+    idAttribute,
+    theme,
+    width,
+    isLoadMoreChildRowsRequiredForRow,
+    subComponentColumns,
+    subComponentAdditionalColumn,
+    subComponentColumnsAccessorList,
+    subComponentAdditionalColumnAccessorList,
+    subComponentIdAttribute,
+    userSelectedSubCompRowIdentifiers,
+    updateSubCompRowIdentifiers,
+    isSubComponentGrid,
+    subComponentHeader,
+    rowsWithExpandedSubComponents,
+    loadMoreChildData,
+    isParentGrid,
+    fixedRowHeight,
+    isLoadMoreRequiredForNormalRow,
+    rowActions,
+    expandableColumn,
+    rowSelector,
+    multiRowSelection,
+    gridGlobalFilterValue
 }: Object): any => {
     const rowsHeightMap = useRef({});
 
@@ -45,22 +68,81 @@ const PinnedRowsList = ({
         <>
             {pinnedRows.map((pinnedRow: Object, index: number): any => {
                 prepareRow(pinnedRow);
-                const { id } = pinnedRow;
+
+                const { original } = pinnedRow;
+                const { lastPage } = original;
+
+                // Add classname passed by developer from getRowInfo prop to required rows
+                let rowClassName = "";
+                if (getRowInfo && typeof getRowInfo === "function") {
+                    const rowInfo = getRowInfo(original, false);
+                    if (rowInfo && rowInfo.className) {
+                        rowClassName = rowInfo.className;
+                    }
+                }
+
                 return (
-                    <PinnedRow
-                        key={id}
-                        gridRef={gridRef}
-                        pinnedRow={pinnedRow}
-                        index={index}
-                        getRowTop={getRowTop}
-                        getRowInfo={getRowInfo}
-                        setRowHeight={setRowHeight}
-                        isRowExpandEnabled={isRowExpandEnabled}
-                        isAtleastOneColumnPinned={isAtleastOneColumnPinned}
-                        additionalColumn={additionalColumn}
-                        enablePinColumn={enablePinColumn}
-                        isRowActionsColumnNeeded={isRowActionsColumnNeeded}
-                    />
+                    <div
+                        {...pinnedRow.getRowProps()}
+                        data-testid="pinned-gridrow"
+                        className={`neo-grid__tr neo-grid__pinnedtr ${rowClassName}`}
+                        style={{
+                            top: getRowTop(index)
+                        }}
+                    >
+                        <RowItem
+                            gridRef={gridRef}
+                            row={pinnedRow}
+                            isAtleastOneColumnPinned={isAtleastOneColumnPinned}
+                            idAttribute={idAttribute}
+                            theme={theme}
+                            index={index}
+                            width={width}
+                            setSize={setRowHeight}
+                            isRowExpandEnabled={isRowExpandEnabled}
+                            additionalColumn={additionalColumn}
+                            isLoadMoreChildRowsRequiredForRow={
+                                isLoadMoreChildRowsRequiredForRow
+                            }
+                            subComponentColumns={subComponentColumns}
+                            subComponentAdditionalColumn={
+                                subComponentAdditionalColumn
+                            }
+                            subComponentColumnsAccessorList={
+                                subComponentColumnsAccessorList
+                            }
+                            subComponentAdditionalColumnAccessorList={
+                                subComponentAdditionalColumnAccessorList
+                            }
+                            subComponentIdAttribute={subComponentIdAttribute}
+                            userSelectedSubCompRowIdentifiers={
+                                userSelectedSubCompRowIdentifiers
+                            }
+                            updateSubCompRowIdentifiers={
+                                updateSubCompRowIdentifiers
+                            }
+                            isSubComponentGrid={isSubComponentGrid}
+                            subComponentHeader={subComponentHeader}
+                            rowsWithExpandedSubComponents={
+                                rowsWithExpandedSubComponents
+                            }
+                            lastPage={lastPage}
+                            loadMoreChildData={loadMoreChildData}
+                            isParentGrid={isParentGrid}
+                            fixedRowHeight={fixedRowHeight}
+                            isLoadMoreRequiredForNormalRow={
+                                isLoadMoreRequiredForNormalRow
+                            }
+                            getRowInfo={getRowInfo}
+                            rowActions={rowActions}
+                            expandableColumn={expandableColumn}
+                            rowSelector={rowSelector}
+                            multiRowSelection={multiRowSelection}
+                            isRowActionsColumnNeeded={isRowActionsColumnNeeded}
+                            enablePinColumn={enablePinColumn}
+                            gridGlobalFilterValue={gridGlobalFilterValue}
+                        />
+                    </div>
                 );
             })}
         </>

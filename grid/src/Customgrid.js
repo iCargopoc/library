@@ -1399,6 +1399,8 @@ const Customgrid = (props: {
                                             pinnedRows.length > 0 ? (
                                                 <PinnedRowsList
                                                     gridRef={gridRef}
+                                                    width={width}
+                                                    theme={theme}
                                                     pinnedRows={pinnedRows}
                                                     prepareRow={prepareRow}
                                                     getRowInfo={getRowInfo}
@@ -1416,6 +1418,61 @@ const Customgrid = (props: {
                                                     }
                                                     isRowActionsColumnNeeded={
                                                         isRowActionsColumnNeeded
+                                                    }
+                                                    idAttribute={idAttribute}
+                                                    isLoadMoreChildRowsRequiredForRow={
+                                                        isLoadMoreChildRowsRequiredForRow
+                                                    }
+                                                    subComponentColumns={
+                                                        subComponentColumns
+                                                    }
+                                                    subComponentAdditionalColumn={
+                                                        subComponentAdditionalColumn
+                                                    }
+                                                    subComponentColumnsAccessorList={
+                                                        subComponentColumnsAccessorList
+                                                    }
+                                                    subComponentAdditionalColumnAccessorList={
+                                                        subComponentAdditionalColumnAccessorList
+                                                    }
+                                                    subComponentIdAttribute={
+                                                        subComponentIdAttribute
+                                                    }
+                                                    userSelectedSubCompRowIdentifiers={
+                                                        userSelectedSubCompRowIdentifiers
+                                                    }
+                                                    updateSubCompRowIdentifiers={
+                                                        updateSubCompRowIdentifiers
+                                                    }
+                                                    isSubComponentGrid={
+                                                        isSubComponentGrid.current
+                                                    }
+                                                    subComponentHeader={
+                                                        subComponentHeader
+                                                    }
+                                                    rowsWithExpandedSubComponents={
+                                                        rowsWithExpandedSubComponents
+                                                    }
+                                                    loadMoreChildData={
+                                                        loadMoreChildData
+                                                    }
+                                                    isParentGrid={isParentGrid}
+                                                    fixedRowHeight={
+                                                        fixedRowHeight
+                                                    }
+                                                    isLoadMoreRequiredForNormalRow={
+                                                        isLoadMoreRequiredForNormalRow
+                                                    }
+                                                    rowSelector={rowSelector}
+                                                    rowActions={rowActions}
+                                                    expandableColumn={
+                                                        expandableColumn
+                                                    }
+                                                    multiRowSelection={
+                                                        multiRowSelection
+                                                    }
+                                                    gridGlobalFilterValue={
+                                                        globalFilter
                                                     }
                                                 />
                                             ) : null}
