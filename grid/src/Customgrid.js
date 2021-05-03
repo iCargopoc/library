@@ -1061,7 +1061,7 @@ const Customgrid = (props: {
     }, [rowsToSelect, rowsToDeselect, gridData, groupSortOptions]);
 
     useEffect(() => {
-        if (rowsToPin && rowsToPin.length > 0) {
+        if (isParentGrid !== true && rowsToPin && rowsToPin.length > 0) {
             setUserSelectedRowsToPin(rowsToPin);
         }
     }, [rowsToPin]);
