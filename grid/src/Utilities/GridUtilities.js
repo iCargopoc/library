@@ -93,6 +93,16 @@ export const isRowSelectionDisabled = (
     return isRowSelectable === false || className === "disabled";
 };
 
+export const isRowExpandDisabled = (
+    getRowInfo: any,
+    rowData: any,
+    isSubComponentRow: boolean
+): boolean => {
+    const rowInfo = getRowInfoData(getRowInfo, rowData, isSubComponentRow);
+    const { isRowExpandable } = rowInfo;
+    return isRowExpandable === false;
+};
+
 export const getRowClassname = (
     getRowInfo: any,
     rowData: any,

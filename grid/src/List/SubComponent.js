@@ -19,6 +19,7 @@ import {
     isLastPinnedColumn,
     getTotalWidthOfPinnedColumns,
     isRowSelectionDisabled,
+    isRowExpandDisabled,
     updateAccessorList,
     getRowClassname
 } from "../Utilities/GridUtilities";
@@ -326,20 +327,7 @@ const SubComponent = (props: {
                         Cell: (cellCustomProps: Object): Object => {
                             const { row } = cellCustomProps;
                             const { original } = row;
-                            // Check if expand icon is required for this row using the getRowInfo prop passed
-                            let isRowExpandable = true;
-                            if (
-                                getRowInfo &&
-                                typeof getRowInfo === "function"
-                            ) {
-                                const rowInfo = getRowInfo(original, true);
-                                if (
-                                    rowInfo &&
-                                    rowInfo.isRowExpandable === false
-                                ) {
-                                    isRowExpandable = false;
-                                }
-                            }
+
                             return (
                                 <div className="ng-action">
                                     {isRowActionsAvailable ? (
@@ -349,7 +337,13 @@ const SubComponent = (props: {
                                             isSubComponentRow
                                         />
                                     ) : null}
-                                    {isRowExpandAvailable && isRowExpandable ? (
+                                    {/* Check if expand icon is required for this row using the getRowInfo prop passed */}
+                                    {isRowExpandAvailable &&
+                                    !isRowExpandDisabled(
+                                        getRowInfo,
+                                        original,
+                                        true
+                                    ) ? (
                                         <span
                                             className="ng-action__expander"
                                             data-testid="subcontentrow_expandericon"
