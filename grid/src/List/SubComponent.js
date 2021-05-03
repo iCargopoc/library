@@ -19,7 +19,8 @@ import {
     isLastPinnedColumn,
     getTotalWidthOfPinnedColumns,
     isRowSelectionDisabled,
-    updateAccessorList
+    updateAccessorList,
+    getRowClassname
 } from "../Utilities/GridUtilities";
 
 const SubComponent = (props: {
@@ -557,21 +558,17 @@ const SubComponent = (props: {
             >
                 {rows.map((row: Object): Object => {
                     prepareRow(row);
-
                     const { original, cells, isExpanded } = row;
-                    // Add classname passed by developer from getRowInfo prop to required rows
-                    let rowClassName = "";
-                    if (getRowInfo && typeof getRowInfo === "function") {
-                        const rowInfo = getRowInfo(original, true);
-                        if (rowInfo && rowInfo.className) {
-                            rowClassName = rowInfo.className;
-                        }
-                    }
+
                     return (
                         <div
                             {...row.getRowProps()}
                             data-testid="subcontentrow"
-                            className={`neo-grid__tr ${rowClassName}`}
+                            className={`neo-grid__tr ${getRowClassname(
+                                getRowInfo,
+                                original,
+                                true
+                            )}`} // Add classname passed by developer from getRowInfo prop to required rows
                         >
                             <div className="neo-grid__row-container">
                                 <div

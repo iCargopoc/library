@@ -1,6 +1,7 @@
 // @flow
 import React, { useRef } from "react";
 import RowItem from "./RowItem";
+import { getRowClassname } from "../Utilities/GridUtilities";
 
 const PinnedRowsList = ({
     gridRef,
@@ -68,24 +69,18 @@ const PinnedRowsList = ({
         <>
             {pinnedRows.map((pinnedRow: Object, index: number): any => {
                 prepareRow(pinnedRow);
-
                 const { original } = pinnedRow;
                 const { lastPage } = original;
-
-                // Add classname passed by developer from getRowInfo prop to required rows
-                let rowClassName = "";
-                if (getRowInfo && typeof getRowInfo === "function") {
-                    const rowInfo = getRowInfo(original, false);
-                    if (rowInfo && rowInfo.className) {
-                        rowClassName = rowInfo.className;
-                    }
-                }
 
                 return (
                     <div
                         {...pinnedRow.getRowProps()}
                         data-testid="pinned-gridrow"
-                        className={`neo-grid__tr neo-grid__pinnedtr ${rowClassName}`}
+                        className={`neo-grid__tr neo-grid__pinnedtr ${getRowClassname(
+                            getRowInfo,
+                            original,
+                            false
+                        )}`} // Add classname passed by developer from getRowInfo prop to required rows
                         style={{
                             top: getRowTop(index)
                         }}

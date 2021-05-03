@@ -71,17 +71,36 @@ export const setColumnWidths = (gridColumns: any[]): any[] => {
     return updatedColumns;
 };
 
+const getRowInfoData = (
+    getRowInfo: any,
+    rowData: any,
+    isSubComponentRow: boolean
+): Object => {
+    if (getRowInfo && typeof getRowInfo === "function") {
+        const rowInfo = getRowInfo(rowData, isSubComponentRow);
+        return rowInfo || {};
+    }
+    return {};
+};
+
 export const isRowSelectionDisabled = (
     getRowInfo: any,
     rowData: any,
     isSubComponentRow: boolean
 ): boolean => {
-    if (getRowInfo && typeof getRowInfo === "function") {
-        const rowInfo = getRowInfo(rowData, isSubComponentRow);
-        const { isRowSelectable, className } = rowInfo || {};
-        return isRowSelectable === false || className === "disabled";
-    }
-    return false;
+    const rowInfo = getRowInfoData(getRowInfo, rowData, isSubComponentRow);
+    const { isRowSelectable, className } = rowInfo;
+    return isRowSelectable === false || className === "disabled";
+};
+
+export const getRowClassname = (
+    getRowInfo: any,
+    rowData: any,
+    isSubComponentRow: boolean
+): string => {
+    const rowInfo = getRowInfoData(getRowInfo, rowData, isSubComponentRow);
+    const { className } = rowInfo;
+    return className || "";
 };
 
 export const findSelectedRows = (

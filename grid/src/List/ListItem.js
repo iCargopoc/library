@@ -2,6 +2,7 @@
 import React from "react";
 import ParentItem from "./ParentItem";
 import RowItem from "./RowItem";
+import { getRowClassname } from "../Utilities/GridUtilities";
 
 const ListItem = ({
     gridRef,
@@ -115,22 +116,13 @@ const ListItem = ({
         );
     }
 
-    // Add classname passed by developer from getRowInfo prop to required rows
-    let rowClassName = "";
-    if (getRowInfo && typeof getRowInfo === "function") {
-        const rowInfo = getRowInfo(original, false);
-        if (rowInfo && rowInfo.className) {
-            rowClassName = rowInfo.className;
-        }
-    }
-
     return (
         <div
             {...row.getRowProps({ style })}
             data-testid="gridrow"
             className={`neo-grid__tr ${
                 isParentGrid ? "neo-grid__child" : ""
-            } ${rowClassName}`}
+            } ${getRowClassname(getRowInfo, original, false)}`} // Add classname passed by developer from getRowInfo prop to required rows
         >
             <RowItem
                 gridRef={gridRef}
