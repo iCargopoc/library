@@ -56,7 +56,8 @@ const GridComponent = (props) => {
         previousPageRefresh,
         pdfPaperSize,
         isHorizontalGrid,
-        passPinColumn
+        passPinColumn,
+        pinnedRowsList
     } = props;
 
     const estimatedRowHeight = fixedRowHeight ? 75 : 150;
@@ -106,6 +107,7 @@ const GridComponent = (props) => {
     const [rowsToDeselect, setRowsToDeselect] = useState([]);
     // State for holding rows to select
     const [rowsToSelect, setRowsToSelect] = useState([]);
+    const [rowsToPin, setRowsToPin] = useState([]);
 
     const [isEditOverlayOpened, setIsEditOverlayOpened] = useState(false);
     const [rowDataToEdit, setRowDataToEdit] = useState(null);
@@ -2646,6 +2648,9 @@ const GridComponent = (props) => {
                 }
             });
         }
+        if (pinnedRowsList && pinnedRowsList.length > 0) {
+            setRowsToPin(pinnedRowsList);
+        }
     }, []);
 
     const removeRowSelection = (event) => {
@@ -2819,6 +2824,7 @@ const GridComponent = (props) => {
                     pdfPaperSize={pdfPaperSize || null}
                     enablePinColumn={passPinColumn || false}
                     displayLoader={displayLoader}
+                    rowsToPin={rowsToPin}
                 />
             </div>
         );

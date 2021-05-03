@@ -74,6 +74,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         exportData,
         onGridRefresh,
         rowsToSelect,
+        rowsToPin,
         rowsToDeselect,
         fixedRowHeight,
         fileName,
@@ -644,6 +645,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     fileName={fileName}
                     onGridRefresh={onGridRefresh}
                     rowsToSelect={rowsToSelect}
+                    rowsToPin={rowsToPin}
                     rowsToDeselect={rowsToDeselect}
                     fixedRowHeight={fixedRowHeight}
                     pdfPaperSize={pdfPaperSize}

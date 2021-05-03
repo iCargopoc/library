@@ -19,7 +19,7 @@ const ColumnHeaders = ({
     isFilterOpen: boolean
 }): any => {
     return (
-        <div className="neo-grid__thead">
+        <div className="neo-grid__thead" data-testid="gridColumnHeader">
             {headerGroups.map((headerGroup: Object, index: number): Object => {
                 // If there are morthan 1 headerGroups, we consider 1st one as group header row
                 const isGroupHeader =

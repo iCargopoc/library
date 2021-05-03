@@ -26,6 +26,7 @@ import DefaultColumnFilter from "./Functions/DefaultColumnFilter";
 import RowOptions from "./Functions/RowOptions";
 import ColumnHeaders from "./Common/ColumnHeaders";
 import GridHeader from "./Common/GridHeader";
+import PinnedRowsList from "./List/PinnedRowsList";
 import RowsList from "./List/RowsList";
 import { IconAngle, IconExpand, IconCollapse } from "./Utilities/SvgUtilities";
 import {
@@ -97,6 +98,7 @@ const Customgrid = (props: {
     fileName: string,
     onGridRefresh: Function,
     rowsToSelect: Array<Object>,
+    rowsToPin: Array<Object>,
     rowsToDeselect: Array<Object>,
     fixedRowHeight: boolean,
     pdfPaperSize: string,
@@ -157,6 +159,7 @@ const Customgrid = (props: {
         pdfPaperSize,
         onGridRefresh,
         rowsToSelect,
+        rowsToPin,
         rowsToDeselect,
         fixedRowHeight,
         enablePinColumn,
@@ -263,6 +266,8 @@ const Customgrid = (props: {
             );
         }
     };
+
+    const [userSelectedRowsToPin, setUserSelectedRowsToPin] = useState([]);
 
     // Local Ref value to identify if column/global filter has been applied, and give a call back
     const filterEventRef = useRef(false);
@@ -1056,6 +1061,12 @@ const Customgrid = (props: {
     }, [rowsToSelect, rowsToDeselect, gridData, groupSortOptions]);
 
     useEffect(() => {
+        if (rowsToPin && rowsToPin.length > 0) {
+            setUserSelectedRowsToPin(rowsToPin);
+        }
+    }, [rowsToPin]);
+
+    useEffect(() => {
         resetRef.current = false;
     }, [gridData, groupSortOptions]);
 
@@ -1258,6 +1269,15 @@ const Customgrid = (props: {
     };
 
     if (!isFirstRendering && gridColumns && gridColumns.length > 0) {
+        const pinnedRows = rows.filter((row: Object): boolean => {
+            const { original } = row;
+            return userSelectedRowsToPin.includes(original[idAttribute]);
+        });
+        const unPinnedRows = rows.filter((row: Object): boolean => {
+            const { original } = row;
+            return !userSelectedRowsToPin.includes(original[idAttribute]);
+        });
+
         // Render table and other components as required
         // Use properties and methods provided by react-table
         // Autosizer used for calculating grid height (don't consider window width and column resizing value changes)
@@ -1375,6 +1395,30 @@ const Customgrid = (props: {
                                                     : ""
                                             }`}
                                         >
+                                            {pinnedRows &&
+                                            pinnedRows.length > 0 ? (
+                                                <PinnedRowsList
+                                                    gridRef={gridRef}
+                                                    pinnedRows={pinnedRows}
+                                                    prepareRow={prepareRow}
+                                                    getRowInfo={getRowInfo}
+                                                    isRowExpandEnabled={
+                                                        isRowExpandEnabled
+                                                    }
+                                                    isAtleastOneColumnPinned={
+                                                        isAtleastOneColumnPinned
+                                                    }
+                                                    additionalColumn={
+                                                        additionalColumn
+                                                    }
+                                                    enablePinColumn={
+                                                        enablePinColumn
+                                                    }
+                                                    isRowActionsColumnNeeded={
+                                                        isRowActionsColumnNeeded
+                                                    }
+                                                />
+                                            ) : null}
                                             {isPaginationNeeded &&
                                             !isParentGrid ? (
                                                 <InfiniteLoader
@@ -1401,7 +1445,7 @@ const Customgrid = (props: {
                                                             height={height}
                                                             width={width}
                                                             theme={theme}
-                                                            rows={rows}
+                                                            rows={unPinnedRows}
                                                             estimatedRowHeight={
                                                                 estimatedRowHeight
                                                             }
@@ -1529,7 +1573,7 @@ const Customgrid = (props: {
                                                     height={height}
                                                     width={width}
                                                     theme={theme}
-                                                    rows={rows}
+                                                    rows={unPinnedRows}
                                                     estimatedRowHeight={
                                                         estimatedRowHeight
                                                     }

@@ -456,6 +456,12 @@ const subComponentColumnToExpand // Same as columnToExpand
     // User can 'Pin Left' columns from manage column overlay, and row actions column will be pinned right by default.
     const enablePinColumn = true;
 
+    // Pass this property if rows in Grid has to be pinned to top.
+    // This should be an array of idAttribute values, of rows that has to be pinned to top.
+    // The UI part for implementing 'Pin Row' functionality (Functionality to be use by user) has not been implemented yet. Waiting to get design from Ux team.
+    // Also, the pinned row identifier icon in UI has not been decided yet. This is also pending.
+    const rowsToPin = [6];
+
     // Pass this property if you are aware of an estimated row height value or if you are using grid with fixed row height.
     const estimatedRowHeight = 50;
 
@@ -508,6 +514,7 @@ const subComponentColumnToExpand // Same as columnToExpand
         fileName={fileName}
         pdfPaperSize={pdfPaperSize}
         enablePinColumn={enablePinColumn}
+        rowsToPin={rowsToPin}
     />
 ```
 
@@ -705,6 +712,25 @@ const subComponentColumnToExpand // Same as columnToExpand
     onRowSelect={onRowSelect}
     onSearch={onSearch}
     enablePinColumn={true}
+/>
+```
+
+#### With pin row
+
+<Story name="With pin row">
+    <GridComponent passIdAttribute pinnedRowsList={[6]} />;
+</Story>
+
+```jsx
+<Grid
+    gridData={gridData}
+    columns={columns}
+    idAttribute={idAttribute}
+    rowActions={rowActions}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    onSearch={onSearch}
+    rowsToPin={rowsToPin}
 />
 ```
 

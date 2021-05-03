@@ -203,6 +203,10 @@
             flex-wrap: wrap;
             background: var(--white);
         }
+        .neo-grid__pinnedtr {
+            position: sticky !important;
+            z-index: 1 !important;
+        }
         .ng-loadmore {
             width: 100%;
             text-align: center;
