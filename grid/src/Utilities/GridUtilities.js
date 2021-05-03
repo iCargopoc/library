@@ -408,6 +408,10 @@ export const findAllChildRows = (allRows: [Object]): any[] => {
     return [];
 };
 
+export const getGridElement = (gridRef: any): Object => {
+    return gridRef && gridRef.current ? gridRef.current : document;
+};
+
 export const getColumnElementsForPinColumn = (
     gridRef: any,
     isSubComponent: boolean,
@@ -415,7 +419,7 @@ export const getColumnElementsForPinColumn = (
 ): any => {
     let columnElements = [];
 
-    const gridElement = gridRef && gridRef.current ? gridRef.current : document;
+    const gridElement = getGridElement(gridRef);
     const subCompElement =
         gridElement.querySelector("[data-testid='subcomponent-content']") ||
         document;

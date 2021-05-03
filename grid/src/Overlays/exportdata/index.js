@@ -13,7 +13,10 @@ import {
     IconCancel,
     IconPdf
 } from "../../Utilities/SvgUtilities";
-import { convertToIndividualColumns } from "../../Utilities/GridUtilities";
+import {
+    convertToIndividualColumns,
+    getGridElement
+} from "../../Utilities/GridUtilities";
 import { processedData } from "../../Utilities/DataUtilities";
 
 const getProcessedData = memoize(processedData);
@@ -218,8 +221,7 @@ const ExportData = (props: Object): any => {
         rowFilteredHeader: Object,
         extensionType: string
     ) => {
-        const gridElement =
-            gridRef && gridRef.current ? gridRef.current : document;
+        const gridElement = getGridElement(gridRef);
         const updatedRowFilteredValues = [...rowFilteredValues];
         const updatedRowFilteredHeader = [...rowFilteredHeader];
         updatedRowFilteredValues.unshift(updatedRowFilteredHeader[0]);

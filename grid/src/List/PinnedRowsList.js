@@ -1,7 +1,7 @@
 // @flow
 import React, { useRef } from "react";
 import RowItem from "./RowItem";
-import { getRowClassname } from "../Utilities/GridUtilities";
+import { getRowClassname, getGridElement } from "../Utilities/GridUtilities";
 
 const PinnedRowsList = ({
     gridRef,
@@ -47,8 +47,7 @@ const PinnedRowsList = ({
     };
 
     const getRowTop = (index: number): Object => {
-        const gridElement =
-            gridRef && gridRef.current ? gridRef.current : document;
+        const gridElement = getGridElement(gridRef);
         const gridColHeaderElement = gridElement.querySelector(
             "[data-testid='gridColumnHeader']"
         );
