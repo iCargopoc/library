@@ -925,11 +925,17 @@ const Customgrid = (props: {
 
     // Make checkbox in header title selected if no: selected rows and total rows are same
     const isAllRowsSelected = (): boolean => {
+        const selectableRows = rows.filter((row: Object): boolean => {
+            const { original } = row;
+            return !isRowSelectionDisabled(getRowInfo, original, false);
+        });
         return (
-            rows &&
-            rows.length > 0 &&
+            selectableRows &&
+            selectableRows.length > 0 &&
+            userSelectedRowIdentifiers &&
+            userSelectedRowIdentifiers.current &&
             userSelectedRowIdentifiers.current.length > 0 &&
-            rows.length === userSelectedRowIdentifiers.current.length
+            selectableRows.length === userSelectedRowIdentifiers.current.length
         );
     };
 
