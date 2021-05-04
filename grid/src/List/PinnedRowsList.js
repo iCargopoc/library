@@ -63,6 +63,8 @@ const PinnedRowsList = ({
         return rowTopValue;
     };
 
+    const pinnedRowsLastIndex = pinnedRows.length - 1;
+
     return (
         <>
             {pinnedRows.map((pinnedRow: Object, index: number): any => {
@@ -74,11 +76,11 @@ const PinnedRowsList = ({
                     <div
                         {...pinnedRow.getRowProps()}
                         data-testid="pinned-gridrow"
-                        className={`neo-grid__tr neo-grid__pinnedtr ${getRowClassname(
-                            getRowInfo,
-                            original,
-                            false
-                        )}`} // Add classname passed by developer from getRowInfo prop to required rows
+                        className={`neo-grid__tr neo-grid__pinnedtr ${
+                            index === pinnedRowsLastIndex
+                                ? "neo-grid__pinnedtr--lasttr"
+                                : ""
+                        } ${getRowClassname(getRowInfo, original, false)}`} // Add classname passed by developer from getRowInfo prop to required rows
                         style={{
                             top: getRowTop(index)
                         }}

@@ -206,6 +206,9 @@
         .neo-grid__pinnedtr {
             position: sticky !important;
             z-index: 2 !important;
+            &--lasttr {
+                box-shadow: 0 8px 6px -6px inset var(--border-default);
+            }
         }
         .ng-loadmore {
             width: 100%;
