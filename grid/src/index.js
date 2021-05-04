@@ -490,7 +490,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                 const parentRowIdValue = dataItem[parentIdAttribute];
                 if (childData !== null && childData !== undefined) {
                     const { total } = childData;
-                    const { current } = totalRecordsOfParentRows || {};
+                    const { current } = totalRecordsOfParentRows;
                     const existingTotal = current[parentRowIdValue];
                     if (existingTotal !== total) {
                         totalChangedParentId = parentRowIdValue;
