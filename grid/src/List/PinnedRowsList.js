@@ -58,7 +58,7 @@ const PinnedRowsList = ({
         const { current } = rowsHeightMap;
         if (index > 0 && current !== null && current !== undefined) {
             for (let i = 0; i < index; i++) {
-                rowTopValue += current[i] || 0;
+                rowTopValue += current[i] + 1 || 1; // 1 is to compensate the 1 px border size
             }
         }
         return rowTopValue;
