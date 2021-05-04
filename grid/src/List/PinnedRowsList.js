@@ -1,5 +1,5 @@
 // @flow
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import RowItem from "./RowItem";
 import { getRowClassname, getGridElement } from "../Utilities/GridUtilities";
 
@@ -37,12 +37,12 @@ const PinnedRowsList = ({
     multiRowSelection,
     gridGlobalFilterValue
 }: Object): any => {
-    const rowsHeightMap = useRef({});
+    const [rowsHeightMap, setRowsHeightMap] = useState({});
 
     const setRowHeight = (index: number, size: number) => {
-        const currentSize = rowsHeightMap.current[index];
+        const currentSize = rowsHeightMap[index];
         if (currentSize !== size) {
-            rowsHeightMap.current = { ...rowsHeightMap.current, [index]: size };
+            setRowsHeightMap({ ...rowsHeightMap, [index]: size });
         }
     };
 
@@ -55,10 +55,9 @@ const PinnedRowsList = ({
             ? gridColHeaderElement.offsetHeight
             : 0;
         let rowTopValue = gridColHeaderElementHeight;
-        const { current } = rowsHeightMap;
-        if (index > 0 && current !== null && current !== undefined) {
+        if (index > 0) {
             for (let i = 0; i < index; i++) {
-                rowTopValue += current[i] + 1 || 1; // 1 is to compensate the 1 px border size
+                rowTopValue += (rowsHeightMap[i] || 0) + 1; // 1 is to compensate the 1 px border size
             }
         }
         return rowTopValue;
