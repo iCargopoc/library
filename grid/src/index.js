@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useEffect, createRef } from "react";
+import React, { useState, useEffect, createRef, useRef } from "react";
 import memoize from "lodash.memoize";
 import {
     extractColumns,
@@ -136,6 +136,9 @@ const Grid = (props: Object): ?React$Element<*> => {
         gridSubComponentAdditionalColumnAccessorList,
         setGridSubComponentAdditionalColumnAccessorList
     ] = useState([]);
+
+    // To hold total records count of each parent row
+    const totalRecordsOfParentRows = useRef({});
 
     // Check if rendered Grid is tree view grid or not.
     const isParentGrid = parentColumn !== null && parentColumn !== undefined;
@@ -390,7 +393,7 @@ const Grid = (props: Object): ?React$Element<*> => {
     // #endregion
 
     // Load child data under a parent row, in case of tree view grid
-    const loadChildData = (row: Object): Function => {
+    const loadChildData = (row: Object, isReload: boolean): Function => {
         // If parent row & id attribute are present for parent data, and load more function is defined by developer
         if (
             row &&
@@ -415,7 +418,11 @@ const Grid = (props: Object): ?React$Element<*> => {
             ) {
                 let pageInfoObj = null;
                 if (paginationType === "cursor") {
-                    if (endCursor !== null && endCursor !== undefined) {
+                    if (
+                        isReload !== true &&
+                        endCursor !== null &&
+                        endCursor !== undefined
+                    ) {
                         pageInfoObj = {
                             endCursor, // send back same endCursor
                             pageSize
@@ -424,6 +431,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     loadMoreData(pageInfoObj, parentId);
                 } else {
                     if (
+                        isReload !== true &&
                         pageNum !== null &&
                         pageNum !== undefined &&
                         typeof pageNum === "number"
@@ -433,7 +441,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                             pageSize
                         };
                     }
-                    loadMoreData(pageInfoObj, parentId);
+                    loadMoreData(pageInfoObj, parentId, isReload);
                 }
             }
         }
@@ -474,16 +482,49 @@ const Grid = (props: Object): ?React$Element<*> => {
     };
 
     useEffect(() => {
-        // Set next page loader display value to false
-        setIsNextPageLoading(false);
-        // Decrement page reload tracked numbers
-        const newPageReloadCount = pageReloadCount - 1;
-        setPageReloadCount(newPageReloadCount < 0 ? 0 : newPageReloadCount);
-        // Check if totalRecordsCount is changed in pageInfo, and if yes store the updated value
-        if (pageInfo) {
-            const { total } = pageInfo;
-            if (typeof total === "number" && total !== totalRecordsCount) {
-                setTotalRecordsCount(total);
+        if (isParentGrid && gridData && gridData.length > 0) {
+            let totalChangedParentId = null;
+            let oldTotalValue = null;
+            gridData.forEach((dataItem: Object) => {
+                const { childData } = dataItem;
+                const parentRowIdValue = dataItem[parentIdAttribute];
+                if (childData !== null && childData !== undefined) {
+                    const { total } = childData;
+                    const { current } = totalRecordsOfParentRows || {};
+                    const existingTotal = current[parentRowIdValue];
+                    if (existingTotal !== total) {
+                        totalChangedParentId = parentRowIdValue;
+                        oldTotalValue = existingTotal;
+                        totalRecordsOfParentRows.current = {
+                            ...current,
+                            [parentRowIdValue]: total
+                        };
+                    }
+                }
+            });
+            if (
+                totalChangedParentId !== null &&
+                totalChangedParentId !== undefined &&
+                oldTotalValue !== null &&
+                oldTotalValue !== undefined
+            ) {
+                loadChildData(
+                    { [parentIdAttribute]: totalChangedParentId },
+                    true
+                );
+            }
+        } else {
+            // Set next page loader display value to false
+            setIsNextPageLoading(false);
+            // Decrement page reload tracked numbers
+            const newPageReloadCount = pageReloadCount - 1;
+            setPageReloadCount(newPageReloadCount < 0 ? 0 : newPageReloadCount);
+            // Check if totalRecordsCount is changed in pageInfo, and if yes store the updated value
+            if (pageInfo) {
+                const { total } = pageInfo;
+                if (typeof total === "number" && total !== totalRecordsCount) {
+                    setTotalRecordsCount(total);
+                }
             }
         }
     }, [gridData, pageInfo]);

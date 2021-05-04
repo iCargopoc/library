@@ -1564,6 +1564,62 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 />
 ```
 
+#### Tree view with auto refresh
+
+<Story name="Tree view with auto refresh">
+    <GridComponent
+        allProps
+        previousPageRefresh
+        className="icargoCustomClass"
+        title="AWBs"
+        gridWidth="100%"
+        rowsToOverscan={4}
+        CustomPanel={CustomPanel}
+        fileName="Custom filename"
+        rowsForSelection={[1, 7, 17]}
+        pdfPaperSize="A1"
+        treeStructure
+    />
+    ;
+</Story>
+
+```jsx
+<Grid
+    className={className}
+    title={title}
+    gridWidth={gridWidth}
+    gridData={gridData}
+    rowsToOverscan={4}
+    idAttribute={idAttribute}
+    paginationType={paginationType}
+    pageInfo={gridPageInfo}
+    loadMoreData={loadMoreData}
+    columns={columns}
+    columnToExpand={columnToExpand}
+    parentColumn={parentColumn}
+    parentIdAttribute={parentIdAttribute}
+    rowActions={rowActions}
+    expandableColumn={expandableColumn}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    onSearch={onSearch}
+    getRowInfo={getRowInfo}
+    onGridRefresh={onGridRefresh}
+    CustomPanel={CustomPanel}
+    rowsToSelect={rowsToSelect}
+    rowsToDeselect={rowsToDeselect}
+    gridHeader
+    rowSelector
+    globalSearch
+    columnFilter
+    groupSort
+    columnChooser
+    exportData
+    fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
+/>
+```
+
 #### Sub components with all props
 
 <Story name="Sub components with all props">

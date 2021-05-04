@@ -1941,10 +1941,37 @@ const GridComponent = (props) => {
         );
     };
 
-    const loadMoreData = (updatedPageInfo, parentId) => {
+    const loadMoreData = (updatedPageInfo, parentId, isReload) => {
         if (parentId !== null && parentId !== undefined) {
             // Tree structure
-            if (updatedPageInfo !== null && updatedPageInfo !== undefined) {
+            if (isReload) {
+                let newGridData = [...gridData];
+                newGridData = newGridData.map((dataItem) => {
+                    const updatedDataItem = { ...dataItem };
+                    const newDataParentId = updatedDataItem[parentIdAttribute];
+                    if (newDataParentId === parentId) {
+                        const { childData } = dataItem;
+                        const { data } = childData || {};
+                        // if (data && data.length > 0) {
+                        const updatedData = data.filter(
+                            (item, index) => index > 0
+                        );
+                        updatedDataItem.childData.data = updatedData;
+                        updatedDataItem.childData.total = 200;
+                        // }
+                    }
+                    return updatedDataItem;
+                });
+                console.log(
+                    "Tree view reload call for parent with Id",
+                    parentId
+                );
+                setGridData(newGridData);
+                setOriginalGridData(newGridData);
+            } else if (
+                updatedPageInfo !== null &&
+                updatedPageInfo !== undefined
+            ) {
                 // Next page loading
                 const pageInfoForApi = { ...updatedPageInfo };
                 if (paginationType === "cursor") {
@@ -1968,6 +1995,13 @@ const GridComponent = (props) => {
                                     updatedData.childData.pageNum =
                                         pageInfoForApi.pageNum;
                                     if (
+                                        updatedData.childData.total === 100 &&
+                                        previousPageRefresh === true &&
+                                        pageInfoForApi.pageNum === 3
+                                    ) {
+                                        updatedData.childData.total = 200;
+                                    }
+                                    if (
                                         pageInfoForApi.pageNum ===
                                         (parentId + 1) * 10
                                     ) {
@@ -1976,6 +2010,13 @@ const GridComponent = (props) => {
                                 } else {
                                     updatedData.childData.endCursor =
                                         pageInfoForApi.endCursor;
+                                    if (
+                                        updatedData.childData.total === 100 &&
+                                        previousPageRefresh === true &&
+                                        pageInfoForApi.endCursor > 100
+                                    ) {
+                                        updatedData.childData.total = 200;
+                                    }
                                     if (
                                         pageInfoForApi.endCursor ===
                                         (parentId + 1) *
@@ -2016,6 +2057,7 @@ const GridComponent = (props) => {
                                     pageNum: currentPageNum,
                                     pageSize: gridPageSize,
                                     lastPage: parentId === 2,
+                                    total: 100,
                                     data: apiData
                                 };
                                 if (paginationType === "index") {
@@ -2410,12 +2452,14 @@ const GridComponent = (props) => {
                     pageNum: 1,
                     pageSize: newPageSize,
                     lastPage: true,
+                    total: 100,
                     data: searchedData.filter((data, index) => index < 5)
                 };
                 newGridData[1].childData = {
                     pageNum: 11,
                     pageSize: newPageSize,
                     lastPage: true,
+                    total: 100,
                     data: searchedData.filter(
                         (data, index) => index >= 5 && index < 10
                     )
@@ -2424,6 +2468,7 @@ const GridComponent = (props) => {
                     pageNum: 21,
                     pageSize: newPageSize,
                     lastPage: true,
+                    total: 100,
                     data: searchedData.filter(
                         (data, index) => index >= 10 && index < 15
                     )
@@ -2496,6 +2541,7 @@ const GridComponent = (props) => {
                                 pageNum: 1,
                                 pageSize: newPageSize,
                                 lastPage: false,
+                                total: 100,
                                 data: firstData
                             };
                         }
@@ -2506,6 +2552,7 @@ const GridComponent = (props) => {
                                         pageNum: 11,
                                         pageSize: newPageSize,
                                         lastPage: false,
+                                        total: 100,
                                         data: secondData
                                     };
                                 }
@@ -2518,6 +2565,7 @@ const GridComponent = (props) => {
                                             pageNum: 21,
                                             pageSize: newPageSize,
                                             lastPage: false,
+                                            total: 100,
                                             data: thirdData
                                         };
                                     }
