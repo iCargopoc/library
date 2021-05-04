@@ -1952,13 +1952,13 @@ const GridComponent = (props) => {
                     if (newDataParentId === parentId) {
                         const { childData } = dataItem;
                         const { data } = childData || {};
-                        // if (data && data.length > 0) {
-                        const updatedData = data.filter(
-                            (item, index) => index > 0
-                        );
-                        updatedDataItem.childData.data = updatedData;
-                        updatedDataItem.childData.total = 200;
-                        // }
+                        if (data && data.length > 0) {
+                            const updatedData = data.filter(
+                                (item, index) => index > 0
+                            );
+                            updatedDataItem.childData.data = updatedData;
+                            updatedDataItem.childData.total = 200;
+                        }
                     }
                     return updatedDataItem;
                 });
