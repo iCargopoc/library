@@ -1648,6 +1648,9 @@ const parentRowsToExpand = [0, 2];
 // In loadMoreData, updatedPageInfo parameter will be null, parentId will be present and the third parameter isReload will be true.
 // When this function is called, fetch all child data of that parentId and update it in the gridData.
 
+// In this storybook, this functionality is implemented only for the first parent.
+// Value of property 'total' will get updated while loading 3rd page of child data under first parent.
+
 <Grid
     className={className}
     title={title}
