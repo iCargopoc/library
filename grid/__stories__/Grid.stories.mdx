@@ -309,13 +309,13 @@ const subComponentColumnToExpand // Same as columnToExpand
         // Grid will call this function when user cliks that icon.
     };
 
-    const loadMoreData = (updatedPageInfo, parentId) => {
+    const loadMoreData = (updatedPageInfo, parentId, isReload) => {
         /* Grid without tree view */
 
         // Grid will call this function only if pageInfo is passed a prop to Grid and the value of lastPage in the pageInfo is false.
         // This function is called when user reaches bottom row of the grid by scrolling down.
-        // Grid passes in 2 parameters updatedPageInfo and parentId.
-        // parentId will be null in case of Grid without tree view.
+        // Grid passes in 3 parameters updatedPageInfo, parentId and isReload.
+        // parentId and isReload will be null/undefined in case of Grid without tree view.
         // updatedPageInfo will be:
         // 1) If paginationType is "index", updatedPageInfo will be { (pageNum + 1), pageSize}
         // 2) Else if paginationType is "cursor", updatedPageInfo will be { endCursor, pageSize}
@@ -324,9 +324,10 @@ const subComponentColumnToExpand // Same as columnToExpand
         /* Grid with tree view */
 
         // Grid will call this function when user clicks the parent row expand icon for the forst time or the load more button present at the end of child data.
-        // Grid passes in 2 parameters updatedPageInfo and parentId.
+        // Grid passes in 3 parameters updatedPageInfo, parentId and isReload.
         // parentId will be the parentIdAttribute value of the selected parent.
-        // updatedPageInfo will be null if child data of that parent is getting called for the first time (clicks the parent row expand icon for the forst time).
+        // isReload will be true, if this function is called as part of data reload scenario (During child data loading, if value of total property gets changed loadMoreData for that parent will be called again with parameter isReload as true)
+        // updatedPageInfo will be null if isReload is true or if child data of that parent is getting called for the first time (clicks the parent row expand icon for the forst time).
         // If user is clicking the load more button present at the end of child data, updatedPageInfo will be:
         // 1) If paginationType is "index" for the corresponding parent, updatedPageInfo will be { (pageNum + 1), pageSize}
         // 2) Else if paginationType is "cursor" for the corresponding parent, updatedPageInfo will be { endCursor, pageSize}
@@ -546,7 +547,7 @@ const subComponentColumnToExpand // Same as columnToExpand
 </Story>
 
 ```jsx
-// Grid will be loaded with design matching 'portal' theme.
+// Grid will be loaded with design matching to 'portal' theme.
 
 <Grid
     theme="portal"
@@ -584,7 +585,7 @@ const subComponentColumnToExpand // Same as columnToExpand
 </Story>
 
 ```jsx
-// Grid width will be '75%' of the screen.
+// Grid width will be '75%' of the container.
 
 <Grid
     gridWidth="75%"
@@ -603,7 +604,8 @@ const subComponentColumnToExpand // Same as columnToExpand
 </Story>
 
 ```jsx
-// All rows will have same height (height of first row).
+// Value passed in estimatedRowHeight will be used as default row heigh at the time of rendering and then Grid will calculate height of each row.
+// This can be used to ensure a smooth transition while scrolling down the rows.
 
 <Grid
     title="AWBs"
@@ -624,6 +626,8 @@ const subComponentColumnToExpand // Same as columnToExpand
 
 ```jsx
 // All rows will have same height (height of first row).
+// Only height of first row will be calculated and this height will be used for all other rows.
+const fixedRowHeight = true;
 
 <Grid
     title="AWBs"
@@ -634,7 +638,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     onSearch={onSearch}
-/>
+/>;
 ```
 
 #### With row expansion
@@ -664,8 +668,8 @@ const subComponentColumnToExpand // Same as columnToExpand
 </Story>
 
 ```jsx
-// expandableColumn = true - can use isColumnExpanded value in display cell to show more data while expanding a row.
-// expandableColumn = false - isColumnExpanded value in display cell will be null/undefined. Use this to show complete data at once.
+// expandableColumn = true - isColumnExpanded value in display cell function parameters to show more data while expanding a row.
+// expandableColumn = false - isColumnExpanded value in display cell function parameters will be null/undefined. Use this to show complete data at once.
 
 <Grid
     gridData={gridData}
@@ -704,6 +708,10 @@ const subComponentColumnToExpand // Same as columnToExpand
 </Story>
 
 ```jsx
+// Refer columns in the 'Grid properties' section (top).
+// To keep columns pinned to left, by default, use pinLeft=true while configuring the columns.
+// enablePinColumn = true - if the option for user to pin a column manually, has to be enabled.
+
 <Grid
     gridData={gridData}
     columns={columns}
@@ -722,6 +730,9 @@ const subComponentColumnToExpand // Same as columnToExpand
 </Story>
 
 ```jsx
+// Pass idAttribute values of rows that are supposed to be pinned, in an array.
+const rowsToPin = [6];
+
 <Grid
     gridData={gridData}
     columns={columns}
@@ -731,7 +742,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     onRowSelect={onRowSelect}
     onSearch={onSearch}
     rowsToPin={rowsToPin}
-/>
+/>;
 ```
 
 #### With grid refresh
@@ -897,6 +908,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
 </Story>
 
 ```jsx
+// Refer serverSideExporting in the 'Grid properties' section (top).
 // Pass 'serverSideExporting' function as a prop and Grid will call this function whenever user tries to export data.
 
 <Grid
@@ -908,43 +920,6 @@ const rowsToDeselect = []; // [1] or [1, 7]
     columns={columns}
     idAttribute={idAttribute}
     rowActions={rowActions}
-    onRowUpdate={onRowUpdate}
-    onRowSelect={onRowSelect}
-    onSearch={onSearch}
-    fileName={fileName}
-    pdfPaperSize={pdfPaperSize}
-/>
-```
-
-#### Tree view grid with server side exporting
-
-<Story name="Tree view grid with server side exporting">
-    <GridComponent
-        treeStructure
-        passRowActions
-        enableServersideExporting
-        fileName="Custom filename"
-        pdfPaperSize="A1"
-    />
-    ;
-</Story>
-
-```jsx
-// Pass 'serverSideExporting' function as a prop and Grid will call this function whenever user tries to export data.
-// In this case of tree view grid, this function will be called only once. Grid expects complete data to be returned in that single call.
-// return {
-//     { data: <completeData> }
-// }
-
-<Grid
-    paginationType={paginationType}
-    gridData={gridData}
-    columns={columns}
-    idAttribute={idAttribute}
-    parentColumn={parentColumn}
-    parentIdAttribute={parentIdAttribute}
-    rowActions={rowActions}
-    serverSideExporting={serverSideExporting}
     onRowUpdate={onRowUpdate}
     onRowSelect={onRowSelect}
     onSearch={onSearch}
@@ -1303,6 +1278,13 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 </Story>
 
 ```jsx
+// This will work only in case of index based pagination.
+// Follow this method if you are using normal or sub component grid (not tree view grid). For tree view grid refer story "Tree view with auto refresh".
+// While loading a new page (Say page 3) Grid will identify if the value of the property 'total' gets changed in pageInfo object.
+// Once the value is changed, Grid considers all pages loaded before (Pages 1 and 2) as invalid pages.
+// When user is scrolling grid rows, if row from an invalid page is being bind to the DOM, grid will trigger loadMoreData (with pageInfo containing that invalid pageNum).
+// Once loadMoreData is called with a previous page, fetch data for that page again and replace the old page data in gridData with the new data.
+
 <Grid
     className={className}
     title={title}
@@ -1357,6 +1339,8 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 </Story>
 
 ```jsx
+// Refer 'Tree Grid' region in the 'Grid properties' section (top).
+
 <Grid
     className={className}
     title={title}
@@ -1413,6 +1397,10 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 </Story>
 
 ```jsx
+// All rows will have same height (height of first row).
+// Only height of first row will be calculated and this height will be used for all other rows.
+const fixedRowHeight = true;
+
 <Grid
     className={className}
     title={title}
@@ -1447,7 +1435,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     exportData
     fileName={fileName}
     pdfPaperSize={pdfPaperSize}
-/>
+/>;
 ```
 
 #### Tree view without expansion
@@ -1470,6 +1458,9 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 </Story>
 
 ```jsx
+// All parent rows will be open by default, and there won't be expand/collapse icon for parent rows.
+const parentRowExpandable = false;
+
 <Grid
     className={className}
     title={title}
@@ -1504,7 +1495,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     exportData
     fileName={fileName}
     pdfPaperSize={pdfPaperSize}
-/>
+/>;
 ```
 
 #### Tree view with parent rows expanded
@@ -1527,6 +1518,10 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 </Story>
 
 ```jsx
+// parentRowsToExpand accepts an array of parent idAttribute values. All parents whose idAttribute value is specified in parentRowsToExpand, will be in opened state by default.
+// Still, expand/collapse icon for parent rows will be present, for user to expand and collapse parent rows.
+const parentRowsToExpand = [0, 2];
+
 <Grid
     className={className}
     title={title}
@@ -1561,6 +1556,70 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     exportData
     fileName={fileName}
     pdfPaperSize={pdfPaperSize}
+/>;
+```
+
+#### Tree view grid with server side exporting
+
+<Story name="Tree view grid with server side exporting">
+    <GridComponent
+        allProps
+        className="icargoCustomClass"
+        title="AWBs"
+        gridWidth="100%"
+        rowsToOverscan={4}
+        CustomPanel={CustomPanel}
+        fileName="Custom filename"
+        rowsForSelection={[1, 7, 17]}
+        pdfPaperSize="A1"
+        treeStructure
+        enableServersideExporting
+    />
+    ;
+</Story>
+
+```jsx
+// Refer serverSideExporting in the 'Grid properties' section (top).
+// Pass 'serverSideExporting' function as a prop and Grid will call this function whenever user tries to export data.
+// In this case of tree view grid, this function will be called only once. Grid expects complete data to be returned in that single call.
+// return {
+//     { data: <completeData> }
+// }
+
+<Grid
+    className={className}
+    title={title}
+    gridWidth={gridWidth}
+    gridData={gridData}
+    rowsToOverscan={4}
+    idAttribute={idAttribute}
+    paginationType={paginationType}
+    pageInfo={gridPageInfo}
+    loadMoreData={loadMoreData}
+    columns={columns}
+    columnToExpand={columnToExpand}
+    parentColumn={parentColumn}
+    parentIdAttribute={parentIdAttribute}
+    rowActions={rowActions}
+    expandableColumn={expandableColumn}
+    onRowUpdate={onRowUpdate}
+    onRowSelect={onRowSelect}
+    onSearch={onSearch}
+    getRowInfo={getRowInfo}
+    onGridRefresh={onGridRefresh}
+    CustomPanel={CustomPanel}
+    rowsToSelect={rowsToSelect}
+    rowsToDeselect={rowsToDeselect}
+    serverSideExporting={serverSideExporting}
+    gridHeader
+    rowSelector
+    globalSearch
+    columnFilter
+    groupSort
+    columnChooser
+    exportData
+    fileName={fileName}
+    pdfPaperSize={pdfPaperSize}
 />
 ```
 
@@ -1584,6 +1643,11 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 </Story>
 
 ```jsx
+// While loading a new page (Say page 3) under a parent, Grid will identify if the value of the property 'total' gets changed in childData object.
+// Once the value is changed, Grid considers all data loaded till now as invalid data, and immediately triggers loadMoreData callback.
+// In loadMoreData, updatedPageInfo parameter will be null, parentId will be present and the third parameter isReload will be true.
+// When this function is called, fetch all child data of that parentId and update it in the gridData.
+
 <Grid
     className={className}
     title={title}
@@ -1639,6 +1703,8 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 </Story>
 
 ```jsx
+// Refer 'Sub Component Grid' in the 'Grid properties' section (top).
+
 <Grid
     className={className}
     title={title}
@@ -1698,6 +1764,9 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 </Story>
 
 ```jsx
+// Column heading row for sub components will not be present.
+const subComponentHeader = false;
+
 <Grid
     subComponentHeader={false}
     className={className}
@@ -1735,7 +1804,7 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
     exportData
     fileName={fileName}
     pdfPaperSize={pdfPaperSize}
-/>
+/>;
 ```
 
 #### Sub components with auto page refresh
@@ -1758,6 +1827,13 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 </Story>
 
 ```jsx
+// This will work only in case of index based pagination.
+// Follow this method if you are using normal or sub component grid (not tree view grid). For tree view grid refer story "Tree view with auto refresh".
+// While loading a new page (Say page 3) Grid will identify if the value of the property 'total' gets changed in pageInfo object.
+// Once the value is changed, Grid considers all pages loaded before (Pages 1 and 2) as invalid pages.
+// When user is scrolling grid rows, if main row from an invalid page is being bind to the DOM, grid will trigger loadMoreData (with pageInfo containing that invalid pageNum).
+// Once loadMoreData is called with a previous page, fetch main row data along with sub component data for each row, for that page again and replace the old page data in gridData with the new data.
+
 <Grid
     className={className}
     title={title}
