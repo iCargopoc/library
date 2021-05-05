@@ -9,6 +9,25 @@ import CellDisplayAndEdit from "../Functions/CellDisplayAndEdit";
 import { AdditionalColumnContext } from "./TagsContext";
 import AdditionalColumnTag from "../Functions/AdditionalColumnTag";
 
+const checPropertyOfGroupedColumns = (
+    columns: any,
+    groupColName: string,
+    property: string
+): boolean => {
+    const columnsInGroup = columns.filter((col: Object): boolean => {
+        const { groupHeader } = col;
+        return groupHeader === groupColName;
+    });
+    let isAtleastOneColHasProperty = false;
+    columnsInGroup.forEach((col: Object) => {
+        const propertyValue = col[property];
+        if (isAtleastOneColHasProperty === false) {
+            isAtleastOneColHasProperty = propertyValue === true;
+        }
+    });
+    return isAtleastOneColHasProperty;
+};
+
 export const extractColumns = (
     columns: any,
     isDesktop: boolean,
@@ -245,35 +264,58 @@ export const extractColumns = (
             modifiedColumns.push(elem);
         });
 
-        const updatedColumnStructure = [];
+        let updatedColumnStructure = [];
+
         modifiedColumns.forEach((modifiedColumn: Object, index: number) => {
-            if (!modifiedColumn.groupHeader) {
-                updatedColumnStructure.push(modifiedColumn);
+            const updatedModifiedColumn = { ...modifiedColumn };
+            const { groupHeader } = modifiedColumn;
+            if (!groupHeader) {
+                updatedColumnStructure.push(updatedModifiedColumn);
             } else {
                 const existingGroupHeaderColumn = updatedColumnStructure.find(
                     (colStructure: Object): boolean => {
-                        return (
-                            colStructure.Header === modifiedColumn.groupHeader
-                        );
+                        return colStructure.Header === groupHeader;
                     }
+                );
+                updatedModifiedColumn.pinLeft = checPropertyOfGroupedColumns(
+                    modifiedColumns,
+                    groupHeader,
+                    "pinLeft"
                 );
                 if (!existingGroupHeaderColumn) {
                     updatedColumnStructure.push({
-                        Header: modifiedColumn.groupHeader,
+                        Header: groupHeader,
                         columnId:
                             isSubComponentColumns === true
                                 ? `subComponentGroupedColumn_${index}`
                                 : `groupedColumn_${index}`,
                         isGroupHeader: true,
-                        display: true,
-                        pinLeft: false,
-                        columns: [modifiedColumn]
+                        display: checPropertyOfGroupedColumns(
+                            modifiedColumns,
+                            groupHeader,
+                            "display"
+                        ),
+                        pinLeft: checPropertyOfGroupedColumns(
+                            modifiedColumns,
+                            groupHeader,
+                            "pinLeft"
+                        ),
+                        columns: [updatedModifiedColumn]
                     });
                 } else {
-                    existingGroupHeaderColumn.columns.push(modifiedColumn);
+                    existingGroupHeaderColumn.columns.push(
+                        updatedModifiedColumn
+                    );
                 }
             }
         });
+
+        // Sort to arrange left pinned columns to first
+        updatedColumnStructure = updatedColumnStructure.sort(
+            (colA: Object, colB: Object): number => {
+                return colA.pinLeft > colB.pinLeft ? -1 : 1;
+            }
+        );
         return {
             updatedColumnStructure,
             columnsAccessorList
