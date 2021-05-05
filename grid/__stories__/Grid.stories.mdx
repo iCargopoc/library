@@ -14,7 +14,7 @@ import CustomPanel from "./panels/CustomPanel";
 
 # Grid
 
-## Business component for showing large list of data in grid view
+## Business component for showing a large list of data in the Grid view
 
 ### Grid properties
 
@@ -30,12 +30,12 @@ const idAttribute = "travelId"; // String - node value of primary key value from
 
 const columns = [
         {
-            groupHeader: "Group Header", // String, Optional - If different columns have to be grouped under single column heading.
-            Header:() => <div> Header </div>, // String or jsx - used to display in the gid column heading and other overlays.
-            title: "Header:, // String, Optional - This has to be given if Header is returning jsx, to display in overlays.
+            groupHeader: "Group Header", // String, Optional - If different columns have to be grouped under a single column heading.
+            Header:() => <div> Header </div>, // String or JSX - used to display in the gid column heading and other overlays.
+            title: "Header", // String, Optional - This has to be given if Header is returning JSX, to display in overlays.
             accessor: "flight", // String - corresponding to the node name in the grid data.
             isSortable: true, // Boolean, Optional - If this column has to be included in the group sort options (Sort By).
-            innerCells: [ // If value of accessor node is object or array (multiple data to be displayed in single column)
+            innerCells: [ // If the value of accessor node is object or array (multiple data to be displayed in a single column)
                 {
                     Header: "Cell Header", // String - Cell header to be displayed in overlays
                     accessor: "flightno", // String - Child node of accessor mentioned above ("flight")
@@ -45,7 +45,7 @@ const columns = [
             ],
             width: 50, // Number - For single-line Grid, pass width % allocated for each column, for multi line pass pixel value.
             widthGrow: 1, // Number, Optional - This is the factor that Grid uses to identify how to allocate the width of a hidden column to other columns.
-            display: false, // Boolean, Optional - To hide a column by default. Default value for this property is true.
+            display: false, // Boolean, Optional - To hide a column by default. The default value for this property is true.
             disableSortBy: true, // Boolean, Optional - To disable column sorting for a column.
             sortValue: "flightno", // Boolean, Optional - Use only if inner cells are present, to decide on which cell column sort should happen.
             disableResizing: true, // Boolean, Optional - To disable column resizing by dragging.
@@ -64,8 +64,8 @@ const columns = [
                 );
             },
             editCell: (rowData, DisplayTag, rowUpdateCallBack, isDesktop, isColumnExpanded) => { // JSx, Optional - content to be displayed in edit overlay of a column.
-                // Other parameters are same as mentioned in displayCell
-                // rowUpdateCallBack -> This is a function that has to be called with updated rowData, each time when user makes any changes to the content.
+                // Other parameters are the same as mentioned in displayCell
+                // rowUpdateCallBack -> This is a function that has to be called with updated rowData, each time when the user makes any changes to the content.
             },
             exportData: (rowData, isDesktop) => { // Array<Object>, Optional - content to be exported from column.
                 // parameters are same as mentioned above.
@@ -77,7 +77,7 @@ const columns = [
                     },
                     {...}
                 ];
-                /** NOTE: Number of objects in the returned array should be same for all rows. Else, the report will go wrong.   **/
+                /** NOTE: The number of objects in the returned array should be the same for all rows. Else, the report will go wrong.   **/
             }
         },
         {...}
@@ -109,7 +109,7 @@ const columnToExpand = {
                 },
                 {...}
             ];
-            /** NOTE: Number of objects in the returned array should be same for all rows. Else, the report will go wrong.   **/
+            /** NOTE: The number of objects in the returned array should be the same for all rows. Else, the report will go wrong.   **/
         }
     };
 
@@ -155,7 +155,7 @@ const parentColumn = {
                 },
                 {...}
             ];
-            /** NOTE: Number of objects in the returned array should be same for all rows. Else, the report will go wrong.   **/
+            /** NOTE: The number of objects in the returned array should be the same for all rows. Else, the report will go wrong.   **/
         }
     };
 
@@ -174,11 +174,11 @@ const subComponentIdAttribute = "hawbId";  // String - node value of primary key
 
 const subComponentColumns = [
         {
-            Header:() => <div> Header </div>, // String or jsx - used to display in the gid column heading and other overlays.
-            title: "Header:, // String, Optional - This has to be given if Header is returning jsx, to display in overlays.
+            Header:() => <div> Header </div>, // String or JSX - used to display in the gid column heading and other overlays.
+            title: "Header", // String, Optional - This has to be given if Header is returning JSX, to display in overlays.
             accessor: "flight", // String - corresponding to the node name in the grid data.
             isSortable: true, // Boolean, Optional - If this column has to be included in the group sort options (Sort By).
-            innerCells: [ // If value of accessor node is object or array (multiple data to be displayed in single column)
+            innerCells: [ // If the value of accessor node is object or array (multiple data to be displayed in a single column)
                 {
                     Header: "Cell Header", // String - Cell header to be displayed in overlays
                     accessor: "flightno", // String - Child node of accessor mentioned above ("flight")
@@ -188,8 +188,8 @@ const subComponentColumns = [
             ],
             width: 50, // Number - For single-line Grid, pass width % allocated for each column, for multi line pass pixel value.
             widthGrow: 1, // Number, Optional - This is the factor that Grid uses to identify how to allocate the width of a hidden column to other columns.
-            display: false, // Boolean, Optional - To hide a column by default. Default value for this property is true.
-            searchKeys: [  // Array<String>, Optional - Mention all node paths from Grid data, that have to be incldued in column filtering and global filtering.
+            display: false, // Boolean, Optional - To hide a column by default. The default value for this property is true.
+            searchKeys: [  // Array<String>, Optional - Mention all node paths from Grid data, that have to be included in column filtering and global filtering.
                 "flight.flightno", // For Object structure - flight: {flightno: "value"}
                 "flight.connectionflights.*.airlinename"  // For Array structure - flight: {connectionflights: [{airlinename: "value"}]}
             ],
@@ -204,8 +204,8 @@ const subComponentColumns = [
                 );
             },
             editCell: (rowData, DisplayTag, rowUpdateCallBack, isDesktop, isColumnExpanded) => { // JSx, Optional - content to be displayed in edit overlay of a column.
-                // Other parameters are same as mentioned in displayCell
-                // rowUpdateCallBack -> This is a function that has to be called with updated rowData, each time when user makes any changes to the content.
+                // Other parameters are the same as mentioned in displayCell
+                // rowUpdateCallBack -> This is a function that has to be called with updated rowData, each time when the user makes any changes to the content.
             },
             exportData: (rowData, isDesktop) => { // Array<Object>, Optional - content to be exported from column.
                 // parameters are same as mentioned above.
@@ -217,7 +217,7 @@ const subComponentColumns = [
                     },
                     {...}
                 ];
-                /** NOTE: Number of objects in the returned array should be same for all rows. Else, the report will go wrong.   **/
+                /** NOTE: The number of objects in the returned array should be the same for all rows. Else, the report will go wrong.   **/
             }
         },
         {...}
@@ -225,7 +225,7 @@ const subComponentColumns = [
 
 const subComponentColumnToExpand // Same as columnToExpand
 
-// By default grid will consider paginationType value as "index".
+// By default Grid will consider paginationType value as "index".
     const paginationType = "index"; // or - paginationType = "cursor".
 
     // If paginationType = "index"
@@ -260,12 +260,12 @@ const subComponentColumnToExpand // Same as columnToExpand
 
     // Call back made by Grid for each row, to display the row actions in Kebab overlay in Grid.
     const rowActions = (rowData, closeOverlay, isSubComponentRow) => {
-        // Grid will call this function for all rows while binding data on to Grid.
+        // Grid will call this function for all rows while binding row data into the Grid.
         // Corresponding 'rowData' is passed as one of the parameters.
         // Second parameter is the 'closeOverlay', which is a method that can be called to close the Kebab overlay.
         // Third parameter is a boolean value that identifies if the row is sub component row or parent row.
         // Return a JSX from this function, which will be bound to the row actions Kebab overlay.
-        // All functionalities of the row actions should be handelled outside the Grid.
+        // All functionalities of the row actions should be handled outside the Grid.
         return <RowAction />
     };
 
@@ -282,8 +282,8 @@ const subComponentColumnToExpand // Same as columnToExpand
         // An array of deselected row will be passed in as the second parameter.
         /************
             Make sure:
-            * If a row is selected, remove that row details from 'rowsToDeselect' prop value (if present).
-            * If a row is deselected, remove that row details from 'rowsToSelect' prop value (if present).
+            * If a row is selected, remove that row details from the 'rowsToDeselect' prop value (if present).
+            * If a row is deselected, remove that row details from the 'rowsToSelect' prop value (if present).
         ************/
     };
 
@@ -298,10 +298,10 @@ const subComponentColumnToExpand // Same as columnToExpand
         // An array of deSelectedRow will be passed in as the second parameter.
     };
 
-    // This should be an array of idAttribute values, of rows that has to be deselected from the Grid
+    // This should be an array of idAttribute values, of rows that have to be deselected from the Grid.
     const rowsToDeselect = [];
 
-    // This should be an array of idAttribute values, of rows that has to be selected from the Grid
+    // This should be an array of idAttribute values, of rows that have to be selected from the Grid.
     const rowsToSelect = [];
 
     const onGridRefresh = () => {
@@ -313,13 +313,13 @@ const subComponentColumnToExpand // Same as columnToExpand
         /* Grid without tree view */
 
         // Grid will call this function only if pageInfo is passed a prop to Grid and the value of lastPage in the pageInfo is false.
-        // This function is called when user reaches bottom row of the grid by scrolling down.
+        // This function is called when user reaches bottom row of the Grid by scrolling down.
         // Grid passes in 3 parameters updatedPageInfo, parentId and isReload.
         // parentId and isReload will be null/undefined in case of Grid without tree view.
         // updatedPageInfo will be:
         // 1) If paginationType is "index", updatedPageInfo will be { (pageNum + 1), pageSize}
         // 2) Else if paginationType is "cursor", updatedPageInfo will be { endCursor, pageSize}
-        // Based on the updatedPageInfo, make API call and re-render grid with updated data.
+        // Based on the updatedPageInfo, make API call and re-render the Grid with updated data.
 
         /* Grid with tree view */
 
@@ -331,17 +331,17 @@ const subComponentColumnToExpand // Same as columnToExpand
         // If user is clicking the load more button present at the end of child data, updatedPageInfo will be:
         // 1) If paginationType is "index" for the corresponding parent, updatedPageInfo will be { (pageNum + 1), pageSize}
         // 2) Else if paginationType is "cursor" for the corresponding parent, updatedPageInfo will be { endCursor, pageSize}
-        // Based on the updatedPageInfo and parentId, make API call and re-render grid with updated data.
+        // Based on the updatedPageInfo and parentId, make API call and re-render the Grid with updated data.
     };
 
     // True if more column data has to be shown while clicking the row expand icon
     // By default Grid considers expandableColumn as false
     const expandableColumn = true;
 
-    // This should be react component, which will be rendered into the Grid header.
+    // This should be a React component, which will be rendered into the Grid header.
     const CustomPanel = <CustomPanel />
 
-    // False if grid needs only single row selection
+    // False if the Grid needs only single row selection
     // By default Grid considers multiRowSelection as true
     const multiRowSelection = false;
 
@@ -349,8 +349,8 @@ const subComponentColumnToExpand // Same as columnToExpand
     // If prop is not passed, Grid takes default value as 5.
     const rowsToOverscan = 4;
 
-    // False if Grid column headings has to be hidden
-    // If row selectors are enabled, checkbox to select all rows will appear at the header portion (before the Grid title)
+    // False if Grid column headings have to be hidden
+    // If row selectors are enabled, a checkbox to select all rows will appear at the header portion (before the Grid title)
     // By default Grid considers gridHeader as true
     const gridHeader = true;
 
@@ -387,7 +387,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     const exportData = true;
 
     // If the file name of exported files from Grid has to be customized, use this prop.
-    // Pass a string value and in that case this will be the file name of exported files (with different extensions).
+    // Pass a string value and in that case, this will be the file name of exported files (with different extensions).
     // If prop is not specified Grid uses 'iCargo Neo Report' as the file name.
     const fileName = "Custom filename";
 
@@ -395,11 +395,11 @@ const subComponentColumnToExpand // Same as columnToExpand
     // By default the paper size for PDF export will be A4.
     const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 
-    // If theme is portal Grid will assign different style for Grid header portion and Grid rows.
+    // If the theme is portal, Grid will assign a different style for the Grid header portion and Grid rows.
     // All other themes will have default stylings.
     const theme = "portal"
 
-    // If all rows of Grid requires same height, Grid will measure height of only first row.
+    // If all rows of Grid require the same height, Grid will only measure the height of the first row.
     // And then uses this row height for all other rows.
     const fixedRowHeight = true;
 
@@ -438,32 +438,32 @@ const subComponentColumnToExpand // Same as columnToExpand
         return {
             { data: <searchedData>, pageInfo: <modifiedPageInfo> }
         }
-        // This function will be called recursively, until developer passes pageInfo that has 'lastPage: true' in it.
+        // This function will be called recursively until the developer passes the pageInfo object that has 'lastPage: true' in it.
         // Data passed each time will be concatenated and this data will be exported from Grid.
 
         /*********************
-        NOTE: In case of tree view grid, this function will be called only once. Grid expects complete data to be returned in that single call.
+        NOTE: In the case of the tree view grid, this function will be called only once. Grid expects complete data to be returned in that single call.
         return {
             { data: <completeData> }
         }
         *********************/
     }
 
-    // Pass this property if a loading graphics has to be displayed in the Grid.
+    // Pass this property if a 'loading graphics' has to be displayed in the Grid.
     // This can be used while doing functionalities like server side sorting.
     const displayLoader = true;
 
-    // Pass this property if pin column feature has to be enabled for grid columns.
+    // Pass this property if the pin column feature has to be enabled for grid columns.
     // User can 'Pin Left' columns from manage column overlay, and row actions column will be pinned right by default.
     const enablePinColumn = true;
 
-    // Pass this property if rows in Grid has to be pinned to top.
-    // This should be an array of idAttribute values, of rows that has to be pinned to top.
-    // The UI part for implementing 'Pin Row' functionality (Functionality to be use by user) has not been implemented yet. Waiting to get design from Ux team.
+    // Pass this property if rows in Grid have to be pinned to the top.
+    // This should be an array of idAttribute values, of rows that have to be pinned to the top.
+    // The UI part for implementing 'Pin Row' functionality (Functionality to be used by the user) has not been implemented yet. Waiting to get the design from the Ux team.
     // Also, the pinned row identifier icon in UI has not been decided yet. This is also pending.
     const rowsToPin = [6];
 
-    // Pass this property if you are aware of an estimated row height value or if you are using grid with fixed row height.
+    // Pass this property if you are aware of an estimated row height value or if you are using the Grid with fixed row height.
     const estimatedRowHeight = 50;
 
     <Grid
@@ -547,7 +547,7 @@ const subComponentColumnToExpand // Same as columnToExpand
 </Story>
 
 ```jsx
-// Grid will be loaded with design matching to 'portal' theme.
+// Grid will be loaded with design matching to the 'portal' theme.
 
 <Grid
     theme="portal"
@@ -604,7 +604,7 @@ const subComponentColumnToExpand // Same as columnToExpand
 </Story>
 
 ```jsx
-// Value passed in estimatedRowHeight will be used as default row heigh at the time of rendering and then Grid will calculate height of each row.
+// Value passed in 'estimatedRowHeight' property will be used as default row heigh at the time of rendering and then Grid will calculate the height of each row.
 // This can be used to ensure a smooth transition while scrolling down the rows.
 
 <Grid
@@ -625,8 +625,8 @@ const subComponentColumnToExpand // Same as columnToExpand
 </Story>
 
 ```jsx
-// All rows will have same height (height of first row).
-// Only height of first row will be calculated and this height will be used for all other rows.
+// All rows will have the same height (height of the first row).
+// Only th eheight of the first row will be calculated and this height will be used for all other rows.
 const fixedRowHeight = true;
 
 <Grid
@@ -771,7 +771,7 @@ const rowsToPin = [6];
 </Story>
 
 ```jsx
-// This should be react component, which will be rendered into the Grid header.
+// This should be a React component, which will be rendered into the Grid header.
 const CustomPanel = <CustomPanel />
 
 <Grid
@@ -791,7 +791,7 @@ const CustomPanel = <CustomPanel />
 </Story>
 
 ```jsx
-// This should be a boolean value. Flase will disable multi selection and enable single selection and true will do vice-versa
+// This should be a boolean value. Value 'Flase' will disable multi selection and enable single selection and true will do vice-versa
 const multiRowSelection = false;
 
 <Grid
@@ -857,7 +857,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
 
 ```jsx
 // Refer paginationType, pageInfo and loadMoreData in the 'Grid properties' section (top).
-// By default grid will consider paginationType value as "index".
+// By default the Grid will consider paginationType value as "index".
 
 <Grid
     gridData={gridData}
@@ -878,9 +878,9 @@ const rowsToDeselect = []; // [1] or [1, 7]
 </Story>
 
 ```jsx
-// Pass 'serverSideSorting' function as a prop and Grid will call this function whenever user selects group sort option.
+// Pass 'serverSideSorting' function as a prop and Grid will call this function whenever the user selects the group sort option.
 // Grid expect this function to re-render the Grid with sorted 'gridData'.
-// In case if developer is making an API call to get sorted data/sorting will take much time, use displayLoader property to display a loading graphichs in Grid till you are ready with sorted data.
+// In case if the developer is making an API call to get sorted data/sorting will take much time, use 'displayLoader' property to display a loading graphics in the Grid, till you are ready with sorted data.
 // Pass displayLoader={true}, then fetch sorted data and once you are ready with sorted data, update gridData and set displayLoader={false}
 
 <Grid
@@ -935,8 +935,8 @@ const rowsToDeselect = []; // [1] or [1, 7]
 </Story>
 
 ```jsx
-// If required pass jsx element as Header of a column.
-// But in that case, also make sure to pass a string value to another property 'title', which can be used for representing column in group sort, manage columns and export overlays.
+// If required pass JSX element as Header of a column.
+// But in that case, also make sure to pass a string value to another property 'title', which can be used for representing a column in components such as the group sort, manage columns, and export overlays.
 
 <Grid
     gridData={gridData}
@@ -954,8 +954,8 @@ const rowsToDeselect = []; // [1] or [1, 7]
 </Story>
 
 ```jsx
-// If a property 'groupHeader' is present in the column configuration. Grid will combine all columns with same 'groupHeader' value under a column heading.
-// But, all column based functionalities such as sorting, filtering etc. will depend on the 'Header' value and not 'groupHeader' value.
+// If a property 'groupHeader' is present in the column configuration. The Grid will combine all columns with the same 'groupHeader' value under a column heading.
+// But, all column based functionalities such as sorting, filtering, etc. will depend on the 'Header' value and not the 'groupHeader' value.
 
 <Grid
     gridData={gridData}
@@ -1013,7 +1013,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
 </Story>
 
 ```jsx
-// This should be a boolean value. Flase will not render the Grid column header.
+// This should be a boolean value. Value 'False' will not render the Grid column header.
 const gridHeader = false;
 
 <Grid
@@ -1034,7 +1034,7 @@ const gridHeader = false;
 </Story>
 
 ```jsx
-// This should be a boolean value. Flase will not render the Grid title.
+// This should be a boolean value. Value 'False' will not render the Grid title.
 const showTitle = false;
 
 <Grid
@@ -1055,7 +1055,7 @@ const showTitle = false;
 </Story>
 
 ```jsx
-// This should be a boolean value. Flase will not render the row selector column.
+// This should be a boolean value. Value 'False' will not render the row selector column.
 const rowSelector = false;
 
 <Grid
@@ -1073,7 +1073,7 @@ const rowSelector = false;
 </Story>
 
 ```jsx
-// This should be a boolean value. Flase will not render the global search component.
+// This should be a boolean value. Value 'False' will not render the global search component.
 const globalSearch = false;
 
 <Grid
@@ -1093,7 +1093,7 @@ const globalSearch = false;
 </Story>
 
 ```jsx
-// This should be a boolean value. Flase will not render the column filter component.
+// This should be a boolean value. Value 'False' will not render the column filter component.
 const columnFilter = false;
 
 <Grid
@@ -1113,7 +1113,7 @@ const columnFilter = false;
 </Story>
 
 ```jsx
-// This should be a boolean value. Flase will not render the group sort component.
+// This should be a boolean value. Value 'False' will not render the group sort component.
 const groupSort = false;
 
 <Grid
@@ -1133,7 +1133,7 @@ const groupSort = false;
 </Story>
 
 ```jsx
-// This should be a boolean value. Flase will not render the column chooser component.
+// This should be a boolean value. Value 'False' will not render the column chooser component.
 const columnChooser = false;
 
 <Grid
@@ -1153,7 +1153,7 @@ const columnChooser = false;
 </Story>
 
 ```jsx
-// This should be a boolean value. Flase will not render the export data component.
+// This should be a boolean value. Value 'False' will not render the export data component.
 const exportData = false;
 
 <Grid
@@ -1278,11 +1278,11 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 </Story>
 
 ```jsx
-// This will work only in case of index based pagination.
-// Follow this method if you are using normal or sub component grid (not tree view grid). For tree view grid refer story "Tree view with auto refresh".
+// This will work only in the case of index based pagination.
+// Follow this method if you are using a normal or sub component grid (not a tree view grid). For the tree view grid refer story "Tree view with auto refresh".
 // While loading a new page (Say page 3) Grid will identify if the value of the property 'total' gets changed in pageInfo object.
 // Once the value is changed, Grid considers all pages loaded before (Pages 1 and 2) as invalid pages.
-// When user is scrolling grid rows, if row from an invalid page is being bind to the DOM, grid will trigger loadMoreData (with pageInfo containing that invalid pageNum).
+// When the user is scrolling grid rows, if a row from an invalid page is being bound to the DOM, the Grid will trigger loadMoreData (with pageInfo containing that invalid pageNum).
 // Once loadMoreData is called with a previous page, fetch data for that page again and replace the old page data in gridData with the new data.
 
 <Grid
@@ -1397,8 +1397,8 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 </Story>
 
 ```jsx
-// All rows will have same height (height of first row).
-// Only height of first row will be calculated and this height will be used for all other rows.
+// All rows will have the same height (height of the first row).
+// Only the height of the first row will be calculated and this height will be used for all other rows.
 const fixedRowHeight = true;
 
 <Grid
@@ -1458,7 +1458,7 @@ const fixedRowHeight = true;
 </Story>
 
 ```jsx
-// All parent rows will be open by default, and there won't be expand/collapse icon for parent rows.
+// All parent rows will be open by default, and there won't be any 'expand/collapse icons' for parent rows.
 const parentRowExpandable = false;
 
 <Grid
@@ -1643,13 +1643,13 @@ const parentRowsToExpand = [0, 2];
 </Story>
 
 ```jsx
-// While loading a new page (Say page 3) under a parent, Grid will identify if the value of the property 'total' gets changed in childData object.
+// While loading a new page (Say page 3) under a parent, Grid will identify if the value of the property 'total' gets changed in the childData object.
 // Once the value is changed, Grid considers all data loaded till now as invalid data, and immediately triggers loadMoreData callback.
 // In loadMoreData, updatedPageInfo parameter will be null, parentId will be present and the third parameter isReload will be true.
 // When this function is called, fetch all child data of that parentId and update it in the gridData.
 
 // In this storybook, this functionality is implemented only for the first parent.
-// Value of property 'total' will get updated while loading 3rd page of child data under first parent.
+// Value of property 'total' will get updated while loading the 3rd page of the child data under the first parent.
 
 <Grid
     className={className}
@@ -1830,11 +1830,11 @@ const subComponentHeader = false;
 </Story>
 
 ```jsx
-// This will work only in case of index based pagination.
-// Follow this method if you are using normal or sub component grid (not tree view grid). For tree view grid refer story "Tree view with auto refresh".
-// While loading a new page (Say page 3) Grid will identify if the value of the property 'total' gets changed in pageInfo object.
+// This will work only in the case of index based pagination.
+// Follow this method if you are using a normal or sub component grid (not a tree view grid). For the tree view grid refer story "Tree view with auto refresh".
+// While loading a new page (Say page 3) Grid will identify if the value of the property 'total' gets changed in the pageInfo object.
 // Once the value is changed, Grid considers all pages loaded before (Pages 1 and 2) as invalid pages.
-// When user is scrolling grid rows, if main row from an invalid page is being bind to the DOM, grid will trigger loadMoreData (with pageInfo containing that invalid pageNum).
+// When the user is scrolling grid rows, if the main row from an invalid page is being bound to the DOM, the Grid will trigger loadMoreData (with pageInfo containing that invalid pageNum).
 // Once loadMoreData is called with a previous page, fetch main row data along with sub component data for each row, for that page again and replace the old page data in gridData with the new data.
 
 <Grid
