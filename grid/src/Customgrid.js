@@ -853,13 +853,15 @@ const Customgrid = (props: {
                 let indexToReset = 0;
                 if (index !== null && index !== undefined && index >= 0) {
                     indexToReset = index;
-                } else {
+                } else if (!isParentGrid) {
                     const { _instanceProps } = current;
                     const expectedItemsCount = overScanCount + 30;
                     const { lastMeasuredIndex } = _instanceProps;
                     const difference = lastMeasuredIndex - expectedItemsCount;
                     indexToReset = difference >= 0 ? difference : 0;
                 }
+                // If grid is tree-view, let rows re-render from 0.
+                // This is because, there might be several parent rows present in the screen in collapsed state. They also have to be re-rendered.
                 current.resetAfterIndex(indexToReset, true);
             }
         }
