@@ -911,6 +911,9 @@ const rowsToDeselect = []; // [1] or [1, 7]
 // Refer serverSideExporting in the 'Grid properties' section (top).
 // Pass 'serverSideExporting' function as a prop and Grid will call this function whenever user tries to export data.
 
+// In this storybook, server side exporting is implemented only for the 'Normal Grid'. It is not implemented for the 'Sub Component Grid'.
+// You can follow the same implementation for both 'Normal Grid' and 'Sub Component Grid'.
+
 <Grid
     gridData={gridData}
     paginationType={paginationType}
@@ -1285,6 +1288,9 @@ const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 // When the user is scrolling grid rows, if a row from an invalid page is being bound to the DOM, the Grid will trigger loadMoreData (with pageInfo containing that invalid pageNum).
 // Once loadMoreData is called with a previous page, fetch data for that page again and replace the old page data in gridData with the new data.
 
+// In this story, the value of the property 'total' will get updated after loading page 3.
+// Once it happens, pages 2 and 1 should reload based on the scroll position.
+
 <Grid
     className={className}
     title={title}
@@ -1586,6 +1592,8 @@ const parentRowsToExpand = [0, 2];
 //     { data: <completeData> }
 // }
 
+// In this storybook, only few data is being returned for server side export of tree view Grid.
+
 <Grid
     className={className}
     title={title}
@@ -1836,6 +1844,9 @@ const subComponentHeader = false;
 // Once the value is changed, Grid considers all pages loaded before (Pages 1 and 2) as invalid pages.
 // When the user is scrolling grid rows, if the main row from an invalid page is being bound to the DOM, the Grid will trigger loadMoreData (with pageInfo containing that invalid pageNum).
 // Once loadMoreData is called with a previous page, fetch main row data along with sub component data for each row, for that page again and replace the old page data in gridData with the new data.
+
+// In this story, the value of the property 'total' will get updated after loading page 3.
+// Once it happens, pages 2 and 1 should reload based on the scroll position.
 
 <Grid
     className={className}
