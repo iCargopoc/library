@@ -395,7 +395,7 @@ const subComponentColumnToExpand // Same as columnToExpand
     // By default the paper size for PDF export will be A4.
     const pdfPaperSize = "A1"  // Use A1, A2, A3, A4 or A5 - Default value is A4
 
-    // If the theme is portal, Grid will assign a different style for the Grid header portion and Grid rows.
+    // If the theme is 'portal', Grid will assign a different style for the Grid header portion and Grid rows.
     // All other themes will have default stylings.
     const theme = "portal"
 
@@ -626,7 +626,7 @@ const subComponentColumnToExpand // Same as columnToExpand
 
 ```jsx
 // All rows will have the same height (height of the first row).
-// Only th eheight of the first row will be calculated and this height will be used for all other rows.
+// Only the height of the first row will be calculated and this height will be used for all other rows.
 const fixedRowHeight = true;
 
 <Grid
@@ -880,7 +880,7 @@ const rowsToDeselect = []; // [1] or [1, 7]
 ```jsx
 // Pass 'serverSideSorting' function as a prop and Grid will call this function whenever the user selects the group sort option.
 // Grid expect this function to re-render the Grid with sorted 'gridData'.
-// In case if the developer is making an API call to get sorted data/sorting will take much time, use 'displayLoader' property to display a loading graphics in the Grid, till you are ready with sorted data.
+// In case if the developer is making an API call to get sorted data/sorting will take much time, use 'displayLoader' property to display loading graphics in the Grid, till you are ready with sorted data.
 // Pass displayLoader={true}, then fetch sorted data and once you are ready with sorted data, update gridData and set displayLoader={false}
 
 <Grid
