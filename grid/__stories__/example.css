@@ -679,7 +679,7 @@ li {
 }
 /* Row Options */
 .ng-action__popover li {
-    margin-bottom: 13px;
+    margin-bottom: 14px;
     cursor: pointer;
 }
 .ng-action__popover li:last-child {

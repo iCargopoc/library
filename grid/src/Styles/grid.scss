@@ -359,6 +359,12 @@
                 margin-bottom: rem(40);
                 z-index: 5;
                 white-space: nowrap;
+                &--pin {
+                    margin-top: 14px !important;
+                }
+                .ng-action__pin {
+                    fill: var(--danger) !important;
+                }
             }
             &__close {
                 position: absolute;
