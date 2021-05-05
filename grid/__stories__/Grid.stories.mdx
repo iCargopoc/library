@@ -46,6 +46,7 @@ const columns = [
             width: 50, // Number - For single-line Grid, pass width % allocated for each column, for multi line pass pixel value.
             widthGrow: 1, // Number, Optional - This is the factor that Grid uses to identify how to allocate the width of a hidden column to other columns.
             display: false, // Boolean, Optional - To hide a column by default. The default value for this property is true.
+            pinLeft: true, // Boolean, Optional - To keep a column pinned to left by default.
             disableSortBy: true, // Boolean, Optional - To disable column sorting for a column.
             sortValue: "flightno", // Boolean, Optional - Use only if inner cells are present, to decide on which cell column sort should happen.
             disableResizing: true, // Boolean, Optional - To disable column resizing by dragging.
@@ -189,6 +190,7 @@ const subComponentColumns = [
             width: 50, // Number - For single-line Grid, pass width % allocated for each column, for multi line pass pixel value.
             widthGrow: 1, // Number, Optional - This is the factor that Grid uses to identify how to allocate the width of a hidden column to other columns.
             display: false, // Boolean, Optional - To hide a column by default. The default value for this property is true.
+            pinLeft: true, // Boolean, Optional - To keep a column pinned to left by default.
             searchKeys: [  // Array<String>, Optional - Mention all node paths from Grid data, that have to be included in column filtering and global filtering.
                 "flight.flightno", // For Object structure - flight: {flightno: "value"}
                 "flight.connectionflights.*.airlinename"  // For Array structure - flight: {connectionflights: [{airlinename: "value"}]}
