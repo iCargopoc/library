@@ -49,7 +49,7 @@ const columns = [
             disableSortBy: true, // Boolean, Optional - To disable column sorting for a column.
             sortValue: "flightno", // Boolean, Optional - Use only if inner cells are present, to decide on which cell column sort should happen.
             disableResizing: true, // Boolean, Optional - To disable column resizing by dragging.
-            searchKeys: [  // Array<String>, Optional - Mention all node paths from Grid data, that have to be incldued in column filtering and global filtering.
+            searchKeys: [  // Array<String>, Optional - Mention all node paths from Grid data, that have to be included in column filtering and global filtering.
                 "flight.flightno", // For Object structure - flight: {flightno: "value"}
                 "flight.connectionflights.*.airlinename"  // For Array structure - flight: {connectionflights: [{airlinename: "value"}]}
             ],
