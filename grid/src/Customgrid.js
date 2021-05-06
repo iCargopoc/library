@@ -104,6 +104,7 @@ const Customgrid = (props: {
     fixedRowHeight: boolean,
     pdfPaperSize: string,
     enablePinColumn: boolean,
+    enablePinRow: boolean,
     shouldDisplayLoader: boolean,
     setShouldDisplayLoader: Function
 }): any => {
@@ -164,6 +165,7 @@ const Customgrid = (props: {
         rowsToDeselect,
         fixedRowHeight,
         enablePinColumn,
+        enablePinRow,
         shouldDisplayLoader,
         setShouldDisplayLoader
     } = props;
@@ -268,7 +270,24 @@ const Customgrid = (props: {
         }
     };
 
+    // To hold row Ids of pinned rows
     const [userSelectedRowsToPin, setUserSelectedRowsToPin] = useState([]);
+    // Check if a row Id is in pinned state or not
+    const isRowPinned = (rowId: any): boolean => {
+        return userSelectedRowsToPin.includes(rowId);
+    };
+    // Update pinned rows list
+    const updatePinnedRows = (rowId: any) => {
+        let updatedList = [...userSelectedRowsToPin];
+        if (isRowPinned(rowId)) {
+            updatedList = updatedList.filter(
+                (item: any): boolean => item !== rowId
+            );
+        } else {
+            updatedList.push(rowId);
+        }
+        setUserSelectedRowsToPin(updatedList);
+    };
 
     // Local Ref value to identify if column/global filter has been applied, and give a call back
     const filterEventRef = useRef(false);
@@ -437,7 +456,7 @@ const Customgrid = (props: {
     ); // If row actions are available
     const isRowExpandAvailable = isRowExpandEnabled || expandableColumn; // If row expand option is available
     const isRowActionsColumnNeeded =
-        isRowActionsAvailable || isRowExpandAvailable;
+        isRowActionsAvailable || isRowExpandAvailable || enablePinRow;
 
     const columns = useMemo((): Object => gridColumns);
     const data =
@@ -477,6 +496,11 @@ const Customgrid = (props: {
             filterEventRef,
             isSubComponentGrid,
             enablePinColumn,
+            isRowActionsAvailable,
+            idAttribute,
+            enablePinRow,
+            updatePinnedRows,
+            isRowPinned,
             isAtleastOneColumnPinned,
             isRowActionsColumnNeeded,
             rowsWithExpandedSubComponents,
@@ -692,60 +716,80 @@ const Customgrid = (props: {
 
             // Add last column only if required
             if (isRowActionsColumnNeeded) {
-                hooks.allColumns.push((hookColumns: Object): Object => [
-                    ...hookColumns,
-                    {
-                        id: "custom",
-                        columnId: "column_custom_1",
-                        disableResizing: true,
-                        disableFilters: true,
-                        disableSortBy: true,
-                        display: true,
-                        pinRight: enablePinColumn === true,
-                        isGroupHeader: false,
-                        minWidth: 35,
-                        width: 35,
-                        maxWidth: 35,
-                        Cell: (cellCustomProps: Object): Object => {
-                            const { row } = cellCustomProps;
-                            const { original } = row;
-                            return (
-                                <div className="ng-action">
-                                    {isRowActionsAvailable ? (
-                                        <RowOptions
-                                            row={row}
-                                            rowActions={rowActions}
-                                            isSubComponentRow={false}
-                                        />
-                                    ) : null}
-                                    {/* Also check if expand icon is required for this row using the getRowInfo prop passed */}
-                                    {isRowExpandAvailable &&
-                                    !isRowExpandDisabled(
-                                        getRowInfo,
-                                        original,
-                                        false
-                                    ) ? (
-                                        <span
-                                            className="ng-action__expander"
-                                            data-testid="rowExpanderIcon"
-                                            {...row.getToggleRowExpandedProps()}
-                                        >
-                                            <i>
-                                                <IconAngle
-                                                    className={
-                                                        row.isExpanded
-                                                            ? "ng-icon ng-action__arrow-up"
-                                                            : "ng-icon ng-action__arrow-down"
-                                                    }
-                                                />
-                                            </i>
-                                        </span>
-                                    ) : null}
-                                </div>
-                            );
+                hooks.allColumns.push(
+                    (hookColumns: Object, instanceObj: Object): Object => [
+                        ...hookColumns,
+                        {
+                            id: "custom",
+                            columnId: "column_custom_1",
+                            disableResizing: true,
+                            disableFilters: true,
+                            disableSortBy: true,
+                            display: true,
+                            pinRight: enablePinColumn === true,
+                            isGroupHeader: false,
+                            minWidth: 35,
+                            width: 35,
+                            maxWidth: 35,
+                            Cell: (cellCustomProps: Object): Object => {
+                                const { instance } = instanceObj;
+                                const enablePinRowObj = instance.enablePinRow;
+                                const updatePinnedRowsObj =
+                                    instance.updatePinnedRows;
+                                const isRowActionsAvailableObj =
+                                    instance.isRowActionsAvailable;
+                                const idAttributeObj = instance.idAttribute;
+                                const isRowPinnedObj = instance.isRowPinned;
+                                const { row } = cellCustomProps;
+                                const { original } = row;
+                                return (
+                                    <div className="ng-action">
+                                        {isRowActionsAvailableObj ||
+                                        enablePinRowObj === true ? (
+                                            <RowOptions
+                                                row={row}
+                                                rowActions={rowActions}
+                                                isRowActionsAvailable={
+                                                    isRowActionsAvailableObj
+                                                }
+                                                idAttribute={idAttributeObj}
+                                                enablePinRow={enablePinRowObj}
+                                                updatePinnedRows={
+                                                    updatePinnedRowsObj
+                                                }
+                                                isRowPinned={isRowPinnedObj}
+                                                isSubComponentRow={false}
+                                            />
+                                        ) : null}
+                                        {/* Also check if expand icon is required for this row using the getRowInfo prop passed */}
+                                        {isRowExpandAvailable &&
+                                        !isRowExpandDisabled(
+                                            getRowInfo,
+                                            original,
+                                            false
+                                        ) ? (
+                                            <span
+                                                className="ng-action__expander"
+                                                data-testid="rowExpanderIcon"
+                                                {...row.getToggleRowExpandedProps()}
+                                            >
+                                                <i>
+                                                    <IconAngle
+                                                        className={
+                                                            row.isExpanded
+                                                                ? "ng-icon ng-action__arrow-up"
+                                                                : "ng-icon ng-action__arrow-down"
+                                                        }
+                                                    />
+                                                </i>
+                                            </span>
+                                        ) : null}
+                                    </div>
+                                );
+                            }
                         }
-                    }
-                ]);
+                    ]
+                );
             }
         }
     );

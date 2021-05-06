@@ -80,6 +80,7 @@ const Grid = (props: Object): ?React$Element<*> => {
         fileName,
         pdfPaperSize,
         enablePinColumn,
+        enablePinRow,
         displayLoader
     } = props;
 
@@ -691,6 +692,9 @@ const Grid = (props: Object): ?React$Element<*> => {
                     fixedRowHeight={fixedRowHeight}
                     pdfPaperSize={pdfPaperSize}
                     enablePinColumn={enablePinColumn}
+                    enablePinRow={
+                        enablePinRow === true && isParentGrid !== true
+                    }
                     shouldDisplayLoader={shouldDisplayLoader}
                     setShouldDisplayLoader={setShouldDisplayLoader}
                 />

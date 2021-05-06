@@ -57,6 +57,7 @@ const GridComponent = (props) => {
         pdfPaperSize,
         isHorizontalGrid,
         passPinColumn,
+        passPinRow,
         pinnedRowsList
     } = props;
 
@@ -2871,6 +2872,7 @@ const GridComponent = (props) => {
                     fileName={fileName || null}
                     pdfPaperSize={pdfPaperSize || null}
                     enablePinColumn={passPinColumn || false}
+                    enablePinRow={passPinRow || false}
                     displayLoader={displayLoader}
                     rowsToPin={rowsToPin}
                 />
