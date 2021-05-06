@@ -693,7 +693,7 @@ const Grid = (props: Object): ?React$Element<*> => {
                     pdfPaperSize={pdfPaperSize}
                     enablePinColumn={enablePinColumn}
                     enablePinRow={
-                        enablePinRow === true && isParentGrid !== true
+                        enablePinRow === true && isParentGrid !== true // Enable only if grid is not tree view grid
                     }
                     shouldDisplayLoader={shouldDisplayLoader}
                     setShouldDisplayLoader={setShouldDisplayLoader}
