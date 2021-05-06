@@ -713,6 +713,7 @@ const fixedRowHeight = true;
 // Refer columns in the 'Grid properties' section (top).
 // To keep columns pinned to left, by default, use pinLeft=true while configuring the columns.
 // enablePinColumn = true - if the option for user to pin a column manually, has to be enabled.
+// Note: Even if you set a column's 'pinLeft' to true in the columns configuration, it will work only if 'enablePinColumn' property is passed with value true.
 
 <Grid
     gridData={gridData}
@@ -728,12 +729,19 @@ const fixedRowHeight = true;
 #### With pin row
 
 <Story name="With pin row">
-    <GridComponent passIdAttribute passPinRow pinnedRowsList={[6]} />;
+    <GridComponent
+        passRowActions
+        passIdAttribute
+        passPinRow
+        pinnedRowsList={[6]}
+    />
+    ;
 </Story>
 
 ```jsx
 // enablePinRow = true - if the option for user to pin a row manually, has to be enabled.
 // Pass idAttribute values of rows that are supposed to be pinned by default, in an array.
+// Note: Even if you pass rowIds in the 'rowsToPin' property, it will work only if 'enablePinRow' property is passed with value true.
 const rowsToPin = [6];
 
 <Grid
