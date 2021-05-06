@@ -334,6 +334,11 @@ const SubComponent = (props: {
                                         <RowOptions
                                             row={row}
                                             rowActions={rowActions}
+                                            isRowActionsAvailable={undefined}
+                                            idAttribute={undefined}
+                                            enablePinRow={undefined}
+                                            updatePinnedRows={undefined}
+                                            isRowPinned={undefined}
                                             isSubComponentRow
                                         />
                                     ) : null}

@@ -19,11 +19,11 @@ const RowOptions = ({
 }: {
     row: Object,
     rowActions: Function,
-    isRowActionsAvailable: boolean,
-    idAttribute: string,
-    enablePinRow: boolean,
-    updatePinnedRows: Function,
-    isRowPinned: Function,
+    isRowActionsAvailable: any,
+    idAttribute: any,
+    enablePinRow: any,
+    updatePinnedRows: any,
+    isRowPinned: any,
     isSubComponentRow: boolean
 }): React$Element<*> => {
     const { original } = row;
