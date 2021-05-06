@@ -890,10 +890,10 @@ const Customgrid = (props: {
     };
 
     const findFirstOpenParentIndex = (): number => {
-        let firstOpenParentIndex = 0;
+        let firstOpenParentIndex = -1;
         const parentRows = getParentRowsFromList(rows);
         parentRows.forEach((row: Object) => {
-            if (firstOpenParentIndex === 0) {
+            if (firstOpenParentIndex === -1) {
                 const { original, index } = row;
                 const parentIdValue = original[parentIdAttribute];
                 if (expandedParentRows.includes(parentIdValue)) {
