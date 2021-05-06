@@ -154,7 +154,7 @@ describe("render Index file ", () => {
     });
     afterEach(cleanup);
 
-    it("test pin rows functionality", () => {
+    it("test pin rows functionality passed as property", () => {
         mockOffsetSize(1440, 900);
         const { getAllByTestId, container } = render(
             <Grid
@@ -167,6 +167,7 @@ describe("render Index file ", () => {
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 rowsToPin={mockRowsToPin}
+                enablePinRow
             />
         );
         const gridContainer = container;
@@ -174,6 +175,80 @@ describe("render Index file ", () => {
 
         // Check if pin rows are present
         expect(getAllByTestId("pinned-gridrow").length).toBe(2);
+    });
+
+    it("test pin rows functionality", () => {
+        mockOffsetSize(1440, 900);
+        const { getAllByTestId, container, getByTestId } = render(
+            <Grid
+                gridData={data}
+                idAttribute="travelId"
+                columns={mockGridColumns}
+                columnToExpand={mockAdditionalColumn}
+                getRowInfo={gmockGtRowInfo}
+                rowActions={mockRowActions}
+                onRowUpdate={mockUpdateRowData}
+                onRowSelect={mockSelectBulkData}
+                enablePinRow
+            />
+        );
+        const gridContainer = container;
+        expect(gridContainer).toBeInTheDocument();
+
+        // Check if pin rows are not present
+        let pinnedRows = container.querySelectorAll(
+            "[data-testid='pinned-gridrow']"
+        );
+        expect(pinnedRows.length).toBe(0);
+
+        // Open actions overlay
+        let rowActionOpenLinks = getAllByTestId("rowActions-open-link");
+        act(() => {
+            rowActionOpenLinks[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+        // Check if row actions overlay has been opened
+        let rowActionsOverlay = getByTestId("rowActions-kebab-overlay");
+        expect(rowActionsOverlay).toBeInTheDocument();
+
+        // Click pin row link
+        const pinRowItem = getByTestId("rowActions-pinrow");
+        act(() => {
+            pinRowItem.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // 1 row should be pinned
+        pinnedRows = getAllByTestId("pinned-gridrow");
+        expect(pinnedRows.length).toBe(1);
+
+        // Open actions overlay again
+        rowActionOpenLinks = getAllByTestId("rowActions-open-link");
+        act(() => {
+            rowActionOpenLinks[0].dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if row actions overlay has been opened
+        rowActionsOverlay = getByTestId("rowActions-kebab-overlay");
+        expect(rowActionsOverlay).toBeInTheDocument();
+
+        // Unpin that row
+        const unpinRowItem = getByTestId("rowActions-unpinrow");
+        act(() => {
+            unpinRowItem.dispatchEvent(
+                new MouseEvent("click", { bubbles: true })
+            );
+        });
+
+        // Check if pin rows are not present
+        pinnedRows = container.querySelectorAll(
+            "[data-testid='pinned-gridrow']"
+        );
+        expect(pinnedRows.length).toBe(0);
     });
 
     it("test pin rows functionality without grid header", () => {
@@ -186,6 +261,7 @@ describe("render Index file ", () => {
                 onRowUpdate={mockUpdateRowData}
                 onRowSelect={mockSelectBulkData}
                 rowsToPin={mockRowsToPin}
+                enablePinRow
                 gridHeader={false}
             />
         );

@@ -47,6 +47,9 @@ const RowOptions = ({
         updatePinnedRows(rowId);
     };
 
+    const isThisRowPinned =
+        isSubComponentRow !== true ? isRowPinned(rowId) : false;
+
     return (
         <div className="ng-action__utils">
             <span
@@ -69,6 +72,11 @@ const RowOptions = ({
                             <li
                                 role="presentation"
                                 className="ng-action__popover--pin"
+                                data-testid={
+                                    isThisRowPinned
+                                        ? "rowActions-unpinrow"
+                                        : "rowActions-pinrow"
+                                }
                                 onClick={setPinValue}
                             >
                                 <span>
@@ -76,7 +84,7 @@ const RowOptions = ({
                                         <IconPinColumn className="ng-icon ng-action__pin" />
                                     </i>
                                     <span>
-                                        {isRowPinned(rowId)
+                                        {isThisRowPinned
                                             ? "Unpin Row"
                                             : "Pin Row"}
                                     </span>
