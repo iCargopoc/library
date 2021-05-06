@@ -408,6 +408,7 @@ const GridComponent = (props) => {
                     </div>
                 );
             },
+            pinLeft: true,
             title: "Flight",
             accessor: "flight",
             innerCells: [

@@ -34,7 +34,8 @@ export const extractColumns = (
     updateRowInGrid: Function,
     expandableColumn: any,
     isParentGrid: boolean,
-    isSubComponentColumns: boolean
+    isSubComponentColumns: boolean,
+    enablePinColumn: boolean
 ): Object => {
     if (columns && columns.length > 0) {
         // Create a list of search keys that has to be used for global filtering
@@ -85,7 +86,7 @@ export const extractColumns = (
             }
 
             // Set pin column flag
-            if (elem.pinLeft !== true) {
+            if (enablePinColumn !== true || elem.pinLeft !== true) {
                 elem.pinLeft = false;
             }
 

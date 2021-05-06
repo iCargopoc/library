@@ -538,7 +538,8 @@ const Grid = (props: Object): ?React$Element<*> => {
             updateRowInGrid,
             expandableColumn,
             isParentGrid,
-            false
+            false,
+            enablePinColumn
         );
         const {
             updatedColumnStructure,
@@ -569,7 +570,8 @@ const Grid = (props: Object): ?React$Element<*> => {
             updateRowInGrid,
             expandableColumn,
             isParentGrid,
-            true
+            true,
+            enablePinColumn
         );
         const {
             updatedColumnStructure,
