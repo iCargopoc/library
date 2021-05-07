@@ -901,7 +901,7 @@ const Customgrid = (props: {
                 }
             }
         });
-        return firstOpenParentIndex;
+        return firstOpenParentIndex >= 0 ? firstOpenParentIndex : 0;
     };
 
     // Recalculate row height from index passed as parameter. If not passed 50 less than the last rendered item index in the list
