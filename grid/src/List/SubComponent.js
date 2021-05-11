@@ -526,8 +526,7 @@ const SubComponent = (props: {
                                                             false ? (
                                                                 <div className="neo-grid__th-iconblock">
                                                                     {!isAutoPinned &&
-                                                                    (isColumnPinnedLeft ||
-                                                                        isColumnPinnedRight) ? (
+                                                                    isColumnPinnedLeft ? (
                                                                         <i className="neo-grid__th-icon">
                                                                             <IconPinColumn className="ng-icon neo-grid__pin" />
                                                                         </i>
