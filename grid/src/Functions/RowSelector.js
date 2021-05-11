@@ -1,27 +1,13 @@
 // @flow
-import React, { forwardRef, useRef, useEffect } from "react";
+import React from "react";
 
-const RowSelector: any = forwardRef(
-    ({ indeterminate, ...rest }: Object, ref: any): React$Element<*> => {
-        const defaultRef = useRef();
-        const resolvedRef = ref || defaultRef;
-
-        useEffect(() => {
-            resolvedRef.current.indeterminate = indeterminate;
-        }, [resolvedRef, indeterminate]);
-
-        return (
-            <div className="neo-grid__row-selector">
-                <div className="neo-form-check">
-                    <input
-                        type="checkbox"
-                        className="neo-checkbox"
-                        ref={resolvedRef}
-                        {...rest}
-                    />
-                </div>
+const RowSelector: any = ({ ...rest }: Object): React$Element<*> => {
+    return (
+        <div className="neo-grid__row-selector">
+            <div className="neo-form-check">
+                <input type="checkbox" className="neo-checkbox" {...rest} />
             </div>
-        );
-    }
-);
+        </div>
+    );
+};
 export default RowSelector;

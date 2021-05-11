@@ -658,7 +658,7 @@ const Customgrid = (props: {
                                 <RowSelector
                                     data-testid="rowSelector-allRows"
                                     {...getToggleAllRowsSelectedProps({
-                                        onClick: (event: Object): Object => {
+                                        onChange: (event: Object): Object => {
                                             // Set state value to identify if checkbox has been selected or deselected
                                             const selectedType =
                                                 event.currentTarget.checked ===
@@ -689,7 +689,7 @@ const Customgrid = (props: {
                                     <RowSelector
                                         data-testid="rowSelector-singleRow"
                                         {...row.getToggleRowSelectedProps({
-                                            onClick: (
+                                            onChange: (
                                                 event: Object
                                             ): Object => {
                                                 // Set state value to identify if checkbox has been selected or deselected

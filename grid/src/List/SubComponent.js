@@ -226,7 +226,7 @@ const SubComponent = (props: {
                                 <RowSelector
                                     data-testid="subcomponent-rowSelector-allRows"
                                     {...getToggleAllRowsSelectedProps({
-                                        onClick: (event: Object): Object => {
+                                        onChange: (event: Object): Object => {
                                             if (subComponentIdAttribute) {
                                                 // Set state value to identify if checkbox has been selected or deselected
                                                 const selectedType =
@@ -275,7 +275,7 @@ const SubComponent = (props: {
                                     <RowSelector
                                         data-testid="subcomponent-rowSelector-singleRow"
                                         {...row.getToggleRowSelectedProps({
-                                            onClick: (
+                                            onChange: (
                                                 event: Object
                                             ): Object => {
                                                 if (subComponentIdAttribute) {
