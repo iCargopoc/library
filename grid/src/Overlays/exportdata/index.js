@@ -152,18 +152,18 @@ const ExportData = (props: Object): any => {
     // update the display flag value of column or all columns in managedColumns and managedAdditionalColumn state, based on the selection
     const updateColumns = (
         columnid: string,
-        isadditionalcolumn: string,
+        isadditionalcolumn: boolean,
         checked: boolean,
         isSubComponentColumn: boolean
     ): any => {
         if (
             columnid === "all" ||
-            (isAdditionalColumnPresent && isadditionalcolumn === "true")
+            (isAdditionalColumnPresent && isadditionalcolumn === true)
         ) {
             // Update additional column state if columnid is "all" or selected column has "isadditionalcolumn"
             updatedDisplayOfAdditionalColumn(checked, isSubComponentColumn);
         }
-        if (isadditionalcolumn !== "true") {
+        if (isadditionalcolumn !== true) {
             // Update main columns state based on selection and columnid, if selected column doesn't have "isadditionalcolumn"
             if (isSubComponentColumn) {
                 const updatedManagedColumns = [

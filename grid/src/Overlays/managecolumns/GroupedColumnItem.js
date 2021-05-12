@@ -45,16 +45,14 @@ const GroupedColumnItem = ({
                                           id={`chk_selectInnerCell_${cellId}`}
                                           className="neo-checkbox"
                                           data-testid={`selectInnerCell_${id}_${cellId}`}
-                                          data-columnid={id}
-                                          data-cellid={cellId}
-                                          data-isadditionalcolumn={
-                                              isadditionalcolumn
-                                          }
                                           checked={cell.display}
                                           onChange={(event: Object): Object =>
                                               onInnerCellChange(
                                                   event,
-                                                  isSubComponentColumn
+                                                  isSubComponentColumn,
+                                                  id,
+                                                  cellId,
+                                                  isadditionalcolumn
                                               )
                                           }
                                       />

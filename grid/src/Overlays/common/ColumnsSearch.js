@@ -143,16 +143,22 @@ const ColumnsSearch = ({
     };
 
     // update the display flag value of column or all columns in managedColumns state, based on the selection
-    const onSearchableColumnChange = (event: Object) => {
-        const { checked, dataset } = event.currentTarget;
-        const { columnid, isadditionalcolumn } = dataset;
+    const onSearchableColumnChange = (
+        event: Object,
+        columnid: string,
+        isadditionalcolumn: boolean
+    ) => {
+        const { checked } = event.currentTarget;
         updateColumns(columnid, isadditionalcolumn, checked, false);
     };
 
     // update the display flag value of sub component column or all columns in managedSubComponentColumns state, based on the selection
-    const onSearchableSubComponentColumnChange = (event: Object) => {
-        const { checked, dataset } = event.currentTarget;
-        const { columnid, isadditionalcolumn } = dataset;
+    const onSearchableSubComponentColumnChange = (
+        event: Object,
+        columnid: string,
+        isadditionalcolumn: boolean
+    ) => {
+        const { checked } = event.currentTarget;
         updateColumns(columnid, isadditionalcolumn, checked, true);
     };
 
@@ -200,9 +206,10 @@ const ColumnsSearch = ({
                             id="chk_selectAllSearchableColumns"
                             className="neo-checkbox"
                             data-testid="selectAllSearchableColumns"
-                            data-columnid="all"
                             checked={isSearchableColumnSelected("all")}
-                            onChange={onSearchableColumnChange}
+                            onChange={(event: any): any =>
+                                onSearchableColumnChange(event, "all", false)
+                            }
                         />
                         <label
                             htmlFor="chk_selectAllSearchableColumns"
@@ -230,14 +237,16 @@ const ColumnsSearch = ({
                                           id={`chk_selectSearchableColumn_${columnId}`}
                                           className="neo-checkbox"
                                           data-testid="selectSingleSearchableColumn"
-                                          data-columnid={columnId}
-                                          data-isadditionalcolumn={
-                                              isDisplayInExpandedRegion
-                                          }
                                           checked={isSearchableColumnSelected(
                                               columnId
                                           )}
-                                          onChange={onSearchableColumnChange}
+                                          onChange={(event: any): any =>
+                                              onSearchableColumnChange(
+                                                  event,
+                                                  columnId,
+                                                  isDisplayInExpandedRegion
+                                              )
+                                          }
                                       />
                                       <label
                                           htmlFor={`chk_selectSearchableColumn_${columnId}`}
@@ -261,11 +270,16 @@ const ColumnsSearch = ({
                             id="chk_selectAllSearchableSubComponentColumns"
                             className="neo-checkbox"
                             data-testid="selectAllSearchableSubComponentColumns"
-                            data-columnid="all"
                             checked={isSearchableSubComponentColumnSelected(
                                 "all"
                             )}
-                            onChange={onSearchableSubComponentColumnChange}
+                            onChange={(event: any): any =>
+                                onSearchableSubComponentColumnChange(
+                                    event,
+                                    "all",
+                                    false
+                                )
+                            }
                         />
                         <label
                             htmlFor="chk_selectAllSearchableSubComponentColumns"
@@ -297,15 +311,15 @@ const ColumnsSearch = ({
                                               id={`chk_selectSearchableSubComponentColumn_${columnId}`}
                                               className="neo-checkbox"
                                               data-testid="selectSingleSearchableSubComponentColumn"
-                                              data-columnid={columnId}
-                                              data-isadditionalcolumn={
-                                                  isDisplayInExpandedRegion
-                                              }
                                               checked={isSearchableSubComponentColumnSelected(
                                                   columnId
                                               )}
-                                              onChange={
-                                                  onSearchableSubComponentColumnChange
+                                              onChange={(event: any): any =>
+                                                  onSearchableSubComponentColumnChange(
+                                                      event,
+                                                      columnId,
+                                                      isDisplayInExpandedRegion
+                                                  )
                                               }
                                           />
                                           <label

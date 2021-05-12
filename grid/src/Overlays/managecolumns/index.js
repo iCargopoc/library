@@ -153,18 +153,18 @@ const ColumnReordering = (props: any): any => {
     // update the display flag value of column or all columns in managedColumns and managedAdditionalColumn state, based on the selection
     const updateColumns = (
         columnid: string,
-        isadditionalcolumn: any,
+        isadditionalcolumn: boolean,
         checked: boolean,
         isSubComponentColumn: boolean
     ): any => {
         if (
             isAdditionalColumnPresent &&
-            (columnid === "all" || isadditionalcolumn === "true")
+            (columnid === "all" || isadditionalcolumn === true)
         ) {
             // Update additional column state if columnid is "all" or selected column has "isadditionalcolumn"
             updatedDisplayOfAdditionalColumn(checked, isSubComponentColumn);
         }
-        if (isadditionalcolumn !== "true") {
+        if (isadditionalcolumn !== true) {
             // Update main columns state based on selection and columnid, if selected column doesn't have "isadditionalcolumn"
             if (isSubComponentColumn) {
                 const updatedManagedColumns = [
@@ -250,10 +250,10 @@ const ColumnReordering = (props: any): any => {
     // update the display flag value of column or all columns in managedColumns and managedAdditionalColumn state, based on the selection
     const onPinColumnChange = (
         event: Object,
-        isSubComponentColumn: boolean
+        isSubComponentColumn: boolean,
+        columnid: string
     ): any => {
-        const { checked, dataset } = event.currentTarget;
-        const { columnid } = dataset;
+        const { checked } = event.currentTarget;
         // Update columns 'pinLeft' state based on selection and columnid
         const columnToUpdate = isSubComponentColumn
             ? [...managedSubComponentColumns]
@@ -299,11 +299,13 @@ const ColumnReordering = (props: any): any => {
     // Update the display flag value of inner cell in managedColumns state, based on the selection
     const onInnerCellChange = (
         event: Object,
-        isSubComponentColumn: boolean
+        isSubComponentColumn: boolean,
+        columnid: string,
+        cellid: string,
+        isadditionalcolumn: boolean
     ) => {
-        const { checked, dataset } = event.currentTarget;
-        const { columnid, cellid, isadditionalcolumn } = dataset;
-        if (isadditionalcolumn === "false" && isSubComponentColumn) {
+        const { checked } = event.currentTarget;
+        if (isadditionalcolumn === false && isSubComponentColumn) {
             setManagedSubComponentColumns((): Object => {
                 return [...managedSubComponentColumns].map(
                     (column: Object): any => {
@@ -352,7 +354,7 @@ const ColumnReordering = (props: any): any => {
                     }
                 );
             });
-        } else if (isadditionalcolumn === "false" && !isSubComponentColumn) {
+        } else if (isadditionalcolumn === false && !isSubComponentColumn) {
             setManagedColumns((): any => {
                 return [...managedColumns].map((column: Object): any => {
                     const updatedColumn = { ...column };
@@ -552,7 +554,7 @@ const ColumnReordering = (props: any): any => {
         const managedAdditionalColumnDisplayType =
             isAdditionalColumnSelected && managedAdditionalColumn != null
                 ? managedAdditionalColumn.isDisplayInExpandedRegion
-                : "true";
+                : true;
 
         const isSubComponentAdditionalColumnSelected =
             isSubComponentGrid &&
@@ -575,7 +577,7 @@ const ColumnReordering = (props: any): any => {
             isSubComponentAdditionalColumnSelected &&
             managedSubComponentAdditionalColumn != null
                 ? managedSubComponentAdditionalColumn.isDisplayInExpandedRegion
-                : "true";
+                : true;
 
         return (
             <ClickAwayListener
@@ -676,15 +678,6 @@ const ColumnReordering = (props: any): any => {
                                                                     id={`chk_selectInnerCell_${cellId}`}
                                                                     className="neo-checkbox"
                                                                     data-testid={`selectInnerCell_${managedAdditionalColumnColumnId}_${cellId}`}
-                                                                    data-columnid={
-                                                                        managedAdditionalColumnColumnId
-                                                                    }
-                                                                    data-cellid={
-                                                                        cellId
-                                                                    }
-                                                                    data-isadditionalcolumn={
-                                                                        managedAdditionalColumnDisplayType
-                                                                    }
                                                                     checked={
                                                                         display
                                                                     }
@@ -693,7 +686,10 @@ const ColumnReordering = (props: any): any => {
                                                                     ): any =>
                                                                         onInnerCellChange(
                                                                             event,
-                                                                            false
+                                                                            false,
+                                                                            managedAdditionalColumnColumnId,
+                                                                            cellId,
+                                                                            managedAdditionalColumnDisplayType
                                                                         )
                                                                     }
                                                                 />
@@ -767,15 +763,6 @@ const ColumnReordering = (props: any): any => {
                                                                             id={`chk_selectSubComponentInnerCell_${cellId}`}
                                                                             className="neo-checkbox"
                                                                             data-testid={`selectSubComponentInnerCell_${managedSubComponentAdditionalColumnColumnId}_${cellId}`}
-                                                                            data-columnid={
-                                                                                managedSubComponentAdditionalColumnColumnId
-                                                                            }
-                                                                            data-cellid={
-                                                                                cellId
-                                                                            }
-                                                                            data-isadditionalcolumn={
-                                                                                managedSubComponentAdditionalColumnDisplayType
-                                                                            }
                                                                             checked={
                                                                                 display
                                                                             }
@@ -784,7 +771,10 @@ const ColumnReordering = (props: any): any => {
                                                                             ): any =>
                                                                                 onInnerCellChange(
                                                                                     event,
-                                                                                    true
+                                                                                    true,
+                                                                                    managedSubComponentAdditionalColumnColumnId,
+                                                                                    cellId,
+                                                                                    managedSubComponentAdditionalColumnDisplayType
                                                                                 )
                                                                             }
                                                                         />

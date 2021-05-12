@@ -95,12 +95,12 @@ const ColumnItem = ({
                                 id={`chk_pinColumn_${id}`}
                                 className="neo-checkbox"
                                 data-testid={`pinColumn_${id}`}
-                                data-columnid={id}
                                 checked={pinLeft}
                                 onChange={(event: Object): Object =>
                                     onPinColumnChange(
                                         event,
-                                        isSubComponentColumn
+                                        isSubComponentColumn,
+                                        id
                                     )
                                 }
                             />
@@ -153,18 +153,16 @@ const ColumnItem = ({
                                                       id={`chk_selectInnerCell_${cellId}`}
                                                       className="neo-checkbox"
                                                       data-testid={`selectInnerCell_${id}_${cellId}`}
-                                                      data-columnid={id}
-                                                      data-cellid={cellId}
-                                                      data-isadditionalcolumn={
-                                                          isadditionalcolumn
-                                                      }
                                                       checked={display}
                                                       onChange={(
                                                           event: Object
                                                       ): Object =>
                                                           onInnerCellChange(
                                                               event,
-                                                              isSubComponentColumn
+                                                              isSubComponentColumn,
+                                                              id,
+                                                              cellId,
+                                                              isadditionalcolumn
                                                           )
                                                       }
                                                   />
