@@ -215,8 +215,11 @@ const Customgrid = (props: {
         setUserSelectedSubCompRowIdentifiers
     ] = useState([]);
 
-    // Local ref value for storing user selected rows - identifier values (idAttribute)
-    const userSelectedRowIdentifiers = useRef([]);
+    // Local state value for storing user selected rows - identifier values (idAttribute)
+    const [
+        userSelectedRowIdentifiers,
+        setUserSelectedRowIdentifiers
+    ] = useState([]);
 
     // Local state to identify if row selection call back has to be given or not
     const [
@@ -246,7 +249,7 @@ const Customgrid = (props: {
             }
             setRowsWithExpandedSubComponents([]);
             setUserSelectedSubCompRowIdentifiers([]);
-            userSelectedRowIdentifiers.current = [];
+            setUserSelectedRowIdentifiers([]);
             setExpandedParentRows([]);
             serverSideSorting(sortOptions);
         }
@@ -869,9 +872,9 @@ const Customgrid = (props: {
                 idAttribute
             );
             const oldUserSelectedRowIdentifiers = [
-                ...userSelectedRowIdentifiers.current
+                ...userSelectedRowIdentifiers
             ];
-            userSelectedRowIdentifiers.current = rowIdentifiers;
+            setUserSelectedRowIdentifiers(rowIdentifiers);
             if (onRowSelect && isRowSelectionCallbackNeeded !== null) {
                 setIsRowSelectionCallbackNeeded(null);
                 onRowSelect(
@@ -994,9 +997,8 @@ const Customgrid = (props: {
             selectableRows &&
             selectableRows.length > 0 &&
             userSelectedRowIdentifiers &&
-            userSelectedRowIdentifiers.current &&
-            userSelectedRowIdentifiers.current.length > 0 &&
-            selectableRows.length === userSelectedRowIdentifiers.current.length
+            userSelectedRowIdentifiers.length > 0 &&
+            selectableRows.length === userSelectedRowIdentifiers.length
         );
     };
 
@@ -1055,12 +1057,8 @@ const Customgrid = (props: {
             let rowsToBeSelected =
                 rowsToSelect && rowsToSelect.length > 0 ? rowsToSelect : [];
             rowsToBeSelected =
-                !isFirstRendering &&
-                userSelectedRowIdentifiers.current.length > 0
-                    ? [
-                          ...userSelectedRowIdentifiers.current,
-                          ...rowsToBeSelected
-                      ]
+                !isFirstRendering && userSelectedRowIdentifiers.length > 0
+                    ? [...userSelectedRowIdentifiers, ...rowsToBeSelected]
                     : rowsToBeSelected;
             let rowsToBeDeselected =
                 rowsToDeselect && rowsToDeselect.length > 0
@@ -1170,7 +1168,7 @@ const Customgrid = (props: {
                 const rowIdToDeSelect = findSelectedRowIdFromIdAttribute(
                     preFilteredRows,
                     idAttribute,
-                    userSelectedRowIdentifiers.current
+                    userSelectedRowIdentifiers
                 );
                 // If selectedRowIds length is 2, means user has selected a row when there is already a row selection made
                 const selectedRowKey = Object.keys(selectedRowIds);
@@ -1259,7 +1257,7 @@ const Customgrid = (props: {
                                     gridRowOriginal,
                                     false
                                 ) &&
-                                !userSelectedRowIdentifiers.current.includes(
+                                !userSelectedRowIdentifiers.includes(
                                     rowIdAttribute
                                 )
                             ) {
