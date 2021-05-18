@@ -16,9 +16,9 @@ const SortingList = (props: {
 }): React$Element<*> => {
     const { updateSortingOptions, sortingOrders, sortOptions, columns } = props;
 
-    const findSort = (sortId: string): Object => {
+    const findSort = (sortId: number): Object => {
         const sort = sortOptions.filter(
-            (c: Object, index: number): boolean => index === sortId
+            (c: Object): boolean => c.optId === sortId
         )[0];
         return {
             sort,
@@ -26,7 +26,7 @@ const SortingList = (props: {
         };
     };
 
-    const moveSort = (sortId: string, atIndex: number) => {
+    const moveSort = (sortId: number, atIndex: number) => {
         const { sort, index } = findSort(sortId);
         updateSortingOptions(
             update(sortOptions, {
@@ -52,10 +52,12 @@ const SortingList = (props: {
                 ) : null}
                 {sortOptions.map(
                     (sortOption: Object, index: number): Object => {
+                        const { optId } = sortOption;
                         return (
                             <SortingItem
-                                id={index}
-                                key={index}
+                                id={optId}
+                                key={optId}
+                                sortIndex={index}
                                 sortOption={sortOption}
                                 sortingOrders={sortingOrders}
                                 columns={columns}

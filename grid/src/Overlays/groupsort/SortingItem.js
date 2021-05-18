@@ -11,6 +11,7 @@ import {
 
 const SortingItem = ({
     id,
+    sortIndex,
     sortOption,
     columns,
     sortingOrders,
@@ -21,6 +22,7 @@ const SortingItem = ({
     deleteSortOption
 }: {
     id: number,
+    sortIndex: number,
     sortOption: Object,
     columns: Array<Object>,
     sortingOrders: Array<Object>,
@@ -115,11 +117,11 @@ const SortingItem = ({
     };
 
     const copySort = () => {
-        copySortOption(id);
+        copySortOption(sortIndex);
     };
 
     const deleteSort = () => {
-        deleteSortOption(id);
+        deleteSortOption(sortIndex);
     };
 
     const opacity = isDragging ? 0.5 : 1;

@@ -32,7 +32,7 @@ const GroupSort = (props: {
 
     if (parentColumns && parentColumns.length > 0) {
         const sortingOrders = ["Ascending", "Descending"];
-        let defaultSortingOption = [];
+        let defaultSortingOption = {};
         const defaultSortBy = parentColumns.find(
             (col: Object): boolean =>
                 col.isSortable &&
@@ -50,14 +50,12 @@ const GroupSort = (props: {
                     defaultSortOn = sortableInnerCell.accessor;
                 }
             }
-            defaultSortingOption = [
-                {
-                    sortBy: defaultSortBy.accessor,
-                    sortOn: defaultSortOn,
-                    order: sortingOrders[0],
-                    isSubComponentColumn: defaultSortBy.isSubComponentColumn
-                }
-            ];
+            defaultSortingOption = {
+                sortBy: defaultSortBy.accessor,
+                sortOn: defaultSortOn,
+                order: sortingOrders[0],
+                isSubComponentColumn: defaultSortBy.isSubComponentColumn
+            };
         }
 
         const [sortOptions, setSortOptions] = useState([]);
@@ -77,12 +75,32 @@ const GroupSort = (props: {
             ]
         };
 
+        const findSortOptionId = (): number => {
+            if (sortOptions.length > 0) {
+                const maxId = sortOptions.reduce(
+                    (max: number, option: Object): number =>
+                        option.optId > max ? option.optId : max,
+                    sortOptions[0].optId
+                );
+                return maxId + 1;
+            }
+            return 0;
+        };
+
         const updateSortingOptions = (sortingOptions: Object): Object => {
             setSortOptions(sortingOptions);
         };
 
         const addSortingOptions = () => {
-            setSortOptions([...sortOptions, ...defaultSortingOption]);
+            if (Object.keys(defaultSortingOption).length > 0) {
+                const newSortOption = [
+                    {
+                        optId: findSortOptionId(),
+                        ...defaultSortingOption
+                    }
+                ];
+                setSortOptions([...sortOptions, ...newSortOption]);
+            }
         };
 
         const clearSortingOptions = () => {
@@ -92,7 +110,7 @@ const GroupSort = (props: {
         };
 
         const updateSingleSortingOption = (
-            sortIndex: number,
+            sortId: number,
             sortByValue: string,
             sortOnValue: string,
             sortOrder: string,
@@ -100,21 +118,24 @@ const GroupSort = (props: {
         ) => {
             const newOptionsList = sortOptions.slice(0);
             const newSortingOption = {
+                optId: sortId,
                 sortBy: sortByValue,
                 sortOn: sortOnValue,
                 order: sortOrder,
                 isSubComponentColumn
             };
             const updatedSortOptions = newOptionsList.map(
-                (option: Object, index: number): Object =>
-                    index === sortIndex ? newSortingOption : option
+                (option: Object): Object =>
+                    option.optId === sortId ? newSortingOption : option
             );
             updateSortingOptions(updatedSortOptions);
         };
 
         const copySortOption = (sortIndex: number) => {
             const newOption = sortOptions.slice(0)[sortIndex];
-            setSortOptions(sortOptions.concat(newOption));
+            const updatedSortOption = { ...newOption };
+            updatedSortOption.optId = findSortOptionId();
+            setSortOptions(sortOptions.concat(updatedSortOption));
         };
 
         const deleteSortOption = (sortIndex: number) => {
