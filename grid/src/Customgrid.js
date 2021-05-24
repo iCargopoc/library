@@ -300,8 +300,6 @@ const Customgrid = (props: {
     // Variables and functions used for handling infinite loading
     const invalidPages = useRef([]);
     const pagesToReload = useRef([]);
-    const currentPageNumber = useRef(-1);
-    const currentEndCursor = useRef(-1);
     const isPaginationNeeded = pageInfo !== undefined && pageInfo !== null;
     const itemCount = gridDataLength + 1;
     const loadMoreItems = (): Object => {
@@ -327,31 +325,16 @@ const Customgrid = (props: {
             return Promise.resolve();
         }
         const { pageNum, endCursor } = pageInfo;
-        if (paginationType === "cursor") {
-            let calculatedEndCursor = endCursor;
-            if (currentEndCursor.current === -1) {
-                currentEndCursor.current = endCursor;
-            } else {
-                calculatedEndCursor = currentEndCursor.current + pageSize;
-                currentEndCursor.current = calculatedEndCursor;
-            }
-            pageInfoToReturn = {
-                endCursor: calculatedEndCursor,
-                ...pageInfoToReturn
-            };
-        } else {
-            let calculatedPageNumber = pageNum;
-            if (currentPageNumber.current === -1) {
-                currentPageNumber.current = pageNum;
-            } else {
-                calculatedPageNumber = currentPageNumber.current + 1;
-                currentPageNumber.current = calculatedPageNumber;
-            }
-            pageInfoToReturn = {
-                pageNum: calculatedPageNumber + 1,
-                ...pageInfoToReturn
-            };
-        }
+        pageInfoToReturn =
+            paginationType === "cursor"
+                ? {
+                      endCursor,
+                      ...pageInfoToReturn
+                  }
+                : {
+                      pageNum: pageNum + 1,
+                      ...pageInfoToReturn
+                  };
         return loadNextPage(pageInfoToReturn, false);
     };
     const isItemLoaded = (index: number): Object => {
