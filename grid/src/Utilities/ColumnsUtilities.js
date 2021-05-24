@@ -314,11 +314,12 @@ export const extractColumns = (
         // Sort to arrange left pinned columns to first
         updatedColumnStructure = updatedColumnStructure.sort(
             (colA: Object, colB: Object): number => {
-                return colA.pinLeft === colB.pinLeft
-                    ? 0
-                    : colA.pinLeft
-                    ? -1
-                    : 1;
+                const colAPinValue = colA.pinLeft;
+                const colBPinValue = colB.pinLeft;
+                if (colAPinValue === colBPinValue) {
+                    return 0;
+                }
+                return colAPinValue ? -1 : 1;
             }
         );
         return {
